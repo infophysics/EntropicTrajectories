@@ -4,6 +4,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "grid.h"
+#include "kdtree.h"
 #include "matrix.cpp"
 #include "vector.cpp"
 #include "grid.cpp"
