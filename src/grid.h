@@ -7,6 +7,16 @@
 
 namespace ET
 {
+
+  //  Struct for an n-dimensinal point
+  template<typename T>
+  struct Point
+  {
+    unsigned int d;
+    T *x;
+    Point(T *p) : x(p), d(sizeof(x)){};
+  };
+
   template<typename T>
   class Grid
   {
@@ -21,7 +31,7 @@ namespace ET
     //  Getters
     unsigned int get_dim();
     unsigned int get_N();
-    Matrix<T> get_grid();
+    std::vector<Point<T> >  get_grid();
     std::string get_name();
 
     //  Setters
@@ -35,14 +45,14 @@ namespace ET
     const T& operator()(const unsigned int i, const unsigned int j) const;
 
     //  points and projections
-    std::vector<T> get_point(unsigned int i);
+    std::vector<Point<T> > get_point(unsigned int i);
     std::vector<T> projection(unsigned int i);
-    void set_point(unsigned int i, std::vector<T> point);
+    void set_point(unsigned int i, std::vector<Point<T> > p);
 
   private:
     unsigned int _dim;
     unsigned int _N;
-    Matrix<T> _grid;
+    std::vector<Point<T> > _grid;
     std::string _name;
     std::vector<std::string> _coords;
   };

@@ -16,7 +16,6 @@ namespace ET
   private:
     unsigned int _dim;
     unsigned int _N;
-    alglib::real_2d_array _data;
-    alglib::kdtree _kdt;
+    
   };
 }

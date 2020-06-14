@@ -45,7 +45,7 @@ namespace ET
     return _N;
   }
   template<typename T>
-  Matrix<T> Grid<T>::get_grid()
+  std::vector<Point<T> > Grid<T>::get_grid()
   {
     return _grid;
   }
@@ -91,7 +91,7 @@ namespace ET
 
   //  points and projections
   template<typename T>
-  std::vector<T> Grid<T>::get_point(unsigned int i)
+  std::vector<Point<T> > Grid<T>::get_point(unsigned int i)
   {
     return _grid.get_row(i);
   }
@@ -101,7 +101,7 @@ namespace ET
     return _grid.get_col(i);
   }
   template<typename T>
-  void Grid<T>::set_point(unsigned int i, std::vector<T> point)
+  void Grid<T>::set_point(unsigned int i, std::vector<Point<T> > point)
   {
     _grid.set_row(i,point);
   }

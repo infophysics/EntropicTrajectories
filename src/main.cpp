@@ -19,7 +19,6 @@ int main()
   std::cout << mat1;
 
   ET::Matrix<double> mat2("M",2,4,{1,2,3,4,5,6,7,8});
-  ET::kDTree<double> k(mat2);
 
   return 0;
 }
