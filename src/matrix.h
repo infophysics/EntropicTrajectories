@@ -26,8 +26,6 @@ namespace ET
     Matrix(std::string name, unsigned int n, unsigned int m, const T& init);
 
     //  Constructors passing elements
-    Matrix(std::vector<std::vector<T> > mat);
-    Matrix(std::string name, std::vector<std::vector<T> > mat);
     Matrix(unsigned int n, std::vector<T> flat);
     Matrix(std::string name, unsigned int n, std::vector<T> flat);
     Matrix(unsigned int n, unsigned int m, std::vector<T> flat);
@@ -37,6 +35,7 @@ namespace ET
     unsigned int get_rows() const;
     unsigned int get_cols() const;
     std::string get_name() const;
+    std::vector<T> get_mat() const;
 
     //  Setters
     void set_name(std::string name);
@@ -49,7 +48,9 @@ namespace ET
     Matrix<T>& operator+=(const Matrix<T>& m);
     Matrix<T> operator-(const Matrix<T>& m);
     Matrix<T>& operator-=(const Matrix<T>& m);
+    //  Using CBLAS for multiplication
     Matrix<T> operator*(const Matrix<T>& m);
+    Matrix<T> brute_mul(const Matrix<T>& m);
     Matrix<T>& operator*=(const Matrix<T>& m);
     //  Scalar algebra
     Matrix<T> operator+(const T& s);
@@ -65,6 +66,9 @@ namespace ET
     //  Access operators
     T& operator()(const unsigned int& i, const unsigned int& j);
     const T& operator()(const unsigned int& i, const unsigned int& j) const;
+    //  Flattened access
+    T& operator()(const unsigned int& i);
+    const T& operator()(const unsigned int& i) const;
 
     //  Various methods
     void print();
@@ -73,7 +77,7 @@ namespace ET
   private:
     //  _n is the number of rows, _m is the number of columns
     unsigned int _n, _m;
-    std::vector<std::vector<T> > _mat;
+    std::vector<T> _mat;
     //  possible name for the matrix
     std::string _name;
   };
