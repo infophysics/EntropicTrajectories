@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ncarrara/workspace/EDMC/include/fastann/dist_l2.hpp
+stddef.h
+-
+
+/home/ncarrara/workspace/EDMC/include/fastann/dist_l2_funcs.hpp
+xmmintrin.h
+-
+emmintrin.h
+-
+pmmintrin.h
+-
+dist_l2.hpp
+/home/ncarrara/workspace/EDMC/include/fastann/dist_l2.hpp
+
+/home/ncarrara/workspace/EDMC/include/fastann/perf_dist_l2.cpp
+stdio.h
+-
+stdlib.h
+-
+math.h
+-
+stdint.h
+-
+dist_l2_funcs.hpp
+/home/ncarrara/workspace/EDMC/include/fastann/dist_l2_funcs.hpp
+rand_point_gen.hpp
+/home/ncarrara/workspace/EDMC/include/fastann/rand_point_gen.hpp
+
+/home/ncarrara/workspace/EDMC/include/fastann/rand_point_gen.hpp
+randomkit.h
+/home/ncarrara/workspace/EDMC/include/fastann/randomkit.h
+
+/home/ncarrara/workspace/EDMC/include/fastann/randomkit.h
+stddef.h
+-
+

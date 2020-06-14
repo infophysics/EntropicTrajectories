@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -O2 -g3 -msse2 -march=native -fno-exceptions -fno-rtti -O3 -DNDEBUG  -rdynamic CMakeFiles/test_kdtree.dir/test_kdtree.cpp.o  -o test_kdtree -Wl,-rpath,/home/ncarrara/workspace/EDMC/include/fastann/build libfastann.so 

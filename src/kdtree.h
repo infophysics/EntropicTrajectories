@@ -1,18 +1,22 @@
-//  Wrapper for a KDTree implementation
+//  Wrapper for a kDTree implementation
 #pragma once
 
+#include "matrix.h"
 #include "alglibmisc.h"
 
 namespace ET
 {
   template<typename T>
-  class KDTree
+  class kDTree
   {
   public:
-    KDTree();
-    ~KDTree();
+    kDTree();
+    ~kDTree();
+    kDTree(Matrix<T> m);
   private:
+    unsigned int _dim;
+    unsigned int _N;
+    alglib::real_2d_array _data;
     alglib::kdtree _kdt;
-
   };
 }
