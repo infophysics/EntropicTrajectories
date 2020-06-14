@@ -110,11 +110,45 @@ namespace ET
     return _mat;
   }
 
+  template<typename T>
+  std::vector<T> Matrix<T>::get_row(unsigned int i)
+  {
+    std::vector<T> row(_m,0.0);
+    for (unsigned int j = 0; j < _m; j++) {
+      row[j] = _mat[i*_m + j];
+    }
+    return row;
+  }
+
+  template<typename T>
+  std::vector<T> Matrix<T>::get_col(unsigned int i)
+  {
+    std::vector<T> col(_n,0.0);
+    for (unsigned int j = 0; j < _n; j++) {
+      col[j] = _mat[j*_m + i];
+    }
+    return col;
+  }
+
   //  Setters
   template<typename T>
   void Matrix<T>::set_name(std::string name)
   {
     _name = name;
+  }
+  template<typename T>
+  void Matrix<T>::set_row(unsigned int i, std::vector<T> row)
+  {
+    for (unsigned int j = 0; j < _m; j++) {
+      _mat[i*_m + j] = row[j];
+    }
+  }
+  template<typename T>
+  void Matrix<T>::set_col(unsigned int i, std::vector<T> col)
+  {
+    for (unsigned int j = 0; j < _n; j++) {
+      _mat[j*_m + i] = col[j];
+    }
   }
 
   //  Operator overloads
@@ -349,6 +383,25 @@ namespace ET
   const T& Matrix<T>::operator()(const unsigned int& i) const
   {
     return this->_mat[i];
+  }
+  template<typename T>
+  std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
+  {
+    os << "(" << m.get_rows() << " x " << m.get_cols() << ") Matrix";
+    if (m.get_name() != " ")
+      os << ": '" << m.get_name() << "'";
+    os << "\n[ ";
+    for (unsigned int i = 0; i < m.get_rows(); i++) {
+      os << "[ ";
+      for (unsigned int j = 0; j < m.get_cols(); j++) {
+        os << m(i,j) << " ";
+      }
+      os << "]";
+      if (i < m.get_rows()-1)
+        os << "\n  ";
+    }
+    os << " ]" << std::endl;
+    return os;
   }
 
   //  Various methods

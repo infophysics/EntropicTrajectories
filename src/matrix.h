@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <ostream>
 #include <stdio.h>
 #include <complex>
 #include <lapacke.h>
@@ -36,9 +37,14 @@ namespace ET
     unsigned int get_cols() const;
     std::string get_name() const;
     std::vector<T> get_mat() const;
+    std::vector<T> get_row(unsigned int i);
+    std::vector<T> get_col(unsigned int i);
+
 
     //  Setters
     void set_name(std::string name);
+    void set_row(unsigned int i, std::vector<T> row);
+    void set_col(unsigned int i, std::vector<T> col);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& m);
@@ -94,4 +100,6 @@ namespace ET
   template<typename T>
   Matrix<T> ones(unsigned int n, unsigned int m);
 
+  template<typename T>
+  std::ostream& operator<<(std::ostream& os, const Matrix<T>& m);
 }
