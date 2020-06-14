@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <complex>
+#include <lapacke.h>
 #include "vector.h"
 
 namespace ET

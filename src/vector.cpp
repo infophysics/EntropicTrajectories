@@ -24,7 +24,7 @@ namespace ET
 
   }
   template<typename T>
-  Vector<T>::Vector(std::vector<T> v) : _v(std::move(v)), _n(_v.size())
+  Vector<T>::Vector(std::vector<T> v) : _v(v), _n(_v.size())
   {
 
   }

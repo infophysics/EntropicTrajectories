@@ -1,9 +1,11 @@
 TARGET = prog
 LIBS = -lm
+FLIBS = -L/usr/lib/x86_64-linux-gnu/openblas -llapacke -llapack -lblas -lgfortran
 CXX = g++
 SRC_PATH = src
 BUILD_PATH = build
 BIN_PATH = $(BUILD_PATH)/bin
+CFLAGS=-O2 -ansi -pedantic -DFORTRAN_TRAILING_UNDERSCORE
 
 # exe
 BIN_NAME = run
@@ -20,7 +22,7 @@ OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 # Set the dependency files that will be used to add header dependencies
 DEPS = $(OBJECTS:.o=.d)
 
-COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
+COMPILE_FLAGS = -std=c++17 -Wall -Wextra -g
 INCLUDES = -I include/ -I /usr/local/include
 
 .PHONY: default_target
@@ -55,7 +57,7 @@ all: $(BIN_PATH)/$(BIN_NAME)
 # Creation of the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"
-	$(CXX) $(OBJECTS) -o $@ ${LIBS}
+	$(CXX) $(OBJECTS) -o $@ ${LIBS} $(FLIBS)
 
 # Add dependency files, if they exist
 -include $(DEPS)
@@ -65,4 +67,4 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 # dependency files to provide header dependencies
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@echo "Compiling: $< -> $@"
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@ $(FLIBS) $(CFLAGS)
