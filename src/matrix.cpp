@@ -6,7 +6,7 @@ namespace ET
 {
 
   template<typename T>
-  Matrix<T>::Matrix() {}
+  Matrix<T>::Matrix() : _name(" ") {}
 
   template<typename T>
   Matrix<T>::~Matrix() {}
@@ -18,10 +18,40 @@ namespace ET
     _mat = m._mat;
     _n = m.get_rows();
     _m = m.get_cols();
+    _name = m.get_name();
   }
 
   template<typename T>
-  Matrix<T>::Matrix(unsigned int n, unsigned int m) : _n(n), _m(m)
+  Matrix<T>::Matrix(unsigned int n) : _n(n), _m(n), _name(" ")
+  {
+    _mat.resize(_n);
+    for (unsigned int i = 0; i < _mat.size(); i++) {
+      _mat[i].resize(_m, 0.0);
+    }
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, unsigned int n)
+  : _n(n), _m(n), _name(name)
+  {
+    _mat.resize(_n);
+    for (unsigned int i = 0; i < _mat.size(); i++) {
+      _mat[i].resize(_m, 0.0);
+    }
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(unsigned int n, unsigned int m) : _n(n), _m(m), _name(" ")
+  {
+    _mat.resize(_n);
+    for (unsigned int i = 0; i < _mat.size(); i++) {
+      _mat[i].resize(_m, 0.0);
+    }
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, unsigned int n, unsigned int m)
+  : _n(n), _m(m), _name(name)
   {
     _mat.resize(_n);
     for (unsigned int i = 0; i < _mat.size(); i++) {
@@ -31,7 +61,18 @@ namespace ET
 
   template<typename T>
   Matrix<T>::Matrix(unsigned int n, unsigned int m, const T& init)
-  : _n(n), _m(m)
+  : _n(n), _m(m), _name(" ")
+  {
+    _mat.resize(_n);
+    for (unsigned int i = 0; i < _mat.size(); i++) {
+      _mat[i].resize(_m, init);
+    }
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, unsigned int n,
+    unsigned int m, const T& init)
+  : _n(n), _m(m), _name(name)
   {
     _mat.resize(_n);
     for (unsigned int i = 0; i < _mat.size(); i++) {
@@ -49,6 +90,19 @@ namespace ET
   unsigned int Matrix<T>::get_cols() const
   {
     return _m;
+  }
+
+  template<typename T>
+  std::string Matrix<T>::get_name() const
+  {
+    return _name;
+  }
+
+  //  Setters
+  template<typename T>
+  void Matrix<T>::set_name(std::string name)
+  {
+    _name = name;
   }
 
   //  Operator overloads
@@ -274,6 +328,24 @@ namespace ET
   }
 
   //  Various methods
+  template<typename T>
+  void Matrix<T>::print()
+  {
+    std::cout << "(" << _n << " x " << _m << ") Matrix";
+    if (_name != " ")
+      std::cout << ": '" << _name << "'";
+    std:: cout << "\n[ ";
+    for (unsigned int i = 0; i < _n; i++) {
+      std::cout << "[ ";
+      for (unsigned int j = 0; j < _m; j++) {
+        std::cout << this->_mat[i][j] << " ";
+      }
+      std::cout << "]";
+      if (i < _n-1)
+        std::cout << "\n  ";
+    }
+    std::cout << " ]" << std::endl;
+  }
   template<typename T>
   Matrix<T> Matrix<T>::transpose()
   {

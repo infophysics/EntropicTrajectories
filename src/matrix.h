@@ -2,6 +2,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <iostream>
 #include <stdio.h>
 #include <complex>
@@ -16,12 +17,20 @@ namespace ET
     Matrix();
     ~Matrix();
     Matrix(const Matrix<T>& m);
+    Matrix(unsigned int n);
+    Matrix(std::string name, unsigned int n);
     Matrix(unsigned int n, unsigned int m);
+    Matrix(std::string name, unsigned int n, unsigned int m);
     Matrix(unsigned int n, unsigned int m, const T& init);
+    Matrix(std::string name, unsigned int n, unsigned int m, const T& init);
 
     //  Getters
     unsigned int get_rows() const;
     unsigned int get_cols() const;
+    std::string get_name() const;
+
+    //  Setters
+    void set_name(std::string name);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& m);
@@ -49,12 +58,15 @@ namespace ET
     const T& operator()(const unsigned int& i, const unsigned int& j) const;
 
     //  Various methods
+    void print();
     Matrix<T> transpose();
 
   private:
     //  _n is the number of rows, _m is the number of columns
     unsigned int _n, _m;
     std::vector<std::vector<T> > _mat;
+    //  possible name for the matrix
+    std::string _name;
   };
 
   //  Various matrices
