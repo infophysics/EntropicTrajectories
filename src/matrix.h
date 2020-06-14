@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <complex>
 #include <lapacke.h>
+#include <cblas.h>
 #include "vector.h"
 
 namespace ET
@@ -24,6 +25,14 @@ namespace ET
     Matrix(unsigned int n, unsigned int m, const T& init);
     Matrix(std::string name, unsigned int n, unsigned int m, const T& init);
 
+    //  Constructors passing elements
+    Matrix(std::vector<std::vector<T> > mat);
+    Matrix(std::string name, std::vector<std::vector<T> > mat);
+    Matrix(unsigned int n, std::vector<T> flat);
+    Matrix(std::string name, unsigned int n, std::vector<T> flat);
+    Matrix(unsigned int n, unsigned int m, std::vector<T> flat);
+    Matrix(std::string name, unsigned int n,
+      unsigned int m, std::vector<T> flat);
     //  Getters
     unsigned int get_rows() const;
     unsigned int get_cols() const;

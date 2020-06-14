@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include "vector.h"
 #include "matrix.h"
 #include "matrix.cpp"
@@ -14,6 +15,18 @@ int main()
   mat3.set_name("C");
   mat1.print();
   mat3.print();
+
+  ET::Matrix<double> mat4("D",2,{1.0,2.0,3.0,4.0});
+  ET::Matrix<double> mat5("E",2,{-1.0,2.0,-3.0,4.0});
+  mat4.print();
+  mat5.print();
+  ET::Matrix<double> mat6 = mat4 * mat5;
+  mat6.set_name("F");
+  mat6.print();
+
+  ET::Matrix<double> mat7("G",2,3,{1,2,3,4,5,6});
+  mat7.print();
+
   /* Locals */
     double A[5][3] = {1,1,1,2,3,4,3,5,2,4,2,5,5,4,3};
     double b[5][2] = {-10,-3,12,14,14,12,16,16,18,16};

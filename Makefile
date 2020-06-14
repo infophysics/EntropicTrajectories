@@ -57,7 +57,7 @@ all: $(BIN_PATH)/$(BIN_NAME)
 # Creation of the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 	@echo "Linking: $@"
-	$(CXX) $(OBJECTS) -o $@ ${LIBS} $(FLIBS)
+	$(CXX) $(OBJECTS) -o $@ ${LIBS} $(FLIBS) $(CFLAGS) $(CXXFLAGS)
 
 # Add dependency files, if they exist
 -include $(DEPS)
@@ -67,4 +67,4 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 # dependency files to provide header dependencies
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@echo "Compiling: $< -> $@"
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@ $(FLIBS) $(CFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@ $(FLIBS) $(CFLAGS) $(CXXFLAGS)

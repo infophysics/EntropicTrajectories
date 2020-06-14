@@ -81,6 +81,75 @@ namespace ET
   }
 
   template<typename T>
+  Matrix<T>::Matrix(std::vector<std::vector<T> > mat)
+  : _mat(mat), _n(_mat.size()), _m(_mat[0].size()), _name(" ")
+  {
+
+  }
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, std::vector<std::vector<T> > mat)
+  : _mat(mat), _n(_mat.size()), _m(_mat[0].size()), _name(name)
+  {
+
+  }
+  template<typename T>
+  Matrix<T>::Matrix(unsigned int n, std::vector<T> flat)
+  : _n(n), _m(n), _name(" ")
+  {
+    if (n*n == flat.size()) {
+      _mat.resize(_n);
+      for (unsigned int i = 0; i < _n; i++) {
+        _mat[i].resize(_m);
+        for (unsigned int j = 0; j < _m; j++) {
+          this->_mat[i][j] = flat[i*_m + j];
+        }
+      }
+    }
+  }
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, unsigned int n, std::vector<T> flat)
+  : _n(n), _m(n), _name(name)
+  {
+    if (n*n == flat.size()) {
+      _mat.resize(_n);
+      for (unsigned int i = 0; i < _n; i++) {
+        _mat[i].resize(_m);
+        for (unsigned int j = 0; j < _m; j++) {
+          this->_mat[i][j] = flat[i*_m + j];
+        }
+      }
+    }
+  }
+  template<typename T>
+  Matrix<T>::Matrix(unsigned int n, unsigned int m, std::vector<T> flat)
+  : _n(n), _m(m), _name(" ")
+  {
+    if (n*m == flat.size()) {
+      _mat.resize(_n);
+      for (unsigned int i = 0; i < _n; i++) {
+        _mat[i].resize(_m);
+        for (unsigned int j = 0; j < _m; j++) {
+          this->_mat[i][j] = flat[i*_m + j];
+        }
+      }
+    }
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, unsigned int n, unsigned int m, std::vector<T> flat)
+  : _n(n), _m(m), _name(name)
+  {
+    if (n*m == flat.size()) {
+      _mat.resize(_n);
+      for (unsigned int i = 0; i < _n; i++) {
+        _mat[i].resize(_m);
+        for (unsigned int j = 0; j < _m; j++) {
+          this->_mat[i][j] = flat[i*_m + j];
+        }
+      }
+    }
+  }
+  template<typename T>
   unsigned int Matrix<T>::get_rows() const
   {
     return _n;
@@ -166,7 +235,7 @@ namespace ET
   Matrix<T> Matrix<T>::operator-(const Matrix<T>& m)
   {
     if(_n != m.get_rows() || _m != m.get_cols())
-      return this;
+      return *this;
     Matrix<T> l(_n, _m, 0.0);
     for (unsigned int i = 0; i < _n; i++) {
       for (unsigned int j = 0; j < _m; j++) {
@@ -191,7 +260,7 @@ namespace ET
   Matrix<T> Matrix<T>::operator*(const Matrix<T>& m)
   {
     if(_m != m.get_rows())
-      return this;
+      return *this;
     Matrix<T> l(_n,m.get_cols(),0.0);
     for (unsigned int i = 0; i < _n; i++) {
       for (unsigned int j = 0; j < _m; j++) {
