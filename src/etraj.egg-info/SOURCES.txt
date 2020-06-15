@@ -1,0 +1,6 @@
+setup.py
+src/etraj.egg-info/PKG-INFO
+src/etraj.egg-info/SOURCES.txt
+src/etraj.egg-info/dependency_links.txt
+src/etraj.egg-info/not-zip-safe
+src/etraj.egg-info/top_level.txt

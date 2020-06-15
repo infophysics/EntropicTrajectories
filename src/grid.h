@@ -58,6 +58,8 @@ namespace ET
     //  associated kdTree neighbors
     std::vector<std::vector<size_t> > _neighbors;
     std::vector<std::vector<double> > _distances;
+
+    //KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> _kdt;
   };
 
 }

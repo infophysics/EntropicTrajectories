@@ -13,12 +13,12 @@ namespace ET
 
   //  Copy constructor
   template<typename T>
-  Matrix<T>::Matrix(const Matrix<T>& m)
+  Matrix<T>::Matrix(const Matrix<T>& matrix)
   {
-    _mat = m._mat;
-    _n = m.get_rows();
-    _m = m.get_cols();
-    _name = m.get_name();
+    _mat = matrix._mat;
+    _n = matrix.get_rows();
+    _m = matrix.get_cols();
+    _name = matrix.get_name();
   }
 
   template<typename T>
@@ -153,79 +153,94 @@ namespace ET
 
   //  Operator overloads
   template<typename T>
-  Matrix<T>& Matrix<T>::operator=(const Matrix<T>& m)
+  Matrix<T>& Matrix<T>::operator=(const Matrix<T>& matrix)
   {
-    if (&m == this)
+    if (&matrix == this)
       return *this;
 
-    _n = m.get_rows();
-    _m = m.get_cols();
+    _n = matrix.get_rows();
+    _m = matrix.get_cols();
     _mat.resize(_n*_m);
     for (unsigned int i = 0; i < _n*_m; i++) {
-        _mat[i] = m(i);
+        _mat[i] = matrix(i);
     }
     return *this;
   }
   template<typename T>
-  bool Matrix<T>::operator==(const Matrix<T>& m)
+  bool Matrix<T>::operator==(const Matrix<T>& matrix)
   {
-    if (_n != m.get_rows() || _m != m.get_cols())
+    if (_n != matrix.get_rows() || _m != matrix.get_cols())
       return false;
     for (unsigned int i = 0; i < _n*_m; i++) {
-        if (m(i) != _mat[i])
+        if (matrix(i) != _mat[i])
           return false;
     }
     return true;
   }
   //  Matrix algebra
   template<typename T>
-  Matrix<T> Matrix<T>::operator+(const Matrix<T>& m)
+  Matrix<T> Matrix<T>::operator+(const Matrix<T>& matrix)
   {
-    if(_n != m.get_rows() || _m != m.get_cols())
+    if(_n != matrix.get_rows() || _m != matrix.get_cols())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
+    }
     Matrix<T> l(_n, _m, 0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
-        l(i) = _mat[i] + m(i);
+        l(i) = _mat[i] + matrix(i);
     }
     return l;
   }
   template<typename T>
-  Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& m)
+  Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& matrix)
   {
-    if(_n != m.get_rows() || _m != m.get_cols())
+    if(_n != matrix.get_rows() || _m != matrix.get_cols())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
+    }
     for (unsigned int i = 0; i < _n*_m; i++) {
-        _mat[i] += m(i);
+        _mat[i] += matrix(i);
     }
     return *this;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator-(const Matrix<T>& m)
+  Matrix<T> Matrix<T>::operator-(const Matrix<T>& matrix)
   {
-    if(_n != m.get_rows() || _m != m.get_cols())
+    if(_n != matrix.get_rows() || _m != matrix.get_cols())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
+    }
     Matrix<T> l(_n, _m, 0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
-        l(i) = _mat[i] - m(i);
+        l(i) = _mat[i] - matrix(i);
     }
     return l;
   }
   template<typename T>
-  Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& m)
+  Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& matrix)
   {
-    if(_n != m.get_rows() || _m != m.get_cols())
+    if(_n != matrix.get_rows() || _m != matrix.get_cols())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
+    }
     for (unsigned int i = 0; i < _n*_m; i++) {
-        _mat[i] -= m(i);
+        _mat[i] -= matrix(i);
     }
     return *this;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator*(const Matrix<T>& m)
+  Matrix<T> Matrix<T>::operator*(const Matrix<T>& matrix)
   {
-    if(_m != m.get_rows())
+    if(_m != matrix.get_rows())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
-    std::vector<T> l(_n*m.get_cols(),0.0);
+    }
+    std::vector<T> l(_n*matrix.get_cols(),0.0);
     //  CBLAS function for matrix multiplication, A*B = C.
     /*  clbas_dgemm(Order  - either CblasRowMajor or CblasColumnMajor
                     TransA - either transpose or not for Matrix A
@@ -245,31 +260,34 @@ namespace ET
         the pointer given by .begin().
     */
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
-                _n, m.get_cols(), _m, 1.0,
+                _n, matrix.get_cols(), _m, 1.0,
                 & *_mat.begin(), _n,
-                & *m.get_mat().begin(), _m,
+                & *matrix.get_mat().begin(), _m,
                 0.0, & *l.begin(), _n);
-    return Matrix<T>(_n,m.get_cols(),l);
+    return Matrix<T>(_n,matrix.get_cols(),l);
   }
   template<typename T>
-  Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& m)
+  Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& matrix)
   {
-    if(_m != m.get_rows())
+    if(_m != matrix.get_rows())
+    {
+      std::cout << "Matrices incompatible!" << std::endl;
       return *this;
-    Matrix<T> l(_n,m.get_cols(),0.0);
+    }
+    Matrix<T> l(_n,matrix.get_cols(),0.0);
     for (unsigned int i = 0; i < _n; i++) {
       for (unsigned int j = 0; j < _m; j++) {
         for (unsigned int k = 0; k < _n; k++) {
-          l(i,j) += this->_mat[i*_m + k] * m(k,j);
+          l(i,j) += this->_mat[i*_m + k] * matrix(k,j);
         }
       }
     }
     return l;
   }
   template<typename T>
-  Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& m)
+  Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& matrix)
   {
-    Matrix<T> l = (*this) * m;
+    Matrix<T> l = (*this) * matrix;
     (*this) = l;
     return *this;
   }
@@ -385,19 +403,19 @@ namespace ET
     return this->_mat[i];
   }
   template<typename T>
-  std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
+  std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
   {
-    os << "(" << m.get_rows() << " x " << m.get_cols() << ") Matrix";
-    if (m.get_name() != " ")
-      os << ": '" << m.get_name() << "'";
+    os << "(" << matrix.get_rows() << " x " << matrix.get_cols() << ") Matrix";
+    if (matrix.get_name() != " ")
+      os << ": '" << matrix.get_name() << "'";
     os << "\n[ ";
-    for (unsigned int i = 0; i < m.get_rows(); i++) {
+    for (unsigned int i = 0; i < matrix.get_rows(); i++) {
       os << "[ ";
-      for (unsigned int j = 0; j < m.get_cols(); j++) {
-        os << m(i,j) << " ";
+      for (unsigned int j = 0; j < matrix.get_cols(); j++) {
+        os << matrix(i,j) << " ";
       }
       os << "]";
-      if (i < m.get_rows()-1)
+      if (i < matrix.get_rows()-1)
         os << "\n  ";
     }
     os << " ]" << std::endl;
@@ -427,5 +445,43 @@ namespace ET
   Matrix<T> Matrix<T>::transpose()
   {
 
+  }
+
+  template<typename T>
+  Matrix<T> identity(unsigned int n)
+  {
+    std::string name = std::to_string(n) + " x " + std::to_string(n) +
+                        " Identity Matrix";
+    Matrix<T> matrix(name, n, n, 0.0);
+
+    for (unsigned int i = 0; i < n; i++)
+    {
+      matrix(i,i) = 1.0;
+    }
+    return matrix;
+  }
+  template<typename T>
+  Matrix<T> zeroes(unsigned int n)
+  {
+    Matrix<T> z(n, n, 0.0);
+    return z;
+  }
+  template<typename T>
+  Matrix<T> zeroes(unsigned int n, unsigned int m)
+  {
+    Matrix<T> z(n, m, 0.0);
+    return z;
+  }
+  template<typename T>
+  Matrix<T> ones(unsigned int n)
+  {
+    Matrix<T> o(n, n, 1.0);
+    return o;
+  }
+  template<typename T>
+  Matrix<T> ones(unsigned int n, unsigned int m)
+  {
+    Matrix<T> o(n, m, 1.0);
+    return o;
   }
 }

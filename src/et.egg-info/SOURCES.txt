@@ -1,0 +1,6 @@
+setup.py
+src/et.egg-info/PKG-INFO
+src/et.egg-info/SOURCES.txt
+src/et.egg-info/dependency_links.txt
+src/et.egg-info/not-zip-safe
+src/et.egg-info/top_level.txt

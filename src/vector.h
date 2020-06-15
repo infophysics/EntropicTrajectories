@@ -33,4 +33,6 @@ namespace ET
   //  Special zero vector
   template<typename T>
   Vector<T> zeroes(unsigned int n);
+
+  template class Vector<double>;
 }

@@ -13,12 +13,17 @@
 
 namespace ET
 {
-  template<typename T> class Matrix
+  //  This matrix class acts as a general container for n x m matrices
+  //  which are row ordered, i.e. m(i,j) picks the element of the ith row
+  //  and the jth column.  It wraps several methods from BLAS and LAPACK.
+  //
+  template<typename T>
+  class Matrix
   {
   public:
     Matrix();
     ~Matrix();
-    Matrix(const Matrix<T>& m);
+    Matrix(const Matrix<T>& matrix);
     Matrix(unsigned int n);
     Matrix(std::string name, unsigned int n);
     Matrix(unsigned int n, unsigned int m);
@@ -47,17 +52,17 @@ namespace ET
     void set_col(unsigned int i, std::vector<T> col);
 
     //  Operator overloads
-    Matrix<T>& operator=(const Matrix<T>& m);
-    bool operator==(const Matrix<T>& m);
+    Matrix<T>& operator=(const Matrix<T>& matrix);
+    bool operator==(const Matrix<T>& matrix);
     //  Matrix algebra
-    Matrix<T> operator+(const Matrix<T>& m);
-    Matrix<T>& operator+=(const Matrix<T>& m);
-    Matrix<T> operator-(const Matrix<T>& m);
-    Matrix<T>& operator-=(const Matrix<T>& m);
+    Matrix<T> operator+(const Matrix<T>& matrix);
+    Matrix<T>& operator+=(const Matrix<T>& matrix);
+    Matrix<T> operator-(const Matrix<T>& matrix);
+    Matrix<T>& operator-=(const Matrix<T>& matrix);
     //  Using CBLAS for multiplication
-    Matrix<T> operator*(const Matrix<T>& m);
-    Matrix<T> brute_mul(const Matrix<T>& m);
-    Matrix<T>& operator*=(const Matrix<T>& m);
+    Matrix<T> operator*(const Matrix<T>& matrix);
+    Matrix<T> brute_mul(const Matrix<T>& matrix);
+    Matrix<T>& operator*=(const Matrix<T>& matrix);
     //  Scalar algebra
     Matrix<T> operator+(const T& s);
     Matrix<T> operator-(const T& s);
@@ -79,6 +84,7 @@ namespace ET
     //  Various methods
     void print();
     Matrix<T> transpose();
+    void transpose(bool inplace = true);
 
   private:
     //  _n is the number of rows, _m is the number of columns
@@ -101,5 +107,5 @@ namespace ET
   Matrix<T> ones(unsigned int n, unsigned int m);
 
   template<typename T>
-  std::ostream& operator<<(std::ostream& os, const Matrix<T>& m);
+  std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
 }

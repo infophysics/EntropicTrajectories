@@ -16,6 +16,10 @@ int main()
 
   std::cout << mat1;
 
+	ET::Matrix<double> id  = ET::identity<double>(10);
+
+	std::cout << id;
+
 	unsigned int N = 10000;
 	unsigned int dim = 25;
 	double max_range = 10.0;
@@ -27,7 +31,6 @@ int main()
 		for (size_t d = 0; d < dim; d++)
 			samples[i][d] = max_range * (rand() % 1000) / (1000.0);
 	}
-	std::cout << "done\n";
 	g.set_grid(samples);
 	g.find_neighbors(10);
 
