@@ -16,8 +16,8 @@ int main()
 
   std::cout << mat1;
 
-	unsigned int N = 100;
-	unsigned int dim = 10;
+	unsigned int N = 10000;
+	unsigned int dim = 25;
 	double max_range = 10.0;
 	std::vector<std::vector<double> > samples;
 	samples.resize(N);
@@ -29,9 +29,9 @@ int main()
 	}
 	std::cout << "done\n";
 	g.set_grid(samples);
-	g.find_neighbors(3);
+	g.find_neighbors(10);
 
-	
+
 
   return 0;
 }
