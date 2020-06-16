@@ -167,7 +167,7 @@ namespace ET
     return *this;
   }
   template<typename T>
-  bool Matrix<T>::operator==(const Matrix<T>& matrix)
+  bool Matrix<T>::operator==(const Matrix<T>& matrix) const
   {
     if (_n != matrix.get_rows() || _m != matrix.get_cols())
       return false;
@@ -179,7 +179,7 @@ namespace ET
   }
   //  Matrix algebra
   template<typename T>
-  Matrix<T> Matrix<T>::operator+(const Matrix<T>& matrix)
+  Matrix<T> Matrix<T>::operator+(const Matrix<T>& matrix) const
   {
     if(_n != matrix.get_rows() || _m != matrix.get_cols())
     {
@@ -206,7 +206,7 @@ namespace ET
     return *this;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator-(const Matrix<T>& matrix)
+  Matrix<T> Matrix<T>::operator-(const Matrix<T>& matrix) const
   {
     if(_n != matrix.get_rows() || _m != matrix.get_cols())
     {
@@ -233,7 +233,7 @@ namespace ET
     return *this;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator*(const Matrix<T>& matrix)
+  Matrix<T> Matrix<T>::operator*(const Matrix<T>& matrix) const
   {
     if(_m != matrix.get_rows())
     {
@@ -267,7 +267,7 @@ namespace ET
     return Matrix<T>(_n,matrix.get_cols(),l);
   }
   template<typename T>
-  Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& matrix)
+  Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& matrix) const
   {
     if(_m != matrix.get_rows())
     {
@@ -293,7 +293,7 @@ namespace ET
   }
   //  Scalar algebra
   template<typename T>
-  Matrix<T> Matrix<T>::operator+(const T& s)
+  Matrix<T> Matrix<T>::operator+(const T& s) const
   {
     Matrix<T> l(_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
@@ -302,7 +302,7 @@ namespace ET
     return l;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator-(const T& s)
+  Matrix<T> Matrix<T>::operator-(const T& s) const
   {
     Matrix<T> l(_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
@@ -311,7 +311,7 @@ namespace ET
     return l;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator*(const T& s)
+  Matrix<T> Matrix<T>::operator*(const T& s) const
   {
     Matrix<T> l(_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
@@ -320,7 +320,7 @@ namespace ET
     return l;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::operator/(const T& s)
+  Matrix<T> Matrix<T>::operator/(const T& s) const
   {
     Matrix<T> l(_n,_m,0.0);
     if (s == 0)
@@ -431,16 +431,39 @@ namespace ET
       std::cout << ": '" << _name << "'";
     std:: cout << "\n[ ";
     for (unsigned int i = 0; i < _n; i++) {
-      std::cout << "[ ";
       for (unsigned int j = 0; j < _m; j++) {
-        std::cout << this->_mat[i*_m + j] << " ";
+        std::cout << this->_mat[i*_m + j];
+        if (j < _m-1)
+        std::cout << "\t";
       }
-      std::cout << "]";
       if (i < _n-1)
         std::cout << "\n  ";
     }
     std::cout << " ]" << std::endl;
   }
+  template<typename T>
+  std::string Matrix<T>::summary()
+  {
+    std::string sum = "dim: (" + std::to_string(_n)
+                    + "x" + std::to_string(_m)
+                    + "), type: "
+                    + type_name<decltype(_mat[0])>();
+    if (_name != " ")
+      sum +=  ", name: '" + _name + "'";
+    sum += "\n[ ";
+    for (unsigned int i = 0; i < _n; i++) {
+      for (unsigned int j = 0; j < _m; j++) {
+        sum += std::to_string(this->_mat[i*_m + j]);
+        if (j < _m-1)
+        sum += "\t";
+      }
+      if (i < _n-1)
+        sum += "\n  ";
+    }
+    sum += " ]\n";
+  return sum;
+  }
+
   template<typename T>
   Matrix<T> Matrix<T>::transpose()
   {

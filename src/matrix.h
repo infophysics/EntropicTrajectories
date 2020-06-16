@@ -10,6 +10,7 @@
 #include <lapacke.h>
 #include <cblas.h>
 #include "vector.h"
+#include "utils.h"
 
 namespace ET
 {
@@ -53,21 +54,21 @@ namespace ET
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& matrix);
-    bool operator==(const Matrix<T>& matrix);
+    bool operator==(const Matrix<T>& matrix) const;
     //  Matrix algebra
-    Matrix<T> operator+(const Matrix<T>& matrix);
+    Matrix<T> operator+(const Matrix<T>& matrix) const;
     Matrix<T>& operator+=(const Matrix<T>& matrix);
-    Matrix<T> operator-(const Matrix<T>& matrix);
+    Matrix<T> operator-(const Matrix<T>& matrix) const;
     Matrix<T>& operator-=(const Matrix<T>& matrix);
     //  Using CBLAS for multiplication
-    Matrix<T> operator*(const Matrix<T>& matrix);
-    Matrix<T> brute_mul(const Matrix<T>& matrix);
+    Matrix<T> operator*(const Matrix<T>& matrix) const;
+    Matrix<T> brute_mul(const Matrix<T>& matrix) const;
     Matrix<T>& operator*=(const Matrix<T>& matrix);
     //  Scalar algebra
-    Matrix<T> operator+(const T& s);
-    Matrix<T> operator-(const T& s);
-    Matrix<T> operator*(const T& s);
-    Matrix<T> operator/(const T& s);
+    Matrix<T> operator+(const T& s) const;
+    Matrix<T> operator-(const T& s) const;
+    Matrix<T> operator*(const T& s) const;
+    Matrix<T> operator/(const T& s) const;
     Matrix<T>& operator+=(const T& s);
     Matrix<T>& operator-=(const T& s);
     Matrix<T>& operator*=(const T& s);
@@ -83,6 +84,7 @@ namespace ET
 
     //  Various methods
     void print();
+    std::string summary();
     Matrix<T> transpose();
     void transpose(bool inplace = true);
 
