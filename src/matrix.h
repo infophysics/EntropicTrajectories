@@ -108,4 +108,6 @@ namespace ET
 
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
+
+  template class Matrix<double>;
 }

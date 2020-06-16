@@ -93,6 +93,7 @@ CMakeFiles/etraj.dir/src/bindings.cpp.o
  /home/ncarrara/anaconda3/include/python3.7m/warnings.h
  /home/ncarrara/anaconda3/include/python3.7m/weakrefobject.h
  /home/ncarrara/workspace/EDMC/src/bindings.cpp
+ /home/ncarrara/workspace/EDMC/src/matrix.h
  /home/ncarrara/workspace/EDMC/src/vector.h
 CMakeFiles/etraj.dir/src/grid.cpp.o
  ../../include/nanoflann/examples/KDTreeVectorOfVectorsAdaptor.h

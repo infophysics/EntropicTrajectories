@@ -14,6 +14,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../../include/nanoflann"
   "../../include/nanoflann/examples"
   "../../include/nanoflann/include"
+  "/usr/include/x86_64-linux-gnu"
   )
 
 # Targets to which this target links.

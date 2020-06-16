@@ -124,6 +124,9 @@ etraj_EXTERNAL_OBJECTS =
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/grid.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/bindings.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/build.make
+../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
+../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
+../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared module ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/etraj.dir/link.txt --verbose=$(VERBOSE)

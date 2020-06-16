@@ -8,6 +8,7 @@
 #include "vector.cpp"
 #include "grid.cpp"
 #include <lapacke.h>
+#include <cblas.h>
 
 int main()
 {

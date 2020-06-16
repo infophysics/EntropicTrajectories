@@ -65,43 +65,6 @@ CMAKE_SOURCE_DIR = /home/ncarrara/workspace/EDMC
 CMAKE_BINARY_DIR = /home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7
 
 #=============================================================================
-# Target rules for target CMakeFiles/example.dir
-
-# All Build rule for target.
-CMakeFiles/example.dir/all:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/depend
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=6,7 "Built target example"
-.PHONY : CMakeFiles/example.dir/all
-
-# Include target in all.
-all: CMakeFiles/example.dir/all
-
-.PHONY : all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/example.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/example.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles 0
-.PHONY : CMakeFiles/example.dir/rule
-
-# Convenience name for target.
-example: CMakeFiles/example.dir/rule
-
-.PHONY : example
-
-# clean rule for target.
-CMakeFiles/example.dir/clean:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/clean
-.PHONY : CMakeFiles/example.dir/clean
-
-# clean rule for target.
-clean: CMakeFiles/example.dir/clean
-
-.PHONY : clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/etraj.dir
 
 # All Build rule for target.

@@ -111,19 +111,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named example
-
-# Build rule for target.
-example: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 example
-.PHONY : example
-
-# fast build rule for target.
-example/fast:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/build
-.PHONY : example/fast
-
-#=============================================================================
 # Target rules for targets named etraj
 
 # Build rule for target.
@@ -190,33 +177,6 @@ src/grid.cpp.s:
 	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/grid.cpp.s
 .PHONY : src/grid.cpp.s
 
-src/main.o: src/main.cpp.o
-
-.PHONY : src/main.o
-
-# target to build an object file
-src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
-
-src/main.i: src/main.cpp.i
-
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
-
-src/main.s: src/main.cpp.s
-
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
-
 src/matrix.o: src/matrix.cpp.o
 
 .PHONY : src/matrix.o
@@ -278,18 +238,14 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... example"
 	@echo "... etraj"
+	@echo "... edit_cache"
 	@echo "... src/bindings.o"
 	@echo "... src/bindings.i"
 	@echo "... src/bindings.s"
 	@echo "... src/grid.o"
 	@echo "... src/grid.i"
 	@echo "... src/grid.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
 	@echo "... src/matrix.o"
 	@echo "... src/matrix.i"
 	@echo "... src/matrix.s"
