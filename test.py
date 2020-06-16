@@ -9,3 +9,6 @@ m2 = Matrix("B",2,2,[1,2,3,4])
 m3 = m1 * m2
 m3.set_name("C")
 print(m3)
+
+m4 = Matrix("D",3,10,[np.random.normal(0,10,1)[0] for i in range(100)])
+print(m4)

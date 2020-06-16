@@ -28,7 +28,8 @@ set(INCLUDE_DIR "include/")
 include_directories(${SOURCE_DIR})
 set(SOURCES "${SOURCE_DIR}vector.cpp"
             "${SOURCE_DIR}matrix.cpp"
-            "${SOURCE_DIR}grid.cpp")
+            "${SOURCE_DIR}grid.cpp"
+            "${SOURCE_DIR}utils.cpp")
 
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"

@@ -143,6 +143,9 @@ CMakeFiles/etraj.dir/src/matrix.cpp.o: ../../src/vector.h
 CMakeFiles/etraj.dir/src/matrix.cpp.o: /usr/include/x86_64-linux-gnu/cblas.h
 CMakeFiles/etraj.dir/src/matrix.cpp.o: /usr/include/x86_64-linux-gnu/openblas_config.h
 
+CMakeFiles/etraj.dir/src/utils.cpp.o: ../../src/utils.cpp
+CMakeFiles/etraj.dir/src/utils.cpp.o: ../../src/utils.h
+
 CMakeFiles/etraj.dir/src/vector.cpp.o: ../../src/vector.cpp
 CMakeFiles/etraj.dir/src/vector.cpp.o: ../../src/vector.h
 

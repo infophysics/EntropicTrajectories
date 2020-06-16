@@ -204,6 +204,33 @@ src/matrix.cpp.s:
 	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/matrix.cpp.s
 .PHONY : src/matrix.cpp.s
 
+src/utils.o: src/utils.cpp.o
+
+.PHONY : src/utils.o
+
+# target to build an object file
+src/utils.cpp.o:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/utils.cpp.o
+.PHONY : src/utils.cpp.o
+
+src/utils.i: src/utils.cpp.i
+
+.PHONY : src/utils.i
+
+# target to preprocess a source file
+src/utils.cpp.i:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/utils.cpp.i
+.PHONY : src/utils.cpp.i
+
+src/utils.s: src/utils.cpp.s
+
+.PHONY : src/utils.s
+
+# target to generate assembly for a file
+src/utils.cpp.s:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/utils.cpp.s
+.PHONY : src/utils.cpp.s
+
 src/vector.o: src/vector.cpp.o
 
 .PHONY : src/vector.o
@@ -249,6 +276,9 @@ help:
 	@echo "... src/matrix.o"
 	@echo "... src/matrix.i"
 	@echo "... src/matrix.s"
+	@echo "... src/utils.o"
+	@echo "... src/utils.i"
+	@echo "... src/utils.s"
 	@echo "... src/vector.o"
 	@echo "... src/vector.i"
 	@echo "... src/vector.s"

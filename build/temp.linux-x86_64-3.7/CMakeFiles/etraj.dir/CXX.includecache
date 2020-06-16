@@ -47,6 +47,14 @@ string
 -
 cstdlib
 -
+sstream
+-
+iomanip
+-
+math.h
+-
+iostream
+-
 
 /home/ncarrara/workspace/EDMC/src/vector.h
 vector

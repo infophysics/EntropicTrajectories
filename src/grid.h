@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "utils.h"
 #include "matrix.h"
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"

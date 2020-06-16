@@ -434,7 +434,7 @@ namespace ET
       for (unsigned int j = 0; j < _m; j++) {
         std::cout << this->_mat[i*_m + j];
         if (j < _m-1)
-        std::cout << "\t";
+        std::cout << "   ";
       }
       if (i < _n-1)
         std::cout << "\n  ";
@@ -444,24 +444,218 @@ namespace ET
   template<typename T>
   std::string Matrix<T>::summary()
   {
+    std::stringstream s;
+    s.str("");
+    s.clear();
     std::string sum = "dim: (" + std::to_string(_n)
                     + "x" + std::to_string(_m)
                     + "), type: "
                     + type_name<decltype(_mat[0])>();
     if (_name != " ")
+    {
       sum +=  ", name: '" + _name + "'";
-    sum += "\n[ ";
-    for (unsigned int i = 0; i < _n; i++) {
-      for (unsigned int j = 0; j < _m; j++) {
-        sum += std::to_string(this->_mat[i*_m + j]);
-        if (j < _m-1)
-        sum += "\t";
-      }
-      if (i < _n-1)
-        sum += "\n  ";
     }
-    sum += " ]\n";
-  return sum;
+    sum += "\n[ ";
+    if (_n < 10)
+    {
+      for (unsigned int i = 0; i < _n; i++)
+      {
+        if (_m < 10)
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          for (unsigned int j = 0; j < _m; j++)
+          {
+            //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + j];
+            sum += scientific_not(this->_mat[i*_m + j],3);
+            if (j < _m-1)
+            {
+              if (_mat[i*_m + j+1] > 0.0)
+                sum += "   ";
+              else
+                sum += "  ";
+            }
+          }
+        }
+        else
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 0];
+          sum += scientific_not(this->_mat[i*_m + 0],3);
+          if (_mat[i*_m + 1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 1];
+          sum += scientific_not(this->_mat[i*_m + 1],3);
+          if (_mat[i*_m + 2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 2];
+          sum += scientific_not(this->_mat[i*_m + 2],3);
+          sum += "   ";
+          sum += "...   ...   ...   ";
+          if (_mat[i*_m + _m-3] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-3];
+          sum += scientific_not(this->_mat[i*_m + _m-3],3);
+          if (_mat[i*_m + _m-2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-2];
+          sum += scientific_not(this->_mat[i*_m + _m-2],3);
+          if (_mat[i*_m + _m-1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-1];
+          sum += scientific_not(this->_mat[i*_m + _m-1],3);
+        }
+        if (i < _n-1)
+        {
+          sum += "\n  ";
+        }
+      }
+    }
+    else
+    {
+      for (unsigned int i = 0; i < 3; i++)
+      {
+        if (_m < 10)
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          for (unsigned int j = 0; j < _m; j++)
+          {
+            //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + j];
+            sum += scientific_not(this->_mat[i*_m + j],3);
+            if (j < _m-1)
+            {
+              if (_mat[i*_m + j+1] > 0.0)
+                sum += "   ";
+              else
+                sum += "  ";
+            }
+          }
+        }
+        else
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 0];
+          sum += scientific_not(this->_mat[i*_m + 0],3);
+          if (_mat[i*_m + 1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 1];
+          sum += scientific_not(this->_mat[i*_m + 1],3);
+          if (_mat[i*_m + 2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 2];
+          sum += scientific_not(this->_mat[i*_m + 2],3);
+          sum += "   ";
+          sum += "...   ...   ...   ";
+          if (_mat[i*_m + _m-3] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-3];
+          sum += scientific_not(this->_mat[i*_m + _m-3],3);
+          if (_mat[i*_m + _m-2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-2];
+          sum += scientific_not(this->_mat[i*_m + _m-2],3);
+          if (_mat[i*_m + _m-1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-1];
+          sum += scientific_not(this->_mat[i*_m + _m-1],3);
+        }
+        if (i < _n-1)
+          sum += "\n  ";
+      }
+      sum += "    ...";
+      if (_m < 10)
+      {
+        for (unsigned int j = 0; j < _m-1; j++)
+        {
+          sum += "         ...";
+        }
+        sum += "\n  ";
+      }
+      else
+      {
+        sum += "         ...         ...      ...   ...   ...       ...         ...         ...\n  ";
+      }
+      for (unsigned int i = _n-3; i < _n; i++)
+      {
+        if (_m < 10)
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          for (unsigned int j = 0; j < _m; j++)
+          {
+            //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + j];
+            sum += scientific_not(this->_mat[i*_m + j],3);
+            if (j < _m-1)
+            {
+              if (_mat[i*_m + j+1] > 0.0)
+                sum += "   ";
+              else
+                sum += "  ";
+            }
+          }
+        }
+        else
+        {
+          if (_mat[i*_m] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 0];
+          sum += scientific_not(this->_mat[i*_m + 0],3);
+          if (_mat[i*_m + 1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 1];
+          sum += scientific_not(this->_mat[i*_m + 1],3);
+          if (_mat[i*_m + 2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + 2];
+          sum += scientific_not(this->_mat[i*_m + 2],3);
+          sum += "   ";
+          sum += "...   ...   ...   ";
+          if (_mat[i*_m + _m-3] > 0.0)
+            sum += " ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-3];
+          sum += scientific_not(this->_mat[i*_m + _m-3],3);
+          if (_mat[i*_m + _m-2] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-2];
+          sum += scientific_not(this->_mat[i*_m + _m-2],3);
+          if (_mat[i*_m + _m-1] > 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+          //s << std::fixed << std::setprecision(3) << this->_mat[i*_m + _m-1];
+          sum += scientific_not(this->_mat[i*_m + _m-1],3);
+        }
+        if (i < _n-1)
+          sum += "\n  ";
+      }
+    }
+    sum += "  ]\n";
+    return sum;
   }
 
   template<typename T>

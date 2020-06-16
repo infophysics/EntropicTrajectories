@@ -96,9 +96,22 @@ CMakeFiles/etraj.dir/src/grid.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/etraj.dir/src/grid.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ncarrara/workspace/EDMC/src/grid.cpp -o CMakeFiles/etraj.dir/src/grid.cpp.s
 
+CMakeFiles/etraj.dir/src/utils.cpp.o: CMakeFiles/etraj.dir/flags.make
+CMakeFiles/etraj.dir/src/utils.cpp.o: ../../src/utils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/etraj.dir/src/utils.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/etraj.dir/src/utils.cpp.o -c /home/ncarrara/workspace/EDMC/src/utils.cpp
+
+CMakeFiles/etraj.dir/src/utils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/etraj.dir/src/utils.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ncarrara/workspace/EDMC/src/utils.cpp > CMakeFiles/etraj.dir/src/utils.cpp.i
+
+CMakeFiles/etraj.dir/src/utils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/etraj.dir/src/utils.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ncarrara/workspace/EDMC/src/utils.cpp -o CMakeFiles/etraj.dir/src/utils.cpp.s
+
 CMakeFiles/etraj.dir/src/bindings.cpp.o: CMakeFiles/etraj.dir/flags.make
 CMakeFiles/etraj.dir/src/bindings.cpp.o: ../../src/bindings.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/etraj.dir/src/bindings.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/etraj.dir/src/bindings.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/etraj.dir/src/bindings.cpp.o -c /home/ncarrara/workspace/EDMC/src/bindings.cpp
 
 CMakeFiles/etraj.dir/src/bindings.cpp.i: cmake_force
@@ -114,6 +127,7 @@ etraj_OBJECTS = \
 "CMakeFiles/etraj.dir/src/vector.cpp.o" \
 "CMakeFiles/etraj.dir/src/matrix.cpp.o" \
 "CMakeFiles/etraj.dir/src/grid.cpp.o" \
+"CMakeFiles/etraj.dir/src/utils.cpp.o" \
 "CMakeFiles/etraj.dir/src/bindings.cpp.o"
 
 # External object files for target etraj
@@ -122,13 +136,14 @@ etraj_EXTERNAL_OBJECTS =
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/vector.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/matrix.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/grid.cpp.o
+../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/utils.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/src/bindings.cpp.o
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/build.make
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: /usr/lib/x86_64-linux-gnu/libopenblas.so
 ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so: CMakeFiles/etraj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX shared module ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared module ../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/etraj.dir/link.txt --verbose=$(VERBOSE)
 	/usr/bin/strip /home/ncarrara/workspace/EDMC/build/lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so
 
