@@ -86,6 +86,31 @@ namespace ET
   : _n(n), _m(m), _name(name), _mat(flat)
   {
   }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::vector<std::vector<T> > array)
+  : _n(array.size()), _m(array[0].size()), _name(" ")
+  {
+    std::vector<T> flat;
+    for (unsigned int i = 0; i < _n; i++)
+    {
+      flat.insert(end(flat),begin(array[i]),end(array[i]));
+    }
+    _mat = flat;
+  }
+
+  template<typename T>
+  Matrix<T>::Matrix(std::string name, std::vector<std::vector<T> > array)
+  : _n(array.size()), _m(array[0].size()), _name(name)
+  {
+    std::vector<T> flat;
+    for (unsigned int i = 0; i < _n; i++)
+    {
+      flat.insert(end(flat),begin(array[i]),end(array[i]));
+    }
+    _mat = flat;
+  }
+
   template<typename T>
   unsigned int Matrix<T>::get_rows() const
   {
@@ -150,6 +175,27 @@ namespace ET
       _mat[j*_m + i] = col[j];
     }
   }
+  template<typename T>
+  void Matrix<T>::set_mat(unsigned int m, std::vector<T> mat)
+  {
+    _n = mat.size()/m;
+    _m = m;
+    _mat = mat;
+  }
+  template<typename T>
+  void Matrix<T>::set_mat(std::vector<std::vector<T> > mat)
+  {
+    _n = mat.size();
+    _m = mat[0].size();
+    _mat.resize(_n*_m);
+    for (unsigned int i = 0; i < _n; i++)
+    {
+      for (unsigned int j = 0; j < _m; j++)
+      {
+        _mat[i*_m + j] = mat[i][j];
+      }
+    }
+  }
 
   //  Operator overloads
   template<typename T>
@@ -176,6 +222,27 @@ namespace ET
           return false;
     }
     return true;
+  }
+  template<typename T>
+  bool Matrix<T>::operator!=(const Matrix<T>& matrix) const
+  {
+    if (_n != matrix.get_rows() || _m != matrix.get_cols())
+      return true;
+    for (unsigned int i = 0; i < _n*_m; i++) {
+        if (matrix(i) != _mat[i])
+          return true;
+    }
+    return false;
+  }
+  template<typename T>
+  Matrix<T> Matrix<T>::operator-() const
+  {
+    std::vector<T> mat(_n*_m);
+    for (unsigned int i = 0; i < _n*_m; i++)
+    {
+      mat[i] = -1*_mat[i];
+    }
+    return Matrix<T>(_n,_m,mat);
   }
   //  Matrix algebra
   template<typename T>
@@ -330,6 +397,7 @@ namespace ET
     }
     return l;
   }
+
   template<typename T>
   Matrix<T>& Matrix<T>::operator+=(const T& s)
   {
@@ -654,7 +722,7 @@ namespace ET
           sum += "\n  ";
       }
     }
-    sum += "  ]\n";
+    sum += "  ]";
     return sum;
   }
 

@@ -14,6 +14,8 @@ namespace ET
         std::stringstream s;
         s << std::fixed << std::setprecision(dec) << y;
         std::string result = s.str() + "e";
+        if (exp < 150)
+            exp = 0;
         if (exp >= 0)
             if (exp < 10)
                 result += "+0" + std::to_string(abs(exp));

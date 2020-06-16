@@ -38,6 +38,8 @@ namespace ET
     Matrix(unsigned int n, unsigned int m, std::vector<T> flat);
     Matrix(std::string name, unsigned int n,
       unsigned int m, std::vector<T> flat);
+    Matrix(std::vector<std::vector<T> > array);
+    Matrix(std::string name, std::vector<std::vector<T> > array);
     //  Getters
     unsigned int get_rows() const;
     unsigned int get_cols() const;
@@ -51,10 +53,14 @@ namespace ET
     void set_name(std::string name);
     void set_row(unsigned int i, std::vector<T> row);
     void set_col(unsigned int i, std::vector<T> col);
+    void set_mat(unsigned int m, std::vector<T> mat);
+    void set_mat(std::vector<std::vector<T> > mat);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& matrix);
     bool operator==(const Matrix<T>& matrix) const;
+    bool operator!=(const Matrix<T>& matrix) const;
+    Matrix<T> operator-() const;
     //  Matrix algebra
     Matrix<T> operator+(const Matrix<T>& matrix) const;
     Matrix<T>& operator+=(const Matrix<T>& matrix);
@@ -73,6 +79,59 @@ namespace ET
     Matrix<T>& operator-=(const T& s);
     Matrix<T>& operator*=(const T& s);
     Matrix<T>& operator/=(const T& s);
+    //  Overloads of scalar operations from the left.
+    //  since we are trying to friend a template argument,
+    //  the friend method must be defined within the class block.
+    friend Matrix<T> operator+(T s, const Matrix<T>& matrix)
+    {
+      unsigned int n = matrix.get_rows();
+      unsigned int m = matrix.get_cols();
+      Matrix<T> l(n,m,0.0);
+      for (unsigned int i = 0; i < n*m; i++) {
+          l(i) = matrix(i) + s;
+      }
+      return l;
+    }
+    friend Matrix<T> operator-(T s, const Matrix<T>& matrix)
+    {
+      unsigned int n = matrix.get_rows();
+      unsigned int m = matrix.get_cols();
+      Matrix<T> l(n,m,0.0);
+      for (unsigned int i = 0; i < n*m; i++) {
+          l(i) = s - matrix(i);
+      }
+      return l;
+    }
+    friend Matrix<T> operator*(T s, const Matrix<T>& matrix)
+    {
+      unsigned int n = matrix.get_rows();
+      unsigned int m = matrix.get_cols();
+      Matrix<T> l(n,m,0.0);
+      for (unsigned int i = 0; i < n*m; i++) {
+          l(i) = matrix(i) * s;
+      }
+      return l;
+    }
+    friend Matrix<T> operator/(T s, const Matrix<T>& matrix)
+    {
+      unsigned int n = matrix.get_rows();
+      unsigned int m = matrix.get_cols();
+      Matrix<T> l(n,m,0.0);
+      std::vector<T> mat(n*m);
+      for (unsigned int i = 0; i < n*m; i++)
+      {
+        if (matrix(i) == 0)
+        {
+          return l;
+        }
+        else
+        {
+          mat[i] = s / matrix(i);
+        }
+      }
+      l.set_mat(m, mat);
+      return l;
+    }
     //  Multiplying a vector
     Vector<T> operator*(const Vector<T>& v);
     //  Access operators

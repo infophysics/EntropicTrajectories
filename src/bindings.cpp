@@ -36,6 +36,8 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string, unsigned int, std::vector<double>>())
     .def(py::init<unsigned int, unsigned int, std::vector<double>>())
     .def(py::init<std::string, unsigned int, unsigned int, std::vector<double>>())
+		.def(py::init<std::vector<std::vector<double>>>())
+		.def(py::init<std::string, std::vector<std::vector<double>>>())
 		//	getters
 		.def("get_rows", &ET::Matrix<double>::get_rows)
 		.def("get_cols", &ET::Matrix<double>::get_cols)
@@ -49,6 +51,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_col", &ET::Matrix<double>::set_col)
     //  operator overloads
 		.def(py::self == py::self)
+		.def(py::self != py::self)
     .def(py::self + py::self)
     .def(py::self += py::self)
     .def(py::self - py::self)
@@ -56,17 +59,19 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::self * py::self)
     .def(py::self *= py::self)
     .def(py::self + double())
-    //.def(double() + py::self)
     .def(py::self += double())
     .def(py::self - double())
-    //.def(double() - py::self)
     .def(py::self -= double())
     .def(py::self * double())
-    //.def(double() * py::self)
     .def(py::self *= double())
     .def(py::self / double())
-    //.def(double() / py::self)
     .def(py::self /= double())
+		.def(-py::self)
+		.def(double() + py::self)
+		.def(double() - py::self)
+		.def(double() * py::self)
+		.def(double() / py::self)
+
 
     .def("__call__", [](const ET::Matrix<double> &self, int i, int j) {
 				return self(i,j);
