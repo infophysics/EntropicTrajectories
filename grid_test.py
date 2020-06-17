@@ -7,7 +7,7 @@ import time
 
 g = Grid("10D",10)
 
-N = 10
+N = 1000
 #   generate random 2d data
 x = np.random.normal(0,1,N)
 y = np.random.normal(0,1,N)
@@ -39,8 +39,10 @@ nano_neighbors_radius = g.get_neighbors_radius()
 nano_distances_radius = g.get_distances_radius()
 start = time.time()
 tree = cKDTree(data)
-ckdtree_neighbors_radius = tree.query_ball_point(data,2.0)
+ckdtree_neighbors_radius = tree.query_ball_point(data,np.sqrt(2.0))
 end = time.time()
 print("cKDTree: ", end - start)
-print(nano_neighbors_radius)
-print(ckdtree_neighbors_radius)
+nano = [len(nano_neighbors_radius[i]) for i in range(len(nano_neighbors_radius))]
+ckdt = [len(ckdtree_neighbors_radius[i]) for i in range(len(ckdtree_neighbors_radius))]
+diff = [nano[i] - ckdt[i] for i in range(len(nano))]
+print(sum(diff))
