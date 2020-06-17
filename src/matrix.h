@@ -9,6 +9,8 @@
 #include <complex>
 #include <lapacke.h>
 #include <cblas.h>
+#include <stdint.h>
+
 #include "vector.h"
 #include "utils.h"
 
@@ -25,35 +27,36 @@ namespace ET
     Matrix();
     ~Matrix();
     Matrix(const Matrix<T>& matrix);
-    Matrix(unsigned int n);
-    Matrix(std::string name, unsigned int n);
-    Matrix(unsigned int n, unsigned int m);
-    Matrix(std::string name, unsigned int n, unsigned int m);
-    Matrix(unsigned int n, unsigned int m, const T& init);
-    Matrix(std::string name, unsigned int n, unsigned int m, const T& init);
+    Matrix(uint64_t n);
+    Matrix(std::string name, uint64_t n);
+    Matrix(uint64_t n, uint64_t m);
+    Matrix(std::string name, uint64_t n, uint64_t m);
+    Matrix(uint64_t n, uint64_t m, const T& init);
+    Matrix(std::string name, uint64_t n, uint64_t m, const T& init);
 
     //  Constructors passing elements
-    Matrix(unsigned int n, std::vector<T> flat);
-    Matrix(std::string name, unsigned int n, std::vector<T> flat);
-    Matrix(unsigned int n, unsigned int m, std::vector<T> flat);
-    Matrix(std::string name, unsigned int n,
-      unsigned int m, std::vector<T> flat);
+    Matrix(uint64_t n, std::vector<T> flat);
+    Matrix(std::string name, uint64_t n, std::vector<T> flat);
+    Matrix(uint64_t n, uint64_t m, std::vector<T> flat);
+    Matrix(std::string name, uint64_t n,
+      uint64_t m, std::vector<T> flat);
     Matrix(std::vector<std::vector<T> > array);
     Matrix(std::string name, std::vector<std::vector<T> > array);
+
     //  Getters
-    unsigned int get_rows() const;
-    unsigned int get_cols() const;
-    std::string get_name() const;
-    std::vector<T> get_mat() const;
-    std::vector<T> get_row(unsigned int i);
-    std::vector<T> get_col(unsigned int i);
+    uint64_t getNumRows() const;
+    uint64_t getNumCols() const;
+    std::string getName() const;
+    std::vector<T> getArray() const;
+    std::vector<T> getRow(uint64_t i);
+    std::vector<T> getCol(uint64_t i);
 
     //  Setters
-    void set_name(std::string name);
-    void set_row(unsigned int i, std::vector<T> row);
-    void set_col(unsigned int i, std::vector<T> col);
-    void set_mat(unsigned int m, std::vector<T> mat);
-    void set_mat(std::vector<std::vector<T> > mat);
+    void setName(std::string name);
+    void setRow(uint64_t i, std::vector<T> row);
+    void setCol(uint64_t i, std::vector<T> col);
+    void setArray(uint64_t m, std::vector<T> mat);
+    void setArray(std::vector<std::vector<T> > mat);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& matrix);
@@ -83,45 +86,45 @@ namespace ET
     //  the friend method must be defined within the class block.
     friend Matrix<T> operator+(T s, const Matrix<T>& matrix)
     {
-      unsigned int n = matrix.get_rows();
-      unsigned int m = matrix.get_cols();
-      std::string name = "(" + std::to_string(s) + "I + "  + matrix.get_name() + ")";
+      uint64_t n = matrix.getNumRows();
+      uint64_t m = matrix.getNumCols();
+      std::string name = "(" + std::to_string(s) + "I + "  + matrix.getName() + ")";
       Matrix<T> l(name,n,m,0.0);
-      for (unsigned int i = 0; i < n*m; i++) {
+      for (uint64_t i = 0; i < n*m; i++) {
           l(i) = matrix(i) + s;
       }
       return l;
     }
     friend Matrix<T> operator-(T s, const Matrix<T>& matrix)
     {
-      unsigned int n = matrix.get_rows();
-      unsigned int m = matrix.get_cols();
-      std::string name = "(" + std::to_string(s) + "I - "  + matrix.get_name() + ")";
+      uint64_t n = matrix.getNumRows();
+      uint64_t m = matrix.getNumCols();
+      std::string name = "(" + std::to_string(s) + "I - "  + matrix.getName() + ")";
       Matrix<T> l(name,n,m,0.0);
-      for (unsigned int i = 0; i < n*m; i++) {
+      for (uint64_t i = 0; i < n*m; i++) {
           l(i) = s - matrix(i);
       }
       return l;
     }
     friend Matrix<T> operator*(T s, const Matrix<T>& matrix)
     {
-      unsigned int n = matrix.get_rows();
-      unsigned int m = matrix.get_cols();
-      std::string name = "(" + std::to_string(s) + " * "  + matrix.get_name() + ")";
+      uint64_t n = matrix.getNumRows();
+      uint64_t m = matrix.getNumCols();
+      std::string name = "(" + std::to_string(s) + " * "  + matrix.getName() + ")";
       Matrix<T> l(name,n,m,0.0);
-      for (unsigned int i = 0; i < n*m; i++) {
+      for (uint64_t i = 0; i < n*m; i++) {
           l(i) = matrix(i) * s;
       }
       return l;
     }
     friend Matrix<T> operator/(T s, const Matrix<T>& matrix)
     {
-      unsigned int n = matrix.get_rows();
-      unsigned int m = matrix.get_cols();
-      std::string name = "(" + std::to_string(s) + " / "  + matrix.get_name() + ")";
+      uint64_t n = matrix.getNumRows();
+      uint64_t m = matrix.getNumCols();
+      std::string name = "(" + std::to_string(s) + " / "  + matrix.getName() + ")";
       Matrix<T> l(name,n,m,0.0);
       std::vector<T> mat(n*m);
-      for (unsigned int i = 0; i < n*m; i++)
+      for (uint64_t i = 0; i < n*m; i++)
       {
         if (matrix(i) == 0)
         {
@@ -132,17 +135,17 @@ namespace ET
           mat[i] = s / matrix(i);
         }
       }
-      l.set_mat(m, mat);
+      l.setArray(m, mat);
       return l;
     }
     //  Multiplying a vector
     Vector<T> operator*(const Vector<T>& v);
     //  Access operators
-    T& operator()(const unsigned int& i, const unsigned int& j);
-    const T& operator()(const unsigned int& i, const unsigned int& j) const;
+    T& operator()(const uint64_t& i, const uint64_t& j);
+    const T& operator()(const uint64_t& i, const uint64_t& j) const;
     //  Flattened access
-    T& operator()(const unsigned int& i);
-    const T& operator()(const unsigned int& i) const;
+    T& operator()(const uint64_t& i);
+    const T& operator()(const uint64_t& i) const;
 
     //  Various methods
     void print();
@@ -152,23 +155,23 @@ namespace ET
 
   private:
     //  _n is the number of rows, _m is the number of columns
-    unsigned int _n, _m;
-    std::vector<T> _mat;
+    uint64_t _n, _m;
+    std::vector<T> _array;
     //  possible name for the matrix
     std::string _name;
   };
 
   //  Various matrices
   template<typename T>
-  Matrix<T> identity(unsigned int n);
+  Matrix<T> identity(uint64_t n);
   template<typename T>
-  Matrix<T> zeroes(unsigned int n);
+  Matrix<T> zeroes(uint64_t n);
   template<typename T>
-  Matrix<T> zeroes(unsigned int n, unsigned int m);
+  Matrix<T> zeroes(uint64_t n, uint64_t m);
   template<typename T>
-  Matrix<T> ones(unsigned int n);
+  Matrix<T> ones(uint64_t n);
   template<typename T>
-  Matrix<T> ones(unsigned int n, unsigned int m);
+  Matrix<T> ones(uint64_t n, uint64_t m);
 
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);

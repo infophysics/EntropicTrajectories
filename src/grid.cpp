@@ -35,65 +35,65 @@ namespace ET
 
   }
   template<typename T>
-  unsigned int Grid<T>::get_dim()
+  unsigned int Grid<T>::getDim()
   {
     return _dim;
   }
   template<typename T>
-  unsigned int Grid<T>::get_N()
+  unsigned int Grid<T>::getN()
   {
     return _N;
   }
   template<typename T>
-  std::vector<std::vector<T> > Grid<T>::get_grid()
+  std::vector<std::vector<T> > Grid<T>::getGrid()
   {
     return _grid;
   }
   template<typename T>
-  std::string Grid<T>::get_name()
+  std::string Grid<T>::getName()
   {
     return _name;
   }
 	template<typename T>
-	std::vector<std::vector<size_t> > Grid<T>::get_neighbors()
+	std::vector<std::vector<size_t> > Grid<T>::getNeighbors()
 	{
 		return _neighbors;
 	}
 	template<typename T>
-	std::vector<std::vector<double> > Grid<T>::get_distances()
+	std::vector<std::vector<double> > Grid<T>::getDistances()
 	{
 		return _distances;
 	}
 	template<typename T>
-	std::vector<std::vector<size_t> > Grid<T>::get_neighbors_radius()
+	std::vector<std::vector<size_t> > Grid<T>::getNeighborsRadius()
 	{
 		return _neighbors_radius;
 	}
 	template<typename T>
-	std::vector<std::vector<double> > Grid<T>::get_distances_radius()
+	std::vector<std::vector<double> > Grid<T>::getDistancesRadius()
 	{
 		return _distances_radius;
 	}
 
   //  Setters
   template<typename T>
-  void Grid<T>::set_dim(unsigned int dim)
+  void Grid<T>::setDim(unsigned int dim)
   {
     _dim = dim;
   }
   template<typename T>
-  void Grid<T>::set_N(unsigned int N)
+  void Grid<T>::setN(unsigned int N)
   {
     _N = N;
   }
   template<typename T>
-  void Grid<T>::set_grid(std::vector<std::vector<T> > grid)
+  void Grid<T>::setGrid(std::vector<std::vector<T> > grid)
   {
     _grid = grid;
 		_N = grid.size();
   }
   template<typename T>
-  void Grid<T>::set_name(std::string name)
+  void Grid<T>::setName(std::string name)
   {
     _name = name;
   }
@@ -122,7 +122,7 @@ namespace ET
 
   //  points and projections
   template<typename T>
-  std::vector<T> Grid<T>::get_point(unsigned int i)
+  std::vector<T> Grid<T>::getPoint(unsigned int i)
   {
     return _grid[i];
   }
@@ -137,13 +137,13 @@ namespace ET
     return result;
   }
   template<typename T>
-  void Grid<T>::set_point(unsigned int i, std::vector<T> point)
+  void Grid<T>::setPoint(unsigned int i, std::vector<T> point)
   {
     _grid[i] = point;
   }
 
   template<typename T>
-  void Grid<T>::find_neighbors(unsigned int k)
+  void Grid<T>::queryNeighbors(unsigned int k)
   {
     _neighbors.resize(_N);
 		_distances.resize(_N);
@@ -166,10 +166,13 @@ namespace ET
   }
 
 	template<typename T>
-  void Grid<T>::radius_search(double radius)
+  void Grid<T>::queryRadius(double radius)
   {
     _neighbors_radius.resize(_N);
 		_distances_radius.resize(_N);
+		//	the algorithm looks for points that satisfy the squared
+		//	distance rather than the square root.
+		radius *= radius;
     //  generate kdtree
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> kdt(_dim, _grid, 16);
     kdt.index->buildIndex();

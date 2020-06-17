@@ -24,20 +24,20 @@ namespace ET
     Grid(std::string name, unsigned int dim, unsigned int N);
 
     //  Getters
-    unsigned int get_dim();
-    unsigned int get_N();
-    std::vector<std::vector<T> >  get_grid();
-    std::string get_name();
-    std::vector<std::vector<size_t> > get_neighbors();
-    std::vector<std::vector<double> > get_distances();
-    std::vector<std::vector<size_t> > get_neighbors_radius();
-    std::vector<std::vector<double> > get_distances_radius();
+    unsigned int getDim();
+    unsigned int getN();
+    std::vector<std::vector<T> >  getGrid();
+    std::string getName();
+    std::vector<std::vector<size_t> > getNeighbors();
+    std::vector<std::vector<double> > getDistances();
+    std::vector<std::vector<size_t> > getNeighborsRadius();
+    std::vector<std::vector<double> > getDistancesRadius();
 
     //  Setters
-    void set_dim(unsigned int dim);
-    void set_N(unsigned int N);
-    void set_grid(std::vector<std::vector<T> > grid);
-    void set_name(std::string name);
+    void setDim(unsigned int dim);
+    void setN(unsigned int N);
+    void setGrid(std::vector<std::vector<T> > grid);
+    void setName(std::string name);
 
     //  Access operators for grid
     T& operator()(const unsigned int i, const unsigned int j);
@@ -47,13 +47,13 @@ namespace ET
     const std::vector<T>& operator()(const unsigned int i) const;
 
     //  points and projections
-    std::vector<T> get_point(unsigned int i);
+    std::vector<T> getPoint(unsigned int i);
     std::vector<T> projection(unsigned int j);
-    void set_point(unsigned int i, std::vector<T> p);
+    void setPoint(unsigned int i, std::vector<T> p);
 
     //  find nearest neighbors
-    void find_neighbors(unsigned int k);
-    void radius_search(double radius);
+    void queryNeighbors(unsigned int k);
+    void queryRadius(double radius);
 
   private:
     unsigned int _dim;

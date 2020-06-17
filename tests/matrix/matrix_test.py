@@ -70,8 +70,8 @@ print("\n(2c) - n = m_1l.get_name()")
 n = m_1l.get_name()
 print("Name of m_1l: ", n)
 
-print("\n(2d) - mat = m_1l.get_mat()")
-mat = m_1l.get_mat()
+print("\n(2d) - mat = m_1l.get_array()")
+mat = m_1l.get_array()
 print("Flattened matrix of m_1l: ", mat)
 
 print("\n(2e) - row = m_1l.get_row(0)")
