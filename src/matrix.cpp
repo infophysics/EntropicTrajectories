@@ -206,6 +206,7 @@ namespace ET
 
     _n = matrix.get_rows();
     _m = matrix.get_cols();
+    _name = matrix.get_name();
     _mat.resize(_n*_m);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] = matrix(i);
@@ -242,7 +243,7 @@ namespace ET
     {
       mat[i] = -1*_mat[i];
     }
-    return Matrix<T>(_n,_m,mat);
+    return Matrix<T>(_name,_n,_m,mat);
   }
   //  Matrix algebra
   template<typename T>
@@ -253,7 +254,8 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
-    Matrix<T> l(_n, _m, 0.0);
+    std::string name = "(" + _name + " + " + matrix.get_name() + ")";
+    Matrix<T> l(name, _n, _m, 0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
         l(i) = _mat[i] + matrix(i);
     }
@@ -267,6 +269,8 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
+    std::string name = "(" + _name + " + " + matrix.get_name() + ")";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] += matrix(i);
     }
@@ -280,7 +284,8 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
-    Matrix<T> l(_n, _m, 0.0);
+    std::string name = "(" + _name + " - " + matrix.get_name() + ")";
+    Matrix<T> l(name,_n, _m, 0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
         l(i) = _mat[i] - matrix(i);
     }
@@ -294,6 +299,8 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
+    std::string name = "(" + _name + " - " + matrix.get_name() + ")";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] -= matrix(i);
     }
@@ -307,6 +314,7 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
+    std::string name = "(" + _name + " * " + matrix.get_name() + ")";
     std::vector<T> l(_n*matrix.get_cols(),0.0);
     //  CBLAS function for matrix multiplication, A*B = C.
     /*  clbas_dgemm(Order  - either CblasRowMajor or CblasColumnMajor
@@ -331,7 +339,7 @@ namespace ET
                 & *_mat.begin(), _n,
                 & *matrix.get_mat().begin(), _m,
                 0.0, & *l.begin(), _n);
-    return Matrix<T>(_n,matrix.get_cols(),l);
+    return Matrix<T>(name,_n,matrix.get_cols(),l);
   }
   template<typename T>
   Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& matrix) const
@@ -341,7 +349,8 @@ namespace ET
       std::cout << "Matrices incompatible!" << std::endl;
       return *this;
     }
-    Matrix<T> l(_n,matrix.get_cols(),0.0);
+    std::string name = "(" + _name + " * " + matrix.get_name() + ")";
+    Matrix<T> l(name,_n,matrix.get_cols(),0.0);
     for (unsigned int i = 0; i < _n; i++) {
       for (unsigned int j = 0; j < _m; j++) {
         for (unsigned int k = 0; k < _n; k++) {
@@ -362,7 +371,8 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::operator+(const T& s) const
   {
-    Matrix<T> l(_n,_m,0.0);
+    std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
+    Matrix<T> l(name,_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
         l(i) = _mat[i] + s;
     }
@@ -371,7 +381,8 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::operator-(const T& s) const
   {
-    Matrix<T> l(_n,_m,0.0);
+    std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
+    Matrix<T> l(name,_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
         l(i) = _mat[i] - s;
     }
@@ -380,7 +391,8 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::operator*(const T& s) const
   {
-    Matrix<T> l(_n,_m,0.0);
+    std::string name = "(" + _name + " * " + std::to_string(s) + ")";
+    Matrix<T> l(name,_n,_m,0.0);
     for (unsigned int i = 0; i < _n*_m; i++) {
         l(i) = _mat[i] * s;
     }
@@ -389,7 +401,8 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::operator/(const T& s) const
   {
-    Matrix<T> l(_n,_m,0.0);
+    std::string name = "(" + _name + " / " + std::to_string(s) + ")";
+    Matrix<T> l(name,_n,_m,0.0);
     if (s == 0)
       return l;
     for (unsigned int i = 0; i < _n*_m; i++) {
@@ -401,6 +414,8 @@ namespace ET
   template<typename T>
   Matrix<T>& Matrix<T>::operator+=(const T& s)
   {
+    std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] += s;
     }
@@ -409,6 +424,8 @@ namespace ET
   template<typename T>
   Matrix<T>& Matrix<T>::operator-=(const T& s)
   {
+    std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] -= s;
     }
@@ -417,6 +434,8 @@ namespace ET
   template<typename T>
   Matrix<T>& Matrix<T>::operator*=(const T& s)
   {
+    std::string name = "(" + _name + " * " + std::to_string(s) + ")";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] *= s;
     }
@@ -427,6 +446,8 @@ namespace ET
   {
     if (s == 0)
       return *this;
+    std::string name = "(" + _name + " / " + std::to_string(s) + ")";
+    set_name(name);
     for (unsigned int i = 0; i < _n*_m; i++) {
         _mat[i] += s;
     }

@@ -48,7 +48,6 @@ namespace ET
     std::vector<T> get_row(unsigned int i);
     std::vector<T> get_col(unsigned int i);
 
-
     //  Setters
     void set_name(std::string name);
     void set_row(unsigned int i, std::vector<T> row);
@@ -86,7 +85,8 @@ namespace ET
     {
       unsigned int n = matrix.get_rows();
       unsigned int m = matrix.get_cols();
-      Matrix<T> l(n,m,0.0);
+      std::string name = "(" + std::to_string(s) + "I + "  + matrix.get_name() + ")";
+      Matrix<T> l(name,n,m,0.0);
       for (unsigned int i = 0; i < n*m; i++) {
           l(i) = matrix(i) + s;
       }
@@ -96,7 +96,8 @@ namespace ET
     {
       unsigned int n = matrix.get_rows();
       unsigned int m = matrix.get_cols();
-      Matrix<T> l(n,m,0.0);
+      std::string name = "(" + std::to_string(s) + "I - "  + matrix.get_name() + ")";
+      Matrix<T> l(name,n,m,0.0);
       for (unsigned int i = 0; i < n*m; i++) {
           l(i) = s - matrix(i);
       }
@@ -106,7 +107,8 @@ namespace ET
     {
       unsigned int n = matrix.get_rows();
       unsigned int m = matrix.get_cols();
-      Matrix<T> l(n,m,0.0);
+      std::string name = "(" + std::to_string(s) + " * "  + matrix.get_name() + ")";
+      Matrix<T> l(name,n,m,0.0);
       for (unsigned int i = 0; i < n*m; i++) {
           l(i) = matrix(i) * s;
       }
@@ -116,7 +118,8 @@ namespace ET
     {
       unsigned int n = matrix.get_rows();
       unsigned int m = matrix.get_cols();
-      Matrix<T> l(n,m,0.0);
+      std::string name = "(" + std::to_string(s) + " / "  + matrix.get_name() + ")";
+      Matrix<T> l(name,n,m,0.0);
       std::vector<T> mat(n*m);
       for (unsigned int i = 0; i < n*m; i++)
       {
