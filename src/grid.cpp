@@ -64,6 +64,16 @@ namespace ET
 	{
 		return _distances;
 	}
+	template<typename T>
+	std::vector<std::vector<size_t> > Grid<T>::get_neighbors_radius()
+	{
+		return _neighbors_radius;
+	}
+	template<typename T>
+	std::vector<std::vector<double> > Grid<T>::get_distances_radius()
+	{
+		return _distances_radius;
+	}
 
   //  Setters
   template<typename T>
@@ -92,29 +102,44 @@ namespace ET
   template<typename T>
   T& Grid<T>::operator()(const unsigned int i, const unsigned int j)
   {
-    return _grid(i,j);
+    return _grid[i][j];
   }
   template<typename T>
   const T& Grid<T>::operator()(const unsigned int i, const unsigned int j) const
   {
-    return _grid(i,j);
+    return _grid[i][j];
+  }
+	template<typename T>
+  std::vector<T>& Grid<T>::operator()(const unsigned int i)
+  {
+    return _grid[i];
+  }
+  template<typename T>
+  const std::vector<T>& Grid<T>::operator()(const unsigned int i) const
+  {
+    return _grid[i];
   }
 
   //  points and projections
   template<typename T>
-  std::vector<std::vector<T> > Grid<T>::get_point(unsigned int i)
+  std::vector<T> Grid<T>::get_point(unsigned int i)
   {
-    return _grid.get_row(i);
+    return _grid[i];
   }
   template<typename T>
-  std::vector<T> Grid<T>::projection(unsigned int i)
+  std::vector<T> Grid<T>::projection(unsigned int j)
   {
-    return _grid.get_col(i);
+		std::vector<T> result(_N);
+		for (unsigned int i = 0; i < _N; i++)
+		{
+			result[i] = _grid[i][j];
+		}
+    return result;
   }
   template<typename T>
-  void Grid<T>::set_point(unsigned int i, std::vector<std::vector<T> > point)
+  void Grid<T>::set_point(unsigned int i, std::vector<T> point)
   {
-    _grid.set_row(i,point);
+    _grid[i] = point;
   }
 
   template<typename T>
@@ -123,7 +148,7 @@ namespace ET
     _neighbors.resize(_N);
 		_distances.resize(_N);
     //  generate kdtree
-    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> kdt(_dim, _grid, 10);
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> kdt(_dim, _grid, 16);
     kdt.index->buildIndex();
 
     const size_t num_results = k;
@@ -137,6 +162,32 @@ namespace ET
 			kdt.index->findNeighbors(resultSet, &_grid[i][0], nanoflann::SearchParams(10));
 			_neighbors[i] = std::move(ret_indexes);
 			_distances[i] = std::move(out_dists_sqr);
+    }
+  }
+
+	template<typename T>
+  void Grid<T>::radius_search(double radius)
+  {
+    _neighbors_radius.resize(_N);
+		_distances_radius.resize(_N);
+    //  generate kdtree
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> kdt(_dim, _grid, 16);
+    kdt.index->buildIndex();
+
+    for (unsigned int i = 0; i < _N; i++)
+    {
+      std::vector<std::pair<size_t,double> > ret_matches;
+
+			kdt.index->radiusSearch(&_grid[i][0], radius, ret_matches, nanoflann::SearchParams(10));
+			std::vector<size_t> indices(ret_matches.size());
+			std::vector<double> distances(ret_matches.size());
+			for (unsigned int j = 0; j < ret_matches.size(); j++)
+			{
+				indices[j] = ret_matches[j].first;
+				distances[j] = ret_matches[j].second;
+			}
+			_neighbors_radius[i] = std::move(indices);
+			_distances_radius[i] = std::move(distances);
     }
   }
 

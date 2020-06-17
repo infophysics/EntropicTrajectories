@@ -4,10 +4,12 @@
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
 #include <pybind11/operators.h>
+#include <pybind11/numpy.h>
 #include <lapacke.h>
 #include <cblas.h>
 #include "vector.h"
 #include "matrix.h"
+#include "grid.h"
 
 
 
@@ -124,14 +126,71 @@ PYBIND11_MODULE(etraj, m) {
 
 		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info {
         return py::buffer_info(
-            & *m.get_mat().begin(),                            /* Pointer to buffer */
+            & *m.get_mat().begin(),                  /* Pointer to buffer */
             sizeof(double),                          /* Size of one scalar */
             py::format_descriptor<double>::format(), /* Python struct-style format descriptor */
-            2,                                      /* Number of dimensions */
-            { m.get_rows(), m.get_cols() },                 /* Buffer dimensions */
-            { sizeof(double) * m.get_cols(),             /* Strides (in bytes) for each index */
+            2,                                       /* Number of dimensions */
+            { m.get_rows(), m.get_cols() },          /* Buffer dimensions */
+            { sizeof(double) * m.get_cols(),         /* Strides (in bytes) for each index */
               sizeof(double) }
 					);
 		   })
     ;
+
+		py::class_<ET::Grid<double>>(m, "Grid")
+			.def(py::init<>())
+			.def(py::init<unsigned int>())
+			.def(py::init<std::string, unsigned int>())
+			.def(py::init<unsigned int, unsigned int>())
+			.def(py::init<std::string, unsigned int, unsigned int>())
+			//	getters
+			.def("get_dim", &ET::Grid<double>::get_dim)
+			.def("get_N", &ET::Grid<double>::get_N)
+			.def("get_grid", &ET::Grid<double>::get_grid)
+			.def("get_name", &ET::Grid<double>::get_name)
+			.def("get_neighbors", &ET::Grid<double>::get_neighbors)
+			.def("get_distances", &ET::Grid<double>::get_distances)
+			.def("get_neighbors_radius", &ET::Grid<double>::get_neighbors_radius)
+			.def("get_distances_radius", &ET::Grid<double>::get_distances_radius)
+			.def("set_dim", &ET::Grid<double>::set_dim)
+			.def("set_N", &ET::Grid<double>::set_N)
+			.def("set_grid", &ET::Grid<double>::set_grid)
+			.def("set_name", &ET::Grid<double>::set_name)
+			//	access operators
+			.def("__getitem__", [](const ET::Grid<double> &self,
+						std::tuple<unsigned int, unsigned int> ij)
+			{
+					unsigned int i, j;
+					std::tie(i, j) = ij;
+					if (i < 0 || i >= self.get_N())
+						throw py::index_error("Index " + std::to_string(i) +
+																	" out of bounds for array with "
+																	+ std::to_string(self.get_N()) + " points!");
+					if (j < 0 || j >= self.get_dim())
+						throw py::index_error("Index " + std::to_string(j) +
+																  " out of bounds for array with dimension "
+																  + std::to_string(self.get_dim()));
+					return self(i,j);
+			}, py::is_operator())
+
+			.def("__setitem__", [](ET::Grid<double> &self,
+						std::tuple<unsigned int, unsigned int> ij, const double& val)
+			{
+					unsigned int i, j;
+					std::tie(i, j) = ij;
+					if (i < 0 || i >= self.get_N())
+						throw py::index_error("Index " + std::to_string(i) +
+																	" out of bounds for array with "
+																	+ std::to_string(self.get_N()) + " points!");
+					if (j < 0 || j >= self.get_dim())
+						throw py::index_error("Index " + std::to_string(j) +
+																  " out of bounds for array with dimension "
+																  + std::to_string(self.get_dim()));
+					self(i,j) = val;
+			}, py::is_operator())
+
+			.def("query", &ET::Grid<double>::find_neighbors)
+			.def("query_radius", &ET::Grid<double>::radius_search)
+			;
+
 }

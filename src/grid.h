@@ -30,6 +30,8 @@ namespace ET
     std::string get_name();
     std::vector<std::vector<size_t> > get_neighbors();
     std::vector<std::vector<double> > get_distances();
+    std::vector<std::vector<size_t> > get_neighbors_radius();
+    std::vector<std::vector<double> > get_distances_radius();
 
     //  Setters
     void set_dim(unsigned int dim);
@@ -40,14 +42,18 @@ namespace ET
     //  Access operators for grid
     T& operator()(const unsigned int i, const unsigned int j);
     const T& operator()(const unsigned int i, const unsigned int j) const;
+    //  Access operators for points
+    std::vector<T>& operator()(const unsigned int i);
+    const std::vector<T>& operator()(const unsigned int i) const;
 
     //  points and projections
-    std::vector<std::vector<T> > get_point(unsigned int i);
-    std::vector<T> projection(unsigned int i);
-    void set_point(unsigned int i, std::vector<std::vector<T> > p);
+    std::vector<T> get_point(unsigned int i);
+    std::vector<T> projection(unsigned int j);
+    void set_point(unsigned int i, std::vector<T> p);
 
     //  find nearest neighbors
     void find_neighbors(unsigned int k);
+    void radius_search(double radius);
 
   private:
     unsigned int _dim;
@@ -59,8 +65,11 @@ namespace ET
     //  associated kdTree neighbors
     std::vector<std::vector<size_t> > _neighbors;
     std::vector<std::vector<double> > _distances;
-
+    std::vector<std::vector<size_t> > _neighbors_radius;
+    std::vector<std::vector<double> > _distances_radius;
     //KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> _kdt;
   };
+
+  template class Grid<double>;
 
 }
