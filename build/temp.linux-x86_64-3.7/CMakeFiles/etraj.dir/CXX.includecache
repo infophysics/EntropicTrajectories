@@ -610,6 +610,26 @@ wchar.h
 
 /home/ncarrara/anaconda3/include/python3.7m/weakrefobject.h
 
+/home/ncarrara/workspace/EDMC/src/approximator.cpp
+approximator.h
+/home/ncarrara/workspace/EDMC/src/approximator.h
+
+/home/ncarrara/workspace/EDMC/src/approximator.h
+vector
+-
+iostream
+-
+map
+-
+grid.h
+/home/ncarrara/workspace/EDMC/src/grid.h
+params.h
+/home/ncarrara/workspace/EDMC/src/params.h
+utils.h
+/home/ncarrara/workspace/EDMC/src/utils.h
+scalar.h
+/home/ncarrara/workspace/EDMC/src/scalar.h
+
 /home/ncarrara/workspace/EDMC/src/bindings.cpp
 pybind11/pybind11.h
 -
@@ -633,6 +653,10 @@ matrix.h
 /home/ncarrara/workspace/EDMC/src/matrix.h
 grid.h
 /home/ncarrara/workspace/EDMC/src/grid.h
+scalar.h
+/home/ncarrara/workspace/EDMC/src/scalar.h
+approximator.h
+/home/ncarrara/workspace/EDMC/src/approximator.h
 
 /home/ncarrara/workspace/EDMC/src/grid.h
 vector
@@ -671,6 +695,22 @@ vector.h
 /home/ncarrara/workspace/EDMC/src/vector.h
 utils.h
 /home/ncarrara/workspace/EDMC/src/utils.h
+
+/home/ncarrara/workspace/EDMC/src/params.h
+
+/home/ncarrara/workspace/EDMC/src/scalar.cpp
+scalar.h
+/home/ncarrara/workspace/EDMC/src/scalar.h
+
+/home/ncarrara/workspace/EDMC/src/scalar.h
+vector
+-
+iostream
+-
+grid.h
+/home/ncarrara/workspace/EDMC/src/grid.h
+approximator.h
+/home/ncarrara/workspace/EDMC/src/approximator.h
 
 /home/ncarrara/workspace/EDMC/src/utils.h
 type_traits

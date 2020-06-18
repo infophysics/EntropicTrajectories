@@ -29,7 +29,9 @@ include_directories(${SOURCE_DIR})
 set(SOURCES "${SOURCE_DIR}vector.cpp"
             "${SOURCE_DIR}matrix.cpp"
             "${SOURCE_DIR}grid.cpp"
-            "${SOURCE_DIR}utils.cpp")
+            "${SOURCE_DIR}utils.cpp"
+            "${SOURCE_DIR}approximator.cpp"
+            "${SOURCE_DIR}scalar.cpp")
 
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"

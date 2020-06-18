@@ -10,6 +10,8 @@
 #include "vector.h"
 #include "matrix.h"
 #include "grid.h"
+#include "scalar.h"
+#include "approximator.h"
 
 
 
@@ -199,4 +201,16 @@ PYBIND11_MODULE(etraj, m) {
 			.def("query_radius", &ET::Grid<double>::queryRadius)
 			;
 
+		py::class_<ET::ScalarField<double>>(m, "ScalarField")
+			.def(py::init<>())
+			.def("set_derivative", &ET::ScalarField<double>::setDerivative)
+			.def(py::init<ET::Grid<double>*,std::vector<double>>())
+			;
+
+		py::class_<ET::Approximator<double>>(m, "Approximator")
+			.def(py::init<>())
+			.def("set_derivative", &ET::Approximator<double>::setDerivative)
+			.def("gradient", &ET::Approximator<double>::gradient)
+			.def("gradient_mls", &ET::Approximator<double>::gradientMLS)
+			;
 }

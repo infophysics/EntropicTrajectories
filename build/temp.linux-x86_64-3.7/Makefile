@@ -123,6 +123,33 @@ etraj/fast:
 	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/build
 .PHONY : etraj/fast
 
+src/approximator.o: src/approximator.cpp.o
+
+.PHONY : src/approximator.o
+
+# target to build an object file
+src/approximator.cpp.o:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/approximator.cpp.o
+.PHONY : src/approximator.cpp.o
+
+src/approximator.i: src/approximator.cpp.i
+
+.PHONY : src/approximator.i
+
+# target to preprocess a source file
+src/approximator.cpp.i:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/approximator.cpp.i
+.PHONY : src/approximator.cpp.i
+
+src/approximator.s: src/approximator.cpp.s
+
+.PHONY : src/approximator.s
+
+# target to generate assembly for a file
+src/approximator.cpp.s:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/approximator.cpp.s
+.PHONY : src/approximator.cpp.s
+
 src/bindings.o: src/bindings.cpp.o
 
 .PHONY : src/bindings.o
@@ -204,6 +231,33 @@ src/matrix.cpp.s:
 	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/matrix.cpp.s
 .PHONY : src/matrix.cpp.s
 
+src/scalar.o: src/scalar.cpp.o
+
+.PHONY : src/scalar.o
+
+# target to build an object file
+src/scalar.cpp.o:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/scalar.cpp.o
+.PHONY : src/scalar.cpp.o
+
+src/scalar.i: src/scalar.cpp.i
+
+.PHONY : src/scalar.i
+
+# target to preprocess a source file
+src/scalar.cpp.i:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/scalar.cpp.i
+.PHONY : src/scalar.cpp.i
+
+src/scalar.s: src/scalar.cpp.s
+
+.PHONY : src/scalar.s
+
+# target to generate assembly for a file
+src/scalar.cpp.s:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/src/scalar.cpp.s
+.PHONY : src/scalar.cpp.s
+
 src/utils.o: src/utils.cpp.o
 
 .PHONY : src/utils.o
@@ -267,6 +321,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... etraj"
 	@echo "... edit_cache"
+	@echo "... src/approximator.o"
+	@echo "... src/approximator.i"
+	@echo "... src/approximator.s"
 	@echo "... src/bindings.o"
 	@echo "... src/bindings.i"
 	@echo "... src/bindings.s"
@@ -276,6 +333,9 @@ help:
 	@echo "... src/matrix.o"
 	@echo "... src/matrix.i"
 	@echo "... src/matrix.s"
+	@echo "... src/scalar.o"
+	@echo "... src/scalar.i"
+	@echo "... src/scalar.s"
 	@echo "... src/utils.o"
 	@echo "... src/utils.i"
 	@echo "... src/utils.s"
