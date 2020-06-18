@@ -143,6 +143,8 @@ PYBIND11_MODULE(etraj, m) {
               sizeof(double) }
 					);
 		   })
+
+		.def("inverse", &ET::Matrix<double>::inverse)
     ;
 
 		py::class_<ET::Grid<double>>(m, "Grid")

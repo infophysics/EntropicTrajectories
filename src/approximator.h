@@ -8,6 +8,7 @@
 #include "grid.h"
 #include "params.h"
 #include "utils.h"
+#include "matrix.h"
 
 
 namespace ET

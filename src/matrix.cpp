@@ -325,19 +325,19 @@ namespace ET
                     K      - number of columns in A, number of rows in B
                     alpha  - scaling factor for A and B
                     A      - Matrix A, i.e. ref. to the beginning of the vector
-                    Ida    - Size of first dimension of A; _n
+                    Ida    - number of columns of A; _m
                     B      - Matrix B, ref. to the beginning of B
-                    Idb    - Size of the first dimension of B; m.getNumCols()
+                    Idb    - number of columns of B; m.getNumCols()
                     beta   - scaling factor for C
                     C      - Matrix C, ref. to beginning of C
-                    Idc    - Size of first dimension of C; _n
+                    Idc    - number of columns of C; _n
         Since we are using std::vector, we must pass in a reference to
         the pointer given by .begin().
     */
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                 _n, matrix.getNumCols(), _m, 1.0,
-                & *_array.begin(), _n,
-                & *matrix.getArray().begin(), _m,
+                & *_array.begin(), _m,
+                & *matrix.getArray().begin(), _n,
                 0.0, & *l.begin(), _n);
     return Matrix<T>(name,_n,matrix.getNumCols(),l);
   }
@@ -509,6 +509,53 @@ namespace ET
     }
     os << " ]" << std::endl;
     return os;
+  }
+
+  template<typename T>
+  Matrix<T> Matrix<T>::inverse()
+  {
+    std::vector<T> _array_copy = _array;
+    //  pivot array with indices 1 <= i <= min(n,m)
+    int *ipiv = new int[std::min(_n,_m)];
+    //  workspaces for inversion
+    int lWork = _n*_m;
+    double *work = new double[lWork];
+    int n = _n;
+    int m = _m;
+    int info;
+    //  first construct an LU factorization to generate the pivot indices
+    //  in ipiv.
+    dgetrf_(&n,&m,& *_array_copy.begin(),&n,ipiv,&info);
+    dgetri_(&n,& *_array_copy.begin(),&n,ipiv,work,&lWork,&info);
+    std::string name = "(" + _name + ")^-1";
+    Matrix<T> inv(name,_m,_n,_array_copy);
+
+    delete ipiv;
+    delete work;
+    return inv;
+  }
+  template<typename T>
+  void Matrix<T>::LU(const Matrix<T>& matrix, Matrix<T>& L,
+                 Matrix<T>& U, int info)
+  {
+
+  }
+  template<typename T>
+  void Matrix<T>::QR(const Matrix<T>& matrix, Matrix<T>& Q,
+                 Matrix<T>& R, int info)
+  {
+
+  }
+  template<typename T>
+  void Matrix<T>::SVD(const Matrix<T>& matrix, Matrix<T>& S,
+                  Matrix<T>& V, Matrix<T>& D, int info)
+  {
+
+  }
+  template<typename T>
+  std::vector<T> Matrix<T>::singularValues(int info)
+  {
+
   }
 
   //  Various methods
