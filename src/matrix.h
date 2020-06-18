@@ -148,13 +148,11 @@ namespace ET
     const T& operator()(const uint64_t& i) const;
 
     //  Linear algebra tools
+    Matrix<T> permutationMatrix(int& n, std::vector<int>& pivot);
     Matrix<T> inverse();
-    void LU(const Matrix<T>& matrix, Matrix<T>& L,
-                   Matrix<T>& U, int info);
-    void QR(const Matrix<T>& matrix, Matrix<T>& Q,
-                   Matrix<T>& R, int info);
-    void SVD(const Matrix<T>& matrix, Matrix<T>& S,
-                    Matrix<T>& V, Matrix<T>& D, int info);
+    Matrix<T> LU();
+    void QR();
+    void SVD();
     std::vector<T> singularValues(int info);
 
     //  Various methods

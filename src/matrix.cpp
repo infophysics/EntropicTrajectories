@@ -512,11 +512,39 @@ namespace ET
   }
 
   template<typename T>
+  Matrix<T> Matrix<T>::permutationMatrix(int& n, std::vector<int>& pivot)
+  {
+    //  generate a permutation matrix from a set of pivot indices
+    std::vector<T> swaps(n*n, 0);
+    std::vector<uint64_t> p(n,0);
+    for (int i = 0; i < n; i++)
+    {
+      p[i] = i;
+    }
+    for (int i = 0; i < pivot.size(); i++)
+    {
+      std::cout << pivot[i] << std::endl;
+      if (pivot[i] != i+1)
+      {
+        p[pivot[i]-1] = i;
+        p[i] = pivot[i]-1;
+      }
+    }
+    for(uint64_t i = 0; i < n; i++)
+    {
+      swaps[p[i]*n + i] = 1;
+      swaps[i*n + p[i]] = 1;
+    }
+    std::string name = "(" + std::to_string(n) = "x" + std::to_string(n) + ") perm";
+    return Matrix<T>(name,n,n,swaps);
+  }
+
+  template<typename T>
   Matrix<T> Matrix<T>::inverse()
   {
     std::vector<T> _array_copy = _array;
     //  pivot array with indices 1 <= i <= min(n,m)
-    int *ipiv = new int[std::min(_n,_m)];
+    int *ipiv = new int[_n];
     //  workspaces for inversion
     int lWork = _n*_m;
     double *work = new double[lWork];
@@ -535,20 +563,26 @@ namespace ET
     return inv;
   }
   template<typename T>
-  void Matrix<T>::LU(const Matrix<T>& matrix, Matrix<T>& L,
-                 Matrix<T>& U, int info)
+  Matrix<T> Matrix<T>::LU()
+  {
+    std::vector<T> _array_copy = _array;
+    //  pivot array with indices 1 <= i <= min(n,m)
+    std::vector<int> ipiv(_n);
+    int n = _n;
+    int m = _m;
+    int info;
+    //  first construct an LU factorization to generate the pivot indices
+    //  in ipiv.
+    dgetrf_(&n,&m,& *_array_copy.begin(),&n,& *ipiv.begin(),&info);
+    return permutationMatrix(n,ipiv);
+  }
+  template<typename T>
+  void Matrix<T>::QR()
   {
 
   }
   template<typename T>
-  void Matrix<T>::QR(const Matrix<T>& matrix, Matrix<T>& Q,
-                 Matrix<T>& R, int info)
-  {
-
-  }
-  template<typename T>
-  void Matrix<T>::SVD(const Matrix<T>& matrix, Matrix<T>& S,
-                  Matrix<T>& V, Matrix<T>& D, int info)
+  void Matrix<T>::SVD()
   {
 
   }

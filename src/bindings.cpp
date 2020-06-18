@@ -145,6 +145,8 @@ PYBIND11_MODULE(etraj, m) {
 		   })
 
 		.def("inverse", &ET::Matrix<double>::inverse)
+		.def("permutation_matrix", &ET::Matrix<double>::permutationMatrix)
+		.def("LU", &ET::Matrix<double>::LU)
     ;
 
 		py::class_<ET::Grid<double>>(m, "Grid")
