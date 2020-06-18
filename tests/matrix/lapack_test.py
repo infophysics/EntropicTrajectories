@@ -17,9 +17,11 @@ print(m_1a_i*m_1a)
 
 print("\n(2) LU tests...")
 print("\n(2a) - permutation matrix")
-m_2a = Matrix("m_2a",2,3,[1,1,1,2,3,2])
+m_2a = Matrix("m_2a",2,2,[-1,-2,1,2])
 perm = m_2a.LU();
 x = np.asarray(m_2a)
+print(m_2a)
+print(x)
 p, l, u = lu(x)
 print(perm)
 print(p)

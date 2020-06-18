@@ -42,6 +42,15 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string, unsigned int, unsigned int, std::vector<double>>())
 		.def(py::init<std::vector<std::vector<double>>>())
 		.def(py::init<std::string, std::vector<std::vector<double>>>())
+		.def(py::init([](py::buffer const b) {
+            py::buffer_info info = b.request();
+            if (info.format != py::format_descriptor<float>::format() || info.ndim != 2)
+                throw std::runtime_error("Incompatible buffer format!");
+
+            auto v = new ET::Matrix<double>(info.shape[0], info.shape[1]);
+            memcpy(v->getArray().data(), info.ptr, sizeof(double) * (size_t) (v->getNumRows() * v->getNumCols()));
+            return v;
+        }))
 		//	getters
 		.def("get_rows", &ET::Matrix<double>::getNumRows)
 		.def("get_cols", &ET::Matrix<double>::getNumCols)
@@ -133,13 +142,12 @@ PYBIND11_MODULE(etraj, m) {
 		.def("print", &ET::Matrix<double>::print)
 
 		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info {
+				size_t rows = m.getNumRows();
+				size_t cols = m.getNumCols();
         return py::buffer_info(
-            & *m.getArray().begin(),                  /* Pointer to buffer */
-            sizeof(double),                          /* Size of one scalar */
-            py::format_descriptor<double>::format(), /* Python struct-style format descriptor */
-            2,                                       /* Number of dimensions */
-            { m.getNumRows(), m.getNumCols() },          /* Buffer dimensions */
-            { sizeof(double) * m.getNumCols(),         /* Strides (in bytes) for each index */
+          	m.getArray().data(),        					/* Pointer to buffer */
+            { rows, cols },      									/* Buffer dimensions */
+            { sizeof(double) * cols,       				/* Strides (in bytes) for each index */
               sizeof(double) }
 					);
 		   })
