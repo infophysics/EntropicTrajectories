@@ -19,6 +19,12 @@ namespace ET
   }
 
   template<typename T>
+  Approximator<T>* ScalarField<T>::getApproximator()
+  {
+    return _approx;
+  }
+
+  template<typename T>
   void ScalarField<T>::setDerivative(std::string type)
   {
     _approx->setDerivative(type);

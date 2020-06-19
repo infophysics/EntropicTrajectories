@@ -86,10 +86,10 @@ namespace ET
         std::vector<double> x, uint64_t n)
     {
         std::vector<std::vector<uint64_t> > mono = monomial_n(p.size(), n);
-        std::vector<std::vector<double> > taylor_exps(p.size());
+        std::vector<double> taylor_exps(p.size());
         for (uint64_t i = 0; i < p.size(); i++)
         {
-            taylor_exps[i] = taylorPolynomial(p[i],x[i],1);
+            taylor_exps[i] = pow((x[i]-p[i]),1);
         }
         std::vector<double> taylor(mono.size(),1.0);
         for (uint64_t i = 0; i < mono.size(); i++)
@@ -100,8 +100,7 @@ namespace ET
                 {
                     for (uint64_t k = 0; k < mono[i][j]; k++)
                     {
-                        std::cout << i << "," << j << "," << k << "," << taylor[i] << std::endl;
-                        taylor[i] *= taylor_exps[j][j];
+                        taylor[i] *= taylor_exps[j];
                     }
                 }
             }

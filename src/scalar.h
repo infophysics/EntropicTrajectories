@@ -21,9 +21,13 @@ namespace ET
     ~ScalarField();
     ScalarField(Grid<T>* micro, std::vector<T> field);
 
+    //  Getters
+    Approximator<T>* getApproximator();
+
     //  Setters
     void setDerivative(std::string type);
     //  Methods for calculating derivatives
+    Matrix<T> constructBMatrix();
 
 
   private:

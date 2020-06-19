@@ -18,46 +18,47 @@ namespace ET
   public:
     Grid();
     ~Grid();
-    Grid(unsigned int dim);
-    Grid(std::string name, unsigned int dim);
-    Grid(unsigned int dim, unsigned int N);
-    Grid(std::string name, unsigned int dim, unsigned int N);
+    Grid(uint64_t dim);
+    Grid(std::string name, uint64_t dim);
+    Grid(uint64_t dim, uint64_t N);
+    Grid(std::string name, uint64_t dim, uint64_t N);
 
     //  Getters
-    unsigned int getDim();
-    unsigned int getN();
+    uint64_t getDim();
+    uint64_t getN();
     std::vector<std::vector<T> >  getGrid();
     std::string getName();
     std::vector<std::vector<size_t> > getNeighbors();
     std::vector<std::vector<double> > getDistances();
     std::vector<std::vector<size_t> > getNeighborsRadius();
     std::vector<std::vector<double> > getDistancesRadius();
+    std::vector<size_t>* getNeighbors(uint64_t index);
 
     //  Setters
-    void setDim(unsigned int dim);
-    void setN(unsigned int N);
+    void setDim(uint64_t dim);
+    void setN(uint64_t N);
     void setGrid(std::vector<std::vector<T> > grid);
     void setName(std::string name);
 
     //  Access operators for grid
-    T& operator()(const unsigned int i, const unsigned int j);
-    const T& operator()(const unsigned int i, const unsigned int j) const;
+    T& operator()(const uint64_t i, const uint64_t j);
+    const T& operator()(const uint64_t i, const uint64_t j) const;
     //  Access operators for points
-    std::vector<T>& operator()(const unsigned int i);
-    const std::vector<T>& operator()(const unsigned int i) const;
+    std::vector<T>& operator()(const uint64_t i);
+    const std::vector<T>& operator()(const uint64_t i) const;
 
     //  points and projections
-    std::vector<T> getPoint(unsigned int i);
-    std::vector<T> projection(unsigned int j);
-    void setPoint(unsigned int i, std::vector<T> p);
+    std::vector<T> getPoint(uint64_t i);
+    std::vector<T> projection(uint64_t j);
+    void setPoint(uint64_t i, std::vector<T> p);
 
     //  find nearest neighbors
-    void queryNeighbors(unsigned int k);
+    void queryNeighbors(uint64_t k);
     void queryRadius(double radius);
 
   private:
-    unsigned int _dim;
-    unsigned int _N;
+    uint64_t _dim;
+    uint64_t _N;
     //  Unstructured grid
     std::vector<std::vector<T> > _grid;
     std::string _name;

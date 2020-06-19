@@ -31,8 +31,12 @@ namespace ET
     //  Gradient functions
     std::vector<T> gradient(Grid<T>* grid, ScalarField<T>* field, uint64_t index);
     std::vector<T> gradientMLS(Grid<T>* grid, ScalarField<T>* field, uint64_t index);
+
+    Matrix<T> constructBMatrix(Grid<T>* grid, std::vector<uint64_t>* neighbors,
+      uint64_t index, uint64_t order);
   private:
     enum ApproxType _type;
+    struct ApproxParams _params;
   };
 
 

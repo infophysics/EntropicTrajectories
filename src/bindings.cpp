@@ -174,7 +174,10 @@ PYBIND11_MODULE(etraj, m) {
 			.def("get_N", &ET::Grid<double>::getN)
 			.def("get_grid", &ET::Grid<double>::getGrid)
 			.def("get_name", &ET::Grid<double>::getName)
-			.def("get_neighbors", &ET::Grid<double>::getNeighbors)
+			.def("get_neighbors", (std::vector<std::vector<size_t> > (ET::Grid<double>::*)
+								()) &ET::Grid<double>::getNeighbors)
+			.def("get_neighbors", (std::vector<size_t>* (ET::Grid<double>::*)
+								(uint64_t)) &ET::Grid<double>::getNeighbors)
 			.def("get_distances", &ET::Grid<double>::getDistances)
 			.def("get_neighbors_radius", &ET::Grid<double>::getNeighborsRadius)
 			.def("get_distances_radius", &ET::Grid<double>::getDistancesRadius)
@@ -221,8 +224,9 @@ PYBIND11_MODULE(etraj, m) {
 
 		py::class_<ET::ScalarField<double>>(m, "ScalarField")
 			.def(py::init<>())
-			.def("set_derivative", &ET::ScalarField<double>::setDerivative)
 			.def(py::init<ET::Grid<double>*,std::vector<double>>())
+			.def("set_derivative", &ET::ScalarField<double>::setDerivative)
+			.def("get_approximator", &ET::ScalarField<double>::getApproximator)
 			;
 
 		py::class_<ET::Approximator<double>>(m, "Approximator")
@@ -230,6 +234,7 @@ PYBIND11_MODULE(etraj, m) {
 			.def("set_derivative", &ET::Approximator<double>::setDerivative)
 			.def("gradient", &ET::Approximator<double>::gradient)
 			.def("gradient_mls", &ET::Approximator<double>::gradientMLS)
+			.def("construct_B_matrix", &ET::Approximator<double>::constructBMatrix)
 			;
 
 		//	various functions
