@@ -49,14 +49,20 @@ namespace ET
     //  method for turning a double into scientific
     //  notation with a certain number of decimal places
     std::string scientific_not(double x, uint64_t dec);
+    //  cartesian product between two vectors
+    std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
+                                         std::vector<double> b);
+    //  generate an index array for all monomials up to order n of some
+    //  d dimensional space.
+    std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n);
 
     //  method for generating a set of taylor polynomials for
     //  a delta p = (x - p).
     std::vector<double> taylorPolynomial(double p, double x, uint64_t n);
+    //  generate a monomial expansion about a point p up to order n for some d
+    //  dimensiona space according to a point x.
+    std::vector<double> taylorMonomialExpansion(std::vector<double> p,
+        std::vector<double> x, uint64_t n);
+    std::vector<std::string> taylorMonomialFactors(uint64_t dim, uint64_t n);
 
-    //  cartesian product between two vectors
-    std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
-                                         std::vector<double> b);
-
-    std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n);
 }
