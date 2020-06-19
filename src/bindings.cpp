@@ -52,8 +52,8 @@ PYBIND11_MODULE(etraj, m) {
             return v;
         }))
 		//	getters
-		.def("get_rows", &ET::Matrix<double>::getNumRows)
-		.def("get_cols", &ET::Matrix<double>::getNumCols)
+		.def("get_num_rows", &ET::Matrix<double>::getNumRows)
+		.def("get_num_cols", &ET::Matrix<double>::getNumCols)
 		.def("get_name", &ET::Matrix<double>::getName)
 		.def("get_array", &ET::Matrix<double>::getArray)
 		.def("get_row", &ET::Matrix<double>::getRow)
@@ -142,19 +142,24 @@ PYBIND11_MODULE(etraj, m) {
 		.def("print", &ET::Matrix<double>::print)
 
 		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info {
-				size_t rows = m.getNumRows();
-				size_t cols = m.getNumCols();
         return py::buffer_info(
-          	m.getArray().data(),        					/* Pointer to buffer */
-            { rows, cols },      									/* Buffer dimensions */
-            { sizeof(double) * cols,       				/* Strides (in bytes) for each index */
-              sizeof(double) }
+					m.data(),                               /* Pointer to buffer */
+					sizeof(float),                          /* Size of one scalar */
+					py::format_descriptor<float>::format(), /* Python struct-style format descriptor */
+					2,                                      /* Number of dimensions */
+					{ m.getNumRows(), m.getNumCols() },                 /* Buffer dimensions */
+					{ sizeof(float) * m.getNumCols(),             /* Strides (in bytes) for each index */
+						sizeof(float) }
 					);
 		   })
 
 		.def("inverse", &ET::Matrix<double>::inverse)
 		.def("permutation_matrix", &ET::Matrix<double>::permutationMatrix)
-		.def("LU", &ET::Matrix<double>::LU)
+		.def("LU", [](ET::Matrix<double> &self) {
+			if (self.getNumRows() != self.getNumCols())
+				throw py::value_error("Expecting square matrix!");
+			return self.LU();
+		})
     ;
 
 		py::class_<ET::Grid<double>>(m, "Grid")

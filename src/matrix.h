@@ -50,6 +50,7 @@ namespace ET
     std::vector<T> getArray() const;
     std::vector<T> getRow(uint64_t i);
     std::vector<T> getCol(uint64_t i);
+    float *data();
 
     //  Setters
     void setName(std::string name);
@@ -148,7 +149,7 @@ namespace ET
     const T& operator()(const uint64_t& i) const;
 
     //  Linear algebra tools
-    Matrix<T> permutationMatrix(int& n, std::vector<int>& pivot);
+    Matrix<T> permutationMatrix(int& n, int* pivot);
     Matrix<T> inverse();
     Matrix<T> LU();
     void QR();
