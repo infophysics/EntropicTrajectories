@@ -123,6 +123,33 @@ etraj/fast:
 	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/build
 .PHONY : etraj/fast
 
+include/monomial/monomial.o: include/monomial/monomial.cpp.o
+
+.PHONY : include/monomial/monomial.o
+
+# target to build an object file
+include/monomial/monomial.cpp.o:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/include/monomial/monomial.cpp.o
+.PHONY : include/monomial/monomial.cpp.o
+
+include/monomial/monomial.i: include/monomial/monomial.cpp.i
+
+.PHONY : include/monomial/monomial.i
+
+# target to preprocess a source file
+include/monomial/monomial.cpp.i:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/include/monomial/monomial.cpp.i
+.PHONY : include/monomial/monomial.cpp.i
+
+include/monomial/monomial.s: include/monomial/monomial.cpp.s
+
+.PHONY : include/monomial/monomial.s
+
+# target to generate assembly for a file
+include/monomial/monomial.cpp.s:
+	$(MAKE) -f CMakeFiles/etraj.dir/build.make CMakeFiles/etraj.dir/include/monomial/monomial.cpp.s
+.PHONY : include/monomial/monomial.cpp.s
+
 src/approximator.o: src/approximator.cpp.o
 
 .PHONY : src/approximator.o
@@ -321,6 +348,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... etraj"
 	@echo "... edit_cache"
+	@echo "... include/monomial/monomial.o"
+	@echo "... include/monomial/monomial.i"
+	@echo "... include/monomial/monomial.s"
 	@echo "... src/approximator.o"
 	@echo "... src/approximator.i"
 	@echo "... src/approximator.s"

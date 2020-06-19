@@ -5,6 +5,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/etraj.dir/src/utils.cpp.o"
   "CMakeFiles/etraj.dir/src/approximator.cpp.o"
   "CMakeFiles/etraj.dir/src/scalar.cpp.o"
+  "CMakeFiles/etraj.dir/include/monomial/monomial.cpp.o"
   "CMakeFiles/etraj.dir/src/bindings.cpp.o"
   "../lib.linux-x86_64-3.7/etraj/etraj.pdb"
   "../lib.linux-x86_64-3.7/etraj/etraj.cpython-37m-x86_64-linux-gnu.so"

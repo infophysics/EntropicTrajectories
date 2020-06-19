@@ -548,6 +548,18 @@ namespace ET
   }
 
   template<typename T>
+  Matrix<T> Matrix<T>::getL(const Matrix<T>& perm)
+  {
+    return *this;
+  }
+
+  template<typename T>
+  Matrix<T> Matrix<T>::getU(const Matrix<T>& perm)
+  {
+    return *this;
+  }
+
+  template<typename T>
   Matrix<T> Matrix<T>::inverse()
   {
     std::vector<T> _array_copy = _array;
@@ -571,7 +583,7 @@ namespace ET
     return inv;
   }
   template<typename T>
-  Matrix<T> Matrix<T>::LU()
+  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
   {
     std::vector<T> _array_copy = _array;
         //  pivot array with indices 1 <= i <= min(n,m)
@@ -582,7 +594,12 @@ namespace ET
     //  first construct an LU factorization to generate the pivot indices
     //  in ipiv.
     dgetrf_(&n,&m,&*_array_copy.begin(),&n,ipiv,&info);
-    return permutationMatrix(n,ipiv);
+    Matrix<T> p = permutationMatrix(n,ipiv);
+    Matrix<T> l = getL(p);
+    Matrix<T> u = getU(p);
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(p,l,u);
+    return result;
+
   }
   template<typename T>
   void Matrix<T>::QR()

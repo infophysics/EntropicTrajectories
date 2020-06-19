@@ -6,12 +6,16 @@
 #   include <cxxabi.h>
 #endif
 #include <memory>
+#include <vector>
 #include <string>
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
+#include <iterator>
 #include <math.h>
 #include <iostream>
+
+#include "monomial.hpp"
 
 namespace ET
 {
@@ -44,5 +48,15 @@ namespace ET
 
     //  method for turning a double into scientific
     //  notation with a certain number of decimal places
-    std::string scientific_not(double x, unsigned int dec);
+    std::string scientific_not(double x, uint64_t dec);
+
+    //  method for generating a set of taylor polynomials for
+    //  a delta p = (x - p).
+    std::vector<double> taylorPolynomial(double p, double x, uint64_t n);
+
+    //  cartesian product between two vectors
+    std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
+                                         std::vector<double> b);
+
+    std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n);
 }

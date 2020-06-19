@@ -11,6 +11,7 @@
 #include "matrix.h"
 #include "grid.h"
 #include "scalar.h"
+#include "utils.h"
 #include "approximator.h"
 
 
@@ -230,4 +231,7 @@ PYBIND11_MODULE(etraj, m) {
 			.def("gradient", &ET::Approximator<double>::gradient)
 			.def("gradient_mls", &ET::Approximator<double>::gradientMLS)
 			;
+
+		//	various functions
+		m.def("monomial_n", &ET::monomial_n, py::return_value_policy::reference);
 }

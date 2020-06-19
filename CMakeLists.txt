@@ -31,11 +31,13 @@ set(SOURCES "${SOURCE_DIR}vector.cpp"
             "${SOURCE_DIR}grid.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}approximator.cpp"
-            "${SOURCE_DIR}scalar.cpp")
+            "${SOURCE_DIR}scalar.cpp"
+            "${INCLUDE_DIR}monomial/monomial.cpp")
 
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
+                    "${INCLUDE_DIR}monomial"
                     "/usr/include/x86_64-linux-gnu")
 
 #	fpermissive flag for perseus

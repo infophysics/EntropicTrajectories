@@ -6,5 +6,5 @@ CXX_FLAGS = -fpermissive -O3 -DNDEBUG -fPIC -fvisibility=hidden   -flto -fno-fat
 
 CXX_DEFINES = -Detraj_EXPORTS
 
-CXX_INCLUDES = -I/home/ncarrara/workspace/EDMC/src -I/home/ncarrara/workspace/EDMC/include/nanoflann -I/home/ncarrara/workspace/EDMC/include/nanoflann/examples -I/home/ncarrara/workspace/EDMC/include/nanoflann/include -I/usr/include/x86_64-linux-gnu -I/home/ncarrara/workspace/EDMC/include/pybind11/include -I/home/ncarrara/anaconda3/include/python3.7m 
+CXX_INCLUDES = -I/home/ncarrara/workspace/EDMC/src -I/home/ncarrara/workspace/EDMC/include/nanoflann -I/home/ncarrara/workspace/EDMC/include/nanoflann/examples -I/home/ncarrara/workspace/EDMC/include/nanoflann/include -I/home/ncarrara/workspace/EDMC/include/monomial -I/usr/include/x86_64-linux-gnu -I/home/ncarrara/workspace/EDMC/include/pybind11/include -I/home/ncarrara/anaconda3/include/python3.7m 
 

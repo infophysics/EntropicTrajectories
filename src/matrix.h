@@ -151,7 +151,9 @@ namespace ET
     //  Linear algebra tools
     Matrix<T> permutationMatrix(int& n, int* pivot);
     Matrix<T> inverse();
-    Matrix<T> LU();
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> LU();
+    Matrix<T> getL(const Matrix<T>& perm);
+    Matrix<T> getU(const Matrix<T>& perm);
     void QR();
     void SVD();
     std::vector<T> singularValues(int info);

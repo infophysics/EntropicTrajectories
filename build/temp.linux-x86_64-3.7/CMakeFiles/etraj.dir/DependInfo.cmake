@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/ncarrara/workspace/EDMC/include/monomial/monomial.cpp" "/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles/etraj.dir/include/monomial/monomial.cpp.o"
   "/home/ncarrara/workspace/EDMC/src/approximator.cpp" "/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles/etraj.dir/src/approximator.cpp.o"
   "/home/ncarrara/workspace/EDMC/src/bindings.cpp" "/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles/etraj.dir/src/bindings.cpp.o"
   "/home/ncarrara/workspace/EDMC/src/grid.cpp" "/home/ncarrara/workspace/EDMC/build/temp.linux-x86_64-3.7/CMakeFiles/etraj.dir/src/grid.cpp.o"
@@ -20,6 +21,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../../include/nanoflann"
   "../../include/nanoflann/examples"
   "../../include/nanoflann/include"
+  "../../include/monomial"
   "/usr/include/x86_64-linux-gnu"
   "../../include/pybind11/include"
   "/home/ncarrara/anaconda3/include/python3.7m"
