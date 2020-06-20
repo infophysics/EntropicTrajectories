@@ -856,7 +856,35 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::transpose()
   {
+    std::vector<T> new_array(_n*_m);
+    for (uint64_t i = 0 ; i < _n; i++)
+    {
+      for (uint64_t j = 0; j < _m; j++)
+      {
+        new_array[j*_n + i] = _array[i*_m + j];
+      }
+    }
+    std::string name = "(" + _name + ")^T";
+    return Matrix<T>(name,_m,_n,new_array);
+  }
 
+  template<typename T>
+  void Matrix<T>::transpose(bool inplace)
+  {
+    std::vector<T> new_array(_n*_m);
+    for (uint64_t i = 0 ; i < _n; i++)
+    {
+      for (uint64_t j = 0; j < _m; j++)
+      {
+        new_array[j*_n + i] = _array[i*_m + j];
+      }
+    }
+    std::string name = "(" + _name + ")^T";
+    _name = name;
+    int n = _m;
+    _m = _n;
+    _n = n;
+    _array = new_array;
   }
 
   template<typename T>

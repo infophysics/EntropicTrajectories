@@ -31,6 +31,18 @@ namespace ET
   }
 
   template<typename T>
+  void Approximator<T>::set_k(uint64_t k)
+  {
+    _params.k = k;
+  }
+
+  template<typename T>
+  void Approximator<T>::set_n(uint64_t n)
+  {
+    _params.n = n;
+  }
+
+  template<typename T>
   std::vector<T> Approximator<T>::gradient(Grid<T>* grid,
     ScalarField<T>* field, uint64_t index)
   {

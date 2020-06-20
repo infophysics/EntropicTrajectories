@@ -27,6 +27,8 @@ namespace ET
 
     //  Setters
     void setDerivative(std::string type);
+    void set_k(uint64_t k);
+    void set_n(uint64_t n);
 
     //  Gradient functions
     std::vector<T> gradient(Grid<T>* grid, ScalarField<T>* field, uint64_t index);

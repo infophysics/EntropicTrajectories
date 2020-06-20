@@ -161,6 +161,8 @@ PYBIND11_MODULE(etraj, m) {
 				throw py::value_error("Expecting square matrix!");
 			return self.LU();
 		})
+		.def("T", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
+		.def("T", (void  (ET::Matrix<double>::*)(bool)) &ET::Matrix<double>::transpose)
     ;
 
 		py::class_<ET::Grid<double>>(m, "Grid")
@@ -232,6 +234,8 @@ PYBIND11_MODULE(etraj, m) {
 		py::class_<ET::Approximator<double>>(m, "Approximator")
 			.def(py::init<>())
 			.def("set_derivative", &ET::Approximator<double>::setDerivative)
+			.def("set_k", &ET::Approximator<double>::set_k)
+			.def("set_n", &ET::Approximator<double>::set_n)
 			.def("gradient", &ET::Approximator<double>::gradient)
 			.def("gradient_mls", &ET::Approximator<double>::gradientMLS)
 			.def("construct_B_matrix", &ET::Approximator<double>::constructBMatrix)
