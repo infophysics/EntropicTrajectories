@@ -6,7 +6,7 @@ namespace ET
     {
         double y;
         int exp = int(floor(log10(abs(x))));
-        int factor = 10*exp;
+        double factor = pow(10,exp);
         if (factor != 0)
             y = x / abs(factor);
         else

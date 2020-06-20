@@ -163,6 +163,9 @@ PYBIND11_MODULE(etraj, m) {
 		})
 		.def("T", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
 		.def("T", (void  (ET::Matrix<double>::*)(bool)) &ET::Matrix<double>::transpose)
+		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
+		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
+		.def("SVD", &ET::Matrix<double>::SVD)
     ;
 
 		py::class_<ET::Grid<double>>(m, "Grid")

@@ -88,6 +88,14 @@ namespace ET
   }
 
   template<typename T>
+  Matrix<T>::Matrix(std::string name, uint64_t n, uint64_t m, T* array)
+  : _n(n), _m(m), _name(name)
+  {
+    std::vector<T> flat(array, array + n*m);
+    _array = flat;
+  }
+
+  template<typename T>
   Matrix<T>::Matrix(std::vector<std::vector<T> > array)
   : _n(array.size()), _m(array[0].size()), _name(" ")
   {
@@ -583,10 +591,16 @@ namespace ET
     return inv;
   }
   template<typename T>
+  Matrix<T> Matrix<T>::pseudoInverse()
+  {
+
+  }
+
+  template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
   {
     std::vector<T> _array_copy = _array;
-        //  pivot array with indices 1 <= i <= min(n,m)
+    //  pivot array with indices 1 <= i <= min(n,m)
     int *ipiv = new int[_n+1];
     int n = _n;
     int m = _m;
@@ -602,19 +616,108 @@ namespace ET
 
   }
   template<typename T>
-  void Matrix<T>::QR()
+  std::tuple<Matrix<T>,Matrix<T>> Matrix<T>::QR()
   {
 
   }
   template<typename T>
-  void Matrix<T>::SVD()
+  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
+  {
+    std::vector<T> _array_copy = _array;
+    int n = _n;
+    int m = _m;
+    int info;
+    //  Sigma, U and V_T matrices
+    //  Sigma will be a vector of singular values of size n,
+    //  U is a unitary m x m matrix,
+    //  VT is the transpose of an n x n unitary matrix.
+    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
+    //  of rows).
+    int ldu = n, lda = n, ldvt = m;
+    T sigma[n], U[n*ldu], VT[ldvt*m];
+    //  workspaces for inversion
+    int lWork;
+    //  find the optimal workspace first
+    double workOpt;
+    double *work;
+    lWork = -1;
+    dgesvd_("A", "A", &n, &m, &*_array_copy.begin(), &lda, sigma, U,
+        &ldu, VT, &ldvt, &workOpt, &lWork, &info);
+    lWork = (int)workOpt;
+    work = (double*)malloc( lWork*sizeof(double) );
+    /* Compute SVD */
+    dgesvd_("A", "A", &n, &m, &*_array_copy.begin(), &lda, sigma, U,
+        &ldu, VT, &ldvt, work, &lWork, &info);
+    /* Check for convergence */
+    if( info > 0 ) {
+      printf( "The algorithm computing SVD failed to converge.\n" );
+      exit( 1 );
+    }
+    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
+    _singular_values = sig;
+    //  construct U, VT and Sigma matrices
+    Matrix<T> U_matrix("U",n,n,U);
+    Matrix<T> VT_matrix("(V)^T",m,m,VT);
+    Matrix<T> S_matrix("Sigma",n,m,0.0);
+    for (uint64_t i = 0; i < _singular_values.size(); i++)
+    {
+      S_matrix(i,i) = _singular_values[i];
+    }
+    U_matrix.transpose(true);
+    VT_matrix.transpose(true);
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
+    return result;
+  }
+
+  template<typename T>
+  bool Matrix<T>::isInvertible()
   {
 
   }
-  template<typename T>
-  std::vector<T> Matrix<T>::singularValues(int info)
-  {
 
+  template<typename T>
+  void Matrix<T>::findSingularValues()
+  {
+    std::vector<T> _array_copy = _array;
+    int n = _n;
+    int m = _m;
+    int info;
+    //  Sigma, U and V_T matrices
+    //  Sigma will be a vector of singular values of size n,
+    //  U is a unitary m x m matrix,
+    //  VT is the transpose of an n x n unitary matrix.
+    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
+    //  of rows).
+    int ldu = n, lda = n, ldvt = m;
+    T sigma[n], U[n*ldu], VT[ldvt*m];
+    //  workspaces for inversion
+    int lWork;
+    //  find the optimal workspace first
+    double workOpt;
+    double *work;
+    lWork = -1;
+    dgesvd_("A", "A", &n, &m, &*_array_copy.begin(), &lda, sigma, U,
+        &ldu, VT, &ldvt, &workOpt, &lWork, &info);
+    lWork = (int)workOpt;
+    work = (double*)malloc( lWork*sizeof(double) );
+    /* Compute SVD */
+    dgesvd_("A", "A", &n, &m, &*_array_copy.begin(), &lda, sigma, U,
+        &ldu, VT, &ldvt, work, &lWork, &info);
+    /* Check for convergence */
+    if( info > 0 ) {
+      printf( "The algorithm computing SVD failed to converge.\n" );
+      exit( 1 );
+    }
+    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
+    _singular_values = sig;
+  }
+
+  template<typename T>
+  std::vector<T> Matrix<T>::getSingularValues()
+  {
+    if (_singular_values.size() == 0)
+      findSingularValues();
+    return _singular_values;
   }
 
   //  Various methods

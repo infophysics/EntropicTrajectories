@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from etraj.etraj import Matrix, Grid, Approximator, ScalarField
 import etraj.etraj as et
+from scipy import linalg
+from scipy.linalg import svdvals
 
 N = 100
 
@@ -35,11 +37,39 @@ m_T = m.T()
 print(m_T)
 prod = m_T * m
 print(prod)
-prod_i = prod.inverse()
-print(prod_i)
-prod_i_m_T = prod_i * m_T
-print(prod_i_m_T)
+s = prod.get_singular_values()
 
-# play with k and n
-m2 = app.construct_B_matrix(g,[1,2,3,5,6],4,2)
-print(m2)
+#   check singular values
+a = prod.get_num_rows()
+b = prod.get_num_cols()
+prod_np = np.asarray(prod)
+U1, S1, VT1 = prod.SVD()
+U, s2, Vh = linalg.svd(prod_np)
+print(U1)
+print(S1)
+print(VT1)
+x = U1 * S1 * VT1
+print(x)
+print("Scipy version...")
+print("U matrix")
+print(U)
+sigma = np.zeros((a,b))
+for i in range(min(a,b)):
+    sigma[i, i] = s2[i]
+print("Sigma matrix")
+print(sigma)
+print("VT matrix")
+print(Vh)
+a1 = np.dot(U, np.dot(sigma, Vh))
+print(x)
+print(a1)
+r = np.linalg.matrix_rank(a1)
+print(r)
+# prod_i = prod.inverse()
+# print(prod_i)
+# prod_i_m_T = prod_i * m_T
+# print(prod_i_m_T)
+#
+# # play with k and n
+# m2 = app.construct_B_matrix(g,[1,2,3,5,6],4,2)
+# print(m2)

@@ -40,6 +40,7 @@ namespace ET
     Matrix(uint64_t n, uint64_t m, std::vector<T> flat);
     Matrix(std::string name, uint64_t n,
       uint64_t m, std::vector<T> flat);
+    Matrix(std::string name, uint64_t n, uint64_t m, T* array);
     Matrix(std::vector<std::vector<T> > array);
     Matrix(std::string name, std::vector<std::vector<T> > array);
 
@@ -150,13 +151,19 @@ namespace ET
 
     //  Linear algebra tools
     Matrix<T> permutationMatrix(int& n, int* pivot);
+    //  TODO:
+    uint64_t getRank();
+    bool isInvertible();
+    void findSingularValues();
     Matrix<T> inverse();
+    Matrix<T> pseudoInverse();
+    //
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> LU();
     Matrix<T> getL(const Matrix<T>& perm);
     Matrix<T> getU(const Matrix<T>& perm);
-    void QR();
-    void SVD();
-    std::vector<T> singularValues(int info);
+    std::tuple<Matrix<T>,Matrix<T>> QR();
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
+    std::vector<T> getSingularValues();
 
     //  Various methods
     void print();
@@ -170,6 +177,10 @@ namespace ET
     std::vector<T> _array;
     //  possible name for the matrix
     std::string _name;
+    //  container for singular values
+    std::vector<T> _singular_values;
+    //  assign rank to -1 at initilization.
+    uint64_t _rank = -1;
   };
 
   //  Various matrices
