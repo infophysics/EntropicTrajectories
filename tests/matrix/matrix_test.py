@@ -58,12 +58,12 @@ m_1l = Matrix('m_1l', [[1,3],[5,6]])
 print(m_1l)
 
 print("\n(2) Getters and setters...")
-print("\n(2a) - x = m_1l.get_rows()")
-x = m_1l.get_rows()
+print("\n(2a) - x = m_1l.get_num_rows()")
+x = m_1l.get_num_rows()
 print("Number of rows in m_1l: ", x)
 
-print("\n(2b) - x = m_1l.get_cols()")
-x = m_1l.get_cols()
+print("\n(2b) - x = m_1l.get_num_cols()")
+x = m_1l.get_num_cols()
 print("Number of cols in m_1l: ", x)
 
 print("\n(2c) - n = m_1l.get_name()")
@@ -113,6 +113,7 @@ m_3b = Matrix('m_3b', 2, [1,2,3,4])
 m_3ap = m_3a * m_3b
 m_3bp = m_3b * m_3a
 print(m_3ap)
+print(m_3bp)
 
 print("\n(3e) - m_3b * m_3a")
 print(m_3bp)

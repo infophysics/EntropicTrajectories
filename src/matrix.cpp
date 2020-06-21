@@ -356,8 +356,8 @@ namespace ET
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
                 _n, matrix.getNumCols(), _m, 1.0,
                 & *_array.begin(), _m,
-                & *matrix.getArray().begin(), _n,
-                0.0, & *l.begin(), _n);
+                & *matrix.getArray().begin(), matrix.getNumCols(),
+                0.0, & *l.begin(), matrix.getNumCols());
     return Matrix<T>(name,_n,matrix.getNumCols(),l);
   }
   template<typename T>
@@ -664,7 +664,9 @@ namespace ET
       S_matrix(i,i) = _singular_values[i];
     }
     U_matrix.transpose(true);
+    U_matrix.setName("U");
     VT_matrix.transpose(true);
+    VT_matrix.setName("(V)^T");
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
     return result;
   }
