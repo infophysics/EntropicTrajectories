@@ -37,3 +37,19 @@ print("\nU Matrix")
 print(U)
 print("Numpy version")
 print(u)
+
+
+print("\n(3) SVD tests...")
+n = 3
+m = 3
+x = [[np.random.normal(0,1,1)[0] for j in range(m)] for i in range(n)]
+m_3a = Matrix("m_3a",x)
+print(m_3a)
+U,S,VT = m_3a.SVD()
+print(U)
+print(S)
+print(VT)
+m_3a2 = U*S*VT
+print(m_3a2)
+diff = m_3a2 - m_3a
+print(diff)
