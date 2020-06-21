@@ -634,7 +634,7 @@ namespace ET
     //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
     //  of rows).
     int ldu = n, lda = n, ldvt = m;
-    T sigma[n], U[n*ldu], VT[ldvt*m];
+    T sigma[std::min(n,m)], U[n*ldu], VT[ldvt*m];
     //  workspaces for inversion
     int lWork;
     //  find the optimal workspace first
@@ -689,7 +689,7 @@ namespace ET
     //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
     //  of rows).
     int ldu = n, lda = n, ldvt = m;
-    T sigma[n], U[n*ldu], VT[ldvt*m];
+    T sigma[std::min(n,m)], U[n*ldu], VT[ldvt*m];
     //  workspaces for inversion
     int lWork;
     //  find the optimal workspace first
