@@ -656,8 +656,8 @@ namespace ET
     std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
     _singular_values = sig;
     //  construct U, VT and Sigma matrices
-    Matrix<T> U_matrix("U",n,n,U);
-    Matrix<T> VT_matrix("(V)^T",m,m,VT);
+    Matrix<T> U_matrix("(V)^T",n,n,U);
+    Matrix<T> VT_matrix("U",m,m,VT);
     Matrix<T> S_matrix("Sigma",n,m,0.0);
     for (uint64_t i = 0; i < _singular_values.size(); i++)
     {
