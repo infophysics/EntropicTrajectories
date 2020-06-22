@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import lu, lu_factor
 from etraj.etraj import Matrix
-
+from scipy import linalg
+from scipy.linalg import svdvals
 
 print("...LAPACK tests...")
 
@@ -41,11 +42,14 @@ print(u)
 
 print("\n(3) SVD tests...")
 n = 3
-m = 2
+m = 3
 x = [[np.random.normal(0,1,1)[0] for j in range(m)] for i in range(n)]
 m_3a = Matrix("m_3a",x)
 print(m_3a)
+y = np.asarray(m_3a)
+print(y)
 U,S,VT = m_3a.SVD()
+U2, s2, Vh = linalg.svd(y)
 print(U)
 print(S)
 print(VT)
@@ -54,3 +58,18 @@ print(m_3a2)
 m_3a2 *= VT
 print(m_3a2)
 print(m_3a)
+print("Scipy version...")
+print("U matrix")
+print(U2)
+a = m_3a.get_num_rows()
+b = m_3a.get_num_cols()
+sigma = np.zeros((a,b))
+for i in range(min(a,b)):
+    sigma[i, i] = s2[i]
+print("Sigma matrix")
+print(sigma)
+print("VT matrix")
+print(Vh)
+print(y)
+a1 = np.dot(U2, np.dot(sigma, Vh))
+print(a1)

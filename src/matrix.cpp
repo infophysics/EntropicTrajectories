@@ -663,11 +663,11 @@ namespace ET
     {
       S_matrix(i,i) = _singular_values[i];
     }
-    U_matrix.transpose(true);
-    U_matrix.setName("U");
-    VT_matrix.transpose(true);
-    VT_matrix.setName("(V)^T");
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
+    //U_matrix.transpose(true);
+    //U_matrix.setName("U");
+    //VT_matrix.transpose(true);
+    //VT_matrix.setName("(V)^T");
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(VT_matrix, S_matrix, U_matrix);
     return result;
   }
 
