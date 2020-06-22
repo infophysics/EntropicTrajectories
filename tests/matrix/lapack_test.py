@@ -46,10 +46,8 @@ m = 3
 x = [[np.random.normal(0,1,1)[0] for j in range(m)] for i in range(n)]
 m_3a = Matrix("m_3a",x)
 print(m_3a)
-y = np.asarray(m_3a)
-print(y)
+
 U,S,VT = m_3a.SVD()
-U2, s2, Vh = linalg.svd(y)
 print(U)
 print(S)
 print(VT)
@@ -58,7 +56,11 @@ print(m_3a2)
 m_3a2 *= VT
 print(m_3a2)
 print(m_3a)
+
 print("Scipy version...")
+y = np.asarray(m_3a)
+print(y)
+U2, s2, Vh = linalg.svd(y)
 print("U matrix")
 print(U2)
 a = m_3a.get_num_rows()
@@ -73,3 +75,61 @@ print(Vh)
 print(y)
 a1 = np.dot(U2, np.dot(sigma, Vh))
 print(a1)
+
+print("\n(4) Pseudo Inverse Tests...")
+print("\n(4a)")
+
+# construct an n x m matrix m_4a
+m_4a = Matrix("m_1a",3,2,[1,1,1,2,3,2])
+print(m_4a)
+
+# compute the pseudo-inverse using two different approaches
+# the direct way uses the function from the python bindings
+print("\nDirect way")
+m_4ap = m_4a.pseudo_inverse()
+print(m_4ap)
+# the indirect way gets the SVD decomposition from the bindings
+# and then computes the matrix product.
+print("\nIndirect way")
+U, S, VT = m_4a.SVD()
+print("\nThe matrices U, Sigma and (V)^T")
+print(U)
+print(S)
+print(VT)
+for i in range(min(S.get_num_cols(),S.get_num_rows())):
+    S[i,i] = 1/S[i,i]
+UT = U.T()
+ST = S.T()
+V = VT.T()
+print("\nThe matrices (U)^T, Sigma^+ and V")
+print(UT)
+print(ST)
+print(V)
+m_4ap2 = (VT.T())*(S.T())*(U.T())
+print(m_4ap2)
+
+print("\nCheck the product")
+m_4app = m_4a * (m_4ap * m_4a)
+print(m_4app)
+
+print("Scipy version...")
+print("Matrix m_4a")
+y = np.asarray(m_4a)
+print(y)
+print("Direct way")
+print("Pseudo-inverse of m_4a")
+yp = np.linalg.pinv(y)
+print(yp)
+print("Indirect way")
+u, s, vh = linalg.svd(y)
+a = m_4a.get_num_rows()
+b = m_3a.get_num_cols()
+sigma = np.zeros((a,b))
+for i in range(min(a,b)):
+    sigma[i, i] = s2[i]
+vh = np.transpose(vh)
+u = np.transpose(u)
+np.transpose(sigma)
+a1 = np.dot(vh, np.dot(sigma, u))
+print(a1)
+np.allclose(y, np.dot(y, np.dot(a1, y)))

@@ -155,6 +155,7 @@ PYBIND11_MODULE(etraj, m) {
 		   })
 
 		.def("inverse", &ET::Matrix<double>::inverse)
+		.def("pseudo_inverse", &ET::Matrix<double>::pseudoInverse)
 		.def("permutation_matrix", &ET::Matrix<double>::permutationMatrix)
 		.def("LU", [](ET::Matrix<double> &self) {
 			if (self.getNumRows() != self.getNumCols())

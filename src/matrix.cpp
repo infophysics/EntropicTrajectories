@@ -593,7 +593,24 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::pseudoInverse()
   {
-
+    //  first compute SVD decomposition
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> svd = SVD();
+    //  The pseudo inverse is then V * Sigma * (U)^T
+    Matrix<T> U_matrix = std::get<0>(svd);
+    Matrix<T> Sigma_matrix = std::get<1>(svd);
+    Matrix<T> VT_matrix = std::get<2>(svd);
+    U_matrix.transpose(true);
+    VT_matrix.transpose(true);
+    for (uint64_t i = 0; i < Sigma_matrix.getNumCols(); i++)
+    {
+      T value = Sigma_matrix(i,i);
+      Sigma_matrix(i,i) = 1/value;
+    }
+    Sigma_matrix.transpose(true);
+    std::string name = "(" + _name + ")^+";
+    Matrix<T> result = VT_matrix * (Sigma_matrix * U_matrix);
+    result.setName(name);
+    return result;
   }
 
   template<typename T>
@@ -656,8 +673,8 @@ namespace ET
     std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
     _singular_values = sig;
     //  construct U, VT and Sigma matrices
-    Matrix<T> U_matrix("(V)^T",n,n,U);
-    Matrix<T> VT_matrix("U",m,m,VT);
+    Matrix<T> U_matrix("U",n,n,U);
+    Matrix<T> VT_matrix("(V)^T",m,m,VT);
     Matrix<T> S_matrix("Sigma",n,m,0.0);
     for (uint64_t i = 0; i < _singular_values.size(); i++)
     {
@@ -667,7 +684,7 @@ namespace ET
     //U_matrix.setName("U");
     //VT_matrix.transpose(true);
     //VT_matrix.setName("(V)^T");
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(VT_matrix, S_matrix, U_matrix);
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
     return result;
   }
 
