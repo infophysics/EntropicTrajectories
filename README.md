@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/EntropicTrajectories/entropictrajectories](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntropicTrajectories/entropictrajectories)
 
-This is the [Entropic Trajectories library](https://github.com/EntropicTrajectories/entropictrajectories), which provides a direct wrapping of functionality.  
+This is the [Entropic Trajectories library](https://github.com/infophysics/entropictrajectories), which provides a direct wrapping of functionality.  
 
 ## Prerequisites
 The Entropic Trajectories Framework uses many existing packages under the hood.  These include the BLAS and LAPACK libraries, which must be installed before cloning this repository.  BLAS and LAPACK can be found at,
