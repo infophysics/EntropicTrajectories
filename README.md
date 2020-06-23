@@ -69,7 +69,7 @@ $ git submodule update
 Then, once all of the submodules are there, simply run the installer,
 
 ```
-python setup.py install
+$ python setup.py install
 ```
 
 ## Usage
