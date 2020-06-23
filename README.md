@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/EntropicTrajectories/entropictrajectories](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/EntropicTrajectories/entropictrajectories)
 
-This is the [Entropic Trajectories library](https://github.com/NESTCollaboration/nest), which provides a direct wrapping of functionality.  
+This is the [Entropic Trajectories library](https://github.com/infophysics/entropictrajectories) which is a framework for solving many-body quantum systems.  For a the full technical documentation see ...  For various papers using the ET framework see ...
 
 ## Prerequisites
 The Entropic Trajectories Framework uses many existing packages under the hood.  These include the BLAS and LAPACK libraries, which must be installed before cloning this repository.  BLAS and LAPACK can be found at,
