@@ -487,7 +487,7 @@ namespace ET
   {
     std::vector<T> vec(_n,0.0);
     Vector<T> v2(vec);
-    if (_n != v.get_dim())
+    if (_n != v.getDim())
       return v2;
     for (uint64_t i = 0; i < _m; i++) {
       T temp = 0.0;
