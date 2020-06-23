@@ -162,8 +162,8 @@ PYBIND11_MODULE(etraj, m) {
 				throw py::value_error("Expecting square matrix!");
 			return self.LU();
 		})
-		.def("T", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
-		.def("T", (void  (ET::Matrix<double>::*)(bool)) &ET::Matrix<double>::transpose)
+		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
+		.def("transpose", (void  (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose_inplace)
 		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
 		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		.def("SVD", &ET::Matrix<double>::SVD)

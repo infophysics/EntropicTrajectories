@@ -80,7 +80,7 @@ print("\n(4) Pseudo Inverse Tests...")
 print("\n(4a)")
 
 # construct an n x m matrix m_4a
-m_4a = Matrix("m_1a",3,2,[1,1,1,2,3,2])
+m_4a = Matrix("m_4a",3,2,[1,1,1,2,3,2])
 print(m_4a)
 
 # compute the pseudo-inverse using two different approaches
@@ -98,22 +98,24 @@ print(S)
 print(VT)
 for i in range(min(S.get_num_cols(),S.get_num_rows())):
     S[i,i] = 1/S[i,i]
-UT = U.T()
-ST = S.T()
-V = VT.T()
+UT = U.transpose()
+ST = S.transpose()
+V = VT.transpose()
 print("\nThe matrices (U)^T, Sigma^+ and V")
 print(UT)
 print(ST)
 print(V)
-m_4ap2 = (VT.T())*(S.T())*(U.T())
+m_4ap2 = (V*ST*UT)
 print(m_4ap2)
 
 print("\nCheck the product")
-m_4app = m_4a * (m_4ap * m_4a)
+temp = m_4ap * m_4a
+m_4app = m_4a * temp
 print(m_4app)
 
 print("Scipy version...")
 print("Matrix m_4a")
+m_4a = Matrix("m_4a",3,2,[1,1,1,2,3,2])
 y = np.asarray(m_4a)
 print(y)
 print("Direct way")
@@ -123,13 +125,16 @@ print(yp)
 print("Indirect way")
 u, s, vh = linalg.svd(y)
 a = m_4a.get_num_rows()
-b = m_3a.get_num_cols()
+b = m_4a.get_num_cols()
 sigma = np.zeros((a,b))
 for i in range(min(a,b)):
     sigma[i, i] = s2[i]
+print(sigma)
+print(vh)
+print(u)
 vh = np.transpose(vh)
 u = np.transpose(u)
-np.transpose(sigma)
+sigma = np.transpose(sigma)
 a1 = np.dot(vh, np.dot(sigma, u))
 print(a1)
-np.allclose(y, np.dot(y, np.dot(a1, y)))
+print(np.allclose(y, np.dot(y, np.dot(a1, y))))

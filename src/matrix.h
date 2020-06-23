@@ -27,20 +27,20 @@ namespace ET
     Matrix();
     ~Matrix();
     Matrix(const Matrix<T>& matrix);
-    Matrix(uint64_t n);
-    Matrix(std::string name, uint64_t n);
-    Matrix(uint64_t n, uint64_t m);
-    Matrix(std::string name, uint64_t n, uint64_t m);
-    Matrix(uint64_t n, uint64_t m, const T& init);
-    Matrix(std::string name, uint64_t n, uint64_t m, const T& init);
+    Matrix(uint64_t m);
+    Matrix(std::string name, uint64_t m);
+    Matrix(uint64_t m, uint64_t n);
+    Matrix(std::string name, uint64_t m, uint64_t n);
+    Matrix(uint64_t m, uint64_t n, const T& init);
+    Matrix(std::string name, uint64_t m, uint64_t n, const T& init);
 
     //  Constructors passing elements
-    Matrix(uint64_t n, std::vector<T> flat);
-    Matrix(std::string name, uint64_t n, std::vector<T> flat);
-    Matrix(uint64_t n, uint64_t m, std::vector<T> flat);
-    Matrix(std::string name, uint64_t n,
-      uint64_t m, std::vector<T> flat);
-    Matrix(std::string name, uint64_t n, uint64_t m, T* array);
+    Matrix(uint64_t m, std::vector<T> flat);
+    Matrix(std::string name, uint64_t m, std::vector<T> flat);
+    Matrix(uint64_t m, uint64_t n, std::vector<T> flat);
+    Matrix(std::string name, uint64_t m,
+      uint64_t n, std::vector<T> flat);
+    Matrix(std::string name, uint64_t m, uint64_t n, T* array);
     Matrix(std::vector<std::vector<T> > array);
     Matrix(std::string name, std::vector<std::vector<T> > array);
 
@@ -88,45 +88,45 @@ namespace ET
     //  the friend method must be defined within the class block.
     friend Matrix<T> operator+(T s, const Matrix<T>& matrix)
     {
-      uint64_t n = matrix.getNumRows();
-      uint64_t m = matrix.getNumCols();
+      uint64_t m = matrix.getNumRows();
+      uint64_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + "I + "  + matrix.getName() + ")";
-      Matrix<T> l(name,n,m,0.0);
-      for (uint64_t i = 0; i < n*m; i++) {
+      Matrix<T> l(name,m,n,0.0);
+      for (uint64_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) + s;
       }
       return l;
     }
     friend Matrix<T> operator-(T s, const Matrix<T>& matrix)
     {
-      uint64_t n = matrix.getNumRows();
-      uint64_t m = matrix.getNumCols();
+      uint64_t m = matrix.getNumRows();
+      uint64_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + "I - "  + matrix.getName() + ")";
-      Matrix<T> l(name,n,m,0.0);
-      for (uint64_t i = 0; i < n*m; i++) {
+      Matrix<T> l(name,m,n,0.0);
+      for (uint64_t i = 0; i < m*n; i++) {
           l(i) = s - matrix(i);
       }
       return l;
     }
     friend Matrix<T> operator*(T s, const Matrix<T>& matrix)
     {
-      uint64_t n = matrix.getNumRows();
-      uint64_t m = matrix.getNumCols();
+      uint64_t m = matrix.getNumRows();
+      uint64_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + " * "  + matrix.getName() + ")";
-      Matrix<T> l(name,n,m,0.0);
-      for (uint64_t i = 0; i < n*m; i++) {
+      Matrix<T> l(name,m,n,0.0);
+      for (uint64_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) * s;
       }
       return l;
     }
     friend Matrix<T> operator/(T s, const Matrix<T>& matrix)
     {
-      uint64_t n = matrix.getNumRows();
-      uint64_t m = matrix.getNumCols();
+      uint64_t m = matrix.getNumRows();
+      uint64_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + " / "  + matrix.getName() + ")";
-      Matrix<T> l(name,n,m,0.0);
+      Matrix<T> l(name,m,n,0.0);
       std::vector<T> mat(n*m);
-      for (uint64_t i = 0; i < n*m; i++)
+      for (uint64_t i = 0; i < m*n; i++)
       {
         if (matrix(i) == 0)
         {
@@ -137,7 +137,7 @@ namespace ET
           mat[i] = s / matrix(i);
         }
       }
-      l.setArray(m, mat);
+      l.setArray(n, mat);
       return l;
     }
     //  Multiplying a vector
@@ -168,12 +168,12 @@ namespace ET
     //  Various methods
     void print();
     std::string summary();
-    Matrix<T> transpose();
-    void transpose(bool inplace = true);
+    Matrix<T> transpose() const;
+    void transpose_inplace();
 
   private:
-    //  _n is the number of rows, _m is the number of columns
-    uint64_t _n, _m;
+    //  _m is the number of rows, _n is the number of columns
+    uint64_t _m, _n;
     std::vector<T> _array;
     //  possible name for the matrix
     std::string _name;
@@ -185,15 +185,15 @@ namespace ET
 
   //  Various matrices
   template<typename T>
-  Matrix<T> identity(uint64_t n);
+  Matrix<T> identity(uint64_t m);
   template<typename T>
-  Matrix<T> zeroes(uint64_t n);
+  Matrix<T> zeroes(uint64_t m);
   template<typename T>
-  Matrix<T> zeroes(uint64_t n, uint64_t m);
+  Matrix<T> zeroes(uint64_t m, uint64_t n);
   template<typename T>
-  Matrix<T> ones(uint64_t n);
+  Matrix<T> ones(uint64_t m);
   template<typename T>
-  Matrix<T> ones(uint64_t n, uint64_t m);
+  Matrix<T> ones(uint64_t m, uint64_t n);
 
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
