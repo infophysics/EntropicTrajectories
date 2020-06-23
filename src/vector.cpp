@@ -9,35 +9,46 @@ namespace ET
 {
 
   template<typename T>
-  Vector<T>::Vector()
+  Vector<T>::Vector() : _dim(0), _name(" ")
   {
-
   }
   template<typename T>
   Vector<T>::~Vector()
   {
-
   }
   template<typename T>
-  Vector<T>::Vector(uint64_t dim) : _dim(dim)
+  Vector<T>::Vector(uint64_t dim) : _dim(dim), _name(" ")
   {
-
   }
   template<typename T>
-  Vector<T>::Vector(std::string name, uint64_t dim) : _dim(dim), _name(name)
+  Vector<T>::Vector(std::string name, uint64_t dim)
+  : _dim(dim), _name(name)
   {
-
+    _vec.resize(_dim,0.0);
   }
   template<typename T>
-  Vector<T>::Vector(std::vector<T> vec) : _vec(vec), _dim(_vec.size())
+  Vector<T>::Vector(std::vector<T> vec)
+  : _dim(vec.size()), _name(" "), _vec(vec)
   {
-
   }
   template<typename T>
   Vector<T>::Vector(std::string name, std::vector<T> vec)
-  : _vec(vec), _dim(_vec.size()), _name(name)
+  : _dim(vec.size()), _name(name), _vec(vec)
   {
-
+  }
+  template<typename T>
+  Vector<T>::Vector(uint64_t dim, const T& init)
+  : _dim(dim), _name(" ")
+  {
+    std::vector<T> vec(_dim,init);
+    _vec = vec;
+  }
+  template<typename T>
+  Vector<T>::Vector(std::string name, uint64_t dim, const T& init)
+  : _dim(dim), _name(name)
+  {
+    std::vector<T> vec(_dim,init);
+    _vec = vec;
   }
 
   template<typename T>
@@ -117,7 +128,8 @@ namespace ET
     {
       vec[i] = -1*_vec[i];
     }
-    return Vector<T>(_name,vec);
+    std::string name = "-" + _name;
+    return Vector<T>(name,vec);
   }
   template<typename T>
   Vector<T> Vector<T>::operator+(const Vector<T>& vector) const
@@ -147,6 +159,7 @@ namespace ET
     for (uint64_t i = 0; i < _dim; i++) {
         _vec[i] += vector(i);
     }
+    return *this;
   }
   template<typename T>
   Vector<T> Vector<T>::operator-(const Vector<T>& vector) const
@@ -176,14 +189,14 @@ namespace ET
     for (uint64_t i = 0; i < _dim; i++) {
         _vec[i] -= vector(i);
     }
+    return *this;
   }
   template<typename T>
   //  Scalar product
   T Vector<T>::dot(const Vector<T>* vector)
   {
     if(_dim != vector->getDim())
-    {    std::vector<T> vec(_dim,0.0);
-
+    {
       std::cout << "Vectors incompatible!" << std::endl;
       return 0;
     }
@@ -299,6 +312,76 @@ namespace ET
     std::vector<T> vec(dim,0.0);
     Vector<T> v(vec);
     return v;
+  }
+
+  template<typename T>
+  std::string Vector<T>::summary()
+  {
+    std::stringstream s;
+    s.str("");
+    s.clear();
+    std::string sum = "dim: " + std::to_string(_dim)
+                    +  ", type: "
+                    + type_name<decltype(_vec[0])>();
+    if (_name != " ")
+    {
+      sum +=  ", name: '" + _name + "'";
+    }
+    if (_vec.size() == 0)
+    {
+      sum += "\n[  empty  ]";
+      return sum;
+    }
+    sum += "\n[ ";
+    if (_dim < 10)
+    {
+      if (_vec[0] >= 0.0)
+          sum += " ";
+      for (uint64_t i = 0; i < _dim; i++)
+      {
+        sum += scientific_not(this->_vec[i],3);
+        if (i < _dim-1)
+        {
+          if (_vec[i+1] >= 0.0)
+            sum += "   ";
+          else
+            sum += "  ";
+        }
+      }
+    }
+    else
+    {
+      if (_vec[0] >= 0.0)
+          sum += " ";
+      sum += scientific_not(this->_vec[0],3);
+      if (_vec[1] >= 0.0)
+        sum += "   ";
+      else
+        sum += "  ";
+      sum += scientific_not(this->_vec[1],3);
+      if (_vec[2] >= 0.0)
+        sum += "   ";
+      else
+        sum += "  ";
+      sum += scientific_not(this->_vec[2],3);
+      sum += "   ";
+      sum += "...   ";
+      if (_vec[_dim-3] >= 0.0)
+        sum += " ";
+      sum += scientific_not(this->_vec[_dim-3],3);
+      if (_vec[_dim-2] >= 0.0)
+        sum += "   ";
+      else
+        sum += "  ";
+      sum += scientific_not(this->_vec[_dim-2],3);
+      if (_vec[_dim-1] >= 0.0)
+        sum += "   ";
+      else
+        sum += "  ";
+      sum += scientific_not(this->_vec[_dim-1],3);
+    }
+    sum += "  ]";
+    return sum;
   }
 
 }

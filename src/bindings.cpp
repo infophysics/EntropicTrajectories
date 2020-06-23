@@ -22,25 +22,71 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(etraj, m) {
 
-  py::class_<ET::Vector<double>>(m, "Vector")
+  py::class_<ET::Vector<double>>(m, "Vector", py::buffer_protocol())
     .def(py::init<>())
-    .def(py::init<unsigned int>())
+    .def(py::init<uint64_t>())
+		.def(py::init<std::string, uint64_t>())
     .def(py::init<std::vector<double>>())
+		.def(py::init<std::string, std::vector<double>>())
+		.def(py::init<uint64_t, const double&>())
+		.def(py::init<std::string, uint64_t, const double&>())
+		.def(py::init([](py::buffer const b) {
+            py::buffer_info info = b.request();
+            if (info.format != py::format_descriptor<float>::format() || info.ndim != 1)
+                throw std::runtime_error("Incompatible buffer format!");
+
+            auto v = new ET::Vector<double>(info.shape[0]);
+            memcpy(v->getVec().data(), info.ptr, sizeof(double) * (size_t) (v->getDim()));
+            return v;
+        }))
+
+		.def("get_dim", &ET::Vector<double>::getDim)
+		.def("get_vec", &ET::Vector<double>::getVec)
+		.def("get_name", &ET::Vector<double>::getName)
+		.def("set_dim", &ET::Vector<double>::setDim)
+		.def("set_vec", &ET::Vector<double>::setVec)
+		.def("set_name", &ET::Vector<double>::setName)
+		.def("dot", &ET::Vector<double>::dot)
+		//	operator overloads
+		.def(py::self == py::self)
+		.def(py::self != py::self)
+    .def(py::self + py::self)
+    .def(py::self += py::self)
+    .def(py::self - py::self)
+    .def(py::self -= py::self)
+    .def(py::self + double())
+    .def(py::self += double())
+    .def(py::self - double())
+    .def(py::self -= double())
+    .def(py::self * double())
+    .def(py::self *= double())
+    .def(py::self / double())
+    .def(py::self /= double())
+		.def(-py::self)
+		.def(double() + py::self)
+		.def(double() - py::self)
+		.def(double() * py::self)
+		.def(double() / py::self)
+
+		//	print functionality
+		.def("__repr__", [](const ET::Vector<double> &vector) {
+				return vector.summary();
+		})
     ;
 
   py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
-    .def(py::init<unsigned int>())
-    .def(py::init<std::string, unsigned int>())
-    .def(py::init<unsigned int, unsigned int>())
-    .def(py::init<std::string, unsigned int, unsigned int>())
-    .def(py::init<unsigned int, unsigned int, const double&>())
-    .def(py::init<std::string, unsigned int, unsigned int, const double&>())
-    .def(py::init<unsigned int, std::vector<double>>())
-    .def(py::init<std::string, unsigned int, std::vector<double>>())
-    .def(py::init<unsigned int, unsigned int, std::vector<double>>())
-    .def(py::init<std::string, unsigned int, unsigned int, std::vector<double>>())
+    .def(py::init<uint64_t>())
+    .def(py::init<std::string, uint64_t>())
+    .def(py::init<uint64_t, uint64_t>())
+    .def(py::init<std::string, uint64_t, uint64_t>())
+    .def(py::init<uint64_t, uint64_t, const double&>())
+    .def(py::init<std::string, uint64_t, uint64_t, const double&>())
+    .def(py::init<uint64_t, std::vector<double>>())
+    .def(py::init<std::string, uint64_t, std::vector<double>>())
+    .def(py::init<uint64_t, uint64_t, std::vector<double>>())
+    .def(py::init<std::string, uint64_t, uint64_t, std::vector<double>>())
 		.def(py::init<std::vector<std::vector<double>>>())
 		.def(py::init<std::string, std::vector<std::vector<double>>>())
 		.def(py::init([](py::buffer const b) {
@@ -94,9 +140,9 @@ PYBIND11_MODULE(etraj, m) {
 		//	Matrix array access.  This first method allows the user
 		//	to write x = m[i,j] to get elements.
     .def("__getitem__", [](const ET::Matrix<double> &self,
-					std::tuple<unsigned int, unsigned int> ij)
+					std::tuple<uint64_t, uint64_t> ij)
 		{
-				unsigned int i, j;
+				uint64_t i, j;
 				std::tie(i, j) = ij;
 				if (i < 0 || i >= self.getNumRows())
 					throw py::index_error("Index " + std::to_string(i) +
@@ -111,9 +157,9 @@ PYBIND11_MODULE(etraj, m) {
 		//	now for the setter of the same type.  To set an element to a Matrix
 		//	at index i,j, write - m[i,j] = x.
 		.def("__setitem__", [](ET::Matrix<double> &self,
-					std::tuple<unsigned int, unsigned int> ij, const double& val)
+					std::tuple<uint64_t, uint64_t> ij, const double& val)
 		{
-				unsigned int i, j;
+				uint64_t i, j;
 				std::tie(i, j) = ij;
 				if (i < 0 || i >= self.getNumRows())
 					throw py::index_error("Index " + std::to_string(i) +
@@ -171,10 +217,10 @@ PYBIND11_MODULE(etraj, m) {
 
 		py::class_<ET::Grid<double>>(m, "Grid")
 			.def(py::init<>())
-			.def(py::init<unsigned int>())
-			.def(py::init<std::string, unsigned int>())
-			.def(py::init<unsigned int, unsigned int>())
-			.def(py::init<std::string, unsigned int, unsigned int>())
+			.def(py::init<uint64_t>())
+			.def(py::init<std::string, uint64_t>())
+			.def(py::init<uint64_t, uint64_t>())
+			.def(py::init<std::string, uint64_t, uint64_t>())
 			//	getters
 			.def("get_dim", &ET::Grid<double>::getDim)
 			.def("get_N", &ET::Grid<double>::getN)
@@ -193,9 +239,9 @@ PYBIND11_MODULE(etraj, m) {
 			.def("set_name", &ET::Grid<double>::setName)
 			//	access operators
 			.def("__getitem__", [](const ET::Grid<double> &self,
-						std::tuple<unsigned int, unsigned int> ij)
+						std::tuple<uint64_t, uint64_t> ij)
 			{
-					unsigned int i, j;
+					uint64_t i, j;
 					std::tie(i, j) = ij;
 					if (i < 0 || i >= self.getN())
 						throw py::index_error("Index " + std::to_string(i) +
@@ -209,9 +255,9 @@ PYBIND11_MODULE(etraj, m) {
 			}, py::is_operator())
 
 			.def("__setitem__", [](ET::Grid<double> &self,
-						std::tuple<unsigned int, unsigned int> ij, const double& val)
+						std::tuple<uint64_t, uint64_t> ij, const double& val)
 			{
-					unsigned int i, j;
+					uint64_t i, j;
 					std::tie(i, j) = ij;
 					if (i < 0 || i >= self.getN())
 						throw py::index_error("Index " + std::to_string(i) +

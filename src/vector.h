@@ -2,9 +2,16 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <iostream>
+#include <ostream>
 #include <stdio.h>
 #include <complex>
+#include <lapacke.h>
+#include <cblas.h>
+#include <stdint.h>
+
+#include "utils.h"
 
 namespace ET
 {
@@ -108,6 +115,7 @@ namespace ET
     T& operator()(const uint64_t& i);
     const T& operator()(const uint64_t& i) const;
 
+    std::string summary();
   private:
     //  dimension
     uint64_t _dim;
