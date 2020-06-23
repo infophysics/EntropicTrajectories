@@ -1,15 +1,8 @@
-# nestpy
+# Entropic Trajectories
 
 [![Join the chat at https://gitter.im/EntropicTrajectories/entropictrajectories] [![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/gitterHQ/gitter)
-[![Build Status](https://travis-ci.org/NESTCollaboration/nestpy.svg?branch=master)](https://travis-ci.org/NESTCollaboration/nestpy)
-[![DOI](https://zenodo.org/badge/140174447.svg)](https://zenodo.org/badge/latestdoi/140174447)
-[![PyPi version](https://pypip.in/v/nestpy/badge.png)](https://pypi.org/project/nestpy/)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Python Versions](https://img.shields.io/pypi/pyversions/nestpy.svg)](https://pypi.python.org/pypi/nestpy)
 
-This is the [Entropic Trajectories library](https://github.com/NESTCollaboration/nest), which provides a direct wrapping of functionality.  The library is not Pythonic at this point but just uses the existing naming conventions from the C++ library.
-
-You do *not* have to have NEST already installed to use this package.
+This is the [Entropic Trajectories library](https://github.com/NESTCollaboration/nest), which provides a direct wrapping of functionality.  
 
 ## Installing from PyPI
 
