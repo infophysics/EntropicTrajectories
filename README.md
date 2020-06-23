@@ -10,6 +10,15 @@ The Entropic Trajectories Framework uses many existing packages under the hood. 
  - LAPACK (Linear Algebra PACKage); http://www.netlib.org/lapack/
  - LAPACKe (C wrapper for LAPACK); https://www.netlib.org/lapack/lapacke.html
 ### Linux installation
+Make sure that you have the python development environment installed,
+```
+$ sudo apt-get install python3-dev
+```
+You will also need a suitable version of CMake and GCC,
+```
+$ sudo apt-get install cmake
+$ sudo apt-get install gcc
+```
 To install BLAS and LAPACK (LAPACKe) on Ubuntu simply run the following command in the terminal,
 ```
 $ sudo apt-get install libblas-dev checkinstall
