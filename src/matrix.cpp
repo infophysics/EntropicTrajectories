@@ -1004,7 +1004,7 @@ namespace ET
   }
 
   template<typename T>
-  void Matrix<T>::transpose_inplace()
+  void Matrix<T>::transpose_inplace(bool inplace)
   {
     std::vector<T> new_array(_m*_n);
     for (uint32_t i = 0 ; i < _m; i++)
@@ -1021,7 +1021,22 @@ namespace ET
     _n = n;
     _m = m;
     _array = new_array;
-    return *this;
+  }
+
+  template<typename T>
+  T Matrix<T>::trace()
+  {
+    if (_m != _n)
+    {
+      std::cout << "Matrix is not square, trace is undefined!" << std::endl;
+      return 0;
+    }
+    T result = 0;
+    for (uint32_t i = 0; i < _m; i++)
+    {
+      result += _array[i*_n + i];
+    }
+    return result;
   }
 
   template<typename T>

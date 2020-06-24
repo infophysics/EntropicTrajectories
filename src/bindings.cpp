@@ -224,7 +224,8 @@ PYBIND11_MODULE(etraj, m) {
 			return self.LU();
 		})
 		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
-		.def("transpose", (void  (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose_inplace)
+		.def("transpose", (void (ET::Matrix<double>::*)(bool)) &ET::Matrix<double>::transpose_inplace)
+		.def("trace", &ET::Matrix<double>::trace)
 		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
 		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		.def("SVD", &ET::Matrix<double>::SVD)

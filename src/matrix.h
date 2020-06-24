@@ -149,6 +149,13 @@ namespace ET
     T& operator()(const uint32_t& i);
     const T& operator()(const uint32_t& i) const;
 
+    //  Various methods
+    void print();
+    std::string summary();
+    Matrix<T> transpose() const;
+    void transpose_inplace(bool inplace=true);
+    T trace();
+
     //  Level 2 BLAS
     //  Vector<T> GEMV(T& alpha, Vector<T>& x, T& beta);
 
@@ -168,11 +175,7 @@ namespace ET
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
     std::vector<T> getSingularValues();
 
-    //  Various methods
-    void print();
-    std::string summary();
-    Matrix<T> transpose() const;
-    void transpose_inplace();
+
 
   private:
     //  _m is the number of rows, _n is the number of columns
