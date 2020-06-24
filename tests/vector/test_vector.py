@@ -304,6 +304,14 @@ v = Vector('v',[1,2,3,4,5])
 x = v[3]
 print(x)
 
+print("\n(3u) Assignment")
+print(">>> v = Vector('v',[1,2,3,4,5])")
+print(">>> v[3] = 7.8")
+print(">>> print(v)")
+v = Vector('v',[1,2,3,4,5])
+v[3] = 7.8
+print(v)
+
 print("\n-----------------------------------------------")
 print("\n(4) Various geometric methods")
 

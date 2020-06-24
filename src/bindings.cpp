@@ -67,7 +67,22 @@ PYBIND11_MODULE(etraj, m) {
 		.def(double() - py::self)
 		.def(double() * py::self)
 		.def(double() / py::self)
-
+		.def("__getitem__", [](const ET::Vector<double> &self, int i) {
+			if (i < 0 || i >= self.getDim())
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for vector with dimension "
+															+ std::to_string(self.getDim()) + "!");
+			return self(i);
+		}, py::is_operator())
+		.def("__setitem__", [](ET::Vector<double> &self,
+					int i, const double& val)
+		{
+			if (i < 0 || i >= self.getDim())
+			throw py::index_error("Index " + std::to_string(i) +
+														" out of bounds for vector with dimension "
+														+ std::to_string(self.getDim()) + "!");
+			self(i) = val;
+		}, py::is_operator())
 		//	print functionality
 		.def("__repr__", [](const ET::Vector<double> &vector) {
 				return vector.summary();
