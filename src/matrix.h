@@ -156,8 +156,6 @@ namespace ET
     void transpose_inplace(bool inplace=true);
     T trace();
 
-    //  Level 2 BLAS
-    //  Vector<T> GEMV(T& alpha, Vector<T>& x, T& beta);
 
     //  Linear algebra tools
     Matrix<T> permutationMatrix(int& n, int* pivot);

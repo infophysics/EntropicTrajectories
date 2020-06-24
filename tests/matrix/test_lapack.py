@@ -20,7 +20,7 @@ print("\n(2) LU tests...")
 print("\n(2a) - permutation matrix")
 m_2a = Matrix("m_2a",3,3,[1,2,3,4,5,6,7,8,9])
 print(m_2a)
-perm, L, U = m_2a.LU();
+perm, L, U = m_2a.LU()
 x = np.asarray(m_2a)
 print("Numpy version")
 print(x)
