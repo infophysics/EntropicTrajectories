@@ -8,10 +8,23 @@ This is the [Entropic Trajectories library](https://github.com/infophysics/entro
 The Entropic Trajectories Framework uses many existing packages under the hood.  These include the BLAS and LAPACK libraries, which must be installed before cloning this repository.  BLAS and LAPACK can be found at,
  - BLAS (Basic Linear Algebra Subprograms); http://www.netlib.org/blas/
  - LAPACK (Linear Algebra PACKage); http://www.netlib.org/lapack/
+ - LAPACKe (C wrapper for LAPACK); https://www.netlib.org/lapack/lapacke.html
 ### Linux installation
-To install BLAS and LAPACK on Ubuntu simply run the following command in the terminal,
+Make sure that you have the python development environment installed,
 ```
-$ sudo apt-get install libblas-dev liblapack-dev
+$ sudo apt-get install python3-dev
+```
+You will also need a suitable version of CMake and GCC,
+```
+$ sudo apt-get install cmake
+$ sudo apt-get install gcc
+```
+To install BLAS and LAPACK (LAPACKe) on Ubuntu simply run the following command in the terminal,
+```
+$ sudo apt-get install libblas-dev checkinstall
+$ sudo apt-get install libblas-doc checkinstall
+$ sudo apt-get install liblapacke-dev checkinstall
+$ sudo apt-get install liblapack-doc checkinstall
 ```
 Other distributions can likely issue a similar command with different package managers (See https://distrowatch.com/dwres.php?resource=package-management for a list of common ones).  You will also need a fortran compiler if you don't already have one,
 ```
@@ -56,7 +69,7 @@ $ git submodule update
 Then, once all of the submodules are there, simply run the installer,
 
 ```
-python setup.py install
+$ python setup.py install
 ```
 
 ## Usage
@@ -79,12 +92,10 @@ For more examples on possible calls, please see the tests folder.
 
 ## Technical implementation
 
-This package is a [pybind11](https://pybind11.readthedocs.io/en/stable/intro.html) wrapper of [NEST](https://github.com/NESTCollaboration/nest) that uses [TravisCI](https://travis-ci.org) to build binaries using the [manylinux](https://github.com/pypa/python-manylinux-demo) [Docker image](https://www.docker.com).
-
 * Implementation also based on [this](http://www.benjack.io/2018/02/02/python-cpp-revisited.html)
 
 See AUTHORS.md for information on the developers.
 
 ## Citation
 
-When you use `nestpy`, please say so in your slides or publications (for publications, see Zenodo link above).  You can mention this in addition to how you cite NEST.  This is important for us being able to get funding to support this project.
+When you use `etraj`, please say so in your slides or publications (for publications, see Zenodo link above).  You can mention this in addition to how you cite EntropicTrajectories.  This is important for us being able to get funding to support this project.
