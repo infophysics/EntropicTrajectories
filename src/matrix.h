@@ -27,37 +27,37 @@ namespace ET
     Matrix();
     ~Matrix();
     Matrix(const Matrix<T>& matrix);
-    Matrix(uint64_t m);
-    Matrix(std::string name, uint64_t m);
-    Matrix(uint64_t m, uint64_t n);
-    Matrix(std::string name, uint64_t m, uint64_t n);
-    Matrix(uint64_t m, uint64_t n, const T& init);
-    Matrix(std::string name, uint64_t m, uint64_t n, const T& init);
+    Matrix(uint32_t m);
+    Matrix(std::string name, uint32_t m);
+    Matrix(uint32_t m, uint32_t n);
+    Matrix(std::string name, uint32_t m, uint32_t n);
+    Matrix(uint32_t m, uint32_t n, const T& init);
+    Matrix(std::string name, uint32_t m, uint32_t n, const T& init);
 
     //  Constructors passing elements
-    Matrix(uint64_t m, std::vector<T> flat);
-    Matrix(std::string name, uint64_t m, std::vector<T> flat);
-    Matrix(uint64_t m, uint64_t n, std::vector<T> flat);
-    Matrix(std::string name, uint64_t m,
-      uint64_t n, std::vector<T> flat);
-    Matrix(std::string name, uint64_t m, uint64_t n, T* array);
+    Matrix(uint32_t m, std::vector<T> flat);
+    Matrix(std::string name, uint32_t m, std::vector<T> flat);
+    Matrix(uint32_t m, uint32_t n, std::vector<T> flat);
+    Matrix(std::string name, uint32_t m,
+      uint32_t n, std::vector<T> flat);
+    Matrix(std::string name, uint32_t m, uint32_t n, T* array);
     Matrix(std::vector<std::vector<T> > array);
     Matrix(std::string name, std::vector<std::vector<T> > array);
 
     //  Getters
-    uint64_t getNumRows() const;
-    uint64_t getNumCols() const;
+    uint32_t getNumRows() const;
+    uint32_t getNumCols() const;
     std::string getName() const;
     std::vector<T> getArray() const;
-    std::vector<T> getRow(uint64_t i);
-    std::vector<T> getCol(uint64_t i);
+    std::vector<T> getRow(uint32_t i);
+    std::vector<T> getCol(uint32_t i);
     float *data();
 
     //  Setters
     void setName(std::string name);
-    void setRow(uint64_t i, std::vector<T> row);
-    void setCol(uint64_t i, std::vector<T> col);
-    void setArray(uint64_t m, std::vector<T> mat);
+    void setRow(uint32_t i, std::vector<T> row);
+    void setCol(uint32_t i, std::vector<T> col);
+    void setArray(uint32_t m, std::vector<T> mat);
     void setArray(std::vector<std::vector<T> > mat);
 
     //  Operator overloads
@@ -88,45 +88,45 @@ namespace ET
     //  the friend method must be defined within the class block.
     friend Matrix<T> operator+(T s, const Matrix<T>& matrix)
     {
-      uint64_t m = matrix.getNumRows();
-      uint64_t n = matrix.getNumCols();
+      uint32_t m = matrix.getNumRows();
+      uint32_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + "I + "  + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint64_t i = 0; i < m*n; i++) {
+      for (uint32_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) + s;
       }
       return l;
     }
     friend Matrix<T> operator-(T s, const Matrix<T>& matrix)
     {
-      uint64_t m = matrix.getNumRows();
-      uint64_t n = matrix.getNumCols();
+      uint32_t m = matrix.getNumRows();
+      uint32_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + "I - "  + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint64_t i = 0; i < m*n; i++) {
+      for (uint32_t i = 0; i < m*n; i++) {
           l(i) = s - matrix(i);
       }
       return l;
     }
     friend Matrix<T> operator*(T s, const Matrix<T>& matrix)
     {
-      uint64_t m = matrix.getNumRows();
-      uint64_t n = matrix.getNumCols();
+      uint32_t m = matrix.getNumRows();
+      uint32_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + " * "  + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint64_t i = 0; i < m*n; i++) {
+      for (uint32_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) * s;
       }
       return l;
     }
     friend Matrix<T> operator/(T s, const Matrix<T>& matrix)
     {
-      uint64_t m = matrix.getNumRows();
-      uint64_t n = matrix.getNumCols();
+      uint32_t m = matrix.getNumRows();
+      uint32_t n = matrix.getNumCols();
       std::string name = "(" + std::to_string(s) + " / "  + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       std::vector<T> mat(n*m);
-      for (uint64_t i = 0; i < m*n; i++)
+      for (uint32_t i = 0; i < m*n; i++)
       {
         if (matrix(i) == 0)
         {
@@ -143,16 +143,19 @@ namespace ET
     //  Multiplying a vector
     Vector<T> operator*(const Vector<T>& v);
     //  Access operators
-    T& operator()(const uint64_t& i, const uint64_t& j);
-    const T& operator()(const uint64_t& i, const uint64_t& j) const;
+    T& operator()(const uint32_t& i, const uint32_t& j);
+    const T& operator()(const uint32_t& i, const uint32_t& j) const;
     //  Flattened access
-    T& operator()(const uint64_t& i);
-    const T& operator()(const uint64_t& i) const;
+    T& operator()(const uint32_t& i);
+    const T& operator()(const uint32_t& i) const;
+
+    //  Level 2 BLAS
+    //  Vector<T> GEMV(T& alpha, Vector<T>& x, T& beta);
 
     //  Linear algebra tools
     Matrix<T> permutationMatrix(int& n, int* pivot);
     //  TODO:
-    uint64_t getRank();
+    uint32_t getRank();
     bool isInvertible();
     void findSingularValues();
     Matrix<T> inverse();
@@ -173,30 +176,34 @@ namespace ET
 
   private:
     //  _m is the number of rows, _n is the number of columns
-    uint64_t _m, _n;
+    uint32_t _m, _n;
     std::vector<T> _array;
     //  possible name for the matrix
     std::string _name;
     //  container for singular values
     std::vector<T> _singular_values;
     //  assign rank to -1 at initilization.
-    uint64_t _rank = -1;
+    uint32_t _rank = -1;
   };
 
   //  Various matrices
   template<typename T>
-  Matrix<T> identity(uint64_t m);
+  Matrix<T> identity(uint32_t m);
   template<typename T>
-  Matrix<T> zeroes(uint64_t m);
+  Matrix<T> zeroes(uint32_t m);
   template<typename T>
-  Matrix<T> zeroes(uint64_t m, uint64_t n);
+  Matrix<T> zeroes(uint32_t m, uint32_t n);
   template<typename T>
-  Matrix<T> ones(uint64_t m);
+  Matrix<T> ones(uint32_t m);
   template<typename T>
-  Matrix<T> ones(uint64_t m, uint64_t n);
+  Matrix<T> ones(uint32_t m, uint32_t n);
 
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
 
   template class Matrix<double>;
+
+  //  Level 2 BLAS double
+  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+      Vector<double>& x, double& beta);
 }

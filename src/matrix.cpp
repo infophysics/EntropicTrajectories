@@ -6,7 +6,7 @@ namespace ET
 {
 
   template<typename T>
-  Matrix<T>::Matrix() : _name(" ") {}
+  Matrix<T>::Matrix() : _name(" "), _m(0), _n(0) {}
 
   template<typename T>
   Matrix<T>::~Matrix() {}
@@ -22,73 +22,73 @@ namespace ET
   }
 
   template<typename T>
-  Matrix<T>::Matrix(uint64_t m) : _m(m), _n(m), _name(" ")
+  Matrix<T>::Matrix(uint32_t m) : _m(m), _n(m), _name(" ")
   {
     _array.resize(_m*_n,0.0);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m)
+  Matrix<T>::Matrix(std::string name, uint32_t m)
   : _m(m), _n(m), _name(name)
   {
     _array.resize(_m*_n,0.0);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(uint64_t m, uint64_t n) : _m(m), _n(n), _name(" ")
+  Matrix<T>::Matrix(uint32_t m, uint32_t n) : _m(m), _n(n), _name(" ")
   {
     _array.resize(_m*_n,0.0);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m, uint64_t n)
+  Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n)
   : _m(m), _n(n), _name(name)
   {
     _array.resize(_m*_n,0.0);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(uint64_t m, uint64_t n, const T& init)
+  Matrix<T>::Matrix(uint32_t m, uint32_t n, const T& init)
   : _m(m), _n(n), _name(" ")
   {
     _array.resize(_m*_n, init);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m,
-    uint64_t n, const T& init)
+  Matrix<T>::Matrix(std::string name, uint32_t m,
+    uint32_t n, const T& init)
   : _m(m), _n(n), _name(name)
   {
     _array.resize(_m*_n, init);
   }
 
   template<typename T>
-  Matrix<T>::Matrix(uint64_t m, std::vector<T> flat)
+  Matrix<T>::Matrix(uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(" "), _array(flat)
   {
 
   }
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m, std::vector<T> flat)
+  Matrix<T>::Matrix(std::string name, uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(name), _array(flat)
   {
 
   }
   template<typename T>
-  Matrix<T>::Matrix(uint64_t m, uint64_t n, std::vector<T> flat)
+  Matrix<T>::Matrix(uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(" "), _array(flat)
   {
 
   }
 
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m, uint64_t n, std::vector<T> flat)
+  Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(name), _array(flat)
   {
   }
 
   template<typename T>
-  Matrix<T>::Matrix(std::string name, uint64_t m, uint64_t n, T* array)
+  Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, T* array)
   : _m(m), _n(n), _name(name)
   {
     std::vector<T> flat(array, array + _m*_n);
@@ -100,7 +100,7 @@ namespace ET
   : _m(array.size()), _n(array[0].size()), _name(" ")
   {
     std::vector<T> flat;
-    for (uint64_t i = 0; i < _m; i++)
+    for (uint32_t i = 0; i < _m; i++)
     {
       flat.insert(end(flat),begin(array[i]),end(array[i]));
     }
@@ -112,7 +112,7 @@ namespace ET
   : _m(array.size()), _n(array[0].size()), _name(name)
   {
     std::vector<T> flat;
-    for (uint64_t i = 0; i < _m; i++)
+    for (uint32_t i = 0; i < _m; i++)
     {
       flat.insert(end(flat),begin(array[i]),end(array[i]));
     }
@@ -120,13 +120,13 @@ namespace ET
   }
 
   template<typename T>
-  uint64_t Matrix<T>::getNumRows() const
+  uint32_t Matrix<T>::getNumRows() const
   {
     return _m;
   }
 
   template<typename T>
-  uint64_t Matrix<T>::getNumCols() const
+  uint32_t Matrix<T>::getNumCols() const
   {
     return _n;
   }
@@ -147,7 +147,7 @@ namespace ET
   float* Matrix<T>::data()
   {
     float *copy = new float[_m*_n];
-    for (uint64_t i = 0; i < _m*_n; i++)
+    for (uint32_t i = 0; i < _m*_n; i++)
     {
       copy[i] = _array[i];
     }
@@ -155,7 +155,7 @@ namespace ET
   }
 
   template<typename T>
-  std::vector<T> Matrix<T>::getRow(uint64_t i)
+  std::vector<T> Matrix<T>::getRow(uint32_t i)
   {
     std::vector<T> row(_m,0.0);
     //  check that row exists
@@ -165,7 +165,7 @@ namespace ET
         " exceeds matrix with dimension " + std::to_string(_m) + "!";
       return row;
     }
-    for (uint64_t j = 0; j < _m; j++)
+    for (uint32_t j = 0; j < _m; j++)
     {
       row[j] = _array[i*_m + j];
     }
@@ -173,10 +173,10 @@ namespace ET
   }
 
   template<typename T>
-  std::vector<T> Matrix<T>::getCol(uint64_t i)
+  std::vector<T> Matrix<T>::getCol(uint32_t i)
   {
     std::vector<T> col(_m,0.0);
-    for (uint64_t j = 0; j < _n; j++) {
+    for (uint32_t j = 0; j < _n; j++) {
       col[j] = _array[j*_n + i];
     }
     return col;
@@ -189,21 +189,21 @@ namespace ET
     _name = name;
   }
   template<typename T>
-  void Matrix<T>::setRow(uint64_t i, std::vector<T> row)
+  void Matrix<T>::setRow(uint32_t i, std::vector<T> row)
   {
-    for (uint64_t j = 0; j < _n; j++) {
+    for (uint32_t j = 0; j < _n; j++) {
       _array[i*_n + j] = row[j];
     }
   }
   template<typename T>
-  void Matrix<T>::setCol(uint64_t i, std::vector<T> col)
+  void Matrix<T>::setCol(uint32_t i, std::vector<T> col)
   {
-    for (uint64_t j = 0; j < _m; j++) {
+    for (uint32_t j = 0; j < _m; j++) {
       _array[j*_n + i] = col[j];
     }
   }
   template<typename T>
-  void Matrix<T>::setArray(uint64_t m, std::vector<T> mat)
+  void Matrix<T>::setArray(uint32_t m, std::vector<T> mat)
   {
     _n = mat.size()/m;
     _m = m;
@@ -215,9 +215,9 @@ namespace ET
     _m = mat.size();
     _n = mat[0].size();
     _array.resize(_m*_n);
-    for (uint64_t i = 0; i < _m; i++)
+    for (uint32_t i = 0; i < _m; i++)
     {
-      for (uint64_t j = 0; j < _n; j++)
+      for (uint32_t j = 0; j < _n; j++)
       {
         _array[i*_n + j] = mat[i][j];
       }
@@ -235,7 +235,7 @@ namespace ET
     _n = matrix.getNumCols();
     _name = matrix.getName();
     _array.resize(_m*_n);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] = matrix(i);
     }
     return *this;
@@ -245,7 +245,7 @@ namespace ET
   {
     if (_n != matrix.getNumRows() || _m != matrix.getNumCols())
       return false;
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         if (matrix(i) != _array[i])
           return false;
     }
@@ -256,7 +256,7 @@ namespace ET
   {
     if (_n != matrix.getNumRows() || _m != matrix.getNumCols())
       return true;
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         if (matrix(i) != _array[i])
           return true;
     }
@@ -266,7 +266,7 @@ namespace ET
   Matrix<T> Matrix<T>::operator-() const
   {
     std::vector<T> mat(_m*_n);
-    for (uint64_t i = 0; i < _m*_n; i++)
+    for (uint32_t i = 0; i < _m*_n; i++)
     {
       mat[i] = -1*_array[i];
     }
@@ -283,7 +283,7 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
     Matrix<T> l(name, _m, _n, 0.0);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] + matrix(i);
     }
     return l;
@@ -298,7 +298,7 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] += matrix(i);
     }
     return *this;
@@ -313,7 +313,7 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + matrix.getName() + ")";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] - matrix(i);
     }
     return l;
@@ -328,7 +328,7 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + matrix.getName() + ")";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] -= matrix(i);
     }
     return *this;
@@ -379,9 +379,9 @@ namespace ET
     }
     std::string name = "(" + _name + " * " + matrix.getName() + ")";
     Matrix<T> l(name,_m,matrix.getNumCols(),0.0);
-    for (uint64_t i = 0; i < _m; i++) {
-      for (uint64_t j = 0; j < _n; j++) {
-        for (uint64_t k = 0; k < _m; k++) {
+    for (uint32_t i = 0; i < _m; i++) {
+      for (uint32_t j = 0; j < _n; j++) {
+        for (uint32_t k = 0; k < _m; k++) {
           l(i,j) += this->_array[i*_n + k] * matrix(k,j);
         }
       }
@@ -401,7 +401,7 @@ namespace ET
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] + s;
     }
     return l;
@@ -411,7 +411,7 @@ namespace ET
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] - s;
     }
     return l;
@@ -421,7 +421,7 @@ namespace ET
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] * s;
     }
     return l;
@@ -433,7 +433,7 @@ namespace ET
     Matrix<T> l(name,_m,_n,0.0);
     if (s == 0)
       return l;
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         l(i) = _array[i] + s;
     }
     return l;
@@ -444,7 +444,7 @@ namespace ET
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] += s;
     }
     return *this;
@@ -454,7 +454,7 @@ namespace ET
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] -= s;
     }
     return *this;
@@ -464,7 +464,7 @@ namespace ET
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] *= s;
     }
     return *this;
@@ -476,7 +476,7 @@ namespace ET
       return *this;
     std::string name = "(" + _name + " / " + std::to_string(s) + ")";
     setName(name);
-    for (uint64_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++) {
         _array[i] += s;
     }
     return *this;
@@ -489,9 +489,9 @@ namespace ET
     Vector<T> v2(vec);
     if (_n != v.getDim())
       return v2;
-    for (uint64_t i = 0; i < _m; i++) {
+    for (uint32_t i = 0; i < _m; i++) {
       T temp = 0.0;
-      for (uint64_t j = 0; j < _n; j++) {
+      for (uint32_t j = 0; j < _n; j++) {
         temp += this->_array[i*_n + j] * v(j);
       }
       v2(i) = temp;
@@ -500,22 +500,22 @@ namespace ET
   }
   //  Access Matrix<T>::operators
   template<typename T>
-  T& Matrix<T>::operator()(const uint64_t& i, const uint64_t& j)
+  T& Matrix<T>::operator()(const uint32_t& i, const uint32_t& j)
   {
     return this->_array[i*_n + j];
   }
   template<typename T>
-  const T& Matrix<T>::operator()(const uint64_t& i, const uint64_t& j) const
+  const T& Matrix<T>::operator()(const uint32_t& i, const uint32_t& j) const
   {
     return this->_array[i*_n + j];
   }
   template<typename T>
-  T& Matrix<T>::operator()(const uint64_t& i)
+  T& Matrix<T>::operator()(const uint32_t& i)
   {
     return this->_array[i];
   }
   template<typename T>
-  const T& Matrix<T>::operator()(const uint64_t& i) const
+  const T& Matrix<T>::operator()(const uint32_t& i) const
   {
     return this->_array[i];
   }
@@ -526,9 +526,9 @@ namespace ET
     if (matrix.getName() != " ")
       os << ": '" << matrix.getName() << "'";
     os << "\n[ ";
-    for (uint64_t i = 0; i < matrix.getNumRows(); i++) {
+    for (uint32_t i = 0; i < matrix.getNumRows(); i++) {
       os << "[ ";
-      for (uint64_t j = 0; j < matrix.getNumCols(); j++) {
+      for (uint32_t j = 0; j < matrix.getNumCols(); j++) {
         os << matrix(i,j) << " ";
       }
       os << "]";
@@ -544,7 +544,7 @@ namespace ET
   {
     //  generate a permutation matrix from a set of pivot indices
     std::vector<T> swaps(n*n, 0);
-    std::vector<uint64_t> p(n,0);
+    std::vector<uint32_t> p(n,0);
     for (int i = 0; i < n; i++)
     {
       p[i] = i;
@@ -556,7 +556,7 @@ namespace ET
       p[pivot[i]-1] = p[i];
       p[i] = temp;
     }
-    for(uint64_t i = 0; i < n; i++)
+    for(uint32_t i = 0; i < n; i++)
     {
       swaps[p[i]*n + i] = 1;
     }
@@ -609,7 +609,7 @@ namespace ET
     Matrix<T> VT_matrix = std::get<2>(svd);
     U_matrix.transpose_inplace();
     VT_matrix.transpose_inplace();
-    for (uint64_t i = 0; i < Sigma_matrix.getNumCols(); i++)
+    for (uint32_t i = 0; i < Sigma_matrix.getNumCols(); i++)
     {
       T value = Sigma_matrix(i,i);
       if (value > 1e-10)
@@ -684,7 +684,7 @@ namespace ET
     Matrix<T> U_latrix("U",_m,_m,U);
     Matrix<T> VT_latrix("(V)^T",_n,_n,VT);
     Matrix<T> S_latrix("Sigma",_m,_n,0.0);
-    for (uint64_t i = 0; i < _singular_values.size(); i++)
+    for (uint32_t i = 0; i < _singular_values.size(); i++)
     {
       S_latrix(i,i) = _singular_values[i];
     }
@@ -753,8 +753,8 @@ namespace ET
     if (_name != " ")
       std::cout << ": '" << _name << "'";
     std:: cout << "\n[ ";
-    for (uint64_t i = 0; i < _n; i++) {
-      for (uint64_t j = 0; j < _m; j++) {
+    for (uint32_t i = 0; i < _n; i++) {
+      for (uint32_t j = 0; j < _m; j++) {
         std::cout << this->_array[i*_m + j];
         if (j < _m-1)
         std::cout << "   ";
@@ -778,16 +778,21 @@ namespace ET
     {
       sum +=  ", name: '" + _name + "'";
     }
+    if (_array.size() == 0)
+    {
+      sum += "\n[  empty  ]";
+      return sum;
+    }
     sum += "\n[ ";
     if (_m < 10)
     {
-      for (uint64_t i = 0; i < _m; i++)
+      for (uint32_t i = 0; i < _m; i++)
       {
         if (_n < 10)
         {
           if (_array[i*_n] >= 0.0)
             sum += " ";
-          for (uint64_t j = 0; j < _n; j++)
+          for (uint32_t j = 0; j < _n; j++)
           {
             //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
@@ -845,13 +850,13 @@ namespace ET
     }
     else
     {
-      for (uint64_t i = 0; i < 3; i++)
+      for (uint32_t i = 0; i < 3; i++)
       {
         if (_n < 10)
         {
           if (_array[i*_n] >= 0.0)
             sum += " ";
-          for (uint64_t j = 0; j < _n; j++)
+          for (uint32_t j = 0; j < _n; j++)
           {
             //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
@@ -907,7 +912,7 @@ namespace ET
       sum += "    ...";
       if (_n < 10)
       {
-        for (uint64_t j = 0; j < _n-1; j++)
+        for (uint32_t j = 0; j < _n-1; j++)
         {
           sum += "         ...";
         }
@@ -917,13 +922,13 @@ namespace ET
       {
         sum += "         ...         ...      ...   ...   ...       ...         ...         ...\n  ";
       }
-      for (uint64_t i = _m-3; i < _m; i++)
+      for (uint32_t i = _m-3; i < _m; i++)
       {
         if (_n < 10)
         {
           if (_array[i*_n] >= 0.0)
             sum += " ";
-          for (uint64_t j = 0; j < _n; j++)
+          for (uint32_t j = 0; j < _n; j++)
           {
             //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
@@ -985,9 +990,9 @@ namespace ET
   Matrix<T> Matrix<T>::transpose() const
   {
     std::vector<T> new_array(_m*_n);
-    for (uint64_t i = 0 ; i < _m; i++)
+    for (uint32_t i = 0 ; i < _m; i++)
     {
-      for (uint64_t j = 0; j < _n; j++)
+      for (uint32_t j = 0; j < _n; j++)
       {
         new_array[j*_m + i] = _array[i*_n + j];
       }
@@ -1002,9 +1007,9 @@ namespace ET
   void Matrix<T>::transpose_inplace()
   {
     std::vector<T> new_array(_m*_n);
-    for (uint64_t i = 0 ; i < _m; i++)
+    for (uint32_t i = 0 ; i < _m; i++)
     {
-      for (uint64_t j = 0; j < _n; j++)
+      for (uint32_t j = 0; j < _n; j++)
       {
         new_array[j*_m + i] = _array[i*_n + j];
       }
@@ -1020,40 +1025,63 @@ namespace ET
   }
 
   template<typename T>
-  Matrix<T> identity(uint64_t m)
+  Matrix<T> identity(uint32_t m)
   {
     std::string name = "I_{" + std::to_string(m) + "x"
                      + std::to_string(m) + "}";
     Matrix<T> matrix(name, m, m, 0.0);
 
-    for (uint64_t i = 0; i < m; i++)
+    for (uint32_t i = 0; i < m; i++)
     {
       matrix(i,i) = 1.0;
     }
     return matrix;
   }
   template<typename T>
-  Matrix<T> zeroes(uint64_t m)
+  Matrix<T> zeroes(uint32_t m)
   {
     Matrix<T> z(m, m, 0.0);
     return z;
   }
   template<typename T>
-  Matrix<T> zeroes(uint64_t m, uint64_t n)
+  Matrix<T> zeroes(uint32_t m, uint32_t n)
   {
     Matrix<T> z(m, n, 0.0);
     return z;
   }
   template<typename T>
-  Matrix<T> ones(uint64_t m)
+  Matrix<T> ones(uint32_t m)
   {
     Matrix<T> o(m, m, 1.0);
     return o;
   }
   template<typename T>
-  Matrix<T> ones(uint64_t m, uint64_t n)
+  Matrix<T> ones(uint32_t m, uint32_t n)
   {
     Matrix<T> o(m, n, 1.0);
     return o;
   }
+
+  //  Level 2 BLAS double
+  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+      Vector<double>& x, double& beta)
+  {
+    std::vector<double> y(x.getDim());
+    cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
+      alpha,&*(A.getArray().begin()),A.getNumRows(),
+      &*x.getVec().begin(),1,beta,&*y.begin(),1);
+    Vector<double> result(y);
+    return result;
+  }
+
+  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+      Vector<double>& x, double& beta, Vector<double>& y)
+  {
+    cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
+      alpha,&*(A.getArray().begin()),A.getNumRows(),
+      &*x.getVec().begin(),1,beta,&*y.getVec().begin(),1);
+    Vector<double> result(y);
+    return result;
+  }
+
 }

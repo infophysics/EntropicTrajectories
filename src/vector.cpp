@@ -17,11 +17,11 @@ namespace ET
   {
   }
   template<typename T>
-  Vector<T>::Vector(uint64_t dim) : _dim(dim), _name(" ")
+  Vector<T>::Vector(uint32_t dim) : _dim(dim), _name(" ")
   {
   }
   template<typename T>
-  Vector<T>::Vector(std::string name, uint64_t dim)
+  Vector<T>::Vector(std::string name, uint32_t dim)
   : _dim(dim), _name(name)
   {
     _vec.resize(_dim,0.0);
@@ -37,14 +37,14 @@ namespace ET
   {
   }
   template<typename T>
-  Vector<T>::Vector(uint64_t dim, const T& init)
+  Vector<T>::Vector(uint32_t dim, const T& init)
   : _dim(dim), _name(" ")
   {
     std::vector<T> vec(_dim,init);
     _vec = vec;
   }
   template<typename T>
-  Vector<T>::Vector(std::string name, uint64_t dim, const T& init)
+  Vector<T>::Vector(std::string name, uint32_t dim, const T& init)
   : _dim(dim), _name(name)
   {
     std::vector<T> vec(_dim,init);
@@ -52,7 +52,7 @@ namespace ET
   }
 
   template<typename T>
-  uint64_t Vector<T>::getDim() const
+  uint32_t Vector<T>::getDim() const
   {
     return _dim;
   }
@@ -67,7 +67,7 @@ namespace ET
     return _name;
   }
   template<typename T>
-  void Vector<T>::setDim(uint64_t dim)
+  void Vector<T>::setDim(uint32_t dim)
   {
     _dim = dim;
   }
@@ -93,7 +93,7 @@ namespace ET
     _dim = vector.getDim();
     _name = vector.getName();
     _vec.resize(_dim);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] = vector(i);
     }
     return *this;
@@ -103,7 +103,7 @@ namespace ET
   {
     if (_dim != vector.getDim())
       return false;
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         if (vector(i) != _vec[i])
           return false;
     }
@@ -114,7 +114,7 @@ namespace ET
   {
     if (_dim != vector.getDim())
       return true;
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         if (vector(i) != _vec[i])
           return true;
     }
@@ -124,7 +124,7 @@ namespace ET
   Vector<T> Vector<T>::operator-() const
   {
     std::vector<T> vec(_dim);
-    for (uint64_t i = 0; i < _dim; i++)
+    for (uint32_t i = 0; i < _dim; i++)
     {
       vec[i] = -1*_vec[i];
     }
@@ -141,7 +141,7 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + vector.getName() + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i] + vector(i);
     }
     return v;
@@ -156,7 +156,7 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + vector.getName() + ")";
     _name = name;
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] += vector(i);
     }
     return *this;
@@ -171,7 +171,7 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + vector.getName() + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i] - vector(i);
     }
     return v;
@@ -186,7 +186,7 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + vector.getName() + ")";
     _name = name;
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] -= vector(i);
     }
     return *this;
@@ -201,7 +201,7 @@ namespace ET
       return 0;
     }
     T result = 0;
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         result += _vec[i]*(*vector)(i);
     }
     return result;
@@ -212,7 +212,7 @@ namespace ET
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i] + s;
     }
     return v;
@@ -223,7 +223,7 @@ namespace ET
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i] - s;
     }
     return v;
@@ -233,7 +233,7 @@ namespace ET
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i] * s;
     }
     return v;
@@ -248,7 +248,7 @@ namespace ET
     }
     std::string name = "(" + _name + " / " + std::to_string(s) + ")";
     Vector<T> v(name, _dim, 0.0);
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         v(i) = _vec[i]/s;
     }
     return v;
@@ -257,7 +257,7 @@ namespace ET
   Vector<T>& Vector<T>::operator+=(const T& s)
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + ")";
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] += s;
     }
     return *this;
@@ -266,7 +266,7 @@ namespace ET
   Vector<T>& Vector<T>::operator-=(const T& s)
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + ")";
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] -= s;
     }
     return *this;
@@ -275,7 +275,7 @@ namespace ET
   Vector<T>& Vector<T>::operator*=(const T& s)
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] *= s;
     }
     return *this;
@@ -289,25 +289,25 @@ namespace ET
       return *this;
     }
     std::string name = "(" + _name + " / " + std::to_string(s) + ")";
-    for (uint64_t i = 0; i < _dim; i++) {
+    for (uint32_t i = 0; i < _dim; i++) {
         _vec[i] /= s;
     }
     return *this;
   }
 
   template<typename T>
-  T& Vector<T>::operator()(const uint64_t& i)
+  T& Vector<T>::operator()(const uint32_t& i)
   {
     return this->_vec[i];
   }
   template<typename T>
-  const T& Vector<T>::operator()(const uint64_t& i) const
+  const T& Vector<T>::operator()(const uint32_t& i) const
   {
     return this->_vec[i];
   }
 
   template<typename T>
-  Vector<T> zeroes(uint64_t dim)
+  Vector<T> zeroes(uint32_t dim)
   {
     std::vector<T> vec(dim,0.0);
     Vector<T> v(vec);
@@ -337,7 +337,7 @@ namespace ET
     {
       if (_vec[0] >= 0.0)
           sum += " ";
-      for (uint64_t i = 0; i < _dim; i++)
+      for (uint32_t i = 0; i < _dim; i++)
       {
         sum += scientific_not(this->_vec[i],3);
         if (i < _dim-1)
