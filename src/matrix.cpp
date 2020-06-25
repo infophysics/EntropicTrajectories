@@ -1,9 +1,110 @@
-//  Matrix wrapper cpp file
+//------------------------------------------------------------------------------
+//  matrix.cpp
+//  The Entropic Trajectories Framework
+//  -----------------------------------
+//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
+//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
+//    pedroh.pessoa100@gmail.com]
+//
+//  Permission to use, copy, modify, and/or distribute this software for any
+//  purpose with or without fee is hereby granted.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//------------------------------------------------------------------------------
 #include "vector.h"
 #include "matrix.h"
 
+//------------------------------------------------------------------------------
+//  Matrix.cpp
+//
+//  This file contains the instantiations of the definitions given in matrix.h.
+//  The various methods are listed below,
+//  ----------------------------------------------------------------------------
+//  Line no.    |   Method
+//  ----------------------------------------------------------------------------
+//  ()        |   Matrix()
+//  ()        |   ~Matrix()
+//  ()        |   Matrix(uint32_t)
+//  ()        |   Matrix(const Matrix<T>&)
+//  ()        |   Matrix(std::string, uint32_t)
+//  ()        |   Matrix(uint32_t, uint32_t)
+//  ()        |   Matrix(std::string, uint32_t, uint32_t)
+//  ()        |   Matrix(uint32_t, uint32_t, const T&)
+//  ()        |   Matrix(std::string, uint32_t, uint32_t, const T&)
+//  ()        |   Matrix(uint32_t, std::vector<T>)
+//  ()        |   Matrix(std::string, uint32_t, std::vector<T>)
+//  ()        |   Matrix(uint32_t, uint32_t, std::vector<T>)
+//  ()        |   Matrix(std::string, uint32_t, uint32_t, std::vector<T>)
+//  ()        |   Matrix(std::string, uint32_t, uint32_t, T*)
+//  ()        |   Matrix(std::vector<std::vector<T>>)
+//  ()        |   Matrix(std::string, std::vector<std::vector<T>>)
+//  ()        |   getNumRows()
+//  ()        |   getNumCols()
+//  ()        |   getName()
+//  ()        |   getArray()
+//  ()        |   accessArray()
+//  ()        |   getRow(uint32_t)
+//  ()        |   getCol(uint32_t)
+//  ()        |   data()
+//  ()        |   setName(std::string)
+//  ()        |   setRow(uint32_t, std::vector<T>)
+//  ()        |   setCol(uint32_t, std::vector<T>)
+//  ()        |   setArray(uint32_t, std::vector<T>)
+//  ()        |   setArray(std::vector<std::vector<T>>)
+//  ()        |   operator=(const Matrix<T>&)
+//  ()        |   operator==(const Matrix<T>&)
+//  ()        |   operator!=(const Matrix<T>&)
+//  ()        |   operator-()
+//  ()        |   operator+(const Matrix<T>&)
+//  ()        |   operator+=(const Matrix<T>&)
+//  ()        |   operator-(const Matrix<T>&)
+//  ()        |   operator-=(const Matrix<T>&)
+//  ()        |   operator*(const Matrix<T>&)
+//  ()        |   brute_mul(const Matrix<T>&)
+//  ()        |   operator*=(const Matrix<T>&)
+//  ()        |   operator+(const T&)
+//  ()        |   operator-(const T&)
+//  ()        |   operator*(const T&)
+//  ()        |   operator/(const T&)
+//  ()        |   operator+=(const T&)
+//  ()        |   operator-=(const T&)
+//  ()        |   operator*=(const T&)
+//  ()        |   operator/=(const T&)
+//  ()        |   operator*(const Vector<T>&)
+//  ()        |   operator()(const uint32_t&, const uint32_t&)
+//  ()        |   operator()(const uint32_t&, const uint32_t&)
+//  ()        |   operator()(const uint32_t&)
+//  ()        |   operator()(const uint32_t&)
+//  ()        |   print()
+//  ()        |   summary()
+//  ()        |   transpose()
+//  ()        |   transpose_inplace(bool)
+//  ()        |   trace()
+//  ()        |   permutationMatrix()
+//  ()        |   getRank()
+//  ()        |   isInvertible()
+//  ()        |   findSingularValues()
+//  ()        |   inverse()
+//  ()        |   pseudoInverse()
+//  ()        |   LU()
+//  ()        |   getL(const Matrix<T>&)
+//  ()        |   getU(const Matrix<T>&)
+//  ()        |   QR()
+//  ()        |   SVD()
+//  ()        |   getSingularValues()
+//------------------------------------------------------------------------------
+
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Matrix constructors
+  //----------------------------------------------------------------------------
 
   template<typename T>
   Matrix<T>::Matrix() : _name(" "), _m(0), _n(0) {}
