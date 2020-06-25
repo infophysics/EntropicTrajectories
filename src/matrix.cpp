@@ -144,6 +144,12 @@ namespace ET
   }
 
   template<typename T>
+  std::vector<T> Matrix<T>::accessArray()
+  {
+    return _array;
+  }
+
+  template<typename T>
   float* Matrix<T>::data()
   {
     float *copy = new float[_m*_n];
@@ -1079,23 +1085,30 @@ namespace ET
 
   //  Level 2 BLAS double
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x, double& beta)
+      Vector<double>& x)
   {
     std::vector<double> y(x.getDim());
     cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,&*(A.getArray().begin()),A.getNumRows(),
-      &*x.getVec().begin(),1,beta,&*y.begin(),1);
-    Vector<double> result(y);
+      alpha,A.getArray().data(),A.getNumRows(),
+      x.getVec().data(),1,1,y.data(),1);
+    std::string name;
+    if (alpha != 0)
+    {
+      name += std::to_string(alpha) + " * ";
+    }
+    name += A.getName() + " * " + x.getName();
+    Vector<double> result(name,y);
     return result;
   }
 
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x, double& beta, Vector<double>& y)
   {
+    std::vector<double> y2 = y.getVec();
     cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,&*(A.getArray().begin()),A.getNumRows(),
-      &*x.getVec().begin(),1,beta,&*y.getVec().begin(),1);
-    Vector<double> result(y);
+      alpha,A.getArray().data(),A.getNumRows(),
+      x.getVec().data(),1,beta,y2.data(),1);
+    Vector<double> result(y2);
     return result;
   }
 

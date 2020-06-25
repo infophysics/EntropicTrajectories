@@ -33,7 +33,7 @@ namespace ET
   }
   template<typename T>
   Vector<T>::Vector(std::string name, std::vector<T> vec)
-  : _dim(vec.size()), _name(name), _vec(vec)
+  : _dim(vec.size()), _name(name), _vec(std::move(vec))
   {
   }
   template<typename T>
@@ -58,6 +58,11 @@ namespace ET
   }
   template<typename T>
   std::vector<T> Vector<T>::getVec() const
+  {
+    return _vec;
+  }
+  template<typename T>
+  std::vector<T> Vector<T>::accessVec()
   {
     return _vec;
   }

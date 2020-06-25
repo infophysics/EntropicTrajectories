@@ -10,6 +10,7 @@
 #include <lapacke.h>
 #include <cblas.h>
 #include <stdint.h>
+#include <complex>
 
 #include "vector.h"
 #include "utils.h"
@@ -48,7 +49,10 @@ namespace ET
     uint32_t getNumRows() const;
     uint32_t getNumCols() const;
     std::string getName() const;
+    //  get a const reference to array
     std::vector<T> getArray() const;
+    //  get access to array
+    std::vector<T> accessArray();
     std::vector<T> getRow(uint32_t i);
     std::vector<T> getCol(uint32_t i);
     float *data();
@@ -203,8 +207,12 @@ namespace ET
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
 
   template class Matrix<double>;
+  //template class Matrix<std::complex<double>>;
 
   //  Level 2 BLAS double
+  //  DGEMV ()
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x, double& beta);
+      Vector<double>& x);
+  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+      Vector<double>& x, double& beta, Vector<double>& y);
 }
