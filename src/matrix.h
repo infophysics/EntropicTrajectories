@@ -187,7 +187,6 @@ namespace ET
     void findSingularValues();
     Matrix<T> inverse();
     Matrix<T> pseudoInverse();
-    //
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> LU();
     Matrix<T> getL(const Matrix<T>& perm);
     Matrix<T> getU(const Matrix<T>& perm);
@@ -227,10 +226,10 @@ namespace ET
   template class Matrix<double>;
   //template class Matrix<std::complex<double>>;
 
-  //  Level 2 BLAS double
+  //  Level 2 BLAS methods
   //  DGEMV ()
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x);
+                       Vector<double>& x);
   void DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x, double& beta, Vector<double>& y);
+                       Vector<double>& x, double& beta, Vector<double>& y);
 }

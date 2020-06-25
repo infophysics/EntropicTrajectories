@@ -106,13 +106,23 @@ namespace ET
   //  Matrix constructors
   //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Default constructor
+  //    sets name = " ", and _m, _n = 0
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>::Matrix() : _name(" "), _m(0), _n(0) {}
 
+  //----------------------------------------------------------------------------
+  //  Default destructor
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>::~Matrix() {}
 
+  //----------------------------------------------------------------------------
   //  Copy constructor
+  //    Does not delete the copied object.
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>::Matrix(const Matrix<T>& matrix)
   {
@@ -122,39 +132,46 @@ namespace ET
     _name = matrix.getName();
   }
 
+  //----------------------------------------------------------------------------
+  //  Constructors with various sets of arguments, such as,
+  //    std::string                 name,
+  //    uint32_t                    m,
+  //    uint32_t                    n,
+  //    std::vector<T>              flatted array,
+  //    std::vector<std::vector<T>> 2d array,
+  //    T*                          C style flattened array,
+  //    const T&                    initial value for all elements.
+  //  If any sizes are specified, the internal array element '_array'
+  //  is resized accordingly, otherwise it is left uninstantiated.
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>::Matrix(uint32_t m) : _m(m), _n(m), _name(" ")
   {
     _array.resize(_m*_n,0.0);
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m)
   : _m(m), _n(m), _name(name)
   {
     _array.resize(_m*_n,0.0);
   }
-
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n) : _m(m), _n(n), _name(" ")
   {
     _array.resize(_m*_n,0.0);
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n)
   : _m(m), _n(n), _name(name)
   {
     _array.resize(_m*_n,0.0);
   }
-
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n, const T& init)
   : _m(m), _n(n), _name(" ")
   {
     _array.resize(_m*_n, init);
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m,
     uint32_t n, const T& init)
@@ -162,32 +179,26 @@ namespace ET
   {
     _array.resize(_m*_n, init);
   }
-
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(" "), _array(flat)
   {
-
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(name), _array(flat)
   {
-
   }
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(" "), _array(flat)
   {
-
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(name), _array(flat)
   {
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, T* array)
   : _m(m), _n(n), _name(name)
@@ -195,7 +206,6 @@ namespace ET
     std::vector<T> flat(array, array + _m*_n);
     _array = flat;
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::vector<std::vector<T> > array)
   : _m(array.size()), _n(array[0].size()), _name(" ")
@@ -207,7 +217,6 @@ namespace ET
     }
     _array = flat;
   }
-
   template<typename T>
   Matrix<T>::Matrix(std::string name, std::vector<std::vector<T> > array)
   : _m(array.size()), _n(array[0].size()), _name(name)
@@ -219,37 +228,44 @@ namespace ET
     }
     _array = flat;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Getters and Setters
+  //  Each attribute comes with its own setters and getters.  There are a few
+  //  additional ones such as 'getRow' and 'getCol' which each return an
+  //  std::vector<T>.
+  //----------------------------------------------------------------------------
   template<typename T>
   uint32_t Matrix<T>::getNumRows() const
   {
     return _m;
   }
-
   template<typename T>
   uint32_t Matrix<T>::getNumCols() const
   {
     return _n;
   }
-
   template<typename T>
   std::string Matrix<T>::getName() const
   {
     return _name;
   }
-
+  //  When 'getArray()' is called it will usually create a copy of _array.
   template<typename T>
   std::vector<T> Matrix<T>::getArray() const
   {
     return _array;
   }
-
+  //  In order to return the '_array' attribute so that it can be manipulated
+  //  by other methods, such as those which utilize BLAS and LAPACK functions,
+  //  we use 'accessArray()' to return a pointer to '_array'.
   template<typename T>
   std::vector<T>* Matrix<T>::accessArray()
   {
     return &_array;
   }
-
+  //  This method returns a C style array that is copied from _array.
   template<typename T>
   float* Matrix<T>::data()
   {
@@ -260,7 +276,6 @@ namespace ET
     }
     return copy;
   }
-
   template<typename T>
   std::vector<T> Matrix<T>::getRow(uint32_t i)
   {
@@ -278,17 +293,16 @@ namespace ET
     }
     return row;
   }
-
   template<typename T>
   std::vector<T> Matrix<T>::getCol(uint32_t i)
   {
     std::vector<T> col(_m,0.0);
-    for (uint32_t j = 0; j < _n; j++) {
+    for (uint32_t j = 0; j < _n; j++)
+    {
       col[j] = _array[j*_n + i];
     }
     return col;
   }
-
   //  Setters
   template<typename T>
   void Matrix<T>::setName(std::string name)
@@ -298,14 +312,16 @@ namespace ET
   template<typename T>
   void Matrix<T>::setRow(uint32_t i, std::vector<T> row)
   {
-    for (uint32_t j = 0; j < _n; j++) {
+    for (uint32_t j = 0; j < _n; j++)
+    {
       _array[i*_n + j] = row[j];
     }
   }
   template<typename T>
   void Matrix<T>::setCol(uint32_t i, std::vector<T> col)
   {
-    for (uint32_t j = 0; j < _m; j++) {
+    for (uint32_t j = 0; j < _m; j++)
+    {
       _array[j*_n + i] = col[j];
     }
   }
@@ -330,19 +346,24 @@ namespace ET
       }
     }
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   //  Operator overloads
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>& Matrix<T>::operator=(const Matrix<T>& matrix)
   {
     if (&matrix == this)
+    {
       return *this;
-
+    }
     _m = matrix.getNumRows();
     _n = matrix.getNumCols();
     _name = matrix.getName();
     _array.resize(_m*_n);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] = matrix(i);
     }
     return *this;
@@ -351,10 +372,15 @@ namespace ET
   bool Matrix<T>::operator==(const Matrix<T>& matrix) const
   {
     if (_n != matrix.getNumRows() || _m != matrix.getNumCols())
+    {
       return false;
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    }
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         if (matrix(i) != _array[i])
+        {
           return false;
+        }
     }
     return true;
   }
@@ -362,10 +388,15 @@ namespace ET
   bool Matrix<T>::operator!=(const Matrix<T>& matrix) const
   {
     if (_n != matrix.getNumRows() || _m != matrix.getNumCols())
+    {
       return true;
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    }
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         if (matrix(i) != _array[i])
+        {
           return true;
+        }
     }
     return false;
   }
@@ -390,7 +421,8 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
     Matrix<T> l(name, _m, _n, 0.0);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] + matrix(i);
     }
     return l;
@@ -405,7 +437,8 @@ namespace ET
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] += matrix(i);
     }
     return *this;
@@ -420,7 +453,8 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + matrix.getName() + ")";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] - matrix(i);
     }
     return l;
@@ -435,7 +469,8 @@ namespace ET
     }
     std::string name = "(" + _name + " - " + matrix.getName() + ")";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] -= matrix(i);
     }
     return *this;
@@ -500,7 +535,8 @@ namespace ET
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] + s;
     }
     return l;
@@ -510,7 +546,8 @@ namespace ET
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] - s;
     }
     return l;
@@ -520,7 +557,8 @@ namespace ET
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
     Matrix<T> l(name,_m,_n,0.0);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] * s;
     }
     return l;
@@ -531,8 +569,11 @@ namespace ET
     std::string name = "(" + _name + " / " + std::to_string(s) + ")";
     Matrix<T> l(name,_m,_n,0.0);
     if (s == 0)
+    {
       return l;
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    }
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         l(i) = _array[i] + s;
     }
     return l;
@@ -543,7 +584,8 @@ namespace ET
   {
     std::string name = "(" + _name + " + " + std::to_string(s) + "I)";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] += s;
     }
     return *this;
@@ -553,7 +595,8 @@ namespace ET
   {
     std::string name = "(" + _name + " - " + std::to_string(s) + "I)";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] -= s;
     }
     return *this;
@@ -563,7 +606,8 @@ namespace ET
   {
     std::string name = "(" + _name + " * " + std::to_string(s) + ")";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] *= s;
     }
     return *this;
@@ -572,10 +616,13 @@ namespace ET
   Matrix<T>& Matrix<T>::operator/=(const T& s)
   {
     if (s == 0)
+    {
       return *this;
+    }
     std::string name = "(" + _name + " / " + std::to_string(s) + ")";
     setName(name);
-    for (uint32_t i = 0; i < _m*_n; i++) {
+    for (uint32_t i = 0; i < _m*_n; i++)
+    {
         _array[i] += s;
     }
     return *this;
@@ -587,10 +634,14 @@ namespace ET
     std::vector<T> vec(_n,0.0);
     Vector<T> v2(vec);
     if (_n != v.getDim())
+    {
       return v2;
-    for (uint32_t i = 0; i < _m; i++) {
+    }
+    for (uint32_t i = 0; i < _m; i++)
+    {
       T temp = 0.0;
-      for (uint32_t j = 0; j < _n; j++) {
+      for (uint32_t j = 0; j < _n; j++)
+      {
         temp += this->_array[i*_n + j] * v(j);
       }
       v2(i) = temp;
@@ -601,250 +652,33 @@ namespace ET
   template<typename T>
   T& Matrix<T>::operator()(const uint32_t& i, const uint32_t& j)
   {
-    return this->_array[i*_n + j];
+    return _array[i*_n + j];
   }
   template<typename T>
   const T& Matrix<T>::operator()(const uint32_t& i, const uint32_t& j) const
   {
-    return this->_array[i*_n + j];
+    return _array[i*_n + j];
   }
   template<typename T>
   T& Matrix<T>::operator()(const uint32_t& i)
   {
-    return this->_array[i];
+    return _array[i];
   }
   template<typename T>
   const T& Matrix<T>::operator()(const uint32_t& i) const
   {
-    return this->_array[i];
+    return _array[i];
   }
-  template<typename T>
-  std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
-  {
-    os << "(" << matrix.getNumRows() << " x " << matrix.getNumCols() << ") Matrix";
-    if (matrix.getName() != " ")
-      os << ": '" << matrix.getName() << "'";
-    os << "\n[ ";
-    for (uint32_t i = 0; i < matrix.getNumRows(); i++) {
-      os << "[ ";
-      for (uint32_t j = 0; j < matrix.getNumCols(); j++) {
-        os << matrix(i,j) << " ";
-      }
-      os << "]";
-      if (i < matrix.getNumRows()-1)
-        os << "\n  ";
-    }
-    os << " ]" << std::endl;
-    return os;
-  }
+  //----------------------------------------------------------------------------
 
-  template<typename T>
-  Matrix<T> Matrix<T>::permutationMatrix(int& n, int* pivot)
-  {
-    //  generate a permutation matrix from a set of pivot indices
-    std::vector<T> swaps(n*n, 0);
-    std::vector<uint32_t> p(n,0);
-    for (int i = 0; i < n; i++)
-    {
-      p[i] = i;
-    }
-    for (int i = 0; i < n; i++)
-    {
-      int temp;
-      temp = p[pivot[i]-1];
-      p[pivot[i]-1] = p[i];
-      p[i] = temp;
-    }
-    for(uint32_t i = 0; i < n; i++)
-    {
-      swaps[p[i]*n + i] = 1;
-    }
-    std::string name = "(" + std::to_string(n) = "x" + std::to_string(n) + ") perm";
-    return Matrix<T>(name,n,n,swaps);
-  }
-
-  //  TODO: implement getL
-  template<typename T>
-  Matrix<T> Matrix<T>::getL(const Matrix<T>& perm)
-  {
-    return *this;
-  }
-
-  //  TODO: implement getU
-  template<typename T>
-  Matrix<T> Matrix<T>::getU(const Matrix<T>& perm)
-  {
-    return *this;
-  }
-
-  template<typename T>
-  Matrix<T> Matrix<T>::inverse()
-  {
-    int m = _m;
-    int n = _n;
-    std::vector<T> _array_copy = _array;
-    //  pivot array with indices 1 <= i <= min(n,m)
-    int *pivot = new int[_n+1];
-    //  workspaces for inversion
-    int lWork = _m*_n;
-    double *work = new double[_m*_n];
-    int info;
-    //  first construct an LU factorization to generate the pivot indices
-    //  in pivot.
-    dgetrf_(&m,&n,& *_array_copy.begin(),&m,pivot,&info);
-    dgetri_(&m,& *_array_copy.begin(),&m,pivot,work,&lWork,&info);
-    std::string name = "(" + _name + ")^-1";
-    Matrix<T> inv(name,m,n,_array_copy);
-    return inv;
-  }
-  template<typename T>
-  Matrix<T> Matrix<T>::pseudoInverse()
-  {
-    //  first compute SVD decomposition
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> svd = SVD();
-    //  The pseudo inverse is then V * Sigma * (U)^T
-    Matrix<T> U_matrix = std::get<0>(svd);
-    Matrix<T> Sigma_matrix = std::get<1>(svd);
-    Matrix<T> VT_matrix = std::get<2>(svd);
-    U_matrix.transpose_inplace();
-    VT_matrix.transpose_inplace();
-    for (uint32_t i = 0; i < Sigma_matrix.getNumCols(); i++)
-    {
-      T value = Sigma_matrix(i,i);
-      if (value > 1e-10)
-        Sigma_matrix(i,i) = 1/value;
-      else
-        Sigma_matrix(i,i) = 0;
-    }
-    Sigma_matrix.transpose_inplace();
-    std::string name = "(" + _name + ")^+";
-    Matrix<T> result = VT_matrix * (Sigma_matrix * U_matrix);
-    result.setName(name);
-    return result;
-  }
-
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
-  {
-    //  pivot array with indices 1 <= i <= min(n,m)
-    int *pivot = new int[_n+1];
-    int info;
-    int m = _m;
-    int n = _n;
-    //  first construct an LU factorization to generate the pivot indices
-    //  in pivot.
-    dgetrf_(&m,&n,&*_array.begin(),&m,pivot,&info);
-    Matrix<T> P = permutationMatrix(m,pivot);
-    Matrix<T> L = getL(P);
-    Matrix<T> U = getU(P);
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(P,L,U);
-    return result;
-
-  }
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>> Matrix<T>::QR()
-  {
-
-  }
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
-  {
-    int info;
-    int m = _m;
-    int n = _n;
-    //  Sigma, U and V_T matrices
-    //  Sigma will be a vector of singular values of size n,
-    //  U is a unitary m x m matrix,
-    //  VT is the transpose of an n x n unitary matrix.
-    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
-    //  of rows).
-    T sigma[std::min(m,n)], U[m*m], VT[n*n];
-    //  workspaces for inversion
-    int lWork;
-    //  find the optimal workspace first
-    double workOpt;
-    double *work;
-    lWork = -1;
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, &workOpt, &lWork, &info);
-    lWork = (int)workOpt;
-    work = (double*)malloc( lWork*sizeof(double) );
-    /* Compute SVD */
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, work, &lWork, &info);
-    /* Check for convergence */
-    if( info > 0 ) {
-      printf( "The algorithm computing SVD failed to converge.\n" );
-      exit( 1 );
-    }
-    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
-    _singular_values = sig;
-    //  construct U, VT and Sigma matrices
-    Matrix<T> U_latrix("U",_m,_m,U);
-    Matrix<T> VT_latrix("(V)^T",_n,_n,VT);
-    Matrix<T> S_latrix("Sigma",_m,_n,0.0);
-    for (uint32_t i = 0; i < _singular_values.size(); i++)
-    {
-      S_latrix(i,i) = _singular_values[i];
-    }
-    //U_latrix.transpose(true);
-    //U_latrix.setName("U");
-    //VT_latrix.transpose(true);
-    //VT_latrix.setName("(V)^T");
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_latrix, S_latrix, VT_latrix);
-    return result;
-  }
-
-  template<typename T>
-  bool Matrix<T>::isInvertible()
-  {
-
-  }
-
-  template<typename T>
-  void Matrix<T>::findSingularValues()
-  {
-    int info;
-    int m = _m;
-    int n = _n;
-    //  Sigma, U and V_T matrices
-    //  Sigma will be a vector of singular values of size n,
-    //  U is a unitary m x m matrix,
-    //  VT is the transpose of an n x n unitary matrix.
-    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
-    //  of rows).
-    T sigma[std::min(m,n)], U[m*m], VT[n*n];
-    //  workspaces for inversion
-    int lWork;
-    //  find the optimal workspace first
-    double workOpt;
-    double *work;
-    lWork = -1;
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, &workOpt, &lWork, &info);
-    lWork = (int)workOpt;
-    work = (double*)malloc( lWork*sizeof(double) );
-    /* Compute SVD */
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, work, &lWork, &info);
-    /* Check for convergence */
-    if( info > 0 ) {
-      printf( "The algorithm computing SVD failed to converge.\n" );
-      exit( 1 );
-    }
-    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
-    _singular_values = sig;
-  }
-
-  template<typename T>
-  std::vector<T> Matrix<T>::getSingularValues()
-  {
-    if (_singular_values.size() == 0)
-      findSingularValues();
-    return _singular_values;
-  }
-
-  //  Various methods
+  //----------------------------------------------------------------------------
+  //  Various methods which include,
+  //    print()
+  //    summary()
+  //    tranpose()
+  //    transpose_inplace()
+  //    trace()
+  //----------------------------------------------------------------------------
   template<typename T>
   void Matrix<T>::print()
   {
@@ -893,7 +727,6 @@ namespace ET
             sum += " ";
           for (uint32_t j = 0; j < _n; j++)
           {
-            //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
             if (j < _n-1)
             {
@@ -908,37 +741,31 @@ namespace ET
         {
           if (_array[i*_n] >= 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 0];
           sum += scientific_not(this->_array[i*_n + 0],3);
           if (_array[i*_n + 1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 1];
           sum += scientific_not(this->_array[i*_n + 1],3);
           if (_array[i*_n + 2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 2];
           sum += scientific_not(this->_array[i*_n + 2],3);
           sum += "   ";
           sum += "...   ...   ...   ";
           if (_array[i*_n + _n-3] >= 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-3];
           sum += scientific_not(this->_array[i*_n + _n-3],3);
           if (_array[i*_n + _n-2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-2];
           sum += scientific_not(this->_array[i*_n + _n-2],3);
           if (_array[i*_n + _n-1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-1];
           sum += scientific_not(this->_array[i*_n + _n-1],3);
         }
         if (i < _m-1)
@@ -957,7 +784,6 @@ namespace ET
             sum += " ";
           for (uint32_t j = 0; j < _n; j++)
           {
-            //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
             if (j < _n-1)
             {
@@ -972,37 +798,31 @@ namespace ET
         {
           if (_array[i*_n] >= 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 0];
           sum += scientific_not(this->_array[i*_n + 0],3);
           if (_array[i*_n + 1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 1];
           sum += scientific_not(this->_array[i*_n + 1],3);
           if (_array[i*_n + 2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 2];
           sum += scientific_not(this->_array[i*_n + 2],3);
           sum += "   ";
           sum += "...   ...   ...   ";
           if (_array[i*_n + _n-3] >= 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-3];
           sum += scientific_not(this->_array[i*_n + _n-3],3);
           if (_array[i*_n + _n-2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-2];
           sum += scientific_not(this->_array[i*_n + _n-2],3);
           if (_array[i*_n + _n-1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-1];
           sum += scientific_not(this->_array[i*_n + _n-1],3);
         }
         if (i < _m-1)
@@ -1029,7 +849,6 @@ namespace ET
             sum += " ";
           for (uint32_t j = 0; j < _n; j++)
           {
-            //s << std::fixed << std::setprecision(3) << this->_array[i*_l + j];
             sum += scientific_not(this->_array[i*_n + j],3);
             if (j < _n-1)
             {
@@ -1044,37 +863,31 @@ namespace ET
         {
           if (_array[i*_n] > 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 0];
           sum += scientific_not(this->_array[i*_n + 0],3);
           if (_array[i*_n + 1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 1];
           sum += scientific_not(this->_array[i*_n + 1],3);
           if (_array[i*_n + 2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + 2];
           sum += scientific_not(this->_array[i*_n + 2],3);
           sum += "   ";
           sum += "...   ...   ...   ";
           if (_array[i*_n + _n-3] >= 0.0)
             sum += " ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-3];
           sum += scientific_not(this->_array[i*_n + _n-3],3);
           if (_array[i*_n + _n-2] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-2];
           sum += scientific_not(this->_array[i*_n + _n-2],3);
           if (_array[i*_n + _n-1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
-          //s << std::fixed << std::setprecision(3) << this->_array[i*_l + _l-1];
           sum += scientific_not(this->_array[i*_n + _n-1],3);
         }
         if (i < _m-1)
@@ -1084,7 +897,6 @@ namespace ET
     sum += "  ]";
     return sum;
   }
-
   template<typename T>
   Matrix<T> Matrix<T>::transpose() const
   {
@@ -1101,7 +913,6 @@ namespace ET
     int n = _m;
     return Matrix<T>(name,m,n,new_array);
   }
-
   template<typename T>
   void Matrix<T>::transpose_inplace(bool inplace)
   {
@@ -1121,7 +932,6 @@ namespace ET
     _m = m;
     _array = new_array;
   }
-
   template<typename T>
   T Matrix<T>::trace()
   {
@@ -1137,7 +947,212 @@ namespace ET
     }
     return result;
   }
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Linear algebra tools
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Matrix<T> Matrix<T>::permutationMatrix(int& n, int* pivot)
+  {
+    //  generate a permutation matrix from a set of pivot indices
+    std::vector<T> swaps(n*n, 0);
+    std::vector<uint32_t> p(n,0);
+    for (int i = 0; i < n; i++)
+    {
+      p[i] = i;
+    }
+    for (int i = 0; i < n; i++)
+    {
+      int temp;
+      temp = p[pivot[i]-1];
+      p[pivot[i]-1] = p[i];
+      p[i] = temp;
+    }
+    for(uint32_t i = 0; i < n; i++)
+    {
+      swaps[p[i]*n + i] = 1;
+    }
+    std::string name = "(" + std::to_string(n) = "x" + std::to_string(n) + ") perm";
+    return Matrix<T>(name,n,n,swaps);
+  }
+  template<typename T>
+  bool Matrix<T>::isInvertible()
+  {
+  }
+  template<typename T>
+  void Matrix<T>::findSingularValues()
+  {
+    int info;
+    int m = _m;
+    int n = _n;
+    //  Sigma, U and V_T matrices
+    //  Sigma will be a vector of singular values of size n,
+    //  U is a unitary m x m matrix,
+    //  VT is the transpose of an n x n unitary matrix.
+    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
+    //  of rows).
+    T sigma[std::min(m,n)], U[m*m], VT[n*n];
+    //  workspaces for inversion
+    int lWork;
+    //  find the optimal workspace first
+    double workOpt;
+    double *work;
+    lWork = -1;
+    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
+        &m, VT, &n, &workOpt, &lWork, &info);
+    lWork = (int)workOpt;
+    work = (double*)malloc( lWork*sizeof(double) );
+    /* Compute SVD */
+    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
+        &m, VT, &n, work, &lWork, &info);
+    /* Check for convergence */
+    if( info > 0 ) {
+      printf( "The algorithm computing SVD failed to converge.\n" );
+      exit( 1 );
+    }
+    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
+    _singular_values = sig;
+  }
+  template<typename T>
+  Matrix<T> Matrix<T>::inverse()
+  {
+    int m = _m;
+    int n = _n;
+    std::vector<T> _array_copy = _array;
+    //  pivot array with indices 1 <= i <= min(n,m)
+    int *pivot = new int[_n+1];
+    //  workspaces for inversion
+    int lWork = _m*_n;
+    double *work = new double[_m*_n];
+    int info;
+    //  first construct an LU factorization to generate the pivot indices
+    //  in pivot.
+    dgetrf_(&m,&n,& *_array_copy.begin(),&m,pivot,&info);
+    dgetri_(&m,& *_array_copy.begin(),&m,pivot,work,&lWork,&info);
+    std::string name = "(" + _name + ")^-1";
+    Matrix<T> inv(name,m,n,_array_copy);
+    return inv;
+  }
+  template<typename T>
+  Matrix<T> Matrix<T>::pseudoInverse()
+  {
+    //  first compute SVD decomposition
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> svd = SVD();
+    //  The pseudo inverse is then V * Sigma * (U)^T
+    Matrix<T> U_matrix = std::get<0>(svd);
+    Matrix<T> Sigma_matrix = std::get<1>(svd);
+    Matrix<T> VT_matrix = std::get<2>(svd);
+    U_matrix.transpose_inplace();
+    VT_matrix.transpose_inplace();
+    for (uint32_t i = 0; i < Sigma_matrix.getNumCols(); i++)
+    {
+      T value = Sigma_matrix(i,i);
+      if (value > 1e-10)
+        Sigma_matrix(i,i) = 1/value;
+      else
+        Sigma_matrix(i,i) = 0;
+    }
+    Sigma_matrix.transpose_inplace();
+    std::string name = "(" + _name + ")^+";
+    Matrix<T> result = VT_matrix * (Sigma_matrix * U_matrix);
+    result.setName(name);
+    return result;
+  }
+  template<typename T>
+  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
+  {
+    //  pivot array with indices 1 <= i <= min(n,m)
+    int *pivot = new int[_n+1];
+    int info;
+    int m = _m;
+    int n = _n;
+    //  first construct an LU factorization to generate the pivot indices
+    //  in pivot.
+    dgetrf_(&m,&n,&*_array.begin(),&m,pivot,&info);
+    Matrix<T> P = permutationMatrix(m,pivot);
+    Matrix<T> L = getL(P);
+    Matrix<T> U = getU(P);
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(P,L,U);
+    return result;
+
+  }
+  //  TODO: implement getL
+  template<typename T>
+  Matrix<T> Matrix<T>::getL(const Matrix<T>& perm)
+  {
+    return *this;
+  }
+  //  TODO: implement getU
+  template<typename T>
+  Matrix<T> Matrix<T>::getU(const Matrix<T>& perm)
+  {
+    return *this;
+  }
+  template<typename T>
+  std::tuple<Matrix<T>,Matrix<T>> Matrix<T>::QR()
+  {
+  }
+  template<typename T>
+  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
+  {
+    int info;
+    int m = _m;
+    int n = _n;
+    //  Sigma, U and V_T matrices
+    //  Sigma will be a vector of singular values of size n,
+    //  U is a unitary m x m matrix,
+    //  VT is the transpose of an n x n unitary matrix.
+    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
+    //  of rows).
+    T sigma[std::min(m,n)], U[m*m], VT[n*n];
+    //  workspaces for inversion
+    int lWork;
+    //  find the optimal workspace first
+    double workOpt;
+    double *work;
+    lWork = -1;
+    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
+        &m, VT, &n, &workOpt, &lWork, &info);
+    lWork = (int)workOpt;
+    work = (double*)malloc( lWork*sizeof(double) );
+    /* Compute SVD */
+    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
+        &m, VT, &n, work, &lWork, &info);
+    /* Check for convergence */
+    if( info > 0 ) {
+      printf( "The algorithm computing SVD failed to converge.\n" );
+      exit( 1 );
+    }
+    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
+    _singular_values = sig;
+    //  construct U, VT and Sigma matrices
+    Matrix<T> U_matrix("U",_m,_m,U);
+    Matrix<T> VT_matrix("(V)^T",_n,_n,VT);
+    Matrix<T> S_matrix("Sigma",_m,_n,0.0);
+    for (uint32_t i = 0; i < _singular_values.size(); i++)
+    {
+      S_matrix(i,i) = _singular_values[i];
+    }
+    //U_matrix.transpose(true);
+    //U_matrix.setName("U");
+    //VT_matrix.transpose(true);
+    //VT_matrix.setName("(V)^T");
+    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
+    return result;
+  }
+  template<typename T>
+  std::vector<T> Matrix<T>::getSingularValues()
+  {
+    if (_singular_values.size() == 0)
+      findSingularValues();
+    return _singular_values;
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Various instantiators
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T> identity(uint32_t m)
   {
@@ -1175,8 +1190,39 @@ namespace ET
     Matrix<T> o(m, n, 1.0);
     return o;
   }
+  //----------------------------------------------------------------------------
 
-  //  Level 2 BLAS double
+  //  Overload of the ostream operator<<
+  //  This has the same functionality as print, except it can be used in
+  //  a std::cout statement.
+  template<typename T>
+  std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
+  {
+    os << "(" << matrix.getNumRows() << " x " << matrix.getNumCols() << ") Matrix";
+    if (matrix.getName() != " ")
+    {
+      os << ": '" << matrix.getName() << "'";
+    }
+    os << "\n[ ";
+    for (uint32_t i = 0; i < matrix.getNumRows(); i++)
+    {
+      os << "[ ";
+      for (uint32_t j = 0; j < matrix.getNumCols(); j++)
+      {
+        os << matrix(i,j) << " ";
+      }
+      os << "]";
+      if (i < matrix.getNumRows()-1)
+      {
+        os << "\n  ";
+      }
+    }
+    os << " ]" << std::endl;
+    return os;
+  }
+
+  //----------------------------------------------------------------------------
+  //  Level 2 BLAS methods
   //  Matrix-vector multiplication
   //----------------------------------------------------------------------------
   //  DGEMV (generic matrix vector multiplication)
@@ -1185,9 +1231,9 @@ namespace ET
   //              x     - (n)-dim vector
   //
   //  Returns:    alpha * A * x
-  //
+  //----------------------------------------------------------------------------
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x)
+                       Vector<double>& x)
   {
     //  container for the vector y
     std::vector<double> y(x.getDim());
@@ -1225,8 +1271,9 @@ namespace ET
   //
   //  Returns:    alpha * A * x + beta * y
   //  This method overwrites the vector y!
+  //----------------------------------------------------------------------------
   void DGEMV(double& alpha, Matrix<double>& A,
-      Vector<double>& x, double& beta, Vector<double>& y)
+             Vector<double>& x, double& beta, Vector<double>& y)
   {
     //std::vector<double> y2 = y.getVec();
     cblas_dgemv(CblasRowMajor,          //  Row major order
@@ -1254,5 +1301,6 @@ namespace ET
     }
     y.setName(name);
   }
+  //----------------------------------------------------------------------------
 
 }

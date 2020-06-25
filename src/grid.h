@@ -26,7 +26,6 @@
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"
 
-
 namespace ET
 {
 

@@ -32,11 +32,7 @@
 #include "utils.h"
 #include "approximator.h"
 
-
-
-
 namespace py = pybind11;
-
 
 PYBIND11_MODULE(etraj, m) {
 
@@ -227,8 +223,8 @@ PYBIND11_MODULE(etraj, m) {
 					sizeof(float),                          /* Size of one scalar */
 					py::format_descriptor<float>::format(), /* Python struct-style format descriptor */
 					2,                                      /* Number of dimensions */
-					{ m.getNumRows(), m.getNumCols() },                 /* Buffer dimensions */
-					{ sizeof(float) * m.getNumCols(),             /* Strides (in bytes) for each index */
+					{ m.getNumRows(), m.getNumCols() },     /* Buffer dimensions */
+					{ sizeof(float) * m.getNumCols(),       /* Strides (in bytes) for each index */
 						sizeof(float) }
 					);
 		   })
