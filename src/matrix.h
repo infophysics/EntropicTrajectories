@@ -213,6 +213,6 @@ namespace ET
   //  DGEMV ()
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x);
-  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+  void DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x, double& beta, Vector<double>& y);
 }

@@ -351,36 +351,20 @@ namespace ET
     std::string name = "(" + _name + " * " + matrix.getName() + ")";
     std::vector<T> l(_m*matrix.getNumCols(),0.0);
     //  CBLAS function for matrix multiplication, A*B = C.
-    /*  clbas_dgemm(Order  - either CblasRowMajor or CblasColumnMajor
-                    TransA - either transpose or not for Matrix A
-                    TransB - either transpose or not for Matrix B
-                    M      - number of rows in A and C
-                    N      - number of columns in B and C
-                    K      - number of columns in A, number of rows in B
-                    alpha  - scaling factor for A and B
-                    A      - Matrix A, i.e. ref. to the beginning of the vector
-                    Ida    - number of columns of A; _l
-                    B      - Matrix B, ref. to the beginning of B
-                    Idb    - number of columns of B; m.getNumCols()
-                    beta   - scaling factor for C
-                    C      - Matrix C, ref. to beginning of C
-                    Idc    - number of columns of C; _n
-        Since we are using std::vector, we must pass in a reference to
-        the pointer given by .begin().
-    */
-    cblas_dgemm(CblasRowMajor,
-                CblasNoTrans,
-                CblasNoTrans,
-                _m,
-                matrix.getNumCols(),
-                _n,
-                1.0,
-                _array.data(),
-                _n,
-                matrix.accessArray()->data(),
-                matrix.getNumCols(),
-                0.0, l.data(),
-                matrix.getNumCols());
+    cblas_dgemm(CblasRowMajor,                //  Row major order
+                CblasNoTrans,                 //  Don't transpose A
+                CblasNoTrans,                 //  Don't transpose B
+                _m,                           //  number of rows of A,C
+                matrix.getNumCols(),          //  number of columns in B,C
+                _n,                           //  number of columns A, rows B
+                1.0,                          //  scaling factor for A*B
+                _array.data(),                //  pointer to A array
+                _n,                           //  number of columns of A
+                matrix.accessArray()->data(), //  pointer to B array
+                matrix.getNumCols(),          //  number of columns of B
+                0.0,                          //  scaling factor of C
+                l.data(),                     //  pointer to C array
+                matrix.getNumCols());         //  number of columns of C
     return Matrix<T>(name,_m,matrix.getNumCols(),l);
   }
   template<typename T>
@@ -1092,13 +1076,33 @@ namespace ET
   }
 
   //  Level 2 BLAS double
+  //  Matrix-vector multiplication
+  //----------------------------------------------------------------------------
+  //  DGEMV (generic matrix vector multiplication)
+  //  Arguments:  alpha - double
+  //              A     - (m x n) matrix
+  //              x     - (n)-dim vector
+  //
+  //  Returns:    alpha * A * x
+  //
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x)
   {
+    //  container for the vector y
     std::vector<double> y(x.getDim());
-    cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,A.accessArray()->data(),A.getNumRows(),
-      x.accessVec()->data(),1,1,y.data(),1);
+    cblas_dgemv(CblasRowMajor,          //  Row major order
+                CblasNoTrans,           //  Don't transpose A
+                A.getNumRows(),         //  number of rows of A
+                A.getNumCols(),         //  number of columns of A
+                alpha,                  //  scaling factor for A*x
+                A.accessArray()->data(),//  pointer to A array
+                A.getNumRows(),         //  number of rows in A
+                x.accessVec()->data(),  //  pointer to x vector
+                1,                      //  increment for elements of x
+                1,                      //  scaling factor for y
+                y.data(),               //  pointer to y vector
+                1);                     //  increment for elements of y
+    //  generate a new name for the product
     std::string name;
     if (alpha != 0)
     {
@@ -1108,16 +1112,46 @@ namespace ET
     Vector<double> result(name,y);
     return result;
   }
+  //----------------------------------------------------------------------------
 
-  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
+  //----------------------------------------------------------------------------
+  //  DGEMV with (beta,y) (generic matrix vector multiplication)
+  //  Arguments:  alpha - double
+  //              A     - (m x n) matrix
+  //              x     - (n)-dim vector
+  //              beta  - double
+  //              y     - (n)-dim vector
+  //
+  //  Returns:    alpha * A * x + beta * y
+  //  This method overwrites the vector y!
+  void DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x, double& beta, Vector<double>& y)
   {
     //std::vector<double> y2 = y.getVec();
-    cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,A.accessArray()->data(),A.getNumRows(),
-      x.accessVec()->data(),1,beta,y.accessVec()->data(),1);
-    Vector<double> result(y);
-    return result;
+    cblas_dgemv(CblasRowMajor,          //  Row major order
+                CblasNoTrans,           //  Don't transpose A
+                A.getNumRows(),         //  number of rows of A
+                A.getNumCols(),         //  number of columns of A
+                alpha,                  //  scaling factor for A*x
+                A.accessArray()->data(),//  pointer to A array
+                A.getNumRows(),         //  number of rows in A
+                x.accessVec()->data(),  //  pointer to x vector
+                1,                      //  increment for elements of x
+                beta,                   //  scaling factor for y
+                y.accessVec()->data(),  //  pointer to y data
+                1);                     //  increment for the elements of y
+    //  generate a new name for the product
+    std::string name;
+    if (alpha != 0)
+    {
+      name += std::to_string(alpha) + " * ";
+    }
+    name += A.getName() + " * " + x.getName();
+    if (beta != 0)
+    {
+      name += " + " + std::to_string(beta) + " * " + y.getName();
+    }
+    y.setName(name);
   }
 
 }
