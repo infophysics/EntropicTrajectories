@@ -62,9 +62,9 @@ namespace ET
     return _vec;
   }
   template<typename T>
-  std::vector<T> Vector<T>::accessVec()
+  std::vector<T>* Vector<T>::accessVec()
   {
-    return _vec;
+    return &_vec;
   }
   template<typename T>
   std::string Vector<T>::getName() const

@@ -52,7 +52,7 @@ namespace ET
     //  get a const reference to array
     std::vector<T> getArray() const;
     //  get access to array
-    std::vector<T> accessArray();
+    std::vector<T>* accessArray();
     std::vector<T> getRow(uint32_t i);
     std::vector<T> getCol(uint32_t i);
     float *data();

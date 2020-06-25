@@ -144,9 +144,9 @@ namespace ET
   }
 
   template<typename T>
-  std::vector<T> Matrix<T>::accessArray()
+  std::vector<T>* Matrix<T>::accessArray()
   {
-    return _array;
+    return &_array;
   }
 
   template<typename T>
@@ -368,11 +368,19 @@ namespace ET
         Since we are using std::vector, we must pass in a reference to
         the pointer given by .begin().
     */
-    cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans,
-                _m, matrix.getNumCols(), _n, 1.0,
-                & *_array.begin(), _n,
-                & *matrix.getArray().begin(), matrix.getNumCols(),
-                0.0, & *l.begin(), matrix.getNumCols());
+    cblas_dgemm(CblasRowMajor,
+                CblasNoTrans,
+                CblasNoTrans,
+                _m,
+                matrix.getNumCols(),
+                _n,
+                1.0,
+                _array.data(),
+                _n,
+                matrix.accessArray()->data(),
+                matrix.getNumCols(),
+                0.0, l.data(),
+                matrix.getNumCols());
     return Matrix<T>(name,_m,matrix.getNumCols(),l);
   }
   template<typename T>
@@ -1089,8 +1097,8 @@ namespace ET
   {
     std::vector<double> y(x.getDim());
     cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,A.getArray().data(),A.getNumRows(),
-      x.getVec().data(),1,1,y.data(),1);
+      alpha,A.accessArray()->data(),A.getNumRows(),
+      x.accessVec()->data(),1,1,y.data(),1);
     std::string name;
     if (alpha != 0)
     {
@@ -1104,11 +1112,11 @@ namespace ET
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
       Vector<double>& x, double& beta, Vector<double>& y)
   {
-    std::vector<double> y2 = y.getVec();
+    //std::vector<double> y2 = y.getVec();
     cblas_dgemv(CblasRowMajor,CblasNoTrans,A.getNumRows(),A.getNumCols(),
-      alpha,A.getArray().data(),A.getNumRows(),
-      x.getVec().data(),1,beta,y2.data(),1);
-    Vector<double> result(y2);
+      alpha,A.accessArray()->data(),A.getNumRows(),
+      x.accessVec()->data(),1,beta,y.accessVec()->data(),1);
+    Vector<double> result(y);
     return result;
   }
 

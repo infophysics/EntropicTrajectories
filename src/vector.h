@@ -33,7 +33,7 @@ namespace ET
     //  get const reference to vec
     std::vector<T> getVec() const;
     //  get access to vec
-    std::vector<T> accessVec();
+    std::vector<T>* accessVec();
     std::string getName() const;
     //  Setters
     void setDim(uint32_t dim);
