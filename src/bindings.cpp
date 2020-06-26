@@ -38,22 +38,26 @@ PYBIND11_MODULE(etraj, m) {
 
   py::class_<ET::Vector<double>>(m, "Vector", py::buffer_protocol())
     .def(py::init<>())
+		.def(py::init<ET::Vector<double>>())
     .def(py::init<uint32_t>())
 		.def(py::init<std::string, uint32_t>())
     .def(py::init<std::vector<double>>())
 		.def(py::init<std::string, std::vector<double>>())
 		.def(py::init<uint32_t, const double&>())
 		.def(py::init<std::string, uint32_t, const double&>())
-		.def(py::init([](py::buffer const b) {
-            py::buffer_info info = b.request();
-            if (info.format != py::format_descriptor<float>::format() || info.ndim != 1)
-                throw std::runtime_error("Incompatible buffer format!");
-
-            auto v = new ET::Vector<double>(info.shape[0]);
-            memcpy(v->getVec().data(), info.ptr, sizeof(double) * (size_t) (v->getDim()));
-            return v;
-        }))
-
+		.def(py::init([](py::buffer const b)
+		{
+    	py::buffer_info info = b.request();
+    	if (info.format != py::format_descriptor<float>::format()
+					|| info.ndim != 1)
+			{
+      	throw std::runtime_error("Incompatible buffer format!");
+			}
+      auto v = new ET::Vector<double>(info.shape[0]);
+      memcpy(v->getVec().data(), info.ptr,
+						 sizeof(double) * (size_t) (v->getDim()));
+      return v;
+    }))
 		.def("get_dim", &ET::Vector<double>::getDim)
 		.def("get_vec", &ET::Vector<double>::getVec)
 		.def("get_name", &ET::Vector<double>::getName)
@@ -72,6 +76,11 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::self += double())
     .def(py::self - double())
     .def(py::self -= double())
+		.def("__mul__", [](const ET::Vector<double>& v,
+											 const ET::Vector<double>& u)
+		{
+			return v * u;
+		}, py::is_operator())
     .def(py::self * double())
     .def(py::self *= double())
     .def(py::self / double())
@@ -81,27 +90,44 @@ PYBIND11_MODULE(etraj, m) {
 		.def(double() - py::self)
 		.def(double() * py::self)
 		.def(double() / py::self)
-		.def("__getitem__", [](const ET::Vector<double> &self, int i) {
+		.def("__getitem__", [](const ET::Vector<double> &self, int i)
+		{
 			if (i < 0 || i >= self.getDim())
+			{
 				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for vector with dimension "
 															+ std::to_string(self.getDim()) + "!");
+			}
 			return self(i);
 		}, py::is_operator())
 		.def("__setitem__", [](ET::Vector<double> &self,
-					int i, const double& val)
+													 int i, const double& val)
 		{
 			if (i < 0 || i >= self.getDim())
-			throw py::index_error("Index " + std::to_string(i) +
+			{
+				throw py::index_error("Index " + std::to_string(i) +
 														" out of bounds for vector with dimension "
 														+ std::to_string(self.getDim()) + "!");
+			}
 			self(i) = val;
 		}, py::is_operator())
 		//	print functionality
-		.def("__repr__", [](const ET::Vector<double> &vector) {
+		.def("__repr__", [](const ET::Vector<double> &vector)
+		{
 				return vector.summary();
 		})
-    ;
+		;
+		//	Level 1 BLAS methods
+		m.def("dswap", &ET::DSWAP);
+		m.def("dscal", &ET::DSCAL);
+		m.def("dcopy", (void (*)(ET::Vector<double>&,
+				  ET::Vector<double>&)) &ET::DCOPY);
+		m.def("dcopy", (ET::Vector<double> (*)(ET::Vector<double>&)) &ET::DCOPY);
+		m.def("daxpy", &ET::DAXPY);
+		m.def("ddot",  &ET::DDOT);
+		m.def("dnrm2", &ET::DNRM2);
+		m.def("dasum", &ET::DASUM);
+		m.def("idamax",&ET::IDAMAX);
 
   py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
@@ -118,15 +144,19 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string, uint32_t, uint32_t, std::vector<double>>())
 		.def(py::init<std::vector<std::vector<double>>>())
 		.def(py::init<std::string, std::vector<std::vector<double>>>())
-		.def(py::init([](py::buffer const b) {
-            py::buffer_info info = b.request();
-            if (info.format != py::format_descriptor<float>::format() || info.ndim != 2)
-                throw std::runtime_error("Incompatible buffer format!");
-
-            auto v = new ET::Matrix<double>(info.shape[0], info.shape[1]);
-            memcpy(v->getArray().data(), info.ptr, sizeof(double) * (size_t) (v->getNumRows() * v->getNumCols()));
-            return v;
-        }))
+		.def(py::init([](py::buffer const b)
+		{
+    	py::buffer_info info = b.request();
+      if (info.format != py::format_descriptor<float>::format()
+					|| info.ndim != 2)
+			{
+      	throw std::runtime_error("Incompatible buffer format!");
+			}
+      auto v = new ET::Matrix<double>(info.shape[0], info.shape[1]);
+      memcpy(v->getArray().data(), info.ptr,
+						 sizeof(double) * (size_t) (v->getNumRows() * v->getNumCols()));
+      return v;
+    }))
 		//	getters
 		.def("get_num_rows", &ET::Matrix<double>::getNumRows)
 		.def("get_num_cols", &ET::Matrix<double>::getNumCols)
@@ -139,10 +169,9 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_row", &ET::Matrix<double>::setRow)
 		.def("set_col", &ET::Matrix<double>::setCol)
 		.def("set_array", (void (ET::Matrix<double>::*)
-							(uint32_t,std::vector<double>)) &ET::Matrix<double>::setArray)
+				 (uint32_t,std::vector<double>)) &ET::Matrix<double>::setArray)
 		.def("set_array", (void (ET::Matrix<double>::*)
-							(std::vector<std::vector<double>>)) &ET::Matrix<double>::setArray)
-
+				 (std::vector<std::vector<double>>)) &ET::Matrix<double>::setArray)
     //  operator overloads
 		.def(py::self == py::self)
 		.def(py::self != py::self)
@@ -165,80 +194,99 @@ PYBIND11_MODULE(etraj, m) {
 		.def(double() - py::self)
 		.def(double() * py::self)
 		.def(double() / py::self)
-
 		//	Matrix array access.  This first method allows the user
 		//	to write x = m[i,j] to get elements.
     .def("__getitem__", [](const ET::Matrix<double> &self,
-					std::tuple<uint32_t, uint32_t> ij)
+													 std::tuple<uint32_t, uint32_t> ij)
 		{
-				uint32_t i, j;
-				std::tie(i, j) = ij;
-				if (i < 0 || i >= self.getNumRows())
-					throw py::index_error("Index " + std::to_string(i) +
+			uint32_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getNumRows())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
 																" out of bounds for array with "
-																+ std::to_string(self.getNumRows()) + " rows!");
-				if (j < 0 || j >= self.getNumCols())
-					throw py::index_error("Index " + std::to_string(j) +
+																+ std::to_string(self.getNumRows())
+																+ " rows!");
+			}
+			if (j < 0 || j >= self.getNumCols())
+			{
+				throw py::index_error("Index " + std::to_string(j) +
 															  " out of bounds for array with "
-															  + std::to_string(self.getNumCols()) + " columns!");
-				return self(i,j);
+															  + std::to_string(self.getNumCols())
+																+ " columns!");
+			}
+			return self(i,j);
 		}, py::is_operator())
 		//	now for the setter of the same type.  To set an element to a Matrix
 		//	at index i,j, write - m[i,j] = x.
 		.def("__setitem__", [](ET::Matrix<double> &self,
-					std::tuple<uint32_t, uint32_t> ij, const double& val)
+													 std::tuple<uint32_t, uint32_t> ij,
+													 const double& val)
 		{
-				uint32_t i, j;
-				std::tie(i, j) = ij;
-				if (i < 0 || i >= self.getNumRows())
-					throw py::index_error("Index " + std::to_string(i) +
+			uint32_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getNumRows())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
 																" out of bounds for array with "
-																+ std::to_string(self.getNumRows()) + " rows!");
-				if (j < 0 || j >= self.getNumCols())
-					throw py::index_error("Index " + std::to_string(j) +
+																+ std::to_string(self.getNumRows())
+																+ " rows!");
+			}
+			if (j < 0 || j >= self.getNumCols())
+			{
+				throw py::index_error("Index " + std::to_string(j) +
 															  " out of bounds for array with "
-															  + std::to_string(self.getNumCols()) + " columns!");
-				self(i,j) = val;
+															  + std::to_string(self.getNumCols())
+																+ " columns!");
+			}
+			self(i,j) = val;
 		}, py::is_operator())
 		//	this will allow the user to get entire rows.
-		.def("__getitem__", [](const ET::Matrix<double> &self, int i) {
+		.def("__getitem__", [](const ET::Matrix<double> &self, int i)
+		{
 			if (i < 0 || i >= self.getNumRows())
+			{
 				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for array with "
-															+ std::to_string(self.getNumRows()) + " rows!");
+															+ std::to_string(self.getNumRows())
+															+ " rows!");
+			}
 			return self.getRow(i);
 		}, py::is_operator())
-
 		//	print functionality
-		.def("__repr__", [](const ET::Matrix<double> &m) {
+		.def("__repr__", [](const ET::Matrix<double> &m)
+		{
 				return m.summary();
 		})
-
 		//	various functions
 		.def("print", &ET::Matrix<double>::print)
-
-		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info {
-        return py::buffer_info(
-					m.data(),                               /* Pointer to buffer */
-					sizeof(float),                          /* Size of one scalar */
-					py::format_descriptor<float>::format(), /* Python struct-style format descriptor */
-					2,                                      /* Number of dimensions */
-					{ m.getNumRows(), m.getNumCols() },     /* Buffer dimensions */
-					{ sizeof(float) * m.getNumCols(),       /* Strides (in bytes) for each index */
-						sizeof(float) }
-					);
-		   })
-
+		//	Buffer definition allows one to cast a Matrix as a numpy array
+		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info
+		{
+      return py::buffer_info(
+				m.data(),                               /* Pointer to buffer */
+				sizeof(float),                          /* Size of one scalar */
+				py::format_descriptor<float>::format(), /* Python struct-style format descriptor */
+				2,                                      /* Number of dimensions */
+				{ m.getNumRows(), m.getNumCols() },     /* Buffer dimensions */
+				{ sizeof(float) * m.getNumCols(),       /* Strides (in bytes) for each index */
+					sizeof(float) });
+		  })
 		.def("inverse", &ET::Matrix<double>::inverse)
 		.def("pseudo_inverse", &ET::Matrix<double>::pseudoInverse)
 		.def("permutation_matrix", &ET::Matrix<double>::permutationMatrix)
-		.def("LU", [](ET::Matrix<double> &self) {
+		.def("LU", [](ET::Matrix<double> &self)
+		{
 			if (self.getNumRows() != self.getNumCols())
+			{
 				throw py::value_error("Expecting square matrix!");
+			}
 			return self.LU();
 		})
-		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)()) &ET::Matrix<double>::transpose)
-		.def("transpose", (void (ET::Matrix<double>::*)(bool)) &ET::Matrix<double>::transpose_inplace)
+		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)())
+				 &ET::Matrix<double>::transpose)
+		.def("transpose", (void (ET::Matrix<double>::*)(bool))
+				 &ET::Matrix<double>::transpose_inplace)
 		.def("trace", &ET::Matrix<double>::trace)
 		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
 		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
@@ -247,9 +295,9 @@ PYBIND11_MODULE(etraj, m) {
 
 		//	Level 2 BLAS functions
 		m.def("dgemv", (ET::Vector<double> (*)(double&,ET::Matrix<double>&,
-			ET::Vector<double>&)) &ET::DGEMV);
+					ET::Vector<double>&)) &ET::DGEMV);
 		m.def("dgemv", (void (*)(double&,ET::Matrix<double>&,
-			ET::Vector<double>&, double&, ET::Vector<double>&)) &ET::DGEMV);
+					ET::Vector<double>&, double&, ET::Vector<double>&)) &ET::DGEMV);
 
 		py::class_<ET::Grid<double>>(m, "Grid")
 			.def(py::init<>())
@@ -262,10 +310,10 @@ PYBIND11_MODULE(etraj, m) {
 			.def("get_N", &ET::Grid<double>::getN)
 			.def("get_grid", &ET::Grid<double>::getGrid)
 			.def("get_name", &ET::Grid<double>::getName)
-			.def("get_neighbors", (std::vector<std::vector<size_t> > (ET::Grid<double>::*)
-								()) &ET::Grid<double>::getNeighbors)
+			.def("get_neighbors", (std::vector<std::vector<size_t> >
+					 (ET::Grid<double>::*)()) &ET::Grid<double>::getNeighbors)
 			.def("get_neighbors", (std::vector<size_t>* (ET::Grid<double>::*)
-								(uint64_t)) &ET::Grid<double>::getNeighbors)
+					 (uint64_t)) &ET::Grid<double>::getNeighbors)
 			.def("get_distances", &ET::Grid<double>::getDistances)
 			.def("get_neighbors_radius", &ET::Grid<double>::getNeighborsRadius)
 			.def("get_distances_radius", &ET::Grid<double>::getDistancesRadius)
@@ -277,35 +325,43 @@ PYBIND11_MODULE(etraj, m) {
 			.def("__getitem__", [](const ET::Grid<double> &self,
 						std::tuple<uint64_t, uint64_t> ij)
 			{
-					uint32_t i, j;
-					std::tie(i, j) = ij;
-					if (i < 0 || i >= self.getN())
-						throw py::index_error("Index " + std::to_string(i) +
-																	" out of bounds for array with "
-																	+ std::to_string(self.getN()) + " points!");
-					if (j < 0 || j >= self.getDim())
-						throw py::index_error("Index " + std::to_string(j) +
-																  " out of bounds for array with dimension "
-																  + std::to_string(self.getDim()));
-					return self(i,j);
+				uint32_t i, j;
+				std::tie(i, j) = ij;
+				if (i < 0 || i >= self.getN())
+				{
+					throw py::index_error("Index " + std::to_string(i) +
+																" out of bounds for array with "
+																+ std::to_string(self.getN())
+																+ " points!");
+				}
+				if (j < 0 || j >= self.getDim())
+				{
+					throw py::index_error("Index " + std::to_string(j) +
+															  " out of bounds for array with dimension "
+															  + std::to_string(self.getDim()));
+				}
+				return self(i,j);
 			}, py::is_operator())
-
 			.def("__setitem__", [](ET::Grid<double> &self,
 						std::tuple<uint32_t, uint32_t> ij, const double& val)
 			{
-					uint32_t i, j;
-					std::tie(i, j) = ij;
-					if (i < 0 || i >= self.getN())
-						throw py::index_error("Index " + std::to_string(i) +
-																	" out of bounds for array with "
-																	+ std::to_string(self.getN()) + " points!");
-					if (j < 0 || j >= self.getDim())
-						throw py::index_error("Index " + std::to_string(j) +
-																  " out of bounds for array with dimension "
-																  + std::to_string(self.getDim()));
-					self(i,j) = val;
+				uint32_t i, j;
+				std::tie(i, j) = ij;
+				if (i < 0 || i >= self.getN())
+				{
+					throw py::index_error("Index " + std::to_string(i) +
+																" out of bounds for array with "
+																+ std::to_string(self.getN())
+																+ " points!");
+				}
+				if (j < 0 || j >= self.getDim())
+				{
+					throw py::index_error("Index " + std::to_string(j) +
+															  " out of bounds for array with dimension "
+															  + std::to_string(self.getDim()));
+				}
+				self(i,j) = val;
 			}, py::is_operator())
-
 			.def("query_neighbors", &ET::Grid<double>::queryNeighbors)
 			.def("query_radius", &ET::Grid<double>::queryRadius)
 			;

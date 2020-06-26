@@ -31,6 +31,10 @@
 
 #include "utils.h"
 
+//------------------------------------------------------------------------------
+//  Vector class
+//
+//------------------------------------------------------------------------------
 namespace ET
 {
   template<typename T>
@@ -39,6 +43,7 @@ namespace ET
   public:
     Vector();
     ~Vector();
+    Vector(const Vector<T>& vector);
     Vector(uint32_t dim);
     Vector(std::string name, uint32_t dim);
     Vector(std::vector<T> vec);
@@ -68,7 +73,8 @@ namespace ET
     Vector<T> operator-(const Vector<T>& vector) const;
     Vector<T>& operator-=(const Vector<T>& vector);
     //  Scalar product
-    T dot(const Vector<T>* vector);
+    T operator*(const Vector<T>& vector) const;
+    T dot(const Vector<T>& vector) const;
     //  Scalar operators
     Vector<T> operator+(const T& s) const;
     Vector<T> operator-(const T& s) const;
@@ -149,6 +155,22 @@ namespace ET
   //  Special zero vector
   template<typename T>
   Vector<T> zeroes(uint32_t dim);
+  template<typename T>
+  Vector<T> ones(uint32_t dim);
 
   template class Vector<double>;
+  template class Vector<float>;
+
+  //  Level 1 BLAS methods
+  void DSWAP(Vector<double>& v, Vector<double>& u);
+  void DSCAL(Vector<double>& v, const double& scale);
+  Vector<double> DCOPY(Vector<double>& v);
+  void DCOPY(Vector<double>& v, Vector<double>& u);
+  void DAXPY(Vector<double>& v, const double& scale, Vector<double>& u);
+  double DDOT(Vector<double>& v, Vector<double>& u);
+  double DNRM2(Vector<double>& v);
+  double DASUM(Vector<double>& v);
+  uint32_t IDAMAX(Vector<double>& v);
+  uint32_t IDAMIN(Vector<double>& v);
+
 }

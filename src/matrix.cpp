@@ -21,12 +21,12 @@
 #include "matrix.h"
 
 //------------------------------------------------------------------------------
-//  Matrix.cpp
+//  matrix.cpp
 //
 //  This file contains the instantiations of the definitions given in matrix.h.
 //  The various methods are listed below,
 //  ----------------------------------------------------------------------------
-//  Line no.    |   Method
+//  Line no.  |   Method
 //  ----------------------------------------------------------------------------
 //  ()        |   Matrix()
 //  ()        |   ~Matrix()
@@ -111,14 +111,16 @@ namespace ET
   //    sets name = " ", and _m, _n = 0
   //----------------------------------------------------------------------------
   template<typename T>
-  Matrix<T>::Matrix() : _name(" "), _m(0), _n(0) {}
-
+  Matrix<T>::Matrix() : _name(" "), _m(0), _n(0)
+  {
+  }
   //----------------------------------------------------------------------------
   //  Default destructor
   //----------------------------------------------------------------------------
   template<typename T>
-  Matrix<T>::~Matrix() {}
-
+  Matrix<T>::~Matrix()
+  {
+  }
   //----------------------------------------------------------------------------
   //  Copy constructor
   //    Does not delete the copied object.
@@ -131,7 +133,6 @@ namespace ET
     _n = matrix.getNumCols();
     _name = matrix.getName();
   }
-
   //----------------------------------------------------------------------------
   //  Constructors with various sets of arguments, such as,
   //    std::string                 name,
@@ -179,6 +180,8 @@ namespace ET
   {
     _array.resize(_m*_n, init);
   }
+  //  Notice that the following methods do not MOVE the vectors so that they
+  //  change ownership.  Instead they are copied into _array.
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(" "), _array(flat)
@@ -1062,7 +1065,7 @@ namespace ET
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
   {
-    //  pivot array with indices 1 <= i <= min(n,m)
+    //  pivot array with indices 1 <=overloads i <= min(n,m)
     int *pivot = new int[_n+1];
     int info;
     int m = _m;
@@ -1225,7 +1228,7 @@ namespace ET
   //  Level 2 BLAS methods
   //  Matrix-vector multiplication
   //----------------------------------------------------------------------------
-  //  DGEMV (generic matrix vector multiplication)
+  //  DGEMV - generic matrix vector multiplication
   //  Arguments:  alpha - double
   //              A     - (m x n) matrix
   //              x     - (n)-dim vector
@@ -1262,7 +1265,7 @@ namespace ET
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  DGEMV with (beta,y) (generic matrix vector multiplication)
+  //  DGEMV with (beta,y) - generic matrix vector multiplication
   //  Arguments:  alpha - double
   //              A     - (m x n) matrix
   //              x     - (n)-dim vector

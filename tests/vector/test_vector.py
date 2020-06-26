@@ -324,3 +324,13 @@ v = Vector('v',[1,2,3,4])
 u = Vector('u',[4,3,2,1])
 s = v.dot(u)
 print(s)
+
+print("\n(4b) Dot product operator overload")
+print(">>> v = Vector('v',[1,2,3,4])")
+print(">>> u = Vector('u',[4,3,2,1])")
+print(">>> s = v*u")
+print(">>> print(s)")
+v = Vector('v',[1,2,3,4])
+u = Vector('u',[4,3,2,1])
+s = v*u
+print(s)
