@@ -732,9 +732,9 @@ namespace ET
   //
   //  Returns:    uint32_t
   //----------------------------------------------------------------------------
-  uint32_t IDAMAX(Vector<double>& v)
+  uint32_t IDAMIN(Vector<double>& v)
   {
-    return cblas_idamax(v.getDim(),           //  dimension of the vectors
+    return cblas_idamin(v.getDim(),           //  dimension of the vectors
                         v.accessVec()->data(),//  pointer to the elements of v
                         1);                   //  increment of the elements of v
   }

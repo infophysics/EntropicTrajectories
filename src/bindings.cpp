@@ -128,6 +128,7 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("dnrm2", &ET::DNRM2);
 		m.def("dasum", &ET::DASUM);
 		m.def("idamax",&ET::IDAMAX);
+		m.def("idamin",&ET::IDAMIN);
 
   py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
