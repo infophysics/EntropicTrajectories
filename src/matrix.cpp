@@ -959,7 +959,8 @@ namespace ET
     {
       swaps[p[i]*n + i] = 1;
     }
-    std::string name = "(" + std::to_string(n) = "x" + std::to_string(n) + ") perm";
+    std::string name = "(" + std::to_string(n) = "x"
+                        + std::to_string(n) + ") perm";
     return Matrix<T>(name,n,n,swaps);
   }
   template<typename T>
@@ -969,99 +970,18 @@ namespace ET
   template<typename T>
   void Matrix<T>::findSingularValues()
   {
-    int info;
-    int m = _m;
-    int n = _n;
-    //  Sigma, U and V_T matrices
-    //  Sigma will be a vector of singular values of size n,
-    //  U is a unitary m x m matrix,
-    //  VT is the transpose of an n x n unitary matrix.
-    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
-    //  of rows).
-    T sigma[std::min(m,n)], U[m*m], VT[n*n];
-    //  workspaces for inversion
-    int lWork;
-    //  find the optimal workspace first
-    double workOpt;
-    double *work;
-    lWork = -1;
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, &workOpt, &lWork, &info);
-    lWork = (int)workOpt;
-    work = (double*)malloc( lWork*sizeof(double) );
-    /* Compute SVD */
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, work, &lWork, &info);
-    /* Check for convergence */
-    if( info > 0 ) {
-      printf( "The algorithm computing SVD failed to converge.\n" );
-      exit( 1 );
-    }
-    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
-    _singular_values = sig;
   }
   template<typename T>
   Matrix<T> Matrix<T>::inverse()
   {
-    int m = _m;
-    int n = _n;
-    std::vector<T> _array_copy = _array;
-    //  pivot array with indices 1 <= i <= min(n,m)
-    int *pivot = new int[_n+1];
-    //  workspaces for inversion
-    int lWork = _m*_n;
-    double *work = new double[_m*_n];
-    int info;
-    //  first construct an LU factorization to generate the pivot indices
-    //  in pivot.
-    dgetrf_(&m,&n,& *_array_copy.begin(),&m,pivot,&info);
-    dgetri_(&m,& *_array_copy.begin(),&m,pivot,work,&lWork,&info);
-    std::string name = "(" + _name + ")^-1";
-    Matrix<T> inv(name,m,n,_array_copy);
-    return inv;
   }
   template<typename T>
   Matrix<T> Matrix<T>::pseudoInverse()
   {
-    //  first compute SVD decomposition
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> svd = SVD();
-    //  The pseudo inverse is then V * Sigma * (U)^T
-    Matrix<T> U_matrix = std::get<0>(svd);
-    Matrix<T> Sigma_matrix = std::get<1>(svd);
-    Matrix<T> VT_matrix = std::get<2>(svd);
-    U_matrix.transpose_inplace();
-    VT_matrix.transpose_inplace();
-    for (uint32_t i = 0; i < Sigma_matrix.getNumCols(); i++)
-    {
-      T value = Sigma_matrix(i,i);
-      if (value > 1e-10)
-        Sigma_matrix(i,i) = 1/value;
-      else
-        Sigma_matrix(i,i) = 0;
-    }
-    Sigma_matrix.transpose_inplace();
-    std::string name = "(" + _name + ")^+";
-    Matrix<T> result = VT_matrix * (Sigma_matrix * U_matrix);
-    result.setName(name);
-    return result;
   }
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
   {
-    //  pivot array with indices 1 <=overloads i <= min(n,m)
-    int *pivot = new int[_n+1];
-    int info;
-    int m = _m;
-    int n = _n;
-    //  first construct an LU factorization to generate the pivot indices
-    //  in pivot.
-    dgetrf_(&m,&n,&*_array.begin(),&m,pivot,&info);
-    Matrix<T> P = permutationMatrix(m,pivot);
-    Matrix<T> L = getL(P);
-    Matrix<T> U = getU(P);
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(P,L,U);
-    return result;
-
   }
   //  TODO: implement getL
   template<typename T>
@@ -1082,50 +1002,6 @@ namespace ET
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
   {
-    int info;
-    int m = _m;
-    int n = _n;
-    //  Sigma, U and V_T matrices
-    //  Sigma will be a vector of singular values of size n,
-    //  U is a unitary m x m matrix,
-    //  VT is the transpose of an n x n unitary matrix.
-    //  the ldu, lda and ldvt are the "leading dimension" (i.e. the number
-    //  of rows).
-    T sigma[std::min(m,n)], U[m*m], VT[n*n];
-    //  workspaces for inversion
-    int lWork;
-    //  find the optimal workspace first
-    double workOpt;
-    double *work;
-    lWork = -1;
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, &workOpt, &lWork, &info);
-    lWork = (int)workOpt;
-    work = (double*)malloc( lWork*sizeof(double) );
-    /* Compute SVD */
-    dgesvd_("A", "A", &m, &n, &*_array.begin(), &m, sigma, U,
-        &m, VT, &n, work, &lWork, &info);
-    /* Check for convergence */
-    if( info > 0 ) {
-      printf( "The algorithm computing SVD failed to converge.\n" );
-      exit( 1 );
-    }
-    std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
-    _singular_values = sig;
-    //  construct U, VT and Sigma matrices
-    Matrix<T> U_matrix("U",_m,_m,U);
-    Matrix<T> VT_matrix("(V)^T",_n,_n,VT);
-    Matrix<T> S_matrix("Sigma",_m,_n,0.0);
-    for (uint32_t i = 0; i < _singular_values.size(); i++)
-    {
-      S_matrix(i,i) = _singular_values[i];
-    }
-    //U_matrix.transpose(true);
-    //U_matrix.setName("U");
-    //VT_matrix.transpose(true);
-    //VT_matrix.setName("(V)^T");
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
-    return result;
   }
   template<typename T>
   std::vector<T> Matrix<T>::getSingularValues()
@@ -1513,13 +1389,13 @@ namespace ET
     int info;
     info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
                          'N',
-                         A.getNumRows(),
-                         A.getNumCols(),
-                         B.getNumCols(),
-                         QR.accessArray()->data(),
-                         A.getNumCols(),
-                         c.data(),
-                         B.getNumCols());
+                         A.getNumRows(),          //  number of rows of A
+                         A.getNumCols(),          //  number of columns of A
+                         B.getNumCols(),          //  number of columns of B
+                         QR.accessArray()->data(),//  pointer to elements of A
+                         A.getNumCols(),          //  leading dimension of A
+                         c.data(),                //  pointer to elements of B
+                         B.getNumCols());         //  leading dimension of B
     if( info > 0 )
     {
       std::cout << "The diagonal element " << info << " of the triangular "
@@ -1538,6 +1414,53 @@ namespace ET
       name  = " ";
     }
     return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELS - solve the linear system min_u|v - Au|
+  //  Arguments:  A     - (m x k)-matrix
+  //              v     - (m)-dim vector
+  //
+  //  Returns:    u_min  ( (k)-dim vector )
+  //----------------------------------------------------------------------------
+  Vector<double> DGELS(const Matrix<double>& A, const Vector<double>& v)
+  {
+    if (A.getNumRows() != v.getDim())
+    {
+      std::cout << "Matrices and vector are incompatible!" << std::endl;
+      return Vector<double>("zeros",1,0.0);
+    }
+    Matrix<double> QR(A);
+    std::vector<double> u = v.getVec();
+    int info;
+    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
+                         'N',
+                         A.getNumRows(),          //  number of rows of A
+                         A.getNumCols(),          //  number of rows of A
+                         1,                       //  dimension of v
+                         QR.accessArray()->data(),//  pointer to elements of A
+                         A.getNumCols(),          //  leading dimension of A
+                         u.data(),                //  pointer to elements of v
+                         1);                      //  leading dimension of v
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols())
+    u.resize(A.getNumCols());
+    std::string name;
+    if (A.getName() != " " && v.getName() != " ")
+    {
+      name += "min_u||" + A.getName() + "*u - " + v.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    return Vector<double>(name,u);
   }
   //----------------------------------------------------------------------------
 

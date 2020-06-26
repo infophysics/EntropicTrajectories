@@ -330,6 +330,8 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		m.def("dgels", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
 		      const ET::Matrix<double>&)) &ET::DGELS);
+		m.def("dgels", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+		      const ET::Vector<double>&)) &ET::DGELS);
 		//--------------------------------------------------------------------------
 
 		py::class_<ET::Grid<double>>(m, "Grid")

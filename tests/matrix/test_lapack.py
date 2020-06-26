@@ -159,3 +159,28 @@ C = et.dgels(A,B)
 print(A)
 print(B)
 print(C)
+
+print("\n(1c) - DGELS (c)")
+print("Solve the linear system Au = v, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [1,2,3,4,5]")
+print(">>> A = Matrix('A',a)")
+print(">>> v = Matrix('v',b)")
+print(">>> u = et.dgels(A,B)")
+print(">>> print(C)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [1,2,3,4,5]
+A = Matrix('A',a)
+v = Vector('v',b)
+u = et.dgels(A,v)
+print(A)
+print(v)
+print(u)
