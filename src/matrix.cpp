@@ -1509,60 +1509,35 @@ namespace ET
       return Matrix<double>('zeros',1,0.0);
     }
     Matrix<double> QR(A);
-    Matrix<double> C(B);
-    char trans = 'N';
-    int m = A.getNumRows();
-    int n = A.getNumCols();
-    int k = C.getNumCols();
+    std::vector<double> c = B.getArray();
     int info;
-    int lWork = -1;
-    double workOpt;
-    double* work;
     info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
                          'N',
                          A.getNumRows(),
                          A.getNumCols(),
-                         C.getNumCols(),
+                         B.getNumCols(),
                          QR.accessArray()->data(),
                          A.getNumCols(),
-                         C.accessArray()->data(),
-                         C.getNumCols());
-    // Query and allocate the optimal workspace
-    // dgels_(&trans,                  //  Don't transpose A
-    //        &m,                      //  number of rows of A
-    //        &n,                      //  number of columns of A
-    //        &k,                      //  number of columns of B
-    //        QR.accessArray()->data(),//  pointer to matrix A
-    //        &n,                      //  leading dimension of A
-    //        C.accessArray()->data(), //  pointer to matrix B
-    //        &k,                      //  leading dimension of B
-    //        &workOpt,                //  temporary workspace
-    //        &lWork,                  //  workspace size
-    //        &info);                  //  result info
-    // //  set the optimal workspace
-    // lWork = (int)workOpt;
-    // work = (double*)malloc( lWork*sizeof(double) );
-    // //  solve the system AC = B
-    // dgels_(&trans,                 //  Don't transpose A
-    //        &m,                     //  number of rows of A
-    //        &n,                     //  number of columns of A
-    //        &k,                     //  number of columns of B
-    //        QR.accessArray()->data(),//  pointer to matrix A
-    //        &n,                     //  leading dimension of A
-    //        C.accessArray()->data(),//  pointer to matrix B
-    //        &k,                     //  leading dimension of B
-    //        work,                   //  workspace
-    //        &lWork,                 //  workspace size
-    //        &info);                 //  result info
-    // Check for the full rank
+                         c.data(),
+                         B.getNumCols());
     if( info > 0 )
     {
       std::cout << "The diagonal element " << info << " of the triangular "
                 << "factor of A is zero, so that A does not have full rank;\n"
                 << "the least squares solution could not be computed.\n";
     }
-    C.setName("min");
-    return C;
+    //  Cut the result according to (A.getNumCols() x B.getNumCols())
+    c.resize(A.getNumCols() * B.getNumCols());
+    std::string name;
+    if (A.getName() != " " && B.getName() != " ")
+    {
+      name += "min_C||" + A.getName() + "*C - " + B.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
   }
   //----------------------------------------------------------------------------
 
