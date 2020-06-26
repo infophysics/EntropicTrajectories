@@ -25,8 +25,9 @@ $ sudo apt-get install libblas-dev checkinstall
 $ sudo apt-get install libblas-doc checkinstall
 $ sudo apt-get install liblapacke-dev checkinstall
 $ sudo apt-get install liblapack-doc checkinstall
+$ sudo apt-get instlal libopenblas-dev checkinstall
 ```
-Other distributions can likely issue a similar command with different package managers (See https://distrowatch.com/dwres.php?resource=package-management for a list of common ones).  You will also need a fortran compiler if you don't already have one,
+OpenBLAS is also needed for some of the methods included in CBLAS.  Other distributions can likely issue a similar command with different package managers (See https://distrowatch.com/dwres.php?resource=package-management for a list of common ones).  You will also need a fortran compiler if you don't already have one,
 ```
 $ sudo apt-get install gfortran
 ```
