@@ -955,6 +955,8 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Linear algebra tools
   //----------------------------------------------------------------------------
+  
+  //  Generate a permutation matrix from a set of pivot indices
   template<typename T>
   Matrix<T> Matrix<T>::permutationMatrix(int& n, int* pivot)
   {
@@ -979,10 +981,20 @@ namespace ET
     std::string name = "(" + std::to_string(n) = "x" + std::to_string(n) + ") perm";
     return Matrix<T>(name,n,n,swaps);
   }
+  
+  // TODO: Check if matrix is invertible routine
   template<typename T>
   bool Matrix<T>::isInvertible()
   {
   }
+  
+  template<typename T>
+  bool Matrix<T>::isSquare()
+  {
+    return (_m == _n);
+  }
+  
+  // Find singular values routine
   template<typename T>
   void Matrix<T>::findSingularValues()
   {
@@ -1017,6 +1029,8 @@ namespace ET
     std::vector<T> sig(sigma, sigma + sizeof(sigma)/sizeof(sigma[0]));
     _singular_values = sig;
   }
+  
+  // Calculate matrix inverse routine
   template<typename T>
   Matrix<T> Matrix<T>::inverse()
   {
@@ -1037,6 +1051,8 @@ namespace ET
     Matrix<T> inv(name,m,n,_array_copy);
     return inv;
   }
+  
+  // Calculate the paseudo inverse matrix routine
   template<typename T>
   Matrix<T> Matrix<T>::pseudoInverse()
   {
@@ -1062,6 +1078,8 @@ namespace ET
     result.setName(name);
     return result;
   }
+  
+  // LU Decomposition Routine
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
   {
@@ -1080,22 +1098,28 @@ namespace ET
     return result;
 
   }
+  
   //  TODO: implement getL
   template<typename T>
   Matrix<T> Matrix<T>::getL(const Matrix<T>& perm)
   {
     return *this;
   }
+  
   //  TODO: implement getU
   template<typename T>
   Matrix<T> Matrix<T>::getU(const Matrix<T>& perm)
   {
     return *this;
   }
+  
+  // TODO: implement QR
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>> Matrix<T>::QR()
   {
   }
+  
+  // Singular Value Decomposition Routine
   template<typename T>
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
   {
@@ -1144,6 +1168,8 @@ namespace ET
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> result(U_matrix, S_matrix, VT_matrix);
     return result;
   }
+  
+  //
   template<typename T>
   std::vector<T> Matrix<T>::getSingularValues()
   {
@@ -1154,7 +1180,7 @@ namespace ET
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  Various instantiators
+  //  Various instantiators - Initialize some default matrix types
   //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T> identity(uint32_t m)
