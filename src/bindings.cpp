@@ -130,7 +130,10 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("idamax",&ET::IDAMAX);
 		m.def("idamin",&ET::IDAMIN);
 
-  py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
+	//--------------------------------------------------------------------------
+	//	Matrix class
+	//--------------------------------------------------------------------------
+	py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
     .def(py::init<uint32_t>())
@@ -293,8 +296,11 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		.def("SVD", &ET::Matrix<double>::SVD)
     ;
+		//--------------------------------------------------------------------------
 
+		//--------------------------------------------------------------------------
 		//	Level 2 BLAS functions
+		//--------------------------------------------------------------------------
 		m.def("dgemv", (ET::Vector<double> (*)(double&,ET::Matrix<double>&,
 					ET::Vector<double>&)) &ET::DGEMV);
 		m.def("dgemv", (void (*)(double&,ET::Matrix<double>&,
@@ -303,12 +309,28 @@ PYBIND11_MODULE(etraj, m) {
 					ET::Vector<double>&)) &ET::DGER);
 		m.def("dger", (void (*)(double&,ET::Vector<double>&,
 					ET::Vector<double>&, ET::Matrix<double>&)) &ET::DGER);
+		//--------------------------------------------------------------------------
 
+		//--------------------------------------------------------------------------
 		//  Level 3 BLAS functions
-		m.def("dgemm", (ET::Matrix<double> (*)(double&, ET::Matrix<double>&,
+		//--------------------------------------------------------------------------
+		m.def("dgemm", (ET::Matrix<double> (*)(const double&,
+			    const ET::Matrix<double>&, const ET::Matrix<double>&))
+					&ET::DGEMM);
+		m.def("dgemm", (void (*)(const double&, const ET::Matrix<double>&,
+			    const ET::Matrix<double>&, const double&,
 					ET::Matrix<double>&)) &ET::DGEMM);
-		m.def("dgemm", (void (*)(double&, ET::Matrix<double>&, ET::Matrix<double>&,
-		      double&, ET::Matrix<double>&)) &ET::DGEMM);
+		//	DGEMM with no scalar "alpha"
+		m.def("dgemm", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+			    const ET::Matrix<double>&)) &ET::DGEMM);
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	LAPACK functions
+		//--------------------------------------------------------------------------
+		m.def("dgels", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+		      const ET::Matrix<double>&)) &ET::DGELS);
+		//--------------------------------------------------------------------------
 
 		py::class_<ET::Grid<double>>(m, "Grid")
 			.def(py::init<>())

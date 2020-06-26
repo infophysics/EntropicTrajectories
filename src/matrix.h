@@ -226,7 +226,9 @@ namespace ET
   template class Matrix<double>;
   //template class Matrix<std::complex<double>>;
 
+  //----------------------------------------------------------------------------
   //  Level 2 BLAS methods
+  //----------------------------------------------------------------------------
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
                        Vector<double>& x);
   void DGEMV(double& alpha, Matrix<double>& A, Vector<double>& x,
@@ -235,11 +237,26 @@ namespace ET
                       Vector<double>& y);
   void DGER(double& alpha, Vector<double>& x,
             Vector<double>& y, Matrix<double>& m);
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   //  Level 3 BLAS methods
-  Matrix<double> DGEMM(double& alpha, Matrix<double>& A,
-                       Matrix<double>& B);
-  void DGEMM(double& alpha, Matrix<double>& A, Matrix<double>& B,
-             double& beta, Matrix<double>& C);
+  //----------------------------------------------------------------------------
+  Matrix<double> DGEMM(const double& alpha, const Matrix<double>& A,
+                       const Matrix<double>& B);
+  Matrix<double> DGEMM(const Matrix<double>& A,
+                       const Matrix<double>& B);
+  void DGEMM(const double& alpha, const Matrix<double>& A,
+             const Matrix<double>& B, const double& beta,
+             Matrix<double>& C);
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  LAPACK methods
+  //----------------------------------------------------------------------------
+  Matrix<double> DGELS(const Matrix<double>& A,
+                       const Matrix<double>& B);
+  Vector<double> DGELS(const Matrix<double>& A,
+                       const Vector<double>& y);
 
 }

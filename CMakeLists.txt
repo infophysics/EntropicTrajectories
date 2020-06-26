@@ -38,11 +38,14 @@ include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
                     "${INCLUDE_DIR}monomial"
-                    "/usr/include/x86_64-linux-gnu")
+                    "/usr/include/x86_64-linux-gnu"
+                    "/usr/lib/x86_64-linux-gnu")
 
-#	fpermissive flag for perseus
-
-set (CMAKE_SHARED_LINKER_FLAGS "-L/usr/lib/x86_64-linux-gnu/openblas
+#  lapacke must be linked first in order to
+#  use the newer functions of the form,
+#  LAPACKE_xxxx, rather than the older style,
+#  xxxx_, which required the use of workspaces.
+set (CMAKE_SHARED_LINKER_FLAGS "-L/usr/lib/x86_64-linux-gnu/lapack
                                 -llapacke
                                 -llapack
                                 -lblas

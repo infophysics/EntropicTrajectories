@@ -487,24 +487,7 @@ namespace ET
           + " incompatible!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " * " + matrix.getName() + ")";
-    std::vector<T> l(_m*matrix.getNumCols(),0.0);
-    //  CBLAS function for matrix multiplication, A*B = C.
-    cblas_dgemm(CblasRowMajor,                //  Row major order
-                CblasNoTrans,                 //  Don't transpose A
-                CblasNoTrans,                 //  Don't transpose B
-                _m,                           //  number of rows of A,C
-                matrix.getNumCols(),          //  number of columns in B,C
-                _n,                           //  number of columns A, rows B
-                1.0,                          //  scaling factor for A*B
-                _array.data(),                //  pointer to A array
-                _n,                           //  number of columns of A
-                matrix.accessArray()->data(), //  pointer to B array
-                matrix.getNumCols(),          //  number of columns of B
-                0.0,                          //  scaling factor of C
-                l.data(),                     //  pointer to C array
-                matrix.getNumCols());         //  number of columns of C
-    return Matrix<T>(name,_m,matrix.getNumCols(),l);
+    return DGEMM(*this,matrix);
   }
   template<typename T>
   Matrix<T> Matrix<T>::brute_mul(const Matrix<T>& matrix) const
@@ -1390,8 +1373,8 @@ namespace ET
   //
   //  Returns:    alpha * m * n  ( (m x n)-matrix )
   //----------------------------------------------------------------------------
-  Matrix<double> DGEMM(double& alpha, Matrix<double>& A,
-                       Matrix<double>& B)
+  Matrix<double> DGEMM(const double& alpha, const Matrix<double>& A,
+                       const Matrix<double>& B)
   {
     if (A.getNumCols() != B.getNumRows())
     {
@@ -1434,8 +1417,9 @@ namespace ET
   //
   //  Returns:    alpha * m * n  ( (m x n)-matrix )
   //----------------------------------------------------------------------------
-  void DGEMM(double& alpha, Matrix<double>& A, Matrix<double>& B,
-             double& beta, Matrix<double>& C)
+  void DGEMM(const double& alpha, const Matrix<double>& A,
+             const Matrix<double>& B, const double& beta,
+             Matrix<double>& C)
   {
     if (A.getNumCols() != B.getNumRows() || A.getNumRows() != C.getNumRows()
         || B.getNumCols() != C.getNumCols())
@@ -1467,4 +1451,119 @@ namespace ET
     C.setName(name);
   }
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGEMM (no alpha) - generic matrix-matrix multiplication
+  //  Arguments:  A     - (m x k)-matrix
+  //              B     - (k x n)-matrix
+  //
+  //  Returns:    m * n  ( (m x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGEMM(const Matrix<double>& A,
+                       const Matrix<double>& B)
+  {
+    if (A.getNumCols() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>('zeros',1,0.0);
+    }
+    std::vector<double> C(A.getNumRows() * B.getNumCols());
+    cblas_dgemm(CblasRowMajor,          //  Row major order
+                CblasNoTrans,           //  Don't tranpose A
+                CblasNoTrans,           //  Don't transpose B
+                A.getNumRows(),         //  number of rows of A
+                B.getNumCols(),         //  number of cols of B
+                A.getNumCols(),         //  number of cols of A
+                1.0,                    //  scaling factor for A*B
+                A.accessArray()->data(),//  pointer to elements of A
+                A.getNumCols(),         //  leading dimension of A
+                B.accessArray()->data(),//  pointer to elements of B
+                B.getNumCols(),         //  leading dimension of B
+                1.0,                    //  coefficient beta=1
+                C.data(),               //  pointer to elements of C
+                B.getNumCols());        //  leading dimension of C
+    //  generate a new name for the product
+    std::string name;
+    if (A.getName() != " " && B.getName() != " ")
+    {
+      name += A.getName() + " * " + B.getName();
+    }
+    return Matrix<double>(name,A.getNumRows(),B.getNumCols(),C);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  LAPACK methods
+  //----------------------------------------------------------------------------
+  //  DGELS - solve the linear system min_C|B - AC|
+  //  Arguments:  A     - (m x k)-matrix
+  //              B     - (m x n)-matrix
+  //
+  //  Returns:    C_min  ( (k x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGELS(const Matrix<double>& A, const Matrix<double>& B)
+  {
+    if (A.getNumRows() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>('zeros',1,0.0);
+    }
+    Matrix<double> QR(A);
+    Matrix<double> C(B);
+    char trans = 'N';
+    int m = A.getNumRows();
+    int n = A.getNumCols();
+    int k = C.getNumCols();
+    int info;
+    int lWork = -1;
+    double workOpt;
+    double* work;
+    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
+                         'N',
+                         A.getNumRows(),
+                         A.getNumCols(),
+                         C.getNumCols(),
+                         QR.accessArray()->data(),
+                         A.getNumCols(),
+                         C.accessArray()->data(),
+                         C.getNumCols());
+    // Query and allocate the optimal workspace
+    // dgels_(&trans,                  //  Don't transpose A
+    //        &m,                      //  number of rows of A
+    //        &n,                      //  number of columns of A
+    //        &k,                      //  number of columns of B
+    //        QR.accessArray()->data(),//  pointer to matrix A
+    //        &n,                      //  leading dimension of A
+    //        C.accessArray()->data(), //  pointer to matrix B
+    //        &k,                      //  leading dimension of B
+    //        &workOpt,                //  temporary workspace
+    //        &lWork,                  //  workspace size
+    //        &info);                  //  result info
+    // //  set the optimal workspace
+    // lWork = (int)workOpt;
+    // work = (double*)malloc( lWork*sizeof(double) );
+    // //  solve the system AC = B
+    // dgels_(&trans,                 //  Don't transpose A
+    //        &m,                     //  number of rows of A
+    //        &n,                     //  number of columns of A
+    //        &k,                     //  number of columns of B
+    //        QR.accessArray()->data(),//  pointer to matrix A
+    //        &n,                     //  leading dimension of A
+    //        C.accessArray()->data(),//  pointer to matrix B
+    //        &k,                     //  leading dimension of B
+    //        work,                   //  workspace
+    //        &lWork,                 //  workspace size
+    //        &info);                 //  result info
+    // Check for the full rank
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    C.setName("min");
+    return C;
+  }
+  //----------------------------------------------------------------------------
+
 }

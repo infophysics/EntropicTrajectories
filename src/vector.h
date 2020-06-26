@@ -152,16 +152,21 @@ namespace ET
     std::string _name;
   };
 
-  //  Special zero vector
+  //----------------------------------------------------------------------------
+  //  Special vector initializers
+  //----------------------------------------------------------------------------
   template<typename T>
   Vector<T> zeroes(uint32_t dim);
   template<typename T>
   Vector<T> ones(uint32_t dim);
+  //----------------------------------------------------------------------------
 
   template class Vector<double>;
   template class Vector<float>;
 
+  //----------------------------------------------------------------------------
   //  Level 1 BLAS methods
+  //----------------------------------------------------------------------------
   void DSWAP(Vector<double>& v, Vector<double>& u);
   void DSCAL(Vector<double>& v, const double& scale);
   Vector<double> DCOPY(Vector<double>& v);
@@ -172,4 +177,5 @@ namespace ET
   double DASUM(Vector<double>& v);
   uint32_t IDAMAX(Vector<double>& v);
   uint32_t IDAMIN(Vector<double>& v);
+  //----------------------------------------------------------------------------
 }
