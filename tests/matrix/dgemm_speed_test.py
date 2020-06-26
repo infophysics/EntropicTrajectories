@@ -14,7 +14,7 @@ native_times = []
 scipy_times = []
 dims = []
 N = 2
-num_iters = 100
+num_iters = 1000
 for i in range(num_iters):
 
     #   generate random matrix
@@ -44,9 +44,10 @@ for i in range(num_iters):
 fig, axs = plt.subplots()
 axs.plot(dims,native_times,color='k',linestyle='--',label="ET")
 axs.plot(dims,scipy_times,color='r',linestyle='--',label="Scipy")
-axs.set_xlabel("Dimension")
-axs.set_ylabel("log(sec)")
+axs.set_xlabel(r"dimension ($n^2$)")
+axs.set_ylabel("log time (log(sec))")
 axs.set_yscale("log")
 plt.legend()
-plt.title("DGEMM: log(sec) vs. Dimension")
+plt.title(r"DGEMM: log time (log(sec)) vs. dimension ($n^2$)")
+plt.savefig("DGEMM_test.png")
 plt.show()
