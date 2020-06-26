@@ -63,7 +63,7 @@ find_path(BLAS_INCLUDE_DIRS cblas.h
   /usr/local/include
   $ENV{BLAS_HOME}/include)
 MESSAGE(STATUS "CBLAS.h location is: " ${BLAS_INCLUDE_DIRS})
-include_directories(${BLAS_INCLUDE_DIR})
+include_directories(${BLAS_INCLUDE_DIRS})
 #-L/usr/lib/x86_64-linux-gnu/openblas -llapacke -llapack -lblas -lgfortran
 
 # Generate Python module

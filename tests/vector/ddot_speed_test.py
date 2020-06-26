@@ -37,7 +37,7 @@ for i in range(num_iters):
     scipy_times.append(end - start)
 
     dims.append(N)
-    N += 25
+    N += 100
 
 #   plot the results
 fig, axs = plt.subplots()
