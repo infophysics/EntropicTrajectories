@@ -299,6 +299,16 @@ PYBIND11_MODULE(etraj, m) {
 					ET::Vector<double>&)) &ET::DGEMV);
 		m.def("dgemv", (void (*)(double&,ET::Matrix<double>&,
 					ET::Vector<double>&, double&, ET::Vector<double>&)) &ET::DGEMV);
+		m.def("dger", (ET::Matrix<double> (*)(double&,ET::Vector<double>&,
+					ET::Vector<double>&)) &ET::DGER);
+		m.def("dger", (void (*)(double&,ET::Vector<double>&,
+					ET::Vector<double>&, ET::Matrix<double>&)) &ET::DGER);
+
+		//  Level 3 BLAS functions
+		m.def("dgemm", (ET::Matrix<double> (*)(double&, ET::Matrix<double>&,
+					ET::Matrix<double>&)) &ET::DGEMM);
+		m.def("dgemm", (void (*)(double&, ET::Matrix<double>&, ET::Matrix<double>&,
+		      double&, ET::Matrix<double>&)) &ET::DGEMM);
 
 		py::class_<ET::Grid<double>>(m, "Grid")
 			.def(py::init<>())

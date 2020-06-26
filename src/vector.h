@@ -172,5 +172,4 @@ namespace ET
   double DASUM(Vector<double>& v);
   uint32_t IDAMAX(Vector<double>& v);
   uint32_t IDAMIN(Vector<double>& v);
-
 }

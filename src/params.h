@@ -19,6 +19,21 @@
 //------------------------------------------------------------------------------
 #pragma once
 
+enum MatrixType
+{
+  SQUARE,
+  SYMMETRIC,
+  PERSYMMETRIC,
+  CENTROSYMMETRIC,
+  ANTI_SYMMETRIC,
+  UPPER_TRIANGULAR,
+  LOWER_TRIANGULAR,
+  DIAGONAL,
+  BIDIAGONAL,
+  TRIDIAGONAL,
+  ANTI_DIAGONAL,
+  BAND,
+};
 
 enum ApproxType
 {

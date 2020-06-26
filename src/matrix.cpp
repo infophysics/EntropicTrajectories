@@ -1170,13 +1170,13 @@ namespace ET
     return matrix;
   }
   template<typename T>
-  Matrix<T> zeroes(uint32_t m)
+  Matrix<T> zeros(uint32_t m)
   {
     Matrix<T> z(m, m, 0.0);
     return z;
   }
   template<typename T>
-  Matrix<T> zeroes(uint32_t m, uint32_t n)
+  Matrix<T> zeros(uint32_t m, uint32_t n)
   {
     Matrix<T> z(m, n, 0.0);
     return z;
@@ -1278,7 +1278,6 @@ namespace ET
   void DGEMV(double& alpha, Matrix<double>& A,
              Vector<double>& x, double& beta, Vector<double>& y)
   {
-    //std::vector<double> y2 = y.getVec();
     cblas_dgemv(CblasRowMajor,          //  Row major order
                 CblasNoTrans,           //  Don't transpose A
                 A.getNumRows(),         //  number of rows of A
@@ -1306,4 +1305,166 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  DGER - generic outer-product of two vectors
+  //  Arguments:  alpha - double
+  //              x     - (m)-dim vector
+  //              y     - (n)-dim vector
+  //
+  //  Returns:    alpha * x * y^T ( (m x n) - matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGER(double& alpha, Vector<double>& x, Vector<double>& y)
+  {
+    std::vector<double> A(x.getDim() * y.getDim());
+    cblas_dger(CblasRowMajor,          //  Row major order
+               x.getDim(),             //  number of rows of A
+               y.getDim(),             //  number of columns of A
+               alpha,                  //  scaling factor for A*x
+               x.accessVec()->data(),  //  pointer to x vector
+               1,                      //  increment for elements of x
+               y.accessVec()->data(),  //  pointer to y data
+               1,                      //  increment for the elements of y
+               A.data(),               //  pointer to the matrix A
+               y.getDim());            //  leading dimension of A
+    //  generate a new name for the product
+    std::string name;
+    if (alpha != 0 && x.getName() != " " && y.getName() != " ")
+    {
+      name += std::to_string(alpha) + " * " + x.getName()
+              + " * " + y.getName() + "^T";
+    }
+    return Matrix<double>(name,x.getDim(),y.getDim(),A);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGER (in place) - generic outer-product of two vectors
+  //  Arguments:  alpha - double
+  //              x     - (m)-dim vector
+  //              y     - (n)-dim vector
+  //              A     - (m x n) Matrix
+  //
+  //  Returns:    void
+  //----------------------------------------------------------------------------
+  void DGER(double& alpha, Vector<double>& x, Vector<double>& y,
+                      Matrix<double>& m)
+  {
+    if (x.getDim() != m.getNumRows() || y.getDim() != m.getNumCols())
+    {
+      std::cout << "Vectors and Matrix are incompatible!" << std::endl;
+      return;
+    }
+    cblas_dger(CblasRowMajor,          //  Row major order
+               x.getDim(),             //  number of rows of A
+               y.getDim(),             //  number of columns of A
+               alpha,                  //  scaling factor for A*x
+               x.accessVec()->data(),  //  pointer to x vector
+               1,                      //  increment for elements of x
+               y.accessVec()->data(),  //  pointer to y data
+               1,                      //  increment for the elements of y
+               m.accessArray()->data(),//  pointer to the matrix A
+               y.getDim());            //  leading dimension of A
+    //  generate a new name for the product
+    std::string name;
+    if (alpha != 0 && x.getName() != " " && y.getName() != " ")
+    {
+      name += std::to_string(alpha) + " * " + x.getName()
+              + " * " + y.getName() + "^T";
+    }
+    if (m.getName() != " ")
+    {
+      name += " + " + m.getName();
+    }
+    m.setName(name);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Level 3 BLAS methods
+  //  Matrix-matrix multiplication
+  //----------------------------------------------------------------------------
+  //  DGEMM - generic matrix-matrix multiplication
+  //  Arguments:  alpha - double
+  //              A     - (m x k)-matrix
+  //              B     - (k x n)-matrix
+  //
+  //  Returns:    alpha * m * n  ( (m x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGEMM(double& alpha, Matrix<double>& A,
+                       Matrix<double>& B)
+  {
+    if (A.getNumCols() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>('zeros',1,0.0);
+    }
+    std::vector<double> C(A.getNumRows() * B.getNumCols());
+    cblas_dgemm(CblasRowMajor,          //  Row major order
+                CblasNoTrans,           //  Don't tranpose A
+                CblasNoTrans,           //  Don't transpose B
+                A.getNumRows(),         //  number of rows of A
+                B.getNumCols(),         //  number of cols of B
+                A.getNumCols(),         //  number of cols of A
+                alpha,                  //  scaling factor for A*B
+                A.accessArray()->data(),//  pointer to elements of A
+                A.getNumCols(),         //  leading dimension of A
+                B.accessArray()->data(),//  pointer to elements of B
+                B.getNumCols(),         //  leading dimension of B
+                1,                      //  coefficient beta=1
+                C.data(),               //  pointer to elements of C
+                B.getNumCols());        //  leading dimension of C
+    //  generate a new name for the product
+    std::string name;
+    if (alpha != 0 && A.getName() != " " && B.getName() != " ")
+    {
+      name += std::to_string(alpha) + " * " + A.getName()
+              + " * " + B.getName();
+    }
+    return Matrix<double>(name,A.getNumRows(),B.getNumCols(),C);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGEMM - generic matrix-matrix multiplication
+  //  Arguments:  alpha - double
+  //              A     - (m x k)-matrix
+  //              B     - (k x n)-matrix
+  //              beta  - double
+  //              C     - (m x n)-matrix
+  //
+  //  Returns:    alpha * m * n  ( (m x n)-matrix )
+  //----------------------------------------------------------------------------
+  void DGEMM(double& alpha, Matrix<double>& A, Matrix<double>& B,
+             double& beta, Matrix<double>& C)
+  {
+    if (A.getNumCols() != B.getNumRows() || A.getNumRows() != C.getNumRows()
+        || B.getNumCols() != C.getNumCols())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return;
+    }
+    cblas_dgemm(CblasRowMajor,          //  Row major order
+                CblasNoTrans,           //  Don't tranpose A
+                CblasNoTrans,           //  Don't transpose B
+                A.getNumRows(),         //  number of rows of A
+                B.getNumCols(),         //  number of cols of B
+                A.getNumCols(),         //  number of cols of A
+                alpha,                  //  scaling factor for A*B
+                A.accessArray()->data(),//  pointer to elements of A
+                A.getNumCols(),         //  leading dimension of A
+                B.accessArray()->data(),//  pointer to elements of B
+                B.getNumCols(),         //  leading dimension of B
+                beta,                   //  coefficient beta=1
+                C.accessArray()->data(),//  pointer to elements of C
+                B.getNumCols());        //  leading dimension of C
+    //  generate a new name for the product
+    std::string name;
+    if (alpha != 0 && A.getName() != " " && B.getName() != " ")
+    {
+      name += std::to_string(alpha) + " * " + A.getName()
+              + " * " + B.getName();
+    }
+    C.setName(name);
+  }
+  //----------------------------------------------------------------------------
 }

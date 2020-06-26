@@ -212,9 +212,9 @@ namespace ET
   template<typename T>
   Matrix<T> identity(uint32_t m);
   template<typename T>
-  Matrix<T> zeroes(uint32_t m);
+  Matrix<T> zeros(uint32_t m);
   template<typename T>
-  Matrix<T> zeroes(uint32_t m, uint32_t n);
+  Matrix<T> zeros(uint32_t m, uint32_t n);
   template<typename T>
   Matrix<T> ones(uint32_t m);
   template<typename T>
@@ -227,9 +227,19 @@ namespace ET
   //template class Matrix<std::complex<double>>;
 
   //  Level 2 BLAS methods
-  //  DGEMV ()
   Vector<double> DGEMV(double& alpha, Matrix<double>& A,
                        Vector<double>& x);
-  void DGEMV(double& alpha, Matrix<double>& A,
-                       Vector<double>& x, double& beta, Vector<double>& y);
+  void DGEMV(double& alpha, Matrix<double>& A, Vector<double>& x,
+             double& beta, Vector<double>& y);
+  Matrix<double> DGER(double& alpha, Vector<double>& x,
+                      Vector<double>& y);
+  void DGER(double& alpha, Vector<double>& x,
+            Vector<double>& y, Matrix<double>& m);
+
+  //  Level 3 BLAS methods
+  Matrix<double> DGEMM(double& alpha, Matrix<double>& A,
+                       Matrix<double>& B);
+  void DGEMM(double& alpha, Matrix<double>& A, Matrix<double>& B,
+             double& beta, Matrix<double>& C);
+
 }

@@ -27,7 +27,7 @@ for i in range(num_iters):
 
     #   run dgemm in ET
     start = time.time()
-    C_et = A_et * B_et
+    C_et = et.dgemm(1.0,A_et,B_et)
     end = time.time()
     native_times.append(end - start)
 
