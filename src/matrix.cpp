@@ -268,16 +268,11 @@ namespace ET
   {
     return &_array;
   }
-  //  This method returns a C style array that is copied from _array.
+  //  get access to the beginning of the array
   template<typename T>
-  float* Matrix<T>::data()
+  T* Matrix<T>::data()
   {
-    float *copy = new float[_m*_n];
-    for (uint32_t i = 0; i < _m*_n; i++)
-    {
-      copy[i] = _array[i];
-    }
-    return copy;
+    return _array.data();
   }
   template<typename T>
   std::vector<T> Matrix<T>::getRow(uint32_t i)
@@ -939,31 +934,6 @@ namespace ET
   //  Linear algebra tools
   //----------------------------------------------------------------------------
   template<typename T>
-  Matrix<T> Matrix<T>::permutationMatrix(int& n, int* pivot)
-  {
-    //  generate a permutation matrix from a set of pivot indices
-    std::vector<T> swaps(n*n, 0);
-    std::vector<uint32_t> p(n,0);
-    for (int i = 0; i < n; i++)
-    {
-      p[i] = i;
-    }
-    for (int i = 0; i < n; i++)
-    {
-      int temp;
-      temp = p[pivot[i]-1];
-      p[pivot[i]-1] = p[i];
-      p[i] = temp;
-    }
-    for(uint32_t i = 0; i < n; i++)
-    {
-      swaps[p[i]*n + i] = 1;
-    }
-    std::string name = "(" + std::to_string(n) = "x"
-                        + std::to_string(n) + ") perm";
-    return Matrix<T>(name,n,n,swaps);
-  }
-  template<typename T>
   bool Matrix<T>::isInvertible()
   {
   }
@@ -1015,12 +985,11 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Various instantiators
   //----------------------------------------------------------------------------
-  template<typename T>
-  Matrix<T> identity(uint32_t m)
+  Matrix<double> identity_d(uint32_t m)
   {
     std::string name = "I_{" + std::to_string(m) + "x"
                      + std::to_string(m) + "}";
-    Matrix<T> matrix(name, m, m, 0.0);
+    Matrix<double> matrix(name, m, m, 0.0);
 
     for (uint32_t i = 0; i < m; i++)
     {
@@ -1028,35 +997,62 @@ namespace ET
     }
     return matrix;
   }
-  template<typename T>
-  Matrix<T> zeros(uint32_t m)
+  Matrix<double> zeros_d(uint32_t m)
   {
-    Matrix<T> z(m, m, 0.0);
+    Matrix<double> z(m, m, 0.0);
     return z;
   }
-  template<typename T>
-  Matrix<T> zeros(uint32_t m, uint32_t n)
+  Matrix<double> zeros_d(uint32_t m, uint32_t n)
   {
-    Matrix<T> z(m, n, 0.0);
+    Matrix<double> z(m, n, 0.0);
     return z;
   }
-  template<typename T>
-  Matrix<T> ones(uint32_t m)
+  Matrix<double> ones_d(uint32_t m)
   {
-    Matrix<T> o(m, m, 1.0);
+    Matrix<double> o(m, m, 1.0);
     return o;
   }
-  template<typename T>
-  Matrix<T> ones(uint32_t m, uint32_t n)
+  Matrix<double> ones_d(uint32_t m, uint32_t n)
   {
-    Matrix<T> o(m, n, 1.0);
+    Matrix<double> o(m, n, 1.0);
     return o;
   }
   //----------------------------------------------------------------------------
+  //  Permutation matrix
+  //----------------------------------------------------------------------------
+  Matrix<double> permutationMatrix_d(const uint32_t& m,
+                              const std::vector<uint32_t> pivot)
+  {
+    //  generate a permutation matrix from a set of pivot indices
+    std::vector<double> swaps(m*m, 0);
+    std::vector<uint32_t> p(m,0);
+    for (int i = 0; i < m; i++)
+    {
+      p[i] = i;
+    }
+    for (int i = 0; i < m; i++)
+    {
+      int temp;
+      temp = p[pivot[i]-1];
+      p[pivot[i]-1] = p[i];
+      p[i] = temp;
+    }
+    for(uint32_t i = 0; i < m; i++)
+    {
+      swaps[p[i]*m + i] = 1;
+    }
+    std::string name = "(" + std::to_string(m) = "x"
+                        + std::to_string(m) + ") perm";
+    return Matrix<double>(name,m,m,swaps);
+  }
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
   //  Overload of the ostream operator<<
   //  This has the same functionality as print, except it can be used in
   //  a std::cout statement.
+  //----------------------------------------------------------------------------
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix)
   {
@@ -1082,6 +1078,7 @@ namespace ET
     os << " ]" << std::endl;
     return os;
   }
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Level 2 BLAS methods
@@ -1099,18 +1096,18 @@ namespace ET
   {
     //  container for the vector y
     std::vector<double> y(x.getDim());
-    cblas_dgemv(CblasRowMajor,          //  Row major order
-                CblasNoTrans,           //  Don't transpose A
-                A.getNumRows(),         //  number of rows of A
-                A.getNumCols(),         //  number of columns of A
-                alpha,                  //  scaling factor for A*x
-                A.accessArray()->data(),//  pointer to A array
-                A.getNumRows(),         //  number of rows in A
-                x.accessVec()->data(),  //  pointer to x vector
-                1,                      //  increment for elements of x
-                1,                      //  scaling factor for y
-                y.data(),               //  pointer to y vector
-                1);                     //  increment for elements of y
+    cblas_dgemv(CblasRowMajor, //  row major order
+                CblasNoTrans,  //  don't transpose A
+                A.getNumRows(),//  number of rows of A
+                A.getNumCols(),//  number of columns of A
+                alpha,         //  scaling factor for A*x
+                A.data(),      //  pointer to A array
+                A.getNumRows(),//  number of rows in A
+                x.data(),      //  pointer to x vector
+                1,             //  increment for elements of x
+                1,             //  scaling factor for y
+                y.data(),      //  pointer to y vector
+                1);            //  increment for elements of y
     //  generate a new name for the product
     std::string name;
     if (alpha != 0)
@@ -1137,18 +1134,18 @@ namespace ET
   void DGEMV(double& alpha, Matrix<double>& A,
              Vector<double>& x, double& beta, Vector<double>& y)
   {
-    cblas_dgemv(CblasRowMajor,          //  Row major order
-                CblasNoTrans,           //  Don't transpose A
-                A.getNumRows(),         //  number of rows of A
-                A.getNumCols(),         //  number of columns of A
-                alpha,                  //  scaling factor for A*x
-                A.accessArray()->data(),//  pointer to A array
-                A.getNumRows(),         //  number of rows in A
-                x.accessVec()->data(),  //  pointer to x vector
-                1,                      //  increment for elements of x
-                beta,                   //  scaling factor for y
-                y.accessVec()->data(),  //  pointer to y data
-                1);                     //  increment for the elements of y
+    cblas_dgemv(CblasRowMajor, //  row major order
+                CblasNoTrans,  //  don't transpose A
+                A.getNumRows(),//  number of rows of A
+                A.getNumCols(),//  number of columns of A
+                alpha,         //  scaling factor for A*x
+                A.data(),      //  pointer to A array
+                A.getNumRows(),//  number of rows in A
+                x.data(),      //  pointer to x vector
+                1,             //  increment for elements of x
+                beta,          //  scaling factor for y
+                y.data(),      //  pointer to y data
+                1);            //  increment for the elements of y
     //  generate a new name for the product
     std::string name;
     if (alpha != 0)
@@ -1175,16 +1172,16 @@ namespace ET
   Matrix<double> DGER(double& alpha, Vector<double>& x, Vector<double>& y)
   {
     std::vector<double> A(x.getDim() * y.getDim());
-    cblas_dger(CblasRowMajor,          //  Row major order
-               x.getDim(),             //  number of rows of A
-               y.getDim(),             //  number of columns of A
-               alpha,                  //  scaling factor for A*x
-               x.accessVec()->data(),  //  pointer to x vector
-               1,                      //  increment for elements of x
-               y.accessVec()->data(),  //  pointer to y data
-               1,                      //  increment for the elements of y
-               A.data(),               //  pointer to the matrix A
-               y.getDim());            //  leading dimension of A
+    cblas_dger(CblasRowMajor,//  row major order
+               x.getDim(),   //  number of rows of A
+               y.getDim(),   //  number of columns of A
+               alpha,        //  scaling factor for A*x
+               x.data(),     //  pointer to x vector
+               1,            //  increment for elements of x
+               y.data(),     //  pointer to y data
+               1,            //  increment for the elements of y
+               A.data(),     //  pointer to the matrix A
+               y.getDim());  //  leading dimension of A
     //  generate a new name for the product
     std::string name;
     if (alpha != 0 && x.getName() != " " && y.getName() != " ")
@@ -1213,16 +1210,16 @@ namespace ET
       std::cout << "Vectors and Matrix are incompatible!" << std::endl;
       return;
     }
-    cblas_dger(CblasRowMajor,          //  Row major order
-               x.getDim(),             //  number of rows of A
-               y.getDim(),             //  number of columns of A
-               alpha,                  //  scaling factor for A*x
-               x.accessVec()->data(),  //  pointer to x vector
-               1,                      //  increment for elements of x
-               y.accessVec()->data(),  //  pointer to y data
-               1,                      //  increment for the elements of y
-               m.accessArray()->data(),//  pointer to the matrix A
-               y.getDim());            //  leading dimension of A
+    cblas_dger(CblasRowMajor,//  row major order
+               x.getDim(),   //  number of rows of A
+               y.getDim(),   //  number of columns of A
+               alpha,        //  scaling factor for A*x
+               x.data(),     //  pointer to x vector
+               1,            //  increment for elements of x
+               y.data(),     //  pointer to y data
+               1,            //  increment for the elements of y
+               m.data(),     //  pointer to the matrix A
+               y.getDim());  //  leading dimension of A
     //  generate a new name for the product
     std::string name;
     if (alpha != 0 && x.getName() != " " && y.getName() != " ")
@@ -1258,20 +1255,20 @@ namespace ET
       return Matrix<double>('zeros',1,0.0);
     }
     std::vector<double> C(A.getNumRows() * B.getNumCols());
-    cblas_dgemm(CblasRowMajor,          //  Row major order
-                CblasNoTrans,           //  Don't tranpose A
-                CblasNoTrans,           //  Don't transpose B
-                A.getNumRows(),         //  number of rows of A
-                B.getNumCols(),         //  number of cols of B
-                A.getNumCols(),         //  number of cols of A
-                alpha,                  //  scaling factor for A*B
-                A.accessArray()->data(),//  pointer to elements of A
-                A.getNumCols(),         //  leading dimension of A
-                B.accessArray()->data(),//  pointer to elements of B
-                B.getNumCols(),         //  leading dimension of B
-                1,                      //  coefficient beta=1
-                C.data(),               //  pointer to elements of C
-                B.getNumCols());        //  leading dimension of C
+    cblas_dgemm(CblasRowMajor,  //  row major order
+                CblasNoTrans,   //  don't tranpose A
+                CblasNoTrans,   //  don't transpose B
+                A.getNumRows(), //  number of rows of A
+                B.getNumCols(), //  number of cols of B
+                A.getNumCols(), //  number of cols of A
+                alpha,          //  scaling factor for A*B
+                A.data(),       //  pointer to elements of A
+                A.getNumCols(), //  leading dimension of A
+                B.data(),       //  pointer to elements of B
+                B.getNumCols(), //  leading dimension of B
+                1,              //  coefficient beta=1
+                C.data(),       //  pointer to elements of C
+                B.getNumCols());//  leading dimension of C
     //  generate a new name for the product
     std::string name;
     if (alpha != 0 && A.getName() != " " && B.getName() != " ")
@@ -1303,20 +1300,20 @@ namespace ET
       std::cout << "Matrices are incompatible!" << std::endl;
       return;
     }
-    cblas_dgemm(CblasRowMajor,          //  Row major order
-                CblasNoTrans,           //  Don't tranpose A
-                CblasNoTrans,           //  Don't transpose B
-                A.getNumRows(),         //  number of rows of A
-                B.getNumCols(),         //  number of cols of B
-                A.getNumCols(),         //  number of cols of A
-                alpha,                  //  scaling factor for A*B
-                A.accessArray()->data(),//  pointer to elements of A
-                A.getNumCols(),         //  leading dimension of A
-                B.accessArray()->data(),//  pointer to elements of B
-                B.getNumCols(),         //  leading dimension of B
-                beta,                   //  coefficient beta=1
-                C.accessArray()->data(),//  pointer to elements of C
-                B.getNumCols());        //  leading dimension of C
+    cblas_dgemm(CblasRowMajor,  //  row major order
+                CblasNoTrans,   //  don't tranpose A
+                CblasNoTrans,   //  don't transpose B
+                A.getNumRows(), //  number of rows of A
+                B.getNumCols(), //  number of cols of B
+                A.getNumCols(), //  number of cols of A
+                alpha,          //  scaling factor for A*B
+                A.data(),       //  pointer to elements of A
+                A.getNumCols(), //  leading dimension of A
+                B.data(),       //  pointer to elements of B
+                B.getNumCols(), //  leading dimension of B
+                beta,           //  coefficient beta=1
+                C.data(),       //  pointer to elements of C
+                B.getNumCols());//  leading dimension of C
     //  generate a new name for the product
     std::string name;
     if (alpha != 0 && A.getName() != " " && B.getName() != " ")
@@ -1344,20 +1341,20 @@ namespace ET
       return Matrix<double>('zeros',1,0.0);
     }
     std::vector<double> C(A.getNumRows() * B.getNumCols());
-    cblas_dgemm(CblasRowMajor,          //  Row major order
-                CblasNoTrans,           //  Don't tranpose A
-                CblasNoTrans,           //  Don't transpose B
-                A.getNumRows(),         //  number of rows of A
-                B.getNumCols(),         //  number of cols of B
-                A.getNumCols(),         //  number of cols of A
-                1.0,                    //  scaling factor for A*B
-                A.accessArray()->data(),//  pointer to elements of A
-                A.getNumCols(),         //  leading dimension of A
-                B.accessArray()->data(),//  pointer to elements of B
-                B.getNumCols(),         //  leading dimension of B
-                1.0,                    //  coefficient beta=1
-                C.data(),               //  pointer to elements of C
-                B.getNumCols());        //  leading dimension of C
+    cblas_dgemm(CblasRowMajor,  //  row major order
+                CblasNoTrans,   //  don't tranpose A
+                CblasNoTrans,   //  don't transpose B
+                A.getNumRows(), //  number of rows of A
+                B.getNumCols(), //  number of cols of B
+                A.getNumCols(), //  number of cols of A
+                1.0,            //  scaling factor for A*B
+                A.data(),       //  pointer to elements of A
+                A.getNumCols(), //  leading dimension of A
+                B.data(),       //  pointer to elements of B
+                B.getNumCols(), //  leading dimension of B
+                1.0,            //  coefficient beta=1
+                C.data(),       //  pointer to elements of C
+                B.getNumCols());//  leading dimension of C
     //  generate a new name for the product
     std::string name;
     if (A.getName() != " " && B.getName() != " ")
@@ -1387,15 +1384,15 @@ namespace ET
     Matrix<double> QR(A);
     std::vector<double> c = B.getArray();
     int info;
-    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
-                         'N',
-                         A.getNumRows(),          //  number of rows of A
-                         A.getNumCols(),          //  number of columns of A
-                         B.getNumCols(),          //  number of columns of B
-                         QR.accessArray()->data(),//  pointer to elements of A
-                         A.getNumCols(),          //  leading dimension of A
-                         c.data(),                //  pointer to elements of B
-                         B.getNumCols());         //  leading dimension of B
+    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,//  row major layout
+                         'N',             //  don't transpose A
+                         A.getNumRows(),  //  number of rows of A
+                         A.getNumCols(),  //  number of columns of A
+                         B.getNumCols(),  //  number of columns of B
+                         QR.data(),       //  pointer to elements of A
+                         A.getNumCols(),  //  leading dimension of A
+                         c.data(),        //  pointer to elements of B
+                         B.getNumCols()); //  leading dimension of B
     if( info > 0 )
     {
       std::cout << "The diagonal element " << info << " of the triangular "
@@ -1434,15 +1431,15 @@ namespace ET
     Matrix<double> QR(A);
     std::vector<double> u = v.getVec();
     int info;
-    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,
-                         'N',
-                         A.getNumRows(),          //  number of rows of A
-                         A.getNumCols(),          //  number of rows of A
-                         1,                       //  dimension of v
-                         QR.accessArray()->data(),//  pointer to elements of A
-                         A.getNumCols(),          //  leading dimension of A
-                         u.data(),                //  pointer to elements of v
-                         1);                      //  leading dimension of v
+    info = LAPACKE_dgels(LAPACK_ROW_MAJOR,//  row major layout
+                         'N',             //  don't transpose A
+                         A.getNumRows(),  //  number of rows of A
+                         A.getNumCols(),  //  number of rows of A
+                         1,               //  dimension of v
+                         QR.data(),       //  pointer to elements of A
+                         A.getNumCols(),  //  leading dimension of A
+                         u.data(),        //  pointer to elements of v
+                         1);              //  leading dimension of v
     if( info > 0 )
     {
       std::cout << "The diagonal element " << info << " of the triangular "
@@ -1461,6 +1458,286 @@ namespace ET
       name  = " ";
     }
     return Vector<double>(name,u);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGETRF - construct an P^-1LU factorization
+  //  Arguments:  A     - (m x m)-matrix
+  //
+  //  Returns:    std::vector<uint32_t> (list of pivots for P^-1)
+  //----------------------------------------------------------------------------
+  std::vector<uint32_t> DGETRF(const Matrix<double>& A)
+  {
+    if (A.getNumRows() != A.getNumCols())
+    {
+      std::cout << "Matrix is not square!" << std::endl;
+      return std::vector<uint32_t>(0);
+    }
+    Matrix<double> LU(A);
+    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          LU.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to pivot list
+    return ipiv;
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGETRF_L_U - compute an LU decomposition
+  //  Arguments:  A     - (m x m)-matrix
+  //
+  //  Returns:    Matrix<double> (compound matrix of L and U)
+  //              LU = [[u_11  u_12  ---  u_1m],
+  //                    [l_21  u_22  ---  u_2m],
+  //                    [ |     |     |    |  ],
+  //                    [l_m1  l_m2  ---  u_mm]]
+  //----------------------------------------------------------------------------
+  Matrix<double> DGETRF_L_U(const Matrix<double>& A)
+  {
+    if (A.getNumRows() != A.getNumCols())
+    {
+      std::cout << "Matrix is not square!" << std::endl;
+      return Matrix<double>('zeros',1,0.0);
+    }
+    Matrix<double> LU(A);
+    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          LU.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to pivot list
+    std::string name = "LU-Matrix";
+    if (A.getName() != " ")
+    {
+      name += " of " + A.getName();
+    }
+    LU.setName(name);
+    return LU;
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGETRF_LU - compute an LU decomposition
+  //  Arguments:  A     - (m x m)-matrix
+  //
+  //  Returns:    std::tuple<Matrix<double>,Matrix<double>> (L and U)
+  //----------------------------------------------------------------------------
+  std::tuple<Matrix<double>,Matrix<double>> DGETRF_LU(const Matrix<double>& A)
+  {
+    if (A.getNumRows() != A.getNumCols())
+    {
+      std::cout << "Matrix is not square!" << std::endl;
+      return {Matrix<double>('zeros',1,0.0),Matrix<double>('zeros',1,0.0)};
+    }
+    Matrix<double> LU(A);
+    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          LU.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to pivot list
+    std::vector<double> l(A.getNumRows()*A.getNumRows(),0.0);
+    std::vector<double> u(A.getNumRows()*A.getNumRows(),0.0);
+    for (uint32_t i = 0; i < A.getNumRows(); i++)
+    {
+      for (uint32_t j = 0; j < A.getNumRows(); j++)
+      {
+        if (i == j)
+        {
+          l[i*A.getNumRows() + j] = 1.0;
+          u[i*A.getNumRows() + j] = LU(i,j);
+        }
+        else if (j < i)
+        {
+          l[i*A.getNumRows() + j] = LU(i,j);
+        }
+        else
+        {
+          u[i*A.getNumRows() + j] = LU(i,j);
+        }
+      }
+    }
+    std::string name_l = "L-Matrix";
+    std::string name_u = "U-Matrix";
+    if (A.getName() != " ")
+    {
+      name_l += " of " + A.getName();
+      name_u += " of " + A.getName();
+    }
+    Matrix<double> L(name_l,A.getNumRows(),l);
+    Matrix<double> U(name_u,A.getNumRows(),u);
+    return {L,U};
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGETRF_PLU - compute an LU decomposition
+  //  Arguments:  A     - (m x m)-matrix
+  //
+  //  Returns:    std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  //              (P, L and U)
+  //----------------------------------------------------------------------------
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGETRF_PLU(const Matrix<double>& A)
+  {
+    if (A.getNumRows() != A.getNumCols())
+    {
+      std::cout << "Matrix is not square!" << std::endl;
+      return {Matrix<double>('zeros',1,0.0),
+              Matrix<double>('zeros',1,0.0),
+              Matrix<double>('zeros',1,0.0)};
+    }
+    Matrix<double> LU(A);
+    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          LU.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to pivot list
+    std::vector<double> l(A.getNumRows()*A.getNumRows(),0.0);
+    std::vector<double> u(A.getNumRows()*A.getNumRows(),0.0);
+    for (uint32_t i = 0; i < A.getNumRows(); i++)
+    {
+      for (uint32_t j = 0; j < A.getNumRows(); j++)
+      {
+        if (i == j)
+        {
+          l[i*A.getNumRows() + j] = 1.0;
+          u[i*A.getNumRows() + j] = LU(i,j);
+        }
+        else if (j < i)
+        {
+          l[i*A.getNumRows() + j] = LU(i,j);
+        }
+        else
+        {
+          u[i*A.getNumRows() + j] = LU(i,j);
+        }
+      }
+    }
+    std::string name_p = "P-Matrix";
+    std::string name_l = "L-Matrix";
+    std::string name_u = "U-Matrix";
+    if (A.getName() != " ")
+    {
+      name_p += " of " + A.getName();
+      name_l += " of " + A.getName();
+      name_u += " of " + A.getName();
+    }
+    Matrix<double> P = permutationMatrix_d(A.getNumRows(),ipiv);
+    P.setName(name_p);
+    Matrix<double> L(name_l,A.getNumRows(),l);
+    Matrix<double> U(name_u,A.getNumRows(),u);
+    return {P,L,U};
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGEQRF - compute a QR decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    Vector<double> (elementary reflectors)
+  //----------------------------------------------------------------------------
+  Vector<double> DGEQRF(const Matrix<double>& A)
+  {
+    Matrix<double> QR(A);
+    std::vector<double> reflectors(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgeqrf(LAPACK_ROW_MAJOR,  // row major order
+                          A.getNumRows(),    // number of rows of A
+                          A.getNumCols(),    // number of columns of A
+                          QR.data(),         // pointer to the elements of A
+                          A.getNumCols(),    // leading dimension of A
+                          reflectors.data());// pointer to reflectors
+    std::string name = "QR-reflectors";
+    if (A.getName() != " ")
+    {
+      name += " of " + A.getName();
+    }
+    return Vector<double>(name,reflectors);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DORGQF - compute a QR decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //              ref   - (min(m,n))-dim vector
+  //
+  //  Returns:    Matrix<double> (Q Matrix)
+  //----------------------------------------------------------------------------
+  Matrix<double> DORGQR(const Matrix<double>& A,
+                             const Vector<double>& ref)
+  {
+    Matrix<double> QR(A);
+    int info;
+    info = LAPACKE_dorgqr(LAPACK_ROW_MAJOR,// row major order
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          ref.getDim(),    // number of elementary reflectors
+                          QR.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ref.data());     // pointer to reflectors
+    std::string name = "Q-Matrix";
+    if (A.getName() != " ")
+    {
+      name += " of " + A.getName();
+    }
+    QR.setName(name);
+    return QR;
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGEQRF_QR - compute a QR decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    std::tuple<Matrix<double>,Matrix<double>> (Q and R)
+  //----------------------------------------------------------------------------
+  std::tuple<Matrix<double>,Matrix<double>>
+  DGEQRF_QR(const Matrix<double>& A)
+  {
+    Matrix<double> Q(A);
+    std::vector<double> reflectors(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgeqrf(LAPACK_ROW_MAJOR,  // row major order
+                          A.getNumRows(),    // number of rows of A
+                          A.getNumCols(),    // number of columns of A
+                          Q.data(),          // pointer to the elements of A
+                          A.getNumCols(),    // leading dimension of A
+                          reflectors.data());// pointer to reflectors
+    //  find Q using dorgqr
+    info = LAPACKE_dorgqr(LAPACK_ROW_MAJOR,  // row major order
+                          A.getNumRows(),    // number of rows of A
+                          A.getNumCols(),    // number of columns of A
+                          reflectors.size(), // number of elementary reflectors
+                          Q.data(),          // pointer to the elements of A
+                          A.getNumCols(),    // leading dimension of A
+                          reflectors.data());// pointer to reflectors
+    std::string name_q = "Q-Matrix";
+    std::string name_r = "R-Matrix";
+    if (A.getName() != " ")
+    {
+      name_q += " of " + A.getName();
+      name_r += " of " + A.getName();
+    }
+    Q.setName(name_q);
+    Matrix<double> Q_T(Q);
+    Q_T.transpose_inplace();
+    //  find R = Q^T*A
+    Matrix<double> R = Q_T * A;
+    R.setName(name_r);
+    return {Q,R};
   }
   //----------------------------------------------------------------------------
 

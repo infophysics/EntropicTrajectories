@@ -171,6 +171,12 @@ namespace ET
   {
     return &_vec;
   }
+  //  get access to beginning of _vec
+  template<typename T>
+  T* Vector<T>::data()
+  {
+    return _vec.data();
+  }
   template<typename T>
   std::string Vector<T>::getName() const
   {
@@ -554,11 +560,11 @@ namespace ET
       std::cout << "Vectors are incompatible!" << std::endl;
       return;
     }
-    cblas_dswap(v.getDim(),           //  dimension of the vectors
-                v.accessVec()->data(),//  pointer to elements of v
-                1,                    //  increment for elements of v
-                u.accessVec()->data(),//  pointer to elements of u
-                1);                   //  increment for elements of u
+    cblas_dswap(v.getDim(),//  dimension of the vectors
+                v.data(),  //  pointer to elements of v
+                1,         //  increment for elements of v
+                u.data(),  //  pointer to elements of u
+                1);        //  increment for elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -571,10 +577,10 @@ namespace ET
   //----------------------------------------------------------------------------
   void DSCAL(Vector<double>& v, const double& scale)
   {
-    cblas_dscal(v.getDim(),           //  dimension of the vector
-                scale,                //  value to scale the vector by
-                v.accessVec()->data(),//  pointer to the elements of v
-                1);                   //  increment for the elements of v
+    cblas_dscal(v.getDim(),//  dimension of the vector
+                scale,     //  value to scale the vector by
+                v.data(),  //  pointer to the elements of v
+                1);        //  increment for the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -587,11 +593,11 @@ namespace ET
   Vector<double> DCOPY(Vector<double>& v)
   {
     std::vector<double> v_copy(v.getDim());
-    cblas_dcopy(v.getDim(),           //  dimension of the vector
-                v.accessVec()->data(),//  pointer to the elements of v
-                1,                    //  increment for the elements of v
-                v_copy.data(),        //  pointer to the elements of v_copy
-                1);                   //  increment for the elements of v_copy
+    cblas_dcopy(v.getDim(),   //  dimension of the vector
+                v.data(),     //  pointer to the elements of v
+                1,            //  increment for the elements of v
+                v_copy.data(),//  pointer to the elements of v_copy
+                1);           //  increment for the elements of v_copy
     std::string name;
     if (v.getName() != " ")
     {
@@ -619,11 +625,11 @@ namespace ET
       std::cout << "Vectors are incompatible!" << std::endl;
       return;
     }
-    cblas_dcopy(v.getDim(),           //  dimension of the vector
-                v.accessVec()->data(),//  pointer to the elements of v
-                1,                    //  increment for the elements of v
-                u.accessVec()->data(),//  pointer to the elements of u
-                1);                   //  increment for the elements of u
+    cblas_dcopy(v.getDim(),//  dimension of the vector
+                v.data(),  //  pointer to the elements of v
+                1,         //  increment for the elements of v
+                u.data(),  //  pointer to the elements of u
+                1);        //  increment for the elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -642,12 +648,12 @@ namespace ET
       std::cout << "Vectors are imcompatible!" << std::endl;
       return;
     }
-    cblas_daxpy(v.getDim(),           //  dimension of the vectors
-                scale,                //  scalar to multiply v
-                v.accessVec()->data(),//  pointer to the elements of v
-                1,                    //  increment for the elements of v
-                u.accessVec()->data(),//  pointer to the elements of u
-                1);                   //  increment for the elements of u
+    cblas_daxpy(v.getDim(),//  dimension of the vectors
+                scale,     //  scalar to multiply v
+                v.data(),  //  pointer to the elements of v
+                1,         //  increment for the elements of v
+                u.data(),  //  pointer to the elements of u
+                1);        //  increment for the elements of u
     std::string name;
     if (u.getName() != " " && v.getName() != " ")
     {
@@ -676,11 +682,11 @@ namespace ET
       std::cout << "Vectors are imcompatible!" << std::endl;
       return 0;
     }
-    return cblas_ddot(v.getDim(),           //  dimension of the vectors
-                      v.accessVec()->data(),//  pointer to the elements of v
-                      1,                    //  increment of the elements of v
-                      u.accessVec()->data(),//  pointer to the elements of u
-                      1);                   //  increment of the elements of u
+    return cblas_ddot(v.getDim(),//  dimension of the vectors
+                      v.data(),  //  pointer to the elements of v
+                      1,         //  increment of the elements of v
+                      u.data(),  //  pointer to the elements of u
+                      1);        //  increment of the elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -692,9 +698,9 @@ namespace ET
   //----------------------------------------------------------------------------
   double DNRM2(Vector<double>& v)
   {
-    return cblas_dnrm2(v.getDim(),           //  dimension of the vectors
-                       v.accessVec()->data(),//  pointer to the elements of v
-                       1);                   //  increment of the elements of v
+    return cblas_dnrm2(v.getDim(),//  dimension of the vectors
+                       v.data(),  //  pointer to the elements of v
+                       1);        //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -706,9 +712,9 @@ namespace ET
   //----------------------------------------------------------------------------
   double DASUM(Vector<double>& v)
   {
-    return cblas_dasum(v.getDim(),           //  dimension of the vectors
-                       v.accessVec()->data(),//  pointer to the elements of v
-                       1);                   //  increment of the elements of v
+    return cblas_dasum(v.getDim(),//  dimension of the vectors
+                       v.data(),  //  pointer to the elements of v
+                       1);        //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -720,9 +726,9 @@ namespace ET
   //----------------------------------------------------------------------------
   uint32_t IDAMAX(Vector<double>& v)
   {
-    return cblas_idamax(v.getDim(),           //  dimension of the vectors
-                        v.accessVec()->data(),//  pointer to the elements of v
-                        1);                   //  increment of the elements of v
+    return cblas_idamax(v.getDim(),//  dimension of the vectors
+                        v.data(),  //  pointer to the elements of v
+                        1);        //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -734,9 +740,9 @@ namespace ET
   //----------------------------------------------------------------------------
   uint32_t IDAMIN(Vector<double>& v)
   {
-    return cblas_idamin(v.getDim(),           //  dimension of the vectors
-                        v.accessVec()->data(),//  pointer to the elements of v
-                        1);                   //  increment of the elements of v
+    return cblas_idamin(v.getDim(),//  dimension of the vectors
+                        v.data(),  //  pointer to the elements of v
+                        1);        //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 }

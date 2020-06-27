@@ -117,7 +117,20 @@ PYBIND11_MODULE(etraj, m) {
 				return vector.summary();
 		})
 		;
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	Instantiations of matrices
+		//--------------------------------------------------------------------------
+		//m.def("zeros", (ET::Vector<double> (*)(uint32_t)) &ET::zeros);
+		//m.def("zeros", (ET::Vector<double> (*)(uint32_t,uint32_t)) &ET::zeros);
+		//m.def("ones", (ET::Vector<double> (*)(uint32_t)) &ET::ones);
+		//m.def("ones", (ET::Vector<double> (*)(uint32_t,uint32_t)) &ET::ones);
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
 		//	Level 1 BLAS methods
+		//--------------------------------------------------------------------------
 		m.def("dswap", &ET::DSWAP);
 		m.def("dscal", &ET::DSCAL);
 		m.def("dcopy", (void (*)(ET::Vector<double>&,
@@ -129,10 +142,11 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("dasum", &ET::DASUM);
 		m.def("idamax",&ET::IDAMAX);
 		m.def("idamin",&ET::IDAMIN);
+		//--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	//	Matrix class
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
@@ -262,8 +276,6 @@ PYBIND11_MODULE(etraj, m) {
 		{
 				return m.summary();
 		})
-		//	various functions
-		.def("print", &ET::Matrix<double>::print)
 		//	Buffer definition allows one to cast a Matrix as a numpy array
 		.def_buffer([](ET::Matrix<double> &m) -> py::buffer_info
 		{
@@ -275,10 +287,27 @@ PYBIND11_MODULE(etraj, m) {
 				{ m.getNumRows(), m.getNumCols() },     /* Buffer dimensions */
 				{ sizeof(float) * m.getNumCols(),       /* Strides (in bytes) for each index */
 					sizeof(float) });
-		  })
+		})
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	Various methods
+		//--------------------------------------------------------------------------
+		.def("print", &ET::Matrix<double>::print)
+		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)())
+				 &ET::Matrix<double>::transpose)
+		.def("transpose", (void (ET::Matrix<double>::*)(bool))
+				 &ET::Matrix<double>::transpose_inplace)
+		.def("trace", &ET::Matrix<double>::trace)
+		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
+		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	Linear algebra tools
+		//--------------------------------------------------------------------------
 		.def("inverse", &ET::Matrix<double>::inverse)
 		.def("pseudo_inverse", &ET::Matrix<double>::pseudoInverse)
-		.def("permutation_matrix", &ET::Matrix<double>::permutationMatrix)
 		.def("LU", [](ET::Matrix<double> &self)
 		{
 			if (self.getNumRows() != self.getNumCols())
@@ -287,17 +316,21 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			return self.LU();
 		})
-		.def("transpose", (ET::Matrix<double> (ET::Matrix<double>::*)())
-				 &ET::Matrix<double>::transpose)
-		.def("transpose", (void (ET::Matrix<double>::*)(bool))
-				 &ET::Matrix<double>::transpose_inplace)
-		.def("trace", &ET::Matrix<double>::trace)
-		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
-		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		.def("SVD", &ET::Matrix<double>::SVD)
-    ;
+		//--------------------------------------------------------------------------
+		;
 		//--------------------------------------------------------------------------
 
+		//--------------------------------------------------------------------------
+		//	Instantiations of matrices
+		//--------------------------------------------------------------------------
+		m.def("identity", (ET::Matrix<double> (*)(uint32_t)) &ET::identity_d);
+		//m.def("zeros", (ET::Matrix<double> (*)(uint32_t)) &ET::zeros);
+		//m.def("zeros", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::zeros);
+		//m.def("ones", (ET::Matrix<double> (*)(uint32_t)) &ET::ones);
+		//m.def("ones", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::ones);
+		m.def("permutation_matrix", (ET::Matrix<double> (*)(const uint32_t&,
+		      const std::vector<uint32_t>)) &ET::permutationMatrix_d);
 		//--------------------------------------------------------------------------
 		//	Level 2 BLAS functions
 		//--------------------------------------------------------------------------
@@ -332,6 +365,13 @@ PYBIND11_MODULE(etraj, m) {
 		      const ET::Matrix<double>&)) &ET::DGELS);
 		m.def("dgels", (ET::Vector<double> (*)(const ET::Matrix<double>&,
 		      const ET::Vector<double>&)) &ET::DGELS);
+		m.def("dgetrf", &ET::DGETRF);
+		m.def("dgetrf_l_u", &ET::DGETRF_L_U);
+		m.def("dgetrf_lu", &ET::DGETRF_LU);
+		m.def("dgetrf_plu", &ET::DGETRF_PLU);
+		m.def("dgeqrf", &ET::DGEQRF);
+		m.def("dorgqr", &ET::DORGQR);
+		m.def("dgeqrf_qr", &ET::DGEQRF_QR);
 		//--------------------------------------------------------------------------
 
 		py::class_<ET::Grid<double>>(m, "Grid")
