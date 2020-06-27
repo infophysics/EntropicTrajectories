@@ -282,4 +282,15 @@ namespace ET
   DGEQRF_QR(const Matrix<double>& A);
   //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  SVD decomposition
+  //----------------------------------------------------------------------------
+  Vector<double> DGESVD(const Matrix<double>& A);
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGESVD_SVD(const Matrix<double>& A);
+  Vector<double> DGESDD(const Matrix<double>& A);
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGESDD_SVD(const Matrix<double>& A);
+  //----------------------------------------------------------------------------
+
 }

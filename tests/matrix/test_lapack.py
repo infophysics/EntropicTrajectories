@@ -279,3 +279,211 @@ print(A)
 print(Q)
 print(R)
 print(QR)
+
+'''
+    Example from https://www.ibm.com/support/knowledgecenter/SSFHY8_6.2/reference/am5gr_hgesvd.html#am5gr_hgesvd__gesvddt
+
+            |  1.0    1.0    0.0    0.0 |
+    A    =  |  0.0    2.0    1.0    0.0 |
+            |  0.0    0.0    3.0    1.0 |
+            |  0.0    0.0    0.0    4.0 |
+
+    Copy code
+
+    Output:
+
+    Array A is overwritten.
+
+
+            | 4.260007 |
+    S    =  | 3.107349 |
+            | 2.111785 |
+            | 0.858542 |
+
+
+    INFO = 0
+'''
+print("\n(4) DGESVD")
+print("\n(4a) - DGESVD")
+print(">>> a = [[1, 1, 0, 0],\n"
+    + "         [0, 2, 1, 0],\n"
+    + "         [0, 0, 3, 1],\n"
+    + "         [0, 0, 0, 4]]")
+print(">>> A = Matrix('A',a)")
+print(">>> s = et.dgesvd(A)")
+print(">>> print(s)")
+a = [[1,1,0,0],[0,2,1,0],[0,0,3,1],[0,0,0,4]]
+A = Matrix('A',a)
+s = et.dgesvd(A)
+print(s)
+
+print("\n(4b) - DGESDD")
+print(">>> a = [[1, 1, 0, 0],\n"
+    + "         [0, 2, 1, 0],\n"
+    + "         [0, 0, 3, 1],\n"
+    + "         [0, 0, 0, 4]]")
+print(">>> A = Matrix('A',a)")
+print(">>> s = et.dgesdd(A)")
+print(">>> print(s)")
+a = [[1,1,0,0],[0,2,1,0],[0,0,3,1],[0,0,0,4]]
+A = Matrix('A',a)
+s = et.dgesvd(A)
+print(s)
+
+'''
+    Example fromhttps://www.ibm.com/support/knowledgecenter/SSFHY8_6.2/reference/am5gr_hgesvd.html#am5gr_hgesvd__gesvddt
+
+            |  1.0    2.0    3.0  |
+    A    =  |  2.0    4.0    5.0  |
+            |  3.0    5.0    6.0  |
+
+    Copy code
+
+    Output:
+
+    Array A is overwritten.
+
+
+            | 11.344814 |
+    S    =  |  0.515729 |
+            |  0.170915 |
+
+    Copy code
+
+
+            | -0.327985 -0.736976 -0.591009 |
+    U    =  | -0.591009 -0.327985  0.736976 |
+            | -0.736976  0.591009 -0.327985 |
+
+    Copy code
+
+
+            | -0.327985 -0.591009 -0.736976 |
+    VT   =  |  0.736976  0.327985 -0.591009 |
+            | -0.591009  0.736976 -0.327985 |
+
+
+    INFO = 0
+'''
+print("\n(4c) - DGESVD_SVD")
+print(">>> a = [[1, 2, 3],\n"
+    + "         [2, 4, 5],\n"
+    + "         [3, 5, 6]]")
+print(">>> A = Matrix('A',a)")
+print(">>> U, S, VT = et.dgesvd_svd(A)")
+print(">>> print(A)")
+print(">>> print(U)")
+print(">>> print(S)")
+print(">>> print(VT)")
+print(">>> B = U * S * VT")
+print(">>> print(B)")
+a = [[1, 2, 3],[2, 4, 5],[3, 5, 6]]
+A = Matrix('A',a)
+U, S, VT = et.dgesvd_svd(A)
+print(A)
+print(U)
+print(S)
+print(VT)
+B = U * S * VT
+print(B)
+
+print("\n(4d) - DGESDD_SVD")
+print(">>> a = [[1, 2, 3],\n"
+    + "         [2, 4, 5],\n"
+    + "         [3, 5, 6]]")
+print(">>> A = Matrix('A',a)")
+print(">>> U, S, VT = et.dgesdd_svd(A)")
+print(">>> print(A)")
+print(">>> print(U)")
+print(">>> print(S)")
+print(">>> print(VT)")
+print(">>> B = U * S * VT")
+print(">>> print(B)")
+a = [[1, 2, 3],[2, 4, 5],[3, 5, 6]]
+A = Matrix('A',a)
+U, S, VT = et.dgesvd_svd(A)
+print(A)
+print(U)
+print(S)
+print(VT)
+B = U * S * VT
+print(B)
+
+'''
+    Example from
+
+     A    = |  1.0    2.0    3.0    4.0  |
+            |  5.0    6.0    7.0    8.0  |
+
+
+    Output:
+
+        For DGESVD:
+
+
+        A    =  | -0.352062 -0.443626 -0.535190 -0.626754 |
+                |  0.758981  0.321242 -0.116498 -0.554238 |
+
+        For DGESDD, A has been overwritten on output.
+
+
+    S    =  | 14.227407 |
+            |  1.257330 |
+
+
+    U    =  | -0.376168 -0.926551 |
+            | -0.926551  0.376168 |
+
+        For DGESVD, VT is not referenced.
+        For DGESDD, VT is:
+
+
+        VT   =  | -0.352062 -0.443626 -0.535190 -0.626754 |
+                |  0.758981  0.321242 -0.116498 -0.554238 |
+
+
+    INFO = 0
+'''
+print("\n(4e) - DGESVD_SVD")
+print(">>> a = [[1, 2, 3, 4],\n"
+    + "         [5, 6, 7, 8]]")
+print(">>> A = Matrix('A',a)")
+print(">>> U, S, VT = et.dgesvd_svd(A)")
+print(">>> print(A)")
+print(">>> print(U)")
+print(">>> print(S)")
+print(">>> print(VT)")
+print(">>> B = U * S * VT")
+print(">>> print(B)")
+a = [[1, 2, 3, 4],
+     [5, 6, 7, 8]]
+A = Matrix('A',a)
+U, S, VT = et.dgesvd_svd(A)
+print(A)
+print(U)
+print(S)
+print(VT)
+B = U * S * VT
+print(B)
+
+print("\n(4f) - DGESDD_SVD")
+print(">>> a = [[1, 2, 3, 4],\n"
+    + "         [5, 6, 7, 8]]")
+print(">>> A = Matrix('A',a)")
+print(">>> U, S, VT = et.dgesdd_svd(A)")
+print(">>> print(A)")
+print(">>> print(U)")
+print(">>> print(S)")
+print(">>> print(VT)")
+print(">>> B = U * S * VT")
+print(">>> print(B)")
+a = [[1, 2, 3, 4],
+     [5, 6, 7, 8]]
+A = Matrix('A',a)
+U, S, VT = et.dgesvd_svd(A)
+print(A)
+print(U)
+print(S)
+print(VT)
+B = U * S * VT
+print(B)

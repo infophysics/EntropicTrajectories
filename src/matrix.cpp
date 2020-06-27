@@ -1252,7 +1252,7 @@ namespace ET
     if (A.getNumCols() != B.getNumRows())
     {
       std::cout << "Matrices are incompatible!" << std::endl;
-      return Matrix<double>('zeros',1,0.0);
+      return Matrix<double>("zeros",1,0.0);
     }
     std::vector<double> C(A.getNumRows() * B.getNumCols());
     cblas_dgemm(CblasRowMajor,  //  row major order
@@ -1338,7 +1338,7 @@ namespace ET
     if (A.getNumCols() != B.getNumRows())
     {
       std::cout << "Matrices are incompatible!" << std::endl;
-      return Matrix<double>('zeros',1,0.0);
+      return Matrix<double>("zeros",1,0.0);
     }
     std::vector<double> C(A.getNumRows() * B.getNumCols());
     cblas_dgemm(CblasRowMajor,  //  row major order
@@ -1379,7 +1379,7 @@ namespace ET
     if (A.getNumRows() != B.getNumRows())
     {
       std::cout << "Matrices are incompatible!" << std::endl;
-      return Matrix<double>('zeros',1,0.0);
+      return Matrix<double>("zeros",1,0.0);
     }
     Matrix<double> QR(A);
     std::vector<double> c = B.getArray();
@@ -1502,7 +1502,7 @@ namespace ET
     if (A.getNumRows() != A.getNumCols())
     {
       std::cout << "Matrix is not square!" << std::endl;
-      return Matrix<double>('zeros',1,0.0);
+      return Matrix<double>("zeros",1,0.0);
     }
     Matrix<double> LU(A);
     std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
@@ -1534,7 +1534,7 @@ namespace ET
     if (A.getNumRows() != A.getNumCols())
     {
       std::cout << "Matrix is not square!" << std::endl;
-      return {Matrix<double>('zeros',1,0.0),Matrix<double>('zeros',1,0.0)};
+      return {Matrix<double>("zeros",1,0.0),Matrix<double>("zeros",1,0.0)};
     }
     Matrix<double> LU(A);
     std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
@@ -1592,9 +1592,9 @@ namespace ET
     if (A.getNumRows() != A.getNumCols())
     {
       std::cout << "Matrix is not square!" << std::endl;
-      return {Matrix<double>('zeros',1,0.0),
-              Matrix<double>('zeros',1,0.0),
-              Matrix<double>('zeros',1,0.0)};
+      return {Matrix<double>("zeros",1,0.0),
+              Matrix<double>("zeros",1,0.0),
+              Matrix<double>("zeros",1,0.0)};
     }
     Matrix<double> LU(A);
     std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
@@ -1741,4 +1741,169 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  DGESVD - compute a SVD decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    Vector<double> (singular values of A)
+  //----------------------------------------------------------------------------
+  Vector<double> DGESVD(const Matrix<double>& A)
+  {
+    Matrix<double> A_copy(A);
+    Matrix<double> U(A.getNumRows());
+    Matrix<double> VT(A.getNumCols());
+    double superb[std::min(A.getNumRows(),A.getNumCols())-1];
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgesvd(LAPACK_ROW_MAJOR,// row major format
+                          'N',             // no columns returned in U
+                          'N',             // no rows returned in VT
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          A_copy.data(),   // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          singular.data(), // pointer to singular values
+                          U.data(),        // pointer to elements of U
+                          U.getNumCols(),  // leading dimension of U
+                          VT.data(),       // pointer to elements of VT
+                          VT.getNumCols(), // leading dimension of VT
+                          superb);         // workspace for subroutines
+    std::string name = "Singular values";
+    if (A.getName() != " ")
+    {
+      name += " of " + A.getName();
+    }
+    return Vector<double>(name,singular);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGESVD - compute a SVD decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  //              (Matrices U, Sigma and (V)^T)
+  //----------------------------------------------------------------------------
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGESVD_SVD(const Matrix<double>& A)
+  {
+    Matrix<double> A_copy(A);
+    Matrix<double> U(A.getNumRows());
+    Matrix<double> VT(A.getNumCols());
+    double superb[std::min(A.getNumRows(),A.getNumCols())-1];
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgesvd(LAPACK_ROW_MAJOR,// row major format
+                          'A',             // all m rows returned in U
+                          'A',             // all n rows returned in VT
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          A_copy.data(),   // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          singular.data(), // pointer to singular values
+                          U.data(),        // pointer to elements of U
+                          U.getNumCols(),  // leading dimension of U
+                          VT.data(),       // pointer to elements of VT
+                          VT.getNumCols(), // leading dimension of VT
+                          superb);         // workspace for subroutines
+    std::string name_u = "U-Matrix";
+    std::string name_s = "Sigma-Matrix";
+    std::string name_vt = "(V)^T-Matrix";
+    if (A.getName() != " ")
+    {
+      name_u += " of " + A.getName();
+      name_s += " of " + A.getName();
+      name_vt += " of " + A.getName();
+    }
+    U.setName(name_u);
+    VT.setName(name_vt);
+    Matrix<double> Sigma(name_s,A.getNumRows(),A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < singular.size(); i++)
+    {
+      Sigma(i,i) = singular[i];
+    }
+    return {U,Sigma,VT};
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGESDD - compute a SVD decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    Vector<double> (singular values of A)
+  //----------------------------------------------------------------------------
+  Vector<double> DGESDD(const Matrix<double>& A)
+  {
+    Matrix<double> A_copy(A);
+    Matrix<double> U(A.getNumRows());
+    Matrix<double> VT(A.getNumCols());
+    double superb[std::min(A.getNumRows(),A.getNumCols())-1];
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgesdd(LAPACK_ROW_MAJOR,// row major format
+                          'N',             // no columns returned in U or V
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          A_copy.data(),   // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          singular.data(), // pointer to singular values
+                          U.data(),        // pointer to elements of U
+                          U.getNumCols(),  // leading dimension of U
+                          VT.data(),       // pointer to elements of VT
+                          VT.getNumCols());// leading dimension of VT
+    std::string name = "Singular values";
+    if (A.getName() != " ")
+    {
+      name += " of " + A.getName();
+    }
+    return Vector<double>(name,singular);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGESDD - compute a SVD decomposition
+  //  Arguments:  A     - (m x n)-matrix
+  //
+  //  Returns:    std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  //              (Matrices U, Sigma and (V)^T)
+  //----------------------------------------------------------------------------
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGESDD_SVD(const Matrix<double>& A)
+  {
+    Matrix<double> A_copy(A);
+    Matrix<double> U(A.getNumRows());
+    Matrix<double> VT(A.getNumCols());
+    double superb[std::min(A.getNumRows(),A.getNumCols())-1];
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgesdd(LAPACK_ROW_MAJOR,// row major format
+                          'A',             // all m rows returned in U and VT
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          A_copy.data(),   // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          singular.data(), // pointer to singular values
+                          U.data(),        // pointer to elements of U
+                          U.getNumCols(),  // leading dimension of U
+                          VT.data(),       // pointer to elements of VT
+                          VT.getNumCols());// leading dimension of VT
+    std::string name_u = "U-Matrix";
+    std::string name_s = "Sigma-Matrix";
+    std::string name_vt = "(V)^T-Matrix";
+    if (A.getName() != " ")
+    {
+      name_u += " of " + A.getName();
+      name_s += " of " + A.getName();
+      name_vt += " of " + A.getName();
+    }
+    U.setName(name_u);
+    VT.setName(name_vt);
+    Matrix<double> Sigma(name_s,A.getNumRows(),A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < singular.size(); i++)
+    {
+      Sigma(i,i) = singular[i];
+    }
+    return {U,Sigma,VT};
+  }
+  //----------------------------------------------------------------------------
 }

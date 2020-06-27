@@ -372,6 +372,10 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("dgeqrf", &ET::DGEQRF);
 		m.def("dorgqr", &ET::DORGQR);
 		m.def("dgeqrf_qr", &ET::DGEQRF_QR);
+		m.def("dgesvd", &ET::DGESVD);
+		m.def("dgesvd_svd", &ET::DGESVD_SVD);
+		m.def("dgesdd", &ET::DGESDD);
+		m.def("dgesdd_svd", &ET::DGESDD_SVD);
 		//--------------------------------------------------------------------------
 
 		py::class_<ET::Grid<double>>(m, "Grid")
