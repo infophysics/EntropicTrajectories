@@ -37,6 +37,10 @@
 //------------------------------------------------------------------------------
 namespace ET
 {
+  //--------------------------------------------------------------------------
+  //  This vector class acts as a general container for (n)-dimensional
+  //  vectors.  It wraps several methods from BLAS level one.
+  //--------------------------------------------------------------------------
   template<typename T>
   class Vector
   {

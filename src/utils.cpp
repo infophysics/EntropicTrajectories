@@ -159,4 +159,39 @@ namespace ET
         }
         return taylor;
     }
+
+    //--------------------------------------------------------------------------
+    //  Error messages
+    //  Here we have a set of functions for generating various
+    //  error messages
+    //--------------------------------------------------------------------------
+    std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
+                                     const uint32_t& attempt)
+    {
+    }
+    std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
+                                             const uint32_t& m2)
+    {
+    }
+    std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
+                                             const uint32_t& n2)
+    {
+    }
+    std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
+                                             const uint32_t& m2)
+    {
+    }
+    std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
+                                             const uint32_t& n2)
+    {
+    }
+    std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
+                                        const uint32_t& m2)
+    {
+    }
+    std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n)
+    {
+    }
+
+    //--------------------------------------------------------------------------
 }

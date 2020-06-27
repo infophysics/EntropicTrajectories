@@ -35,10 +35,11 @@
 
 namespace ET
 {
-  //  This matrix class acts as a general container for n x m matrices
+  //--------------------------------------------------------------------------
+  //  This matrix class acts as a general container for (m x n) matrices
   //  which are row ordered, i.e. m(i,j) picks the element of the ith row
   //  and the jth column.  It wraps several methods from BLAS and LAPACK.
-  //
+  //--------------------------------------------------------------------------
   template<typename T>
   class Matrix
   {

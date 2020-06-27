@@ -26,9 +26,9 @@ set(SOURCE_DIR "src/")
 set(INCLUDE_DIR "include/")
 # Tell CMake that headers are also in SOURCE_DIR
 include_directories(${SOURCE_DIR})
-set(SOURCES "${SOURCE_DIR}vector.cpp"
-            "${SOURCE_DIR}matrix.cpp"
-            "${SOURCE_DIR}grid.cpp"
+set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
+            "${SOURCE_DIR}linalg/matrix.cpp"
+            "${SOURCE_DIR}grid/grid.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}approximator.cpp"
             "${SOURCE_DIR}scalar.cpp"
@@ -38,6 +38,11 @@ include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
                     "${INCLUDE_DIR}monomial"
+                    "${SOURCE_DIR}fields"
+                    "${SOURCE_DIR}geometry"
+                    "${SOURCE_DIR}grid"
+                    "${SOURCE_DIR}inerpolation"
+                    "${SOURCE_DIR}linalg"
                     "/usr/include/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu")
 

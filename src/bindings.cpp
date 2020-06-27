@@ -25,8 +25,8 @@
 #include <pybind11/numpy.h>
 #include <lapacke.h>
 #include <cblas.h>
-#include "vector.h"
-#include "matrix.h"
+#include "linalg/vector.h"
+#include "linalg/matrix.h"
 #include "grid.h"
 #include "scalar.h"
 #include "utils.h"
