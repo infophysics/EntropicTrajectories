@@ -71,9 +71,11 @@ namespace ET
     std::vector<T> getArray() const;
     //  get access to array
     std::vector<T>* accessArray();
+    //  get access to the beginning of the array
+    T* data();
     std::vector<T> getRow(uint32_t i);
     std::vector<T> getCol(uint32_t i);
-    float *data();
+
 
     //  Setters
     void setName(std::string name);
@@ -178,9 +180,7 @@ namespace ET
     void transpose_inplace(bool inplace=true);
     T trace();
 
-
     //  Linear algebra tools
-    Matrix<T> permutationMatrix(int& n, int* pivot);
     //  TODO:
     uint32_t getRank();
     bool isInvertible();
@@ -208,18 +208,16 @@ namespace ET
     uint32_t _rank = -1;
   };
 
-  //  Various matrices
-  template<typename T>
-  Matrix<T> identity(uint32_t m);
-  template<typename T>
-  Matrix<T> zeros(uint32_t m);
-  template<typename T>
-  Matrix<T> zeros(uint32_t m, uint32_t n);
-  template<typename T>
-  Matrix<T> ones(uint32_t m);
-  template<typename T>
-  Matrix<T> ones(uint32_t m, uint32_t n);
-
+  //----------------------------------------------------------------------------
+  //  Various Initializers
+  //----------------------------------------------------------------------------
+  Matrix<double> identity_d(uint32_t m);
+  Matrix<double> zeros_d(uint32_t m);
+  Matrix<double> zeros_d(uint32_t m, uint32_t n);
+  Matrix<double> ones_d(uint32_t m);
+  Matrix<double> ones_d(uint32_t m, uint32_t n);
+  Matrix<double> permutationMatrix_d(const uint32_t& m,
+                              const std::vector<uint32_t> pivot);
   template<typename T>
   std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
 
@@ -254,9 +252,34 @@ namespace ET
   //----------------------------------------------------------------------------
   //  LAPACK methods
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Linear least squares
+  //----------------------------------------------------------------------------
   Matrix<double> DGELS(const Matrix<double>& A,
                        const Matrix<double>& B);
   Vector<double> DGELS(const Matrix<double>& A,
-                       const Vector<double>& y);
+                       const Vector<double>& u);
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  LU decomposition
+  //----------------------------------------------------------------------------
+  std::vector<uint32_t> DGETRF(const Matrix<double>& A);
+  Matrix<double> DGETRF_L_U(const Matrix<double>& A);
+  std::tuple<Matrix<double>,Matrix<double>> DGETRF_LU(const Matrix<double>& A);
+  std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
+  DGETRF_PLU(const Matrix<double>& A);
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  QR decomposition
+  //----------------------------------------------------------------------------
+  Vector<double> DGEQRF(const Matrix<double>& A);
+  Matrix<double> DORGQR(const Matrix<double>& A,
+                        const Vector<double>& ref);
+  std::tuple<Matrix<double>,Matrix<double>>
+  DGEQRF_QR(const Matrix<double>& A);
+  //----------------------------------------------------------------------------
 
 }
