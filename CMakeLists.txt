@@ -28,7 +28,7 @@ set(INCLUDE_DIR "include/")
 include_directories(${SOURCE_DIR})
 set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}linalg/matrix.cpp"
-            "${SOURCE_DIR}grid/grid.cpp"
+            "${SOURCE_DIR}grid/ugrid.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}approximator.cpp"
             "${SOURCE_DIR}scalar.cpp"

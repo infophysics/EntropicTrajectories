@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  grid.h
+//  ugrid.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
@@ -28,22 +28,26 @@
 
 namespace ET
 {
-
+  //----------------------------------------------------------------------------
+  //  Class for unstructured grids
+  //----------------------------------------------------------------------------
   template<typename T>
-  class Grid
+  class UGrid
   {
   public:
-    Grid();
-    ~Grid();
-    Grid(uint64_t dim);
-    Grid(std::string name, uint64_t dim);
-    Grid(uint64_t dim, uint64_t N);
-    Grid(std::string name, uint64_t dim, uint64_t N);
+    UGrid();
+    ~UGrid();
+    UGrid(uint64_t dim);
+    UGrid(std::string name, uint64_t dim);
+    UGrid(uint64_t dim, uint64_t N);
+    UGrid(std::string name, uint64_t dim, uint64_t N);
+    UGrid(std::vector<T> ugrid);
+    UGrid(std::vector<std::vector<T> > ugrid);
 
     //  Getters
     uint64_t getDim();
     uint64_t getN();
-    std::vector<std::vector<T> >  getGrid();
+    std::vector<std::vector<T> >  getUGrid();
     std::string getName();
     std::vector<std::vector<size_t> > getNeighbors();
     std::vector<std::vector<double> > getDistances();
@@ -54,10 +58,10 @@ namespace ET
     //  Setters
     void setDim(uint64_t dim);
     void setN(uint64_t N);
-    void setGrid(std::vector<std::vector<T> > grid);
+    void setUGrid(std::vector<std::vector<T> > ugrid);
     void setName(std::string name);
 
-    //  Access operators for grid
+    //  Access operators for ugrid
     T& operator()(const uint64_t i, const uint64_t j);
     const T& operator()(const uint64_t i, const uint64_t j) const;
     //  Access operators for points
@@ -74,10 +78,12 @@ namespace ET
     void queryRadius(double radius);
 
   private:
+    //  dimension of the ugrid
     uint64_t _dim;
+    //  number of points in the ugrid
     uint64_t _N;
-    //  Unstructured grid
-    std::vector<std::vector<T> > _grid;
+    //  Unstructured ugrid
+    std::vector<std::vector<T> > _ugrid;
     std::string _name;
     std::vector<std::string> _coords;
     //  associated kdTree neighbors
@@ -88,6 +94,6 @@ namespace ET
     //KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> _kdt;
   };
 
-  template class Grid<double>;
+  template class UGrid<double>;
 
 }

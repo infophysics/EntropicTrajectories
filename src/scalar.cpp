@@ -46,7 +46,7 @@ namespace ET
   }
 
   template<typename T>
-  ScalarField<T>::ScalarField(Grid<T>* micro, std::vector<T> field)
+  ScalarField<T>::ScalarField(UGrid<T>* micro, std::vector<T> field)
   : _micro(micro), _field(field)
   {
     _approx = new Approximator<T>();

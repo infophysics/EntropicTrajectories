@@ -22,7 +22,7 @@
 #include <vector>
 #include <iostream>
 
-#include "grid.h"
+#include "ugrid.h"
 
 namespace ET
 {
@@ -37,7 +37,7 @@ namespace ET
   public:
     ScalarField();
     ~ScalarField();
-    ScalarField(Grid<T>* micro, std::vector<T> field);
+    ScalarField(UGrid<T>* micro, std::vector<T> field);
 
     //  Getters
     Approximator<T>* getApproximator();
@@ -49,7 +49,7 @@ namespace ET
 
 
   private:
-    Grid<T>* _micro;
+    UGrid<T>* _micro;
     std::vector<T> _field;
     Approximator<T>* _approx;
 

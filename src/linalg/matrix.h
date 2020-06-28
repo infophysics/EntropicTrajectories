@@ -269,6 +269,18 @@ namespace ET
                        const Matrix<double>& B);
   Vector<double> DGELS(const Matrix<double>& A,
                        const Vector<double>& u);
+  Matrix<double> DGELSY(const Matrix<double>& A,
+                        const Matrix<double>& B);
+  Vector<double> DGELSY(const Matrix<double>& A,
+                        const Vector<double>& u);
+  Matrix<double> DGELSD(const Matrix<double>& A,
+                        const Matrix<double>& B);
+  Vector<double> DGELSD(const Matrix<double>& A,
+                        const Vector<double>& u);
+  Matrix<double> DGELSS(const Matrix<double>& A,
+                        const Matrix<double>& B);
+  Vector<double> DGELSS(const Matrix<double>& A,
+                        const Vector<double>& u);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------

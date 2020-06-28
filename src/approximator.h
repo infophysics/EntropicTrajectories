@@ -21,7 +21,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
-#include "grid.h"
+#include "ugrid.h"
 #include "params.h"
 #include "utils.h"
 #include "matrix.h"
@@ -47,10 +47,10 @@ namespace ET
     void set_n(uint64_t n);
 
     //  Gradient functions
-    std::vector<T> gradient(Grid<T>* grid, ScalarField<T>* field, uint64_t index);
-    std::vector<T> gradientMLS(Grid<T>* grid, ScalarField<T>* field, uint64_t index);
+    std::vector<T> gradient(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
+    std::vector<T> gradientMLS(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
 
-    Matrix<T> constructBMatrix(Grid<T>* grid, std::vector<uint64_t>* neighbors,
+    Matrix<T> constructBMatrix(UGrid<T>* ugrid, std::vector<uint64_t>* neighbors,
       uint64_t index, uint64_t order);
   private:
     enum ApproxType _type;

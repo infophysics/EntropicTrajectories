@@ -27,7 +27,7 @@
 #include <cblas.h>
 #include "linalg/vector.h"
 #include "linalg/matrix.h"
-#include "grid.h"
+#include "ugrid.h"
 #include "scalar.h"
 #include "utils.h"
 #include "approximator.h"
@@ -382,30 +382,32 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("dgesdd_svd", &ET::DGESDD_SVD);
 		//--------------------------------------------------------------------------
 
-		py::class_<ET::Grid<double>>(m, "Grid")
+		py::class_<ET::UGrid<double>>(m, "UGrid")
 			.def(py::init<>())
 			.def(py::init<uint64_t>())
 			.def(py::init<std::string, uint64_t>())
 			.def(py::init<uint64_t, uint64_t>())
 			.def(py::init<std::string, uint64_t, uint64_t>())
+			.def(py::init<std::vector<double>>())
+			.def(py::init<std::vector<std::vector<double>>>())
 			//	getters
-			.def("get_dim", &ET::Grid<double>::getDim)
-			.def("get_N", &ET::Grid<double>::getN)
-			.def("get_grid", &ET::Grid<double>::getGrid)
-			.def("get_name", &ET::Grid<double>::getName)
+			.def("get_dim", &ET::UGrid<double>::getDim)
+			.def("get_N", &ET::UGrid<double>::getN)
+			.def("get_grid", &ET::UGrid<double>::getUGrid)
+			.def("get_name", &ET::UGrid<double>::getName)
 			.def("get_neighbors", (std::vector<std::vector<size_t> >
-					 (ET::Grid<double>::*)()) &ET::Grid<double>::getNeighbors)
-			.def("get_neighbors", (std::vector<size_t>* (ET::Grid<double>::*)
-					 (uint64_t)) &ET::Grid<double>::getNeighbors)
-			.def("get_distances", &ET::Grid<double>::getDistances)
-			.def("get_neighbors_radius", &ET::Grid<double>::getNeighborsRadius)
-			.def("get_distances_radius", &ET::Grid<double>::getDistancesRadius)
-			.def("set_dim", &ET::Grid<double>::setDim)
-			.def("set_N", &ET::Grid<double>::setN)
-			.def("set_grid", &ET::Grid<double>::setGrid)
-			.def("set_name", &ET::Grid<double>::setName)
+					 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors)
+			.def("get_neighbors", (std::vector<size_t>* (ET::UGrid<double>::*)
+					 (uint64_t)) &ET::UGrid<double>::getNeighbors)
+			.def("get_distances", &ET::UGrid<double>::getDistances)
+			.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius)
+			.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius)
+			.def("set_dim", &ET::UGrid<double>::setDim)
+			.def("set_N", &ET::UGrid<double>::setN)
+			.def("set_grid", &ET::UGrid<double>::setUGrid)
+			.def("set_name", &ET::UGrid<double>::setName)
 			//	access operators
-			.def("__getitem__", [](const ET::Grid<double> &self,
+			.def("__getitem__", [](const ET::UGrid<double> &self,
 						std::tuple<uint64_t, uint64_t> ij)
 			{
 				uint32_t i, j;
@@ -425,7 +427,7 @@ PYBIND11_MODULE(etraj, m) {
 				}
 				return self(i,j);
 			}, py::is_operator())
-			.def("__setitem__", [](ET::Grid<double> &self,
+			.def("__setitem__", [](ET::UGrid<double> &self,
 						std::tuple<uint32_t, uint32_t> ij, const double& val)
 			{
 				uint32_t i, j;
@@ -445,13 +447,13 @@ PYBIND11_MODULE(etraj, m) {
 				}
 				self(i,j) = val;
 			}, py::is_operator())
-			.def("query_neighbors", &ET::Grid<double>::queryNeighbors)
-			.def("query_radius", &ET::Grid<double>::queryRadius)
+			.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
+			.def("query_radius", &ET::UGrid<double>::queryRadius)
 			;
 
 		py::class_<ET::ScalarField<double>>(m, "ScalarField")
 			.def(py::init<>())
-			.def(py::init<ET::Grid<double>*,std::vector<double>>())
+			.def(py::init<ET::UGrid<double>*,std::vector<double>>())
 			.def("set_derivative", &ET::ScalarField<double>::setDerivative)
 			.def("get_approximator", &ET::ScalarField<double>::getApproximator)
 			;
