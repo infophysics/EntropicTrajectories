@@ -57,7 +57,7 @@ print("\n(1) DGELS")
     0.71   0.63
     0.13   0.14
 '''
-print("\n(1a) - DGELS (a)")
+print("\n(1a) - DGELS")
 print("Solve the linear system ac = b, with\n")
 print(">>> a = [[ 1.44, -7.84, -4.39,  4.53],\n"
     + "         [-9.96, -0.28, -3.24,  3.83],\n"
@@ -127,7 +127,7 @@ print(C)
           ( 1 1 )
           ( 1 2 )
 '''
-print("\n(1b) - DGELS (b)")
+print("\n(1b) - DGELS")
 print("Solve the linear system ac = b, with\n")
 print(">>> a = [[1,1,1],\n"
     + "         [2,3,4],\n"
@@ -164,7 +164,7 @@ print(C)
     Same example as (1b) except with Au = v where
     'u' and 'v' are vectors.
 '''
-print("\n(1c) - DGELS (c)")
+print("\n(1c) - DGELS")
 print("Solve the linear system Au = v, with\n")
 print(">>> a = [[1,1,1],\n"
     + "         [2,3,4],\n"
@@ -188,6 +188,228 @@ u = et.dgels(A,v)
 print(A)
 print(v)
 print(u)
+
+'''
+    Same examples as (1b) and (1c) except using
+    DGELSY as the driver.
+'''
+print("\n(1d) - DGELSY")
+print("Solve the linear system ac = b, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [[-10,3],\n"
+    + "         [12,14],\n"
+    + "         [14,12],\n"
+    + "         [16,16],\n"
+    + "         [18,16]]")
+print(">>> A = Matrix('A',a)")
+print(">>> B = Matrix('B',b)")
+print(">>> C = et.dgelsy(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> print('The rank of A is: ',rank_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [[-10,3],
+     [12,14],
+     [14,12],
+     [16,16],
+     [18,16]]
+A = Matrix('A',a)
+B = Matrix('B',b)
+C = et.dgelsy(A,B)
+print(A)
+print(B)
+print(C)
+rank_A = A.get_rank()
+print('The rank of A is: ',rank_A)
+
+print("\n(1e) - DGELSY")
+print("Solve the linear system Au = v, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [1,2,3,4,5]")
+print(">>> A = Matrix('A',a)")
+print(">>> v = Matrix('v',b)")
+print(">>> u = et.dgelsy(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> print('The rank of A is: ',rank_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [1,2,3,4,5]
+A = Matrix('A',a)
+v = Vector('v',b)
+u = et.dgelsy(A,v)
+print(A)
+print(v)
+print(u)
+rank_A = A.get_rank()
+print('The rank of A is: ',rank_A)
+
+'''
+    Same examples as (1b) and (1c) except using
+    DGELSD as the driver.
+'''
+print("\n(1f) - DGELSD")
+print("Solve the linear system ac = b, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [[-10,3],\n"
+    + "         [12,14],\n"
+    + "         [14,12],\n"
+    + "         [16,16],\n"
+    + "         [18,16]]")
+print(">>> A = Matrix('A',a)")
+print(">>> B = Matrix('B',b)")
+print(">>> C = et.dgelsd(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> sing_A = A.get_singular_values()")
+print(">>> print('The rank of A is: ',rank_A)")
+print(">>> print('The singular values of A are:\n',sing_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [[-10,3],
+     [12,14],
+     [14,12],
+     [16,16],
+     [18,16]]
+A = Matrix('A',a)
+B = Matrix('B',b)
+C = et.dgelsd(A,B)
+print(A)
+print(B)
+print(C)
+rank_A = A.get_rank()
+sing_A = A.get_singular_values()
+print('The rank of A is: ',rank_A)
+print('The singular values of A are:\n',sing_A)
+
+print("\n(1g) - DGELSD")
+print("Solve the linear system Au = v, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [1,2,3,4,5]")
+print(">>> A = Matrix('A',a)")
+print(">>> v = Matrix('v',b)")
+print(">>> u = et.dgelsd(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> print('The rank of A is: ',rank_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [1,2,3,4,5]
+A = Matrix('A',a)
+v = Vector('v',b)
+u = et.dgelsd(A,v)
+print(A)
+print(v)
+print(u)
+rank_A = A.get_rank()
+sing_A = A.get_singular_values()
+print('The rank of A is: ',rank_A)
+print('The singular values of A are:\n',sing_A)
+
+'''
+    Same examples as (1b) and (1c) except using
+    DGELSS as the driver.
+'''
+print("\n(1h) - DGELSS")
+print("Solve the linear system ac = b, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [[-10,3],\n"
+    + "         [12,14],\n"
+    + "         [14,12],\n"
+    + "         [16,16],\n"
+    + "         [18,16]]")
+print(">>> A = Matrix('A',a)")
+print(">>> B = Matrix('B',b)")
+print(">>> C = et.dgelss(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> sing_A = A.get_singular_values()")
+print(">>> print('The rank of A is: ',rank_A)")
+print(">>> print('The singular values of A are:\n',sing_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [[-10,3],
+     [12,14],
+     [14,12],
+     [16,16],
+     [18,16]]
+A = Matrix('A',a)
+B = Matrix('B',b)
+C = et.dgelss(A,B)
+print(A)
+print(B)
+print(C)
+rank_A = A.get_rank()
+sing_A = A.get_singular_values()
+print('The rank of A is: ',rank_A)
+print('The singular values of A are:\n',sing_A)
+
+print("\n(1i) - DGELSS")
+print("Solve the linear system Au = v, with\n")
+print(">>> a = [[1,1,1],\n"
+    + "         [2,3,4],\n"
+    + "         [3,5,2],\n"
+    + "         [4,2,5],\n"
+    + "         [5,4,3]]")
+print(">>> b = [1,2,3,4,5]")
+print(">>> A = Matrix('A',a)")
+print(">>> v = Matrix('v',b)")
+print(">>> u = et.dgelss(A,B)")
+print(">>> print(C)")
+print(">>> rank_A = A.get_rank()")
+print(">>> print('The rank of A is: ',rank_A)")
+a = [[1,1,1],
+     [2,3,4],
+     [3,5,2],
+     [4,2,5],
+     [5,4,3]]
+b = [1,2,3,4,5]
+A = Matrix('A',a)
+v = Vector('v',b)
+u = et.dgelss(A,v)
+print(A)
+print(v)
+print(u)
+rank_A = A.get_rank()
+sing_A = A.get_singular_values()
+print('The rank of A is: ',rank_A)
+print('The singular values of A are:\n',sing_A)
 
 print("\n(2) DGETRF")
 

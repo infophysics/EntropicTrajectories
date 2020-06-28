@@ -182,8 +182,10 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_array", &ET::Matrix<double>::getArray)
 		.def("get_row", &ET::Matrix<double>::getRow)
 		.def("get_col", &ET::Matrix<double>::getCol)
-		.def("info", &ET::Matrix<double>::getInfo)
-		.def("flag", &ET::Matrix<double>::getFlag)
+		.def("get_info", &ET::Matrix<double>::getInfo)
+		.def("get_flag", &ET::Matrix<double>::getFlag)
+		.def("get_rank", &ET::Matrix<double>::getRank)
+		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		//	setters
 		.def("set_name", &ET::Matrix<double>::setName)
 		.def("set_row", &ET::Matrix<double>::setRow)
@@ -192,8 +194,10 @@ PYBIND11_MODULE(etraj, m) {
 				 (uint32_t,std::vector<double>)) &ET::Matrix<double>::setArray)
 		.def("set_array", (void (ET::Matrix<double>::*)
 				 (std::vector<std::vector<double>>)) &ET::Matrix<double>::setArray)
+		.def("set_singular_values", &ET::Matrix<double>::setSingularValues)
 		.def("set_info", &ET::Matrix<double>::setInfo)
 		.def("set_flag", &ET::Matrix<double>::setFlag)
+		.def("set_rank", &ET::Matrix<double>::setRank)
     //  operator overloads
 		.def(py::self == py::self)
 		.def(py::self != py::self)
@@ -369,6 +373,18 @@ PYBIND11_MODULE(etraj, m) {
 		      const ET::Matrix<double>&)) &ET::DGELS);
 		m.def("dgels", (ET::Vector<double> (*)(const ET::Matrix<double>&,
 		      const ET::Vector<double>&)) &ET::DGELS);
+		m.def("dgelsy", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+		      const ET::Matrix<double>&)) &ET::DGELSY);
+		m.def("dgelsy", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+		      const ET::Vector<double>&)) &ET::DGELSY);
+		m.def("dgelsd", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+		      const ET::Matrix<double>&)) &ET::DGELSD);
+		m.def("dgelsd", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+		      const ET::Vector<double>&)) &ET::DGELSD);
+		m.def("dgelss", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+		      const ET::Matrix<double>&)) &ET::DGELSS);
+		m.def("dgelss", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+		      const ET::Vector<double>&)) &ET::DGELSS);
 		m.def("dgetrf", &ET::DGETRF);
 		m.def("dgetrf_l_u", &ET::DGETRF_L_U);
 		m.def("dgetrf_lu", &ET::DGETRF_LU);

@@ -76,8 +76,10 @@ namespace ET
     T* data();
     std::vector<T> getRow(uint32_t i);
     std::vector<T> getCol(uint32_t i);
+    std::vector<T> getSingularValues();
     std::string getInfo();
     int getFlag();
+    uint32_t getRank();
 
 
     //  Setters
@@ -86,8 +88,10 @@ namespace ET
     void setCol(uint32_t i, std::vector<T> col);
     void setArray(uint32_t m, std::vector<T> mat);
     void setArray(std::vector<std::vector<T> > mat);
+    void setSingularValues(std::vector<T> singular);
     void setInfo(std::string info);
     void setFlag(int flag);
+    void setRank(uint32_t rank);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& matrix);
@@ -187,7 +191,6 @@ namespace ET
 
     //  Linear algebra tools
     //  TODO:
-    uint32_t getRank();
     bool isInvertible();
     void findSingularValues();
     Matrix<T> inverse();
@@ -197,9 +200,6 @@ namespace ET
     Matrix<T> getU(const Matrix<T>& perm);
     std::tuple<Matrix<T>,Matrix<T>> QR();
     std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
-    std::vector<T> getSingularValues();
-
-
 
   private:
     //  _m is the number of rows, _n is the number of columns

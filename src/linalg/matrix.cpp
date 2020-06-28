@@ -308,6 +308,11 @@ namespace ET
     return col;
   }
   template<typename T>
+  std::vector<T> Matrix<T>::getSingularValues()
+  {
+    return _singular_values;
+  }
+  template<typename T>
   std::string Matrix<T>::getInfo()
   {
     return _info;
@@ -316,6 +321,11 @@ namespace ET
   int Matrix<T>::getFlag()
   {
     return _flag;
+  }
+  template<typename T>
+  uint32_t Matrix<T>::getRank()
+  {
+    return _rank;
   }
   //  Setters
   template<typename T>
@@ -367,6 +377,11 @@ namespace ET
     }
   }
   template<typename T>
+  void Matrix<T>::setSingularValues(std::vector<T> singular)
+  {
+    _singular_values = singular;
+  }
+  template<typename T>
   void Matrix<T>::setInfo(std::string info)
   {
     _info = info;
@@ -375,6 +390,11 @@ namespace ET
   void Matrix<T>::setFlag(int flag)
   {
     _flag = flag;
+  }
+  template<typename T>
+  void Matrix<T>::setRank(uint32_t rank)
+  {
+    _rank = rank;
   }
   //----------------------------------------------------------------------------
 
@@ -1012,13 +1032,6 @@ namespace ET
   std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
   {
   }
-  template<typename T>
-  std::vector<T> Matrix<T>::getSingularValues()
-  {
-    if (_singular_values.size() == 0)
-      findSingularValues();
-    return _singular_values;
-  }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -1496,6 +1509,344 @@ namespace ET
     {
       name  = " ";
     }
+    return Vector<double>(name,u);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSY - solve the linear system min_C|B - AC| using
+  //           complete orthogonal factorization.
+  //  Arguments:  A     - (m x k)-matrix
+  //              B     - (m x n)-matrix
+  //
+  //  Returns:    C_min  ( (k x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGELSY(const Matrix<double>& A, const Matrix<double>& B)
+  {
+    if (A.getNumRows() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>("zeros",1,0.0);
+    }
+    Matrix<double> QR(A);
+    std::vector<double> c = B.getArray();
+    int info;
+    int jpvt[A.getNumCols()];
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelsy(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          B.getNumCols(),  //  number of columns of B
+                          QR.data(),       //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          c.data(),        //  pointer to elements of B
+                          B.getNumCols(),  //  leading dimension of B
+                          jpvt,            //  workspace array
+                          rcond,           //  used for rank of A
+                          &rank);          //  the effective rank of A
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols() x B.getNumCols())
+    c.resize(A.getNumCols() * B.getNumCols());
+    std::string name;
+    if (A.getName() != " " && B.getName() != " ")
+    {
+      name += "min_C||" + A.getName() + "*C - " + B.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the effective rank of A
+    A.setRank(rank);
+    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSY - solve the linear system min_u|v - Au|
+  //           using complete orthogonal factorization
+  //  Arguments:  A     - (m x k)-matrix
+  //              v     - (m)-dim vector
+  //
+  //  Returns:    u_min  ( (k)-dim vector )
+  //----------------------------------------------------------------------------
+  Vector<double> DGELSY(const Matrix<double>& A, const Vector<double>& v)
+  {
+    if (A.getNumRows() != v.getDim())
+    {
+      std::cout << "Matrices and vector are incompatible!" << std::endl;
+      return Vector<double>("zeros",1,0.0);
+    }
+    Matrix<double> QR(A);
+    std::vector<double> u = v.getVec();
+    int info;
+    int jpvt[A.getNumCols()];
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelsy(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          1,               //  dimension of v
+                          QR.data(),       //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          u.data(),        //  pointer to elements of v
+                          1,               //  leading dimension of v
+                          jpvt,            //  workspace array
+                          rcond,           //  used for rank of A
+                          &rank);          //  the effective rank of A
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols())
+    u.resize(A.getNumCols());
+    std::string name;
+    if (A.getName() != " " && v.getName() != " ")
+    {
+      name += "min_u||" + A.getName() + "*u - " + v.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the effective rank of A
+    A.setRank(rank);
+    return Vector<double>(name,u);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSD - solve the linear system min_C|B - AC|
+  //           using SVD and the divide and conquer method
+  //  Arguments:  A     - (m x k)-matrix
+  //              B     - (m x n)-matrix
+  //
+  //  Returns:    C_min  ( (k x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGELSD(const Matrix<double>& A, const Matrix<double>& B)
+  {
+    if (A.getNumRows() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>("zeros",1,0.0);
+    }
+    Matrix<double> SVD(A);
+    std::vector<double> c = B.getArray();
+    int info;
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelsd(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          B.getNumCols(),  //  number of columns of B
+                          SVD.data(),      //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          c.data(),        //  pointer to elements of B
+                          B.getNumCols(),  //  leading dimension of B
+                          singular.data(), //  pointer to the singular values
+                          rcond,           //  condition number
+                          &rank);          //  effective rank of A.
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols() x B.getNumCols())
+    c.resize(A.getNumCols() * B.getNumCols());
+    std::string name;
+    if (A.getName() != " " && B.getName() != " ")
+    {
+      name += "min_C||" + A.getName() + "*C - " + B.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the singular values of A
+    A.setSingularValues(singular);
+    //  set the effective rank of A
+    A.setRank(rank);
+    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSD - solve the linear system min_u|v - Au|
+  //           using SVD and the divide and conquer method
+  //  Arguments:  A     - (m x k)-matrix
+  //              v     - (m)-dim vector
+  //
+  //  Returns:    u_min  ( (k)-dim vector )
+  //----------------------------------------------------------------------------
+  Vector<double> DGELSD(const Matrix<double>& A, const Vector<double>& v)
+  {
+    if (A.getNumRows() != v.getDim())
+    {
+      std::cout << "Matrices and vector are incompatible!" << std::endl;
+      return Vector<double>("zeros",1,0.0);
+    }
+    Matrix<double> SVD(A);
+    std::vector<double> u = v.getVec();
+    int info;
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelsd(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          1,               //  dimension of v
+                          SVD.data(),      //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          u.data(),        //  pointer to elements of v
+                          1,               //  leading dimension of v
+                          singular.data(), //  pointer to the singular values
+                          rcond,           //  condition number
+                          &rank);          //  effective rank of A.
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols())
+    u.resize(A.getNumCols());
+    std::string name;
+    if (A.getName() != " " && v.getName() != " ")
+    {
+      name += "min_u||" + A.getName() + "*u - " + v.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the singular values of A
+    A.setSingularValues(singular);
+    //  set the effective rank of A
+    A.setRank(rank);
+    return Vector<double>(name,u);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSS - solve the linear system min_C|B - AC|
+  //           using SVD.
+  //  Arguments:  A     - (m x k)-matrix
+  //              B     - (m x n)-matrix
+  //
+  //  Returns:    C_min  ( (k x n)-matrix )
+  //----------------------------------------------------------------------------
+  Matrix<double> DGELSS(const Matrix<double>& A, const Matrix<double>& B)
+  {
+    if (A.getNumRows() != B.getNumRows())
+    {
+      std::cout << "Matrices are incompatible!" << std::endl;
+      return Matrix<double>("zeros",1,0.0);
+    }
+    Matrix<double> SVD(A);
+    std::vector<double> c = B.getArray();
+    int info;
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelss(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          B.getNumCols(),  //  number of columns of B
+                          SVD.data(),      //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          c.data(),        //  pointer to elements of B
+                          B.getNumCols(),  //  leading dimension of B
+                          singular.data(), //  pointer to the singular values
+                          rcond,           //  condition number
+                          &rank);          //  effective rank of A.
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols() x B.getNumCols())
+    c.resize(A.getNumCols() * B.getNumCols());
+    std::string name;
+    if (A.getName() != " " && B.getName() != " ")
+    {
+      name += "min_C||" + A.getName() + "*C - " + B.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the singular values of A
+    A.setSingularValues(singular);
+    //  set the effective rank of A
+    A.setRank(rank);
+    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGELSS - solve the linear system min_u|v - Au|
+  //           using SVD.
+  //  Arguments:  A     - (m x k)-matrix
+  //              v     - (m)-dim vector
+  //
+  //  Returns:    u_min  ( (k)-dim vector )
+  //----------------------------------------------------------------------------
+  Vector<double> DGELSS(const Matrix<double>& A, const Vector<double>& v)
+  {
+    if (A.getNumRows() != v.getDim())
+    {
+      std::cout << "Matrices and vector are incompatible!" << std::endl;
+      return Vector<double>("zeros",1,0.0);
+    }
+    Matrix<double> SVD(A);
+    std::vector<double> u = v.getVec();
+    int info;
+    std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
+    double rcond;
+    int rank;
+    info = LAPACKE_dgelss(LAPACK_ROW_MAJOR,//  row major layout
+                          A.getNumRows(),  //  number of rows of A
+                          A.getNumCols(),  //  number of columns of A
+                          1,               //  dimension of v
+                          SVD.data(),      //  pointer to elements of A
+                          A.getNumCols(),  //  leading dimension of A
+                          u.data(),        //  pointer to elements of v
+                          1,               //  leading dimension of v
+                          singular.data(), //  pointer to the singular values
+                          rcond,           //  condition number
+                          &rank);          //  effective rank of A.
+    if( info > 0 )
+    {
+      std::cout << "The diagonal element " << info << " of the triangular "
+                << "factor of A is zero, so that A does not have full rank;\n"
+                << "the least squares solution could not be computed.\n";
+    }
+    //  Cut the result according to (A.getNumCols())
+    u.resize(A.getNumCols());
+    std::string name;
+    if (A.getName() != " " && v.getName() != " ")
+    {
+      name += "min_u||" + A.getName() + "*u - " + v.getName() + "|";
+    }
+    else
+    {
+      name  = " ";
+    }
+    //  set the singular values of A
+    A.setSingularValues(singular);
+    //  set the effective rank of A
+    A.setRank(rank);
     return Vector<double>(name,u);
   }
   //----------------------------------------------------------------------------
