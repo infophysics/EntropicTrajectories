@@ -105,6 +105,13 @@ namespace ET
     std::vector<std::string> taylorMonomialFactors(uint64_t dim, uint64_t n);
 
     //--------------------------------------------------------------------------
+    //  Checks that the number of elements in each rows of an
+    //  array are the same.
+    //--------------------------------------------------------------------------
+    bool checkConsistency(std::vector<std::vector<double>>& array,
+                          std::vector<std::pair<uint32_t,uint32_t>>& rows);
+
+    //--------------------------------------------------------------------------
     //  Error messages
     //  Here we have a set of functions for generating various
     //  error messages

@@ -225,6 +225,12 @@ namespace ET
   Matrix<T>::Matrix(std::string name, std::vector<std::vector<T> > array)
   : _m(array.size()), _n(array[0].size()), _name(name)
   {
+    std::vector<std::pair<uint32_t,uint32_t>> rows;
+    bool well_defined = checkConsistency(array,rows);
+    if (well_defined == false)
+    {
+      setInfo(MATRIX_INCONSISTENT_ARRAY(rows));
+    }
     std::vector<T> flat;
     for (uint32_t i = 0; i < _m; i++)
     {
@@ -343,30 +349,8 @@ namespace ET
   template<typename T>
   void Matrix<T>::setArray(std::vector<std::vector<T> > mat)
   {
-    //  check that the array is well defined
-    bool well_defined = true;
     std::vector<std::pair<uint32_t,uint32_t>> rows;
-    for (uint32_t i = 0; i < mat.size(); i++)
-    {
-      if (mat[0].size() != mat[i].size())
-      {
-        well_defined = false;
-        bool unique = false;
-        for (uint32_t j = 0; j < rows.size(); j++)
-        {
-          if (std::get<0>(rows[j]) == mat[i].size())
-          {
-            unique = true;
-            std::get<1>(rows[j]) += 1;
-          }
-        }
-        if (unique = false)
-        {
-          auto p = std::make_pair(mat[i].size(),1);
-          rows.push_back(p);//
-        }
-      }
-    }
+    bool well_defined = checkConsistency(mat,rows);
     if (well_defined == false)
     {
       setInfo(MATRIX_INCONSISTENT_ARRAY(rows));

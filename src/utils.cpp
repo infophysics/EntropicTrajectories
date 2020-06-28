@@ -21,6 +21,9 @@
 
 namespace ET
 {
+    //--------------------------------------------------------------------------
+    //  Function for turning a number into scientific notation
+    //--------------------------------------------------------------------------
     std::string scientific_not(double x, uint64_t dec)
     {
         double y;
@@ -54,9 +57,11 @@ namespace ET
                 result += "-" + std::to_string(abs(exp));
         return result;
     }
+    //--------------------------------------------------------------------------
 
-
-
+    //--------------------------------------------------------------------------
+    //  Function for generating a Cartesian product
+    //--------------------------------------------------------------------------
     std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
                                          std::vector<double> b)
     {
@@ -71,7 +76,11 @@ namespace ET
         }
         return cart;
     }
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  Function for generating a set of monomial indices
+    //--------------------------------------------------------------------------
     std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n)
     {
         int x[dim];
@@ -97,7 +106,11 @@ namespace ET
         }
         return mono;
     }
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  Generates a Taylor polynomial
+    //--------------------------------------------------------------------------
     std::vector<double> taylorPolynomial(double p, double x, uint64_t n)
     {
         std::vector<double> taylor(n);
@@ -107,7 +120,11 @@ namespace ET
         }
         return taylor;
     }
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  Generates a set of monomial expansions
+    //--------------------------------------------------------------------------
     std::vector<double> taylorMonomialExpansion(std::vector<double> p,
         std::vector<double> x, uint64_t n)
     {
@@ -133,7 +150,11 @@ namespace ET
         }
         return taylor;
     }
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  Generates a set of monomial factors of order n
+    //--------------------------------------------------------------------------
     std::vector<std::string> taylorMonomialFactors(uint64_t dim, uint64_t n)
     {
         std::vector<std::vector<uint64_t> > mono = monomial_n(dim, n);
@@ -159,6 +180,42 @@ namespace ET
         }
         return taylor;
     }
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    //  Checks if an array is consistently defined.
+    //--------------------------------------------------------------------------
+    bool checkConsistency(std::vector<std::vector<double>>& array,
+                          std::vector<std::pair<uint32_t,uint32_t>>& rows)
+    {
+      //  check that the array is well defined
+      bool well_defined = true;
+      auto p = std::make_pair(array[0].size(),1);
+      rows.push_back(p);
+      for (uint32_t i = 0; i < array.size(); i++)
+      {
+        if (array[0].size() != array[i].size())
+        {
+          well_defined = false;
+          bool unique = false;
+          for (uint32_t j = 0; j < rows.size(); j++)
+          {
+            if (std::get<0>(rows[j]) == array[i].size())
+            {
+              unique = true;
+              std::get<1>(rows[j]) += 1;
+            }
+          }
+          if (unique == false)
+          {
+            auto p = std::make_pair(array[i].size(),1);
+            rows.push_back(p);
+          }
+        }
+      }
+      return well_defined;
+    }
+    //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Error messages
@@ -171,8 +228,8 @@ namespace ET
         error += " inconsistent numbers of columns.";
         for (uint32_t i = 0; i < rows.size(); i++)
         {
-          error += "  There are " + std::to_string(std::get<0>(rows[i]))
-                +  " rows of size " + std::to_string(std::get<1>(rows[i])) + ".";
+          error += "  There are " + std::to_string(std::get<1>(rows[i]))
+                +  " rows of size " + std::to_string(std::get<0>(rows[i])) + ".";
         }
         return error;
     }
