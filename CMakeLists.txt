@@ -57,14 +57,21 @@ set (CMAKE_SHARED_LINKER_FLAGS "-L/usr/lib/x86_64-linux-gnu/lapack
                                 -lblas
                                 -lgfortran")
 
-find_library(blas libblas.a /usr/local/lib)
-MESSAGE(STATUS "BLAS location is: " ${blas})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+    "${CMAKE_SOURCE_DIR}/include/morse_cmake/modules/find"
+    "${CMAKE_SOURCE_DIR}/include/morse_cmake/modules")
+include(MorseInit)
 
-# Blas library
+MESSAGE(STATUS "CMake source directory: " ${CMAKE_SOURCE_DIR})
+MESSAGE(STATUS "CMake Module path is: " ${CMAKE_MODULE_PATH})
+#find_library(blas libblas.a /usr/local/lib)
+#MESSAGE(STATUS "BLAS location is: " ${blas})
+
+# find BLAS, LAPACK, LAPACKE, and OPENBLAS
 find_package( BLAS REQUIRED )
+find_package( CBLAS REQUIRED )
 find_package( LAPACK REQUIRED )
-
-
+find_package( LAPACKE REQUIRED )
 
 # find CBLAS library
 find_path(BLAS_INCLUDE_DIRS cblas.h
@@ -72,7 +79,10 @@ find_path(BLAS_INCLUDE_DIRS cblas.h
   /usr/local/include
   $ENV{BLAS_HOME}/include)
 MESSAGE(STATUS "CBLAS.h location is: " ${BLAS_INCLUDE_DIRS})
-include_directories(${BLAS_INCLUDE_DIRS})
+include_directories(${BLAS_INCLUDE_DIRS}
+                    ${CBLAS_INCLUDE_DIRS}
+                    ${LAPACK_INCLUDE_DIRS}
+                    ${LAPACKE_INCLUDE_DIRS})
 #-L/usr/lib/x86_64-linux-gnu/openblas -llapacke -llapack -lblas -lgfortran
 
 # Generate Python module
@@ -81,4 +91,6 @@ add_subdirectory(include/pybind11)
 pybind11_add_module(etraj ${SOURCES} "src/bindings.cpp")
 target_link_libraries(etraj PUBLIC ${MY_LIBRARIES}
                                    ${BLAS_LIBRARIES}
-                                   ${LAPACK_LIBRARIES})
+                                   ${CBLAS_LIBRARIES}
+                                   ${LAPACK_LIBRARIES}
+                                   ${LAPACKE_LIBRARIES})
