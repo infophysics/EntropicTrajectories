@@ -76,6 +76,8 @@ namespace ET
     T* data();
     std::vector<T> getRow(uint32_t i);
     std::vector<T> getCol(uint32_t i);
+    std::string getInfo();
+    int getFlag();
 
 
     //  Setters
@@ -84,6 +86,8 @@ namespace ET
     void setCol(uint32_t i, std::vector<T> col);
     void setArray(uint32_t m, std::vector<T> mat);
     void setArray(std::vector<std::vector<T> > mat);
+    void setInfo(std::string info);
+    void setFlag(int flag);
 
     //  Operator overloads
     Matrix<T>& operator=(const Matrix<T>& matrix);
@@ -205,6 +209,10 @@ namespace ET
     std::string _name;
     //  container for singular values
     std::vector<T> _singular_values;
+    //  conatiner for message status
+    int _flag;
+    //  container for messages
+    std::string _info;
     //  assign rank to -1 at initilization.
     uint32_t _rank = -1;
   };

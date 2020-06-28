@@ -39,7 +39,8 @@ namespace ET
 {
     //--------------------------------------------------------------------------
     //  Function for getting the 'type' of a variable
-    //  This was taken from a comment thread: https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
+    //  This was taken from a comment thread: https://stackoverflow.com/
+    //  questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
     //--------------------------------------------------------------------------
     template <class T>
     std::string
@@ -108,12 +109,18 @@ namespace ET
     //  Here we have a set of functions for generating various
     //  error messages
     //--------------------------------------------------------------------------
+    std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows);
     std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
-                                     const uint32_t& attempt);
+                                     const uint32_t& attempt,
+                                     const std::string& name);
     std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                             const uint32_t& m2);
+                                             const uint32_t& m2,
+                                             const std::string& name1,
+                                             const std::string& name2);
     std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                             const uint32_t& n2);
+                                             const uint32_t& n2,
+                                             const std::string& name1,
+                                             const std::string& name2);
     std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
                                              const uint32_t& m2);
     std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,

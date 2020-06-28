@@ -182,6 +182,8 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_array", &ET::Matrix<double>::getArray)
 		.def("get_row", &ET::Matrix<double>::getRow)
 		.def("get_col", &ET::Matrix<double>::getCol)
+		.def("info", &ET::Matrix<double>::getInfo)
+		.def("flag", &ET::Matrix<double>::getFlag)
 		//	setters
 		.def("set_name", &ET::Matrix<double>::setName)
 		.def("set_row", &ET::Matrix<double>::setRow)
@@ -190,6 +192,8 @@ PYBIND11_MODULE(etraj, m) {
 				 (uint32_t,std::vector<double>)) &ET::Matrix<double>::setArray)
 		.def("set_array", (void (ET::Matrix<double>::*)
 				 (std::vector<std::vector<double>>)) &ET::Matrix<double>::setArray)
+		.def("set_info", &ET::Matrix<double>::setInfo)
+		.def("set_flag", &ET::Matrix<double>::setFlag)
     //  operator overloads
 		.def(py::self == py::self)
 		.def(py::self != py::self)

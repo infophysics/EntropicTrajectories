@@ -165,17 +165,58 @@ namespace ET
     //  Here we have a set of functions for generating various
     //  error messages
     //--------------------------------------------------------------------------
-    std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
-                                     const uint32_t& attempt)
+    std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows)
     {
+        std::string error = "ERROR: Attempted to construct matrix with";
+        error += " inconsistent numbers of columns.";
+        for (uint32_t i = 0; i < rows.size(); i++)
+        {
+          error += "  There are " + std::to_string(std::get<0>(rows[i]))
+                +  " rows of size " + std::to_string(std::get<1>(rows[i])) + ".";
+        }
+        return error;
+    }
+    std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
+                                     const uint32_t& attempt,
+                                     const std::string& name)
+    {
+      std::string error = "ERROR: Attempted to access index "
+                        + std::to_string(attempt);
+      if (name != " ")
+      {
+        error += " of matrix '" + name + "'";
+      }
+      error += "; out of bounds for axis " + std::to_string(int(axis))
+             + " with size " + std::to_string(bound);
+      return error;
     }
     std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                             const uint32_t& m2)
+                                             const uint32_t& m2,
+                                             const std::string& name1,
+                                             const std::string& name2)
     {
+      std::string error = "ERROR: Attempted to multiply incompatible matrices";
+      if (name1 != " " && name2 != " ")
+      {
+        error += "'" + name1 + "' and '" + name2 + "'";
+      }
+      error += "; row sizes are m1 = " + std::to_string(m1)
+             + " and m2 = " + std::to_string(m2);
+      return error;
     }
     std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                             const uint32_t& n2)
+                                             const uint32_t& n2,
+                                             const std::string& name1,
+                                             const std::string& name2)
     {
+      std::string error = "ERROR: Attempted to multiply incompatible matrices";
+      if (name1 != " " && name2 != " ")
+      {
+        error += "'" + name1 + "' and '" + name2 + "'";
+      }
+      error += "; column sizes are n1 = " + std::to_string(n1)
+             + " and n2 = " + std::to_string(n2);
+      return error;
     }
     std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
                                              const uint32_t& m2)

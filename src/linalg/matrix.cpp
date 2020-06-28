@@ -279,11 +279,10 @@ namespace ET
   std::vector<T> Matrix<T>::getRow(uint32_t i)
   {
     std::vector<T> row(_m,0.0);
-    //  check that row exists
+    //  check that row exists, if not log error and send zero vector
     if (i >= _m)
     {
-      std::cout << "ERROR! Index " << std::to_string(i) <<
-        " exceeds matrix with dimension " + std::to_string(_m) + "!";
+      _info = MATRIX_OUT_OF_BOUNDS(0,_n,i,_name);
       return row;
     }
     for (uint32_t j = 0; j < _m; j++)
@@ -301,6 +300,16 @@ namespace ET
       col[j] = _array[j*_n + i];
     }
     return col;
+  }
+  template<typename T>
+  std::string Matrix<T>::getInfo()
+  {
+    return _info;
+  }
+  template<typename T>
+  int Matrix<T>::getFlag()
+  {
+    return _flag;
   }
   //  Setters
   template<typename T>
@@ -334,6 +343,34 @@ namespace ET
   template<typename T>
   void Matrix<T>::setArray(std::vector<std::vector<T> > mat)
   {
+    //  check that the array is well defined
+    bool well_defined = true;
+    std::vector<std::pair<uint32_t,uint32_t>> rows;
+    for (uint32_t i = 0; i < mat.size(); i++)
+    {
+      if (mat[0].size() != mat[i].size())
+      {
+        well_defined = false;
+        bool unique = false;
+        for (uint32_t j = 0; j < rows.size(); j++)
+        {
+          if (std::get<0>(rows[j]) == mat[i].size())
+          {
+            unique = true;
+            std::get<1>(rows[j]) += 1;
+          }
+        }
+        if (unique = false)
+        {
+          auto p = std::make_pair(mat[i].size(),1);
+          rows.push_back(p);
+        }
+      }
+    }
+    if (well_defined == false)
+    {
+      setInfo(MATRIX_INCONSISTENT_ARRAY(rows));
+    }
     _m = mat.size();
     _n = mat[0].size();
     _array.resize(_m*_n);
@@ -344,6 +381,16 @@ namespace ET
         _array[i*_n + j] = mat[i][j];
       }
     }
+  }
+  template<typename T>
+  void Matrix<T>::setInfo(std::string info)
+  {
+    _info = info;
+  }
+  template<typename T>
+  void Matrix<T>::setFlag(int flag)
+  {
+    _flag = flag;
   }
   //----------------------------------------------------------------------------
 
@@ -413,9 +460,16 @@ namespace ET
   template<typename T>
   Matrix<T> Matrix<T>::operator+(const Matrix<T>& matrix) const
   {
-    if(_n != matrix.getNumRows() || _m != matrix.getNumCols())
+    if(_n != matrix.getNumRows())
     {
-      std::cout << "Matrices incompatible!" << std::endl;
+      setInfo(MATRIX_ADD_INCOMPATIBLE_ROWS(_n, matrix.getNumRows(),
+                                           _name, matrix.getName()));
+      return *this;
+    }
+    if (_m != matrix.getNumCols())
+    {
+      setInfo(MATRIX_ADD_INCOMPATIBLE_COLS(_m, matrix.getNumCols(),
+                                           _name, matrix.getName()));
       return *this;
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
