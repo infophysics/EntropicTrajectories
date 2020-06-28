@@ -363,7 +363,7 @@ namespace ET
         if (unique = false)
         {
           auto p = std::make_pair(mat[i].size(),1);
-          rows.push_back(p);
+          rows.push_back(p);//
         }
       }
     }
