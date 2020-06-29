@@ -18,20 +18,21 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
 #pragma once
+
 #include <vector>
 #include <iostream>
 #include <map>
+
 #include "ugrid.h"
 #include "params.h"
 #include "utils.h"
 #include "matrix.h"
 
-
 namespace ET
 {
   template<typename T> class ScalarField;
 }
-#include "scalar.h"
+#include "scalarfield.h"
 namespace ET
 {
   template<typename T>
@@ -40,21 +41,43 @@ namespace ET
   public:
     Approximator();
     ~Approximator();
+    Approximator(int type);
+    Approximator(std::string type);
+
+    //  Getters
+    int getApproxType() const;
+    ApproxParams getApproxParams() const;
+    int getLSDriver() const;
+    int getFlag() const;
+    std::string getInfo() const;
 
     //  Setters
-    void setDerivative(std::string type);
+    void setApproxType(std::string type);
+    void setApproxParams(ApproxParams params);
+    void setLSDriver(std::string type);
+    //  Set parameters
     void set_k(uint64_t k);
     void set_n(uint64_t n);
+    void setFlag(int flag);
+    void setInfo(std::string info);
 
     //  Gradient functions
-    std::vector<T> gradient(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
-    std::vector<T> gradientMLS(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
+    std::vector<T> scalarGradient(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
+    std::vector<T> scalarGradientMLS(UGrid<T>* ugrid, ScalarField<T>* field, uint64_t index);
 
-    Matrix<T> constructBMatrix(UGrid<T>* ugrid, std::vector<uint64_t>* neighbors,
+    Matrix<T> constructTaylorMatrix(UGrid<T>* ugrid, std::vector<uint64_t>* neighbors,
       uint64_t index, uint64_t order);
+
+    //  various functions
+    std::string summary();
   private:
     enum ApproxType _type;
     struct ApproxParams _params;
+    enum LSDriver _lsdriver;
+    //  conatiner for message status
+    int _flag;
+    //  container for messages
+    std::string _info;
   };
 
 

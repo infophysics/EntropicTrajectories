@@ -156,6 +156,10 @@ namespace ET
     std::vector<T> _vec;
     //  name
     std::string _name;
+    //  conatiner for message status
+    int _flag;
+    //  container for messages
+    std::string _info;
   };
 
   //----------------------------------------------------------------------------

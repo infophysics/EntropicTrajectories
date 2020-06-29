@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  scalar.h
+//  scalarfield.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
@@ -37,21 +37,55 @@ namespace ET
   public:
     ScalarField();
     ~ScalarField();
+    ScalarField(UGrid<T>* micro);
+    ScalarField(std::string, UGrid<T>* micro);
     ScalarField(UGrid<T>* micro, std::vector<T> field);
+    ScalarField(std::string, UGrid<T>* micro, std::vector<T> field);
 
     //  Getters
+    //  get const reference to field
+    std::vector<T> getField() const;
+    //  get access to field
+    std::vector<T>* accessField();
+    //  get access to beginning of field
+    T* data();
+    std::string getName() const;
+    uint64_t getN() const;
     Approximator<T>* getApproximator();
+    int getFlag();
+    std::string getInfo();
 
     //  Setters
-    void setDerivative(std::string type);
+    void setUGrid(UGrid<T>* micro);
+    void setField(std::vector<T> field);
+    void setName(std::string name);
+    void setApproxType(std::string type);
+    void setFlag(int flag);
+    void setInfo(std::string info);
+
+    //  operator overloads
+    T& operator()(const uint32_t& i);
+    const T& operator()(const uint32_t& i) const;
+
     //  Methods for calculating derivatives
-    Matrix<T> constructBMatrix();
+    Matrix<T> constructTaylorMatrix();
 
 
   private:
+    //  number of points
+    uint64_t _N;
+    //  pointer to associated microstates
     UGrid<T>* _micro;
+    //  vector for field values
     std::vector<T> _field;
+    //  pointer to associated approximator
     Approximator<T>* _approx;
+    //  name of the field
+    std::string _name;
+    //  conatiner for message status
+    int _flag;
+    //  container for messages
+    std::string _info;
 
   };
 

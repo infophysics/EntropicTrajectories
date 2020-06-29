@@ -19,31 +19,50 @@
 //------------------------------------------------------------------------------
 #pragma once
 
-enum MatrixType
+namespace ET
 {
-  SQUARE,
-  SYMMETRIC,
-  PERSYMMETRIC,
-  CENTROSYMMETRIC,
-  ANTI_SYMMETRIC,
-  UPPER_TRIANGULAR,
-  LOWER_TRIANGULAR,
-  DIAGONAL,
-  BIDIAGONAL,
-  TRIDIAGONAL,
-  ANTI_DIAGONAL,
-  BAND,
-};
+  enum MatrixType
+  {
+    SQUARE,
+    SYMMETRIC,
+    PERSYMMETRIC,
+    CENTROSYMMETRIC,
+    ANTI_SYMMETRIC,
+    UPPER_TRIANGULAR,
+    LOWER_TRIANGULAR,
+    DIAGONAL,
+    BIDIAGONAL,
+    TRIDIAGONAL,
+    ANTI_DIAGONAL,
+    BAND,
+  };
 
-enum ApproxType
-{
-  MLS,
-  RBF,
-};
+  //  Least squares driver routine
+  enum LSDriver
+  {
+    xGELS,  //  default driver
+    xGELSY, //  complete orthogonal factorization
+    xGELSD, //  SVD with divide and conquer
+    xGELSS, //  SVD
+  };
 
-struct ApproxParams
-{
-  //  TODO:: implement a set of parameters for each type.
-  uint64_t k = 3;             //  number of nearest neighbors
-  uint64_t n = 3;             //  order of polynomial expansion
-};
+  enum ApproxType
+  {
+    MLS,
+    RBF,
+  };
+
+  //----------------------------------------------------------------------------
+  //  Struct for approximator parameters
+  //----------------------------------------------------------------------------
+  struct ApproxParams
+  {
+    //  TODO:: implement a set of parameters for each type.
+    //  Basic parameters
+    uint64_t k = 3;             //  number of nearest neighbors
+    uint64_t n = 3;             //  order of polynomial expansion
+
+    ApproxParams() {}
+  };
+  //----------------------------------------------------------------------------
+}

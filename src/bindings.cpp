@@ -28,7 +28,7 @@
 #include "linalg/vector.h"
 #include "linalg/matrix.h"
 #include "ugrid.h"
-#include "scalar.h"
+#include "scalarfield.h"
 #include "utils.h"
 #include "approximator.h"
 
@@ -469,19 +469,76 @@ PYBIND11_MODULE(etraj, m) {
 
 		py::class_<ET::ScalarField<double>>(m, "ScalarField")
 			.def(py::init<>())
+			.def(py::init<ET::UGrid<double>*>())
+			.def(py::init<std::string,ET::UGrid<double>*>())
 			.def(py::init<ET::UGrid<double>*,std::vector<double>>())
-			.def("set_derivative", &ET::ScalarField<double>::setDerivative)
+			.def(py::init<std::string,ET::UGrid<double>*,std::vector<double>>())
+			.def("get_field", &ET::ScalarField<double>::getField)
+			.def("access_field", &ET::ScalarField<double>::accessField)
+			.def("data", &ET::ScalarField<double>::data)
+			.def("get_name", &ET::ScalarField<double>::getName)
+			.def("get_N", &ET::ScalarField<double>::getN)
 			.def("get_approximator", &ET::ScalarField<double>::getApproximator)
+			.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
+			.def("set_field", &ET::ScalarField<double>::setField)
+			.def("set_name", &ET::ScalarField<double>::setName)
+			.def("set_approx_type", &ET::ScalarField<double>::setApproxType)
+			//	Operator overloads
+			.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
+			{
+				if (i < 0 || i >= self.getN())
+				{
+					throw py::index_error("Index " + std::to_string(i) +
+																" out of bounds for scalar field with "
+																+ std::to_string(self.getN()) + " points!");
+				}
+				return self(i);
+			}, py::is_operator())
+			.def("__setitem__", [](ET::ScalarField<double> &self,
+														 int i, const double& val)
+			{
+				if (i < 0 || i >= self.getN())
+				{
+					throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for scalar field with "
+															+ std::to_string(self.getN()) + " points!");
+				}
+				self(i) = val;
+			}, py::is_operator())
 			;
 
 		py::class_<ET::Approximator<double>>(m, "Approximator")
 			.def(py::init<>())
-			.def("set_derivative", &ET::Approximator<double>::setDerivative)
+			.def(py::init<int>())
+			.def(py::init<std::string>())
+			//	Getters and setters
+			.def("get_approx_type", &ET::Approximator<double>::getApproxType)
+			.def("get_approx_params", &ET::Approximator<double>::getApproxParams)
+			.def("get_lsdriver", &ET::Approximator<double>::getLSDriver)
+			.def("get_flag", &ET::Approximator<double>::getFlag)
+			.def("get_info", &ET::Approximator<double>::getInfo)
+			.def("set_approx_type", &ET::Approximator<double>::setApproxType)
+			.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
+			.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
 			.def("set_k", &ET::Approximator<double>::set_k)
 			.def("set_n", &ET::Approximator<double>::set_n)
-			.def("gradient", &ET::Approximator<double>::gradient)
-			.def("gradient_mls", &ET::Approximator<double>::gradientMLS)
-			.def("construct_B_matrix", &ET::Approximator<double>::constructBMatrix)
+			.def("set_flag", &ET::Approximator<double>::setFlag)
+			.def("set_info", &ET::Approximator<double>::setInfo)
+			//	scalar field methods
+			.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
+			.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
+			.def("construct_taylor_matrix", &ET::Approximator<double>::constructTaylorMatrix)
+			//	print functionality
+			.def("__repr__", [](const ET::Approximator<double> &app)
+			{
+					return app.summary();
+			})
+			;
+
+		py::class_<ET::ApproxParams>(m, "ApproxParams")
+			.def(py::init<>())
+			.def_readwrite("k", &ET::ApproxParams::k)
+			.def_readwrite("n", &ET::ApproxParams::n)
 			;
 
 		//	various functions
