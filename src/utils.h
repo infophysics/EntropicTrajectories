@@ -32,6 +32,7 @@
 #include <iterator>
 #include <math.h>
 #include <iostream>
+#include <numeric>
 
 #include "monomial.hpp"
 
@@ -74,35 +75,49 @@ namespace ET
     //  Method for turning a double into scientific
     //  notation with a certain number of decimal places
     //--------------------------------------------------------------------------
-    std::string scientific_not(double x, uint64_t dec);
+    template<typename T>
+    std::string scientific_not(T x, uint32_t dec);
+    template std::string scientific_not<double> (double, uint32_t);
 
     //--------------------------------------------------------------------------
     //  Cartesian product between two vectors
     //--------------------------------------------------------------------------
     std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
-                                         std::vector<double> b);
+                                                       std::vector<double> b);
+
+    //--------------------------------------------------------------------------
+    //  Multiset coefficient
+    //--------------------------------------------------------------------------
+    double multisetCoeff(uint32_t dim, uint32_t n);
 
     //--------------------------------------------------------------------------
     //  Generate an index array for all monomials up to order n of some
     //  d dimensional space.
     //--------------------------------------------------------------------------
-    std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n);
+    std::vector<std::vector<uint32_t> > monomial_n(uint32_t dim, uint32_t n);
+
+    //--------------------------------------------------------------------------
+    //  Return the index of the element of order <n_1,...,n_d>
+    //  for some monomial expansion.
+    //--------------------------------------------------------------------------
+    uint32_t getTaylorIndex(uint32_t dim, uint32_t n,
+                            std::vector<uint32_t> term);
 
     //--------------------------------------------------------------------------
     //  Method for generating a set of taylor polynomials for
     //  a delta p = (x - p).
     //--------------------------------------------------------------------------
-    std::vector<double> taylorPolynomial(double p, double x, uint64_t n);
+    std::vector<double> taylorPolynomial(double p, double x, uint32_t n);
 
     //--------------------------------------------------------------------------
     //  Generate a monomial expansion about a point p up to order n for some d
     //  dimensiona space according to a point x.
     //--------------------------------------------------------------------------
     std::vector<double> taylorMonomialExpansion(std::vector<double> p,
-        std::vector<double> x, uint64_t n);
-
+                                                std::vector<double> x,
+                                                uint32_t n);
     //--------------------------------------------------------------------------
-    std::vector<std::string> taylorMonomialFactors(uint64_t dim, uint64_t n);
+    std::vector<std::string> taylorMonomialFactors(uint32_t dim, uint32_t n);
 
     //--------------------------------------------------------------------------
     //  Checks that the number of elements in each rows of an

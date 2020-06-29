@@ -24,11 +24,12 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Function for turning a number into scientific notation
     //--------------------------------------------------------------------------
-    std::string scientific_not(double x, uint64_t dec)
+    template<typename T>
+    std::string scientific_not(T x, uint32_t dec)
     {
-        double y;
+        T y;
         int exp = int(floor(log10(abs(x))));
-        double factor = pow(10,exp);
+        T factor = pow(10,exp);
         if (factor != 0)
             y = x / abs(factor);
         else
@@ -63,13 +64,13 @@ namespace ET
     //  Function for generating a Cartesian product
     //--------------------------------------------------------------------------
     std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
-                                         std::vector<double> b)
+                                                       std::vector<double> b)
     {
         std::vector<std::vector<double> > cart(a.size());
-        for (uint64_t i = 0; i < a.size(); i++)
+        for (uint32_t i = 0; i < a.size(); i++)
         {
             cart[i].resize(b.size());
-            for (uint64_t j = 0; j < b.size(); j++)
+            for (uint32_t j = 0; j < b.size(); j++)
             {
                 cart[i][j] = a[i]*b[j];
             }
@@ -79,18 +80,26 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
+    //  Multiset coefficient
+    //--------------------------------------------------------------------------
+    double multisetCoeff(uint32_t dim, uint32_t n)
+    {
+        return i4_choose(dim + n - 1,n);
+    }
+
+    //--------------------------------------------------------------------------
     //  Function for generating a set of monomial indices
     //--------------------------------------------------------------------------
-    std::vector<std::vector<uint64_t> > monomial_n(uint64_t dim, uint64_t n)
+    std::vector<std::vector<uint32_t> > monomial_n(uint32_t dim, uint32_t n)
     {
         int x[dim];
-        for (uint64_t i = 0; i < dim-1; i++)
+        for (uint32_t i = 0; i < dim-1; i++)
         {
             x[i] = 0;
         }
         x[dim-1] = 1;
-        std::vector<std::vector<uint64_t> > mono;
-        std::vector<uint64_t> temp(x, x + dim);
+        std::vector<std::vector<uint32_t> > mono;
+        std::vector<uint32_t> temp(x, x + dim);
         mono.push_back(temp);
         int i = 1;
         for ( ; ; )
@@ -100,7 +109,7 @@ namespace ET
               break;
             }
             mono_between_next_grlex(dim, 0, n, x);
-            std::vector<uint64_t> temp(x, x + dim);
+            std::vector<uint32_t> temp(x, x + dim);
             mono.push_back(temp);
             i = i + 1;
         }
@@ -109,12 +118,50 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
+    //  Return the index of the element of order <n_1,...,n_d>
+    //  for some monomial expansion.
+    //--------------------------------------------------------------------------
+    uint32_t getTaylorIndex(uint32_t dim, uint32_t n,
+                            std::vector<uint32_t> term)
+    {
+        if (term.size() != dim)
+        {
+            std::cout << "Number of elements in exp.";
+            std::cout << " array does not equal dimension!" << std::endl;
+            return 0;
+        }
+        std::vector<int> x(dim);
+        std::vector<int> y(dim);
+        for (uint32_t i = 0; i < dim; i++)
+        {
+            x[i] = 0;
+            y[i] = term[i];
+        }
+        x[dim-1] = 1;
+        int i = 0;
+        bool reached = false;
+        while (reached != true)
+        {
+            if (x == y)
+            {
+                return i;
+            }
+            else
+            {
+                mono_between_next_grlex(dim,0,n,x.data());
+                i++;
+            }
+        }
+    }
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     //  Generates a Taylor polynomial
     //--------------------------------------------------------------------------
-    std::vector<double> taylorPolynomial(double p, double x, uint64_t n)
+    std::vector<double> taylorPolynomial(double p, double x, uint32_t n)
     {
         std::vector<double> taylor(n);
-        for (uint64_t i = 1; i < n+1; i++)
+        for (uint32_t i = 1; i < n+1; i++)
         {
             taylor[i-1] = pow((x-p),i);
         }
@@ -126,22 +173,23 @@ namespace ET
     //  Generates a set of monomial expansions
     //--------------------------------------------------------------------------
     std::vector<double> taylorMonomialExpansion(std::vector<double> p,
-        std::vector<double> x, uint64_t n)
+                                                std::vector<double> x,
+                                                uint32_t n)
     {
-        std::vector<std::vector<uint64_t> > mono = monomial_n(p.size(), n);
+        std::vector<std::vector<uint32_t> > mono = monomial_n(p.size(), n);
         std::vector<double> taylor_exps(p.size());
-        for (uint64_t i = 0; i < p.size(); i++)
+        for (uint32_t i = 0; i < p.size(); i++)
         {
             taylor_exps[i] = pow((x[i]-p[i]),1);
         }
         std::vector<double> taylor(mono.size(),1.0);
-        for (uint64_t i = 0; i < mono.size(); i++)
+        for (uint32_t i = 0; i < mono.size(); i++)
         {
-            for (uint64_t j = 0; j < p.size(); j++)
+            for (uint32_t j = 0; j < p.size(); j++)
             {
                 if (mono[i][j] > 0)
                 {
-                    for (uint64_t k = 0; k < mono[i][j]; k++)
+                    for (uint32_t k = 0; k < mono[i][j]; k++)
                     {
                         taylor[i] *= taylor_exps[j];
                     }
@@ -155,18 +203,18 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Generates a set of monomial factors of order n
     //--------------------------------------------------------------------------
-    std::vector<std::string> taylorMonomialFactors(uint64_t dim, uint64_t n)
+    std::vector<std::string> taylorMonomialFactors(uint32_t dim, uint32_t n)
     {
-        std::vector<std::vector<uint64_t> > mono = monomial_n(dim, n);
+        std::vector<std::vector<uint32_t> > mono = monomial_n(dim, n);
         std::vector<std::string> xs(dim);
-        for (uint64_t i = 0; i < dim; i++)
+        for (uint32_t i = 0; i < dim; i++)
         {
             xs[i] = "x_" + std::to_string(i);
         }
         std::vector<std::string> taylor(mono.size(),"");
-        for (uint64_t i = 0; i < mono.size(); i++)
+        for (uint32_t i = 0; i < mono.size(); i++)
         {
-            for (uint64_t j = 0; j < dim; j++)
+            for (uint32_t j = 0; j < dim; j++)
             {
                 if (mono[i][j] > 0)
                 {

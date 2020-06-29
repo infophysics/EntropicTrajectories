@@ -542,7 +542,9 @@ PYBIND11_MODULE(etraj, m) {
 			;
 
 		//	various functions
+		m.def("multiset_coeff", &ET::multisetCoeff);
 		m.def("monomial_n", &ET::monomial_n, py::return_value_policy::reference);
+		m.def("get_taylor_index", &ET::getTaylorIndex);
 		m.def("taylor_polynomial", &ET::taylorPolynomial);
 		m.def("taylor_monomial_expansion", &ET::taylorMonomialExpansion);
 		m.def("taylor_monomial_factors", &ET::taylorMonomialFactors);
