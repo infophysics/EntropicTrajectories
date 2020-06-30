@@ -192,18 +192,17 @@ namespace ET
   Matrix<T> Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
   {
-
     Monomial mono(ugrid->getDim(),order);
-    std::vector<std::vector<double> > B;
+    std::vector<std::vector<double>> B;
     for (uint64_t i = 0; i < neighbors.size(); i++)
     {
       uint64_t id = neighbors[i];
-      std::vector<double> temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
-            ugrid->getPoint(id));
+      std::vector<T> p = ugrid->getPoint(id);
+      std::vector<T> x = ugrid->getPoint(index);
+      std::vector<double> temp = mono.taylorMonomialExpansion(x,p);
       B.push_back(temp);
     }
-    Matrix<T> m("B",B);
-    return m;
+    return Matrix<T>("B",B);
   }
   //----------------------------------------------------------------------------
 

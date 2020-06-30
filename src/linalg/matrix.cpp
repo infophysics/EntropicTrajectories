@@ -1497,11 +1497,15 @@ namespace ET
       return Vector<double>("zeros",1,0.0);
     }
     Matrix<double> QR(A);
+    //  ------------------------------------------------------------------------
     //  WARNING: while A can be a general m x n matrix, the vector u
-    //  must have as many rows as the number of columns of A.
-    //  otherwise we get a segfault.  Thus, u is initialized with
-    //  dim = A.getNumCols() with zeros.  Then, the first v.getDim()
-    //  elements are filled with v's elements.
+    //  must have at least as many rows as the number of columns of A,
+    //  otherwise we get a segfault from LAPACK.  To prevent this, u
+    //  is initialized with _dim = A.getNumCols() with zeros.  Then, the
+    //  first v.getDim() elements are filled with v's elements.
+    //  (N. Carrara - 6/30/2020)
+    //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
+    //--------------------------------------------------------------------------
     std::vector<double> u(A.getNumCols(),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)
     {
@@ -1609,8 +1613,20 @@ namespace ET
       return Vector<double>("zeros",1,0.0);
     }
     Matrix<double> QR(A);
-    std::vector<double> u = v.getVec();
-    int info;
+    //  ------------------------------------------------------------------------
+    //  WARNING: while A can be a general m x n matrix, the vector u
+    //  must have at least as many rows as the number of columns of A,
+    //  otherwise we get a segfault from LAPACK.  To prevent this, u
+    //  is initialized with _dim = A.getNumCols() with zeros.  Then, the
+    //  first v.getDim() elements are filled with v's elements.
+    //  (N. Carrara - 6/30/2020)
+    //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
+    //--------------------------------------------------------------------------
+    std::vector<double> u(A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < v.getDim(); i++)
+    {
+      u[i] = v(i);
+    }    int info;
     int jpvt[A.getNumCols()];
     double rcond;
     int rank;
@@ -1721,7 +1737,20 @@ namespace ET
       return Vector<double>("zeros",1,0.0);
     }
     Matrix<double> SVD(A);
-    std::vector<double> u = v.getVec();
+    //  ------------------------------------------------------------------------
+    //  WARNING: while A can be a general m x n matrix, the vector u
+    //  must have at least as many rows as the number of columns of A,
+    //  otherwise we get a segfault from LAPACK.  To prevent this, u
+    //  is initialized with _dim = A.getNumCols() with zeros.  Then, the
+    //  first v.getDim() elements are filled with v's elements.
+    //  (N. Carrara - 6/30/2020)
+    //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
+    //--------------------------------------------------------------------------
+    std::vector<double> u(A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < v.getDim(); i++)
+    {
+      u[i] = v(i);
+    }
     int info;
     std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
     double rcond;
@@ -1835,7 +1864,20 @@ namespace ET
       return Vector<double>("zeros",1,0.0);
     }
     Matrix<double> SVD(A);
-    std::vector<double> u = v.getVec();
+    //  ------------------------------------------------------------------------
+    //  WARNING: while A can be a general m x n matrix, the vector u
+    //  must have at least as many rows as the number of columns of A,
+    //  otherwise we get a segfault from LAPACK.  To prevent this, u
+    //  is initialized with _dim = A.getNumCols() with zeros.  Then, the
+    //  first v.getDim() elements are filled with v's elements.
+    //  (N. Carrara - 6/30/2020)
+    //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
+    //--------------------------------------------------------------------------
+    std::vector<double> u(A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < v.getDim(); i++)
+    {
+      u[i] = v(i);
+    }
     int info;
     std::vector<double> singular(std::min(A.getNumRows(),A.getNumCols()));
     double rcond;

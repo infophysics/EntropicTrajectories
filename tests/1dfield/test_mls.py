@@ -7,9 +7,10 @@ import time
 
 # create a random one-dimensional grid
 # between -pi and pi.
-N = 100
+N = 2000
 x = np.random.uniform(-np.pi,np.pi,N)
 
+print("Creating UGrid")
 g = UGrid(x)
 # generate the function values for f(x) = cos(x)
 f = np.cos(1.5*x)
@@ -28,26 +29,33 @@ f_neighbors = [f[i] for i in neighbors]
 
 # let's use those neighbors to approximate the derivative
 # of f(x) at x_rand.
+print("Creating approximator", flush=True)
 app = Approximator()
 # construct the B matrix for first order in the Taylor expansion
+print("Creating Taylor matrix", flush=True)
 b_matrix = app.construct_taylor_matrix(g,neighbors,i_rand,3)
+print(b_matrix)
 
 # solve the least squares problem Ax = y
 # where y is the f_neighbors
 # and x are the coefficients
+print("Creating f vector", flush=True)
 v = Vector(f_neighbors)
+print("Running DGELS", flush=True)
 f_app = et.dgelsd(b_matrix,v)
+print(f_app)
 
 # let's approximate the derivative of the entire function
-k = 5
+k = 6
 g.query_neighbors(k)
 f_der = []
 f_derr = []
 f_der_true = -1.5*np.sin(1.5*x)
-y = g.get_neighbors()
+#y = g.get_neighbors()
+print("looping...", flush=True)
 for i in range(len(x)):
     temp_neighbors = g.get_neighbors(i)
-    b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,3)
+    b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,6)
     x_neighbors = [x[m] for m in temp_neighbors]
     f_neighbors = [f[m] for m in temp_neighbors]
     v = Vector(f_neighbors)

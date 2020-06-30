@@ -238,6 +238,7 @@ namespace ET
     generateMonomial(deg);
     return taylorMonomialExpansion(x1,x2);
   }
+
   std::string Monomial::summary()
   {
     std::string s;
