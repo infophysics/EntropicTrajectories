@@ -122,7 +122,7 @@ namespace ET
   template<typename T>
   Matrix<T>::~Matrix()
   {
-    std::cout << "\nMatrix " + _name + " at location " << this << " destroyed.";
+    //std::cout << "\nMatrix " + _name + " at location " << this << " destroyed.";
   }
   //----------------------------------------------------------------------------
   //  Copy constructor
@@ -131,7 +131,7 @@ namespace ET
   template<typename T>
   Matrix<T>::Matrix(const Matrix<T>& matrix)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array = matrix._array;
     _m = matrix.getNumRows();
     _n = matrix.getNumCols();
@@ -152,34 +152,34 @@ namespace ET
   template<typename T>
   Matrix<T>::Matrix(uint32_t m) : _m(m), _n(m), _name(" ")
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n,0.0);
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m)
   : _m(m), _n(m), _name(name)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n,0.0);
   }
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n) : _m(m), _n(n), _name(" ")
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n,0.0);
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n)
   : _m(m), _n(n), _name(name)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n,0.0);
   }
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n, const T& init)
   : _m(m), _n(n), _name(" ")
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n, init);
   }
   template<typename T>
@@ -187,7 +187,7 @@ namespace ET
     uint32_t n, const T& init)
   : _m(m), _n(n), _name(name)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     _array.resize(_m*_n, init);
   }
   //  Notice that the following methods do not MOVE the vectors so that they
@@ -202,25 +202,25 @@ namespace ET
   Matrix<T>::Matrix(std::string name, uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(name), _array(flat)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
   }
   template<typename T>
   Matrix<T>::Matrix(uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(" "), _array(flat)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, std::vector<T> flat)
   : _m(m), _n(n), _name(name), _array(flat)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, uint32_t n, T* array)
   : _m(m), _n(n), _name(name)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     std::vector<T> flat(array, array + _m*_n);
     _array = flat;
   }
@@ -228,7 +228,7 @@ namespace ET
   Matrix<T>::Matrix(std::vector<std::vector<T> > array)
   : _m(array.size()), _n(array[0].size()), _name(" ")
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     std::vector<T> flat;
     for (uint32_t i = 0; i < _m; i++)
     {
@@ -240,7 +240,7 @@ namespace ET
   Matrix<T>::Matrix(std::string name, std::vector<std::vector<T> > array)
   : _m(array.size()), _n(array[0].size()), _name(name)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
     std::vector<std::pair<uint32_t,uint32_t>> rows;
     bool well_defined = checkConsistency(array,rows);
     if (well_defined == false)
@@ -1496,11 +1496,17 @@ namespace ET
       std::cout << "Matrices and vector are incompatible!" << std::endl;
       return Vector<double>("zeros",1,0.0);
     }
-    std::cout << "\nH1";
     Matrix<double> QR(A);
-    std::cout << "\nH2";
-    std::vector<double> u = v.getVec();
-    std::cout << "\nH3";
+    //  WARNING: while A can be a general m x n matrix, the vector u
+    //  must have as many rows as the number of columns of A.
+    //  otherwise we get a segfault.  Thus, u is initialized with
+    //  dim = A.getNumCols() with zeros.  Then, the first v.getDim()
+    //  elements are filled with v's elements.
+    std::vector<double> u(A.getNumCols(),0.0);
+    for (uint32_t i = 0; i < v.getDim(); i++)
+    {
+      u[i] = v(i);
+    }
     int info;
     info = LAPACKE_dgels(LAPACK_ROW_MAJOR,//  row major layout
                          'N',             //  don't transpose A
@@ -1518,7 +1524,6 @@ namespace ET
                 << "the least squares solution could not be computed.\n";
     }
     //  Cut the result according to (A.getNumCols())
-    std::cout << "\nH4";
     u.resize(A.getNumCols());
     std::string name;
     if (A.getName() != " " && v.getName() != " ")

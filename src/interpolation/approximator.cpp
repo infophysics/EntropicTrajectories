@@ -60,24 +60,24 @@ namespace ET
   template<typename T>
   Approximator<T>::Approximator()
   {
-    std::cout << "\nApproximator created at location " << this;
+    //std::cout << "\nApproximator created at location " << this;
     _type = 0;
     _lsdriver = 0;
   }
   template<typename T>
   Approximator<T>::~Approximator()
   {
-    std::cout << "\nApproximator at location " << this << " destroyed.";
+    //std::cout << "\nApproximator at location " << this << " destroyed.";
   }
   template<typename T>
   Approximator<T>::Approximator(int type) : _type(type)
   {
-    std::cout << "\nApproximator created at location " << this;
+    //std::cout << "\nApproximator created at location " << this;
   }
   template<typename T>
   Approximator<T>::Approximator(std::string type)
   {
-    std::cout << "\nApproximator created at location " << this;
+    //std::cout << "\nApproximator created at location " << this;
     _type = ApproxTypeMap[type];
   }
   //----------------------------------------------------------------------------
@@ -192,8 +192,7 @@ namespace ET
   Matrix<T> Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
   {
-    std::cout << "\nneighbors location: " << &neighbors;
-    std::cout << "\nGrid location: " << &ugrid;
+
     Monomial mono(ugrid->getDim(),order);
     std::vector<std::vector<double> > B;
     for (uint64_t i = 0; i < neighbors.size(); i++)

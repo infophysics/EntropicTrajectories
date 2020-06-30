@@ -91,7 +91,7 @@ namespace ET
   }
   Monomial::~Monomial()
   {
-    std::cout << "\nMonomial destroyed.";
+    //std::cout << "\nMonomial destroyed.";
   }
   Monomial::Monomial(uint32_t dim) : _dim(dim)
   {

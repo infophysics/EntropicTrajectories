@@ -10,7 +10,6 @@ import time
 N = 100
 x = np.random.uniform(-np.pi,np.pi,N)
 
-print("Creating UGrid")
 g = UGrid(x)
 # generate the function values for f(x) = cos(x)
 f = np.cos(1.5*x)
@@ -29,53 +28,32 @@ f_neighbors = [f[i] for i in neighbors]
 
 # let's use those neighbors to approximate the derivative
 # of f(x) at x_rand.
-print("Creating approximator", flush=True)
 app = Approximator()
 # construct the B matrix for first order in the Taylor expansion
-print("Creating Taylor matrix", flush=True)
 b_matrix = app.construct_taylor_matrix(g,neighbors,i_rand,3)
-print(b_matrix)
 
 # solve the least squares problem Ax = y
 # where y is the f_neighbors
 # and x are the coefficients
-print("Creating f vector", flush=True)
 v = Vector(f_neighbors)
-print("Running DGELS", flush=True)
 f_app = et.dgelsd(b_matrix,v)
-print(f_app)
 
 # let's approximate the derivative of the entire function
-k = 3
-#g.query_neighbors(k)
+k = 5
+g.query_neighbors(k)
 f_der = []
 f_derr = []
 f_der_true = -1.5*np.sin(1.5*x)
 y = g.get_neighbors()
-print("looping...", flush=True)
 for i in range(len(x)):
-    print("Iteration: ",i, flush=True)
-    print("Getting neighbors", flush=True)
     temp_neighbors = g.get_neighbors(i)
-    print("Creating Taylor matrix", flush=True)
-    del b_matrix
-    b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,5)
-    print("Getting x neighbors", flush=True)
+    b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,3)
     x_neighbors = [x[m] for m in temp_neighbors]
-    print("Getting f neighbors", flush=True)
     f_neighbors = [f[m] for m in temp_neighbors]
-    print("Creating f vector", flush=True)
-    del v
     v = Vector(f_neighbors)
-    print("Running DGELS", flush=True)
-    del f_app
     f_app = et.dgels(b_matrix,v)
-    print("here")
-    print("Adding results to f_der", flush=True)
     f_der.append(f_app[1])
     f_derr.append(f_app[2])
-print(f_der)
-print(f_derr)
 fig, axs = plt.subplots(figsize=(12,8))
 axs.scatter(x,f,color='k',label='f(x) = cos(1.5*x)')
 axs.scatter(x,f_der,color='r',label=r'$\approx df/dx$')

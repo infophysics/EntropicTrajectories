@@ -32,39 +32,39 @@ namespace ET
   template<typename T>
   UGrid<T>::UGrid() : _dim(0), _N(0)
   {
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::~UGrid()
   {
-		std::cout << "\nUGrid at location " << this << " destroyed.";
+		//std::cout << "\nUGrid at location " << this << " destroyed.";
   }
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim) : _dim(dim)
   {
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim) : _dim(dim), _name(name)
   {
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N)
   {
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim, uint64_t N)
   : _dim(dim), _N(N), _name(name)
   {
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
   }
 	//	One dimensional constructor
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<T> ugrid)
 	{
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
 		_N = ugrid.size();
 		_ugrid.resize(_N);
 		_dim = 1;
@@ -79,7 +79,7 @@ namespace ET
 	UGrid<T>::UGrid(std::vector<std::vector<T> > ugrid)
 	{
 		_N = ugrid.size();
-		std::cout << "\nUGrid created at location " << this;
+		//std::cout << "\nUGrid created at location " << this;
 		_dim = ugrid[0].size();
 		_ugrid = ugrid;
 	}
@@ -126,6 +126,10 @@ namespace ET
 	template<typename T>
 	std::vector<size_t> UGrid<T>::getNeighbors(uint64_t index)
 	{
+		if (index > _N)
+		{
+			std::cout << "Index " << std::to_string(index) << " exceeds array of length " << _N;
+		}
 		return _neighbors[index];
 	}
   //  Setters
@@ -207,11 +211,13 @@ namespace ET
     const size_t num_results = k;
     for (uint64_t i = 0; i < _N; i++)
     {
+			_neighbors[i].resize(k);
+			_distances[i].resize(k);
       std::vector<size_t> ret_indexes(num_results);
       std::vector<double> out_dists_sqr(num_results);
 
       nanoflann::KNNResultSet<double> resultSet(num_results);
-      resultSet.init(&ret_indexes[0], &out_dists_sqr[0] );
+      resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
 			kdt.index->findNeighbors(resultSet, &_ugrid[i][0], nanoflann::SearchParams(10));
 			_neighbors[i] = std::move(ret_indexes);
 			_distances[i] = std::move(out_dists_sqr);
