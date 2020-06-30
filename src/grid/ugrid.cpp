@@ -32,32 +32,39 @@ namespace ET
   template<typename T>
   UGrid<T>::UGrid() : _dim(0), _N(0)
   {
+		std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::~UGrid()
   {
+		std::cout << "\nUGrid at location " << this << " destroyed.";
   }
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim) : _dim(dim)
   {
+		std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim) : _dim(dim), _name(name)
   {
+		std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N)
   {
+		std::cout << "\nUGrid created at location " << this;
   }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim, uint64_t N)
   : _dim(dim), _N(N), _name(name)
   {
+		std::cout << "\nUGrid created at location " << this;
   }
 	//	One dimensional constructor
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<T> ugrid)
 	{
+		std::cout << "\nUGrid created at location " << this;
 		_N = ugrid.size();
 		_ugrid.resize(_N);
 		_dim = 1;
@@ -72,6 +79,7 @@ namespace ET
 	UGrid<T>::UGrid(std::vector<std::vector<T> > ugrid)
 	{
 		_N = ugrid.size();
+		std::cout << "\nUGrid created at location " << this;
 		_dim = ugrid[0].size();
 		_ugrid = ugrid;
 	}
@@ -116,9 +124,9 @@ namespace ET
 		return _distances_radius;
 	}
 	template<typename T>
-	std::vector<size_t>* UGrid<T>::getNeighbors(uint64_t index)
+	std::vector<size_t> UGrid<T>::getNeighbors(uint64_t index)
 	{
-		return &_neighbors[index];
+		return _neighbors[index];
 	}
   //  Setters
   template<typename T>
@@ -167,7 +175,7 @@ namespace ET
 
   //  points and projections
   template<typename T>
-  std::vector<T> UGrid<T>::getPoint(uint64_t i)
+  const std::vector<T>& UGrid<T>::getPoint(const uint64_t i) const
   {
     return _ugrid[i];
   }

@@ -60,20 +60,24 @@ namespace ET
   template<typename T>
   Approximator<T>::Approximator()
   {
+    std::cout << "\nApproximator created at location " << this;
     _type = 0;
     _lsdriver = 0;
   }
   template<typename T>
   Approximator<T>::~Approximator()
   {
+    std::cout << "\nApproximator at location " << this << " destroyed.";
   }
   template<typename T>
   Approximator<T>::Approximator(int type) : _type(type)
   {
+    std::cout << "\nApproximator created at location " << this;
   }
   template<typename T>
   Approximator<T>::Approximator(std::string type)
   {
+    std::cout << "\nApproximator created at location " << this;
     _type = ApproxTypeMap[type];
   }
   //----------------------------------------------------------------------------
@@ -147,46 +151,60 @@ namespace ET
   //  Methods for Scalar fields
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<T> Approximator<T>::scalarGradient(UGrid<T>* ugrid,
-    ScalarField<T>* field, uint64_t index)
+  std::vector<T> Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::shared_ptr<ScalarField<T>> field, uint64_t index)
   {
     if (_type == 0)
       return scalarGradientMLS(ugrid, field, index);
   }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //
+  //----------------------------------------------------------------------------
   template<typename T>
-  Matrix<T> Approximator<T>::constructTaylorMatrix(UGrid<T>* ugrid,
-    std::vector<uint64_t>* neighbors, uint64_t index, uint64_t order)
-  {
-    std::vector<std::vector<double> > B;
-    for (uint64_t i = 0; i < neighbors->size(); i++)
-    {
-      uint64_t id = (*neighbors)[i];
-      std::vector<double> temp = taylorMonomialExpansion(ugrid->getPoint(index),
-            ugrid->getPoint(id), order);
-      temp.push_back(1.0);
-      B.push_back(temp);
-    }
-    return Matrix<T>("B",B);
-  }
-  template<typename T>
-  std::vector<T> Approximator<T>::scalarGradientMLS(UGrid<T>* ugrid,
-    ScalarField<T>* field, uint64_t index)
+  std::vector<T> Approximator<T>::scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::shared_ptr<ScalarField<T>> field, uint64_t index)
   {
     std::vector<T> result;
-    //  TODO:: implement MLS here.
     //  First, find the nearest neighbors associated to the point specified by
     //  index.
     ugrid->queryNeighbors(_params.k);
-    std::vector<uint64_t>* neighbors = ugrid->getNeighbors(index);
+    std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
     //  Construct the matrix associated with the ugrid spacing
     Matrix<T> B = constructTaylorMatrix(ugrid, neighbors, index, _params.n);
     //  Construct the vector of field values associated to each point
     std::vector<T> field_neighbors(_params.k);
     for (uint32_t i = 0; i < _params.k; i++)
     {
-      field_neighbors[i] = (*field)((*neighbors)[i]);
+      field_neighbors[i] = (*field)(neighbors[i]);
     }
-    return result;
+    Vector<T> field_vals(field_neighbors);
+    Vector<T> answer = DGELS(B,field_vals);
+    return answer.getVec();
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Matrix<T> Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
+  {
+    std::cout << "\nneighbors location: " << &neighbors;
+    std::cout << "\nGrid location: " << &ugrid;
+    Monomial mono(ugrid->getDim(),order);
+    std::vector<std::vector<double> > B;
+    for (uint64_t i = 0; i < neighbors.size(); i++)
+    {
+      uint64_t id = neighbors[i];
+      std::vector<double> temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
+            ugrid->getPoint(id));
+      B.push_back(temp);
+    }
+    Matrix<T> m("B",B);
+    return m;
   }
   //----------------------------------------------------------------------------
 

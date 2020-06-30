@@ -38,18 +38,18 @@
 
 namespace ET
 {
-    //--------------------------------------------------------------------------
-    //  Function for getting the 'type' of a variable
-    //  This was taken from a comment thread: https://stackoverflow.com/
-    //  questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
-    //--------------------------------------------------------------------------
-    template <class T>
-    std::string
-    type_name()
-    {
-        typedef typename std::remove_reference<T>::type TR;
-        std::unique_ptr<char, void(*)(void*)> own
-               (
+  //--------------------------------------------------------------------------
+  //  Function for getting the 'type' of a variable
+  //  This was taken from a comment thread: https://stackoverflow.com/
+  //  questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
+  //--------------------------------------------------------------------------
+  template <class T>
+  std::string
+  type_name()
+  {
+    typedef typename std::remove_reference<T>::type TR;
+    std::unique_ptr<char, void(*)(void*)> own
+    (
     #ifndef _MSC_VER
                     abi::__cxa_demangle(typeid(TR).name(), nullptr,
                                                nullptr, nullptr),
@@ -58,100 +58,118 @@ namespace ET
     #endif
                     std::free
                );
-        std::string r = own != nullptr ? own.get() : typeid(TR).name();
-        if (std::is_const<TR>::value)
-            r += " const";
-        if (std::is_volatile<TR>::value)
-            r += " volatile";
-        if (std::is_lvalue_reference<T>::value)
-            r += "&";
-        else if (std::is_rvalue_reference<T>::value)
-            r += "&&";
-        return r;
-    }
-    //--------------------------------------------------------------------------
+    std::string r = own != nullptr ? own.get() : typeid(TR).name();
+    if (std::is_const<TR>::value)
+        r += " const";
+    if (std::is_volatile<TR>::value)
+        r += " volatile";
+    if (std::is_lvalue_reference<T>::value)
+        r += "&";
+    else if (std::is_rvalue_reference<T>::value)
+        r += "&&";
+    return r;
+  }
+  //----------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------
-    //  Method for turning a double into scientific
-    //  notation with a certain number of decimal places
-    //--------------------------------------------------------------------------
-    template<typename T>
-    std::string scientific_not(T x, uint32_t dec);
-    template std::string scientific_not<double> (double, uint32_t);
+  //----------------------------------------------------------------------------
+  //  Method for turning a double into scientific
+  //  notation with a certain number of decimal places
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::string scientific_not(T x, uint32_t dec);
+  template std::string scientific_not<double> (double, uint32_t);
 
-    //--------------------------------------------------------------------------
-    //  Cartesian product between two vectors
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
-                                                       std::vector<double> b);
+  //----------------------------------------------------------------------------
+  //  Cartesian product between two vectors
+  //----------------------------------------------------------------------------
+  std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
+                                                     std::vector<double> b);
 
-    //--------------------------------------------------------------------------
-    //  Multiset coefficient
-    //--------------------------------------------------------------------------
-    double multisetCoeff(uint32_t dim, uint32_t n);
+  //----------------------------------------------------------------------------
+  //  Class for generating d-dimensional monomials of degree n
+  //  for use in a moving least squares algorithm.
+  //----------------------------------------------------------------------------
+  class Monomial
+  {
+  public:
+    Monomial();
+    ~Monomial();
+    Monomial(uint32_t dim);
+    Monomial(uint32_t dim, uint32_t deg);
 
-    //--------------------------------------------------------------------------
-    //  Generate an index array for all monomials up to order n of some
-    //  d dimensional space.
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<uint32_t> > monomial_n(uint32_t dim, uint32_t n);
+    //  Getters
+    uint32_t getDim();
+    uint32_t getDeg();
+    std::vector<std::vector<uint32_t>> getMono();
+    std::vector<std::vector<uint32_t>> getMono(uint32_t deg);
+    std::vector<std::vector<std::string>> getMonoFactors();
+    uint32_t getMultisetCoefficient(uint32_t deg);
+    uint32_t getTaylorIndex(std::vector<uint32_t> term);
+    //  Setters
+    void setDim(uint32_t dim);
+    void setDeg(uint32_t deg);
+    void generateMonomial();
+    void generateMonomial(uint32_t deg);
 
-    //--------------------------------------------------------------------------
-    //  Return the index of the element of order <n_1,...,n_d>
-    //  for some monomial expansion.
-    //--------------------------------------------------------------------------
-    uint32_t getTaylorIndex(uint32_t dim, uint32_t n,
-                            std::vector<uint32_t> term);
+    //  Various functions
+    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
+                                                const std::vector<double>& x2);
+    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
+                                                const std::vector<double>& x2,
+                                                uint32_t deg);
+    std::string summary();
 
-    //--------------------------------------------------------------------------
-    //  Method for generating a set of taylor polynomials for
-    //  a delta p = (x - p).
-    //--------------------------------------------------------------------------
-    std::vector<double> taylorPolynomial(double p, double x, uint32_t n);
+  private:
+    uint32_t _dim;
+    uint32_t _deg;
+    std::vector<std::vector<uint32_t>> _mono;
+    std::vector<std::vector<std::string>> _monoFactors;
+    std::vector<uint32_t> _multisetCoeffs;
+    //  conatiner for message status
+    int _flag;
+    //  container for messages
+    std::string _info;
+  };
 
-    //--------------------------------------------------------------------------
-    //  Generate a monomial expansion about a point p up to order n for some d
-    //  dimensiona space according to a point x.
-    //--------------------------------------------------------------------------
-    std::vector<double> taylorMonomialExpansion(std::vector<double> p,
-                                                std::vector<double> x,
-                                                uint32_t n);
-    //--------------------------------------------------------------------------
-    std::vector<std::string> taylorMonomialFactors(uint32_t dim, uint32_t n);
+  //----------------------------------------------------------------------------
+  //  Method for generating a set of taylor polynomials for
+  //  a delta p = (x - p).
+  //----------------------------------------------------------------------------
+  std::vector<double> taylorPolynomial(double p, double x, uint32_t n);
 
-    //--------------------------------------------------------------------------
-    //  Checks that the number of elements in each rows of an
-    //  array are the same.
-    //--------------------------------------------------------------------------
-    bool checkConsistency(std::vector<std::vector<double>>& array,
-                          std::vector<std::pair<uint32_t,uint32_t>>& rows);
+  //----------------------------------------------------------------------------
+  //  Checks that the number of elements in each rows of an
+  //  array are the same.
+  //----------------------------------------------------------------------------
+  bool checkConsistency(std::vector<std::vector<double>>& array,
+                        std::vector<std::pair<uint32_t,uint32_t>>& rows);
 
-    //--------------------------------------------------------------------------
-    //  Error messages
-    //  Here we have a set of functions for generating various
-    //  error messages
-    //--------------------------------------------------------------------------
-    std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows);
-    std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
-                                     const uint32_t& attempt,
-                                     const std::string& name);
-    std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                             const uint32_t& m2,
-                                             const std::string& name1,
-                                             const std::string& name2);
-    std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                             const uint32_t& n2,
-                                             const std::string& name1,
-                                             const std::string& name2);
-    std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                             const uint32_t& m2);
-    std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                             const uint32_t& n2);
-    std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
-                                        const uint32_t& m2);
-    std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n);
+  //----------------------------------------------------------------------------
+  //  Error messages
+  //  Here we have a set of functions for generating various
+  //  error messages
+  //----------------------------------------------------------------------------
+  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows);
+  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
+                                   const uint32_t& attempt,
+                                   const std::string& name);
+  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
+                                           const uint32_t& m2,
+                                           const std::string& name1,
+                                           const std::string& name2);
+  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
+                                           const uint32_t& n2,
+                                           const std::string& name1,
+                                           const std::string& name2);
+  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
+                                           const uint32_t& m2);
+  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
+                                           const uint32_t& n2);
+  std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
+                                      const uint32_t& m2);
+  std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n);
 
-    //--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
 
 }

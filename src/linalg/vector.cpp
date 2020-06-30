@@ -81,6 +81,7 @@ namespace ET
   template<typename T>
   Vector<T>::Vector() : _dim(0), _name(" ")
   {
+    std::cout << "\nVector created at location " << this;
   }
   //----------------------------------------------------------------------------
   //  Default destructor
@@ -88,6 +89,7 @@ namespace ET
   template<typename T>
   Vector<T>::~Vector()
   {
+    std::cout << "\nVector " + _name + " at location " << this << " destroyed.";
   }
   //----------------------------------------------------------------------------
   //  Copy constructor
@@ -112,12 +114,14 @@ namespace ET
   template<typename T>
   Vector<T>::Vector(uint32_t dim) : _dim(dim), _name(" ")
   {
+    std::cout << "\nVector created at location " << this;
     _vec.resize(_dim);
   }
   template<typename T>
   Vector<T>::Vector(std::string name, uint32_t dim)
   : _dim(dim), _name(name)
   {
+    std::cout << "\nVector created at location " << this;
     _vec.resize(_dim,0.0);
   }
   //  Notice that the following methods do not MOVE the vectors so that they
@@ -126,16 +130,19 @@ namespace ET
   Vector<T>::Vector(std::vector<T> vec)
   : _dim(vec.size()), _name(" "), _vec(vec)
   {
+    std::cout << "\nVector created at location " << this;
   }
   template<typename T>
   Vector<T>::Vector(std::string name, std::vector<T> vec)
   : _dim(vec.size()), _name(name), _vec(std::move(vec))
   {
+    std::cout << "\nVector created at location " << this;
   }
   template<typename T>
   Vector<T>::Vector(uint32_t dim, const T& init)
   : _dim(dim), _name(" ")
   {
+    std::cout << "\nVector created at location " << this;
     std::vector<T> vec(_dim,init);
     _vec = vec;
   }
@@ -143,6 +150,7 @@ namespace ET
   Vector<T>::Vector(std::string name, uint32_t dim, const T& init)
   : _dim(dim), _name(name)
   {
+    std::cout << "\nVector created at location " << this;
     std::vector<T> vec(_dim,init);
     _vec = vec;
   }

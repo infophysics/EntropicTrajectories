@@ -21,6 +21,7 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 
 #include "ugrid.h"
 
@@ -37,10 +38,10 @@ namespace ET
   public:
     ScalarField();
     ~ScalarField();
-    ScalarField(UGrid<T>* micro);
-    ScalarField(std::string, UGrid<T>* micro);
-    ScalarField(UGrid<T>* micro, std::vector<T> field);
-    ScalarField(std::string, UGrid<T>* micro, std::vector<T> field);
+    ScalarField(std::shared_ptr<UGrid<T>> micro);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> micro);
+    ScalarField(std::shared_ptr<UGrid<T>> micro, std::vector<T> field);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> micro, std::vector<T> field);
 
     //  Getters
     //  get const reference to field
@@ -56,7 +57,7 @@ namespace ET
     std::string getInfo();
 
     //  Setters
-    void setUGrid(UGrid<T>* micro);
+    void setUGrid(std::shared_ptr<UGrid<T>> micro);
     void setField(std::vector<T> field);
     void setName(std::string name);
     void setApproxType(std::string type);
@@ -75,7 +76,7 @@ namespace ET
     //  number of points
     uint64_t _N;
     //  pointer to associated microstates
-    UGrid<T>* _micro;
+    std::shared_ptr<UGrid<T>> _micro;
     //  vector for field values
     std::vector<T> _field;
     //  pointer to associated approximator

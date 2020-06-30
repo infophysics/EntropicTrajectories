@@ -53,7 +53,7 @@ namespace ET
     std::vector<std::vector<double> > getDistances();
     std::vector<std::vector<size_t> > getNeighborsRadius();
     std::vector<std::vector<double> > getDistancesRadius();
-    std::vector<size_t>* getNeighbors(uint64_t index);
+    std::vector<size_t> getNeighbors(uint64_t index);
 
     //  Setters
     void setDim(uint64_t dim);
@@ -69,7 +69,7 @@ namespace ET
     const std::vector<T>& operator()(const uint64_t i) const;
 
     //  points and projections
-    std::vector<T> getPoint(uint64_t i);
+    const std::vector<T>& getPoint(const uint64_t i) const;
     std::vector<T> projection(uint64_t j);
     void setPoint(uint64_t i, std::vector<T> p);
 
