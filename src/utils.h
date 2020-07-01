@@ -72,6 +72,19 @@ namespace ET
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
+  //  Function for turning a memory address into a string
+  //----------------------------------------------------------------------------
+  template<class T>
+  std::string getMem(const T& object)
+  {
+    std::ostringstream address;
+    address << &object;
+    return address.str();
+  }
+  //----------------------------------------------------------------------------
+
+
+  //----------------------------------------------------------------------------
   //  Method for turning a double into scientific
   //  notation with a certain number of decimal places
   //----------------------------------------------------------------------------

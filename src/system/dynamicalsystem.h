@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  logger.h
+//  dynamicalsystem.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
@@ -20,25 +20,39 @@
 #pragma once
 
 #include <vector>
-#include <string>
 #include <iostream>
-#include <ostream>
-#include <stdio.h>
-#include <complex>
-#include <lapacke.h>
-#include <cblas.h>
-#include <stdint.h>
-#include <complex>
+#include <map>
+#include <memory>
+#include <vector>
+#include <string>
 
-#include "vector.h"
+#include "ugrid.h"
+#include "params.h"
 #include "utils.h"
+#include "matrix.h"
+#include "scalarfield.h"
+#include "approximator.h"
+#include "params.h"
+#include "log.h"
 
 namespace ET
 {
-
-  class Logger
+  template<typename T>
+  class DynamicalSystem
   {
+  public:
+    DynamicalSystem();
+    ~DynamicalSystem();
+    DynamicalSystem(std::string name);
 
+  private:
+    std::string _name;
+    std::shared_ptr<UGrid<T>> _ugrid;
+    std::shared_ptr<Approximator<T>> _approx;
+    std::vector<std::shared_ptr<ScalarField<T>>> _scalarFields;
+    std::shared_ptr<Log> _log;
   };
+
+  template class DynamicalSystem<double>;
 
 }

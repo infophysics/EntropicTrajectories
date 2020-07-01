@@ -3,13 +3,14 @@ cmake_minimum_required(VERSION 2.8.12)
 set(CMAKE_CXX_FLAGS "-fpermissive")
 if (CMAKE_VERSION VERSION_LESS "3.1")
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
   endif ()
 else ()
   set (CMAKE_CXX_STANDARD 17)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif ()
 
-
+MESSAGE("CMAKE FLAGS: " ${CMAKE_CXX_FLAGS})
 project(etraj LANGUAGES CXX C Fortran)
 include(FortranCInterface)
 
@@ -32,18 +33,21 @@ set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}interpolation/approximator.cpp"
             "${SOURCE_DIR}fields/scalarfield.cpp"
+            "${SOURCE_DIR}log/log.cpp"
+            "${SOURCE_DIR}system/dynamicalsystem.cpp"
             "${INCLUDE_DIR}monomial/monomial.cpp")
 
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
                     "${INCLUDE_DIR}monomial"
-                    "${INCLUDE_DIR}spdlog"
                     "${SOURCE_DIR}fields"
                     "${SOURCE_DIR}geometry"
                     "${SOURCE_DIR}grid"
                     "${SOURCE_DIR}interpolation"
                     "${SOURCE_DIR}linalg"
+                    "${SOURCE_DIR}system"
+                    "${SOURCE_DIR}log"
                     "/usr/include/x86_64-linux-gnu"
                     "/usr/lib/x86_64-linux-gnu")
 

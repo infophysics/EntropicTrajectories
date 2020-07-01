@@ -32,6 +32,7 @@
 #include "scalarfield.h"
 #include "utils.h"
 #include "approximator.h"
+#include "dynamicalsystem.h"
 
 namespace py = pybind11;
 
@@ -143,7 +144,7 @@ PYBIND11_MODULE(etraj, m) {
 		m.def("dasum", &ET::DASUM);
 		m.def("idamax",&ET::IDAMAX);
 		m.def("idamin",&ET::IDAMIN);
-		//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Matrix class
@@ -328,267 +329,300 @@ PYBIND11_MODULE(etraj, m) {
 		.def("SVD", &ET::Matrix<double>::SVD)
 		//--------------------------------------------------------------------------
 		;
-		//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
 
-		//--------------------------------------------------------------------------
-		//	Instantiations of matrices
-		//--------------------------------------------------------------------------
-		m.def("identity", (ET::Matrix<double> (*)(uint32_t)) &ET::identity_d);
-		//m.def("zeros", (ET::Matrix<double> (*)(uint32_t)) &ET::zeros);
-		//m.def("zeros", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::zeros);
-		//m.def("ones", (ET::Matrix<double> (*)(uint32_t)) &ET::ones);
-		//m.def("ones", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::ones);
-		m.def("permutation_matrix", (ET::Matrix<double> (*)(const uint32_t&,
-		      const std::vector<uint32_t>)) &ET::permutationMatrix_d);
-		//--------------------------------------------------------------------------
-		//	Level 2 BLAS functions
-		//--------------------------------------------------------------------------
-		m.def("dgemv", (ET::Vector<double> (*)(double&,ET::Matrix<double>&,
-					ET::Vector<double>&)) &ET::DGEMV);
-		m.def("dgemv", (void (*)(double&,ET::Matrix<double>&,
-					ET::Vector<double>&, double&, ET::Vector<double>&)) &ET::DGEMV);
-		m.def("dger", (ET::Matrix<double> (*)(double&,ET::Vector<double>&,
-					ET::Vector<double>&)) &ET::DGER);
-		m.def("dger", (void (*)(double&,ET::Vector<double>&,
-					ET::Vector<double>&, ET::Matrix<double>&)) &ET::DGER);
-		//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	//	Instantiations of matrices
+	//--------------------------------------------------------------------------
+	m.def("identity", (ET::Matrix<double> (*)(uint32_t)) &ET::identity_d);
+	//m.def("zeros", (ET::Matrix<double> (*)(uint32_t)) &ET::zeros);
+	//m.def("zeros", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::zeros);
+	//m.def("ones", (ET::Matrix<double> (*)(uint32_t)) &ET::ones);
+	//m.def("ones", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::ones);
+	m.def("permutation_matrix", (ET::Matrix<double> (*)(const uint32_t&,
+	      const std::vector<uint32_t>)) &ET::permutationMatrix_d);
+	//--------------------------------------------------------------------------
+	//	Level 2 BLAS functions
+	//--------------------------------------------------------------------------
+	m.def("dgemv", (ET::Vector<double> (*)(double&,ET::Matrix<double>&,
+				ET::Vector<double>&)) &ET::DGEMV);
+	m.def("dgemv", (void (*)(double&,ET::Matrix<double>&,
+				ET::Vector<double>&, double&, ET::Vector<double>&)) &ET::DGEMV);
+	m.def("dger", (ET::Matrix<double> (*)(double&,ET::Vector<double>&,
+				ET::Vector<double>&)) &ET::DGER);
+	m.def("dger", (void (*)(double&,ET::Vector<double>&,
+				ET::Vector<double>&, ET::Matrix<double>&)) &ET::DGER);
+	//--------------------------------------------------------------------------
 
-		//--------------------------------------------------------------------------
-		//  Level 3 BLAS functions
-		//--------------------------------------------------------------------------
-		m.def("dgemm", (ET::Matrix<double> (*)(const double&,
-			    const ET::Matrix<double>&, const ET::Matrix<double>&))
-					&ET::DGEMM);
-		m.def("dgemm", (void (*)(const double&, const ET::Matrix<double>&,
-			    const ET::Matrix<double>&, const double&,
-					ET::Matrix<double>&)) &ET::DGEMM);
-		//	DGEMM with no scalar "alpha"
-		m.def("dgemm", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
-			    const ET::Matrix<double>&)) &ET::DGEMM, py::keep_alive<1, 2>());
-		//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	//  Level 3 BLAS functions
+	//--------------------------------------------------------------------------
+	m.def("dgemm", (ET::Matrix<double> (*)(const double&,
+		    const ET::Matrix<double>&, const ET::Matrix<double>&))
+				&ET::DGEMM);
+	m.def("dgemm", (void (*)(const double&, const ET::Matrix<double>&,
+		    const ET::Matrix<double>&, const double&,
+				ET::Matrix<double>&)) &ET::DGEMM);
+	//	DGEMM with no scalar "alpha"
+	m.def("dgemm", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+		    const ET::Matrix<double>&)) &ET::DGEMM, py::keep_alive<1, 2>());
+	//--------------------------------------------------------------------------
 
-		//--------------------------------------------------------------------------
-		//	LAPACK functions
-		//--------------------------------------------------------------------------
-		m.def("dgels", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
-		      const ET::Matrix<double>&)) &ET::DGELS, py::keep_alive<0, 1>());
-		m.def("dgels", (ET::Vector<double> (*)(const ET::Matrix<double>&,
-		      const ET::Vector<double>&)) &ET::DGELS, py::keep_alive<0, 1>());
-		m.def("dgelsy", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
-		      const ET::Matrix<double>&)) &ET::DGELSY);
-		m.def("dgelsy", (ET::Vector<double> (*)(const ET::Matrix<double>&,
-		      const ET::Vector<double>&)) &ET::DGELSY);
-		m.def("dgelsd", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
-		      const ET::Matrix<double>&)) &ET::DGELSD);
-		m.def("dgelsd", (ET::Vector<double> (*)(const ET::Matrix<double>&,
-		      const ET::Vector<double>&)) &ET::DGELSD);
-		m.def("dgelss", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
-		      const ET::Matrix<double>&)) &ET::DGELSS);
-		m.def("dgelss", (ET::Vector<double> (*)(const ET::Matrix<double>&,
-		      const ET::Vector<double>&)) &ET::DGELSS);
-		m.def("dgetrf", &ET::DGETRF);
-		m.def("dgetrf_l_u", &ET::DGETRF_L_U);
-		m.def("dgetrf_lu", &ET::DGETRF_LU);
-		m.def("dgetrf_plu", &ET::DGETRF_PLU);
-		m.def("dgeqrf", &ET::DGEQRF);
-		m.def("dorgqr", &ET::DORGQR);
-		m.def("dgeqrf_qr", &ET::DGEQRF_QR);
-		m.def("dgesvd", &ET::DGESVD);
-		m.def("dgesvd_svd", &ET::DGESVD_SVD);
-		m.def("dgesdd", &ET::DGESDD);
-		m.def("dgesdd_svd", &ET::DGESDD_SVD);
-		//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+	//	LAPACK functions
+	//--------------------------------------------------------------------------
+	m.def("dgels", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+	      const ET::Matrix<double>&)) &ET::DGELS, py::keep_alive<0, 1>());
+	m.def("dgels", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+	      const ET::Vector<double>&)) &ET::DGELS, py::keep_alive<0, 1>());
+	m.def("dgelsy", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+	      const ET::Matrix<double>&)) &ET::DGELSY);
+	m.def("dgelsy", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+	      const ET::Vector<double>&)) &ET::DGELSY);
+	m.def("dgelsd", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+	      const ET::Matrix<double>&)) &ET::DGELSD);
+	m.def("dgelsd", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+	      const ET::Vector<double>&)) &ET::DGELSD);
+	m.def("dgelss", (ET::Matrix<double> (*)(const ET::Matrix<double>&,
+	      const ET::Matrix<double>&)) &ET::DGELSS);
+	m.def("dgelss", (ET::Vector<double> (*)(const ET::Matrix<double>&,
+	      const ET::Vector<double>&)) &ET::DGELSS);
+	m.def("dgetrf", &ET::DGETRF);
+	m.def("dgetrf_l_u", &ET::DGETRF_L_U);
+	m.def("dgetrf_lu", &ET::DGETRF_LU);
+	m.def("dgetrf_plu", &ET::DGETRF_PLU);
+	m.def("dgeqrf", &ET::DGEQRF);
+	m.def("dorgqr", &ET::DORGQR);
+	m.def("dgeqrf_qr", &ET::DGEQRF_QR);
+	m.def("dgesvd", &ET::DGESVD);
+	m.def("dgesvd_svd", &ET::DGESVD_SVD);
+	m.def("dgesdd", &ET::DGESDD);
+	m.def("dgesdd_svd", &ET::DGESDD_SVD);
+	//--------------------------------------------------------------------------
 
-		py::class_<ET::UGrid<double>, std::shared_ptr<ET::UGrid<double>>>(m, "UGrid")
-			.def(py::init<>())
-			.def(py::init<uint64_t>())
-			.def(py::init<std::string, uint64_t>())
-			.def(py::init<uint64_t, uint64_t>())
-			.def(py::init<std::string, uint64_t, uint64_t>())
-			.def(py::init<std::vector<double>>(), py::keep_alive<1, 2>())
-			.def(py::init<std::vector<std::vector<double>>>(), py::keep_alive<1, 2>())
-			//	getters
-			.def("get_dim", &ET::UGrid<double>::getDim, py::return_value_policy::reference)
-			.def("get_N", &ET::UGrid<double>::getN, py::return_value_policy::reference)
-			.def("get_grid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
-			.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
-			.def("get_neighbors", (std::vector<std::vector<size_t>>
-					 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
-			.def("get_neighbors", (std::vector<size_t> (ET::UGrid<double>::*)
-					 (uint64_t)) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
-			.def("get_distances", &ET::UGrid<double>::getDistances, py::return_value_policy::reference)
-			.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius, py::return_value_policy::reference)
-			.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius, py::return_value_policy::reference)
-			.def("set_dim", &ET::UGrid<double>::setDim)
-			.def("set_N", &ET::UGrid<double>::setN)
-			.def("set_grid", &ET::UGrid<double>::setUGrid)
-			.def("set_name", &ET::UGrid<double>::setName)
-			//	access operators
-			.def("__getitem__", [](const ET::UGrid<double> &self,
-						std::tuple<uint64_t, uint64_t> ij)
+	//----------------------------------------------------------------------------
+	//	UGrid class
+	//----------------------------------------------------------------------------
+	py::class_<ET::UGrid<double>, std::shared_ptr<ET::UGrid<double>>>(m, "UGrid")
+		.def(py::init<>())
+		.def(py::init<uint64_t>())
+		.def(py::init<std::string, uint64_t>())
+		.def(py::init<uint64_t, uint64_t>())
+		.def(py::init<std::string, uint64_t, uint64_t>())
+		.def(py::init<std::vector<double>>(), py::keep_alive<1, 2>())
+		.def(py::init<std::vector<std::vector<double>>>(), py::keep_alive<1, 2>())
+		//	getters
+		.def("get_dim", &ET::UGrid<double>::getDim, py::return_value_policy::reference)
+		.def("get_N", &ET::UGrid<double>::getN, py::return_value_policy::reference)
+		.def("get_grid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
+		.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
+		.def("get_neighbors", (std::vector<std::vector<size_t>>
+				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
+		.def("get_neighbors", (std::vector<size_t> (ET::UGrid<double>::*)
+				 (uint64_t)) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
+		.def("get_distances", &ET::UGrid<double>::getDistances, py::return_value_policy::reference)
+		.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius, py::return_value_policy::reference)
+		.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius, py::return_value_policy::reference)
+		.def("set_dim", &ET::UGrid<double>::setDim)
+		.def("set_N", &ET::UGrid<double>::setN)
+		.def("set_grid", &ET::UGrid<double>::setUGrid)
+		.def("set_name", &ET::UGrid<double>::setName)
+		//	access operators
+		.def("__getitem__", [](const ET::UGrid<double> &self,
+					std::tuple<uint64_t, uint64_t> ij)
+		{
+			uint32_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getN())
 			{
-				uint32_t i, j;
-				std::tie(i, j) = ij;
-				if (i < 0 || i >= self.getN())
-				{
-					throw py::index_error("Index " + std::to_string(i) +
-																" out of bounds for array with "
-																+ std::to_string(self.getN())
-																+ " points!");
-				}
-				if (j < 0 || j >= self.getDim())
-				{
-					throw py::index_error("Index " + std::to_string(j) +
-															  " out of bounds for array with dimension "
-															  + std::to_string(self.getDim()));
-				}
-				return self(i,j);
-			}, py::is_operator())
-			.def("__setitem__", [](ET::UGrid<double> &self,
-						std::tuple<uint32_t, uint32_t> ij, const double& val)
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " points!");
+			}
+			if (j < 0 || j >= self.getDim())
 			{
-				uint32_t i, j;
-				std::tie(i, j) = ij;
-				if (i < 0 || i >= self.getN())
-				{
-					throw py::index_error("Index " + std::to_string(i) +
-																" out of bounds for array with "
-																+ std::to_string(self.getN())
-																+ " points!");
-				}
-				if (j < 0 || j >= self.getDim())
-				{
-					throw py::index_error("Index " + std::to_string(j) +
-															  " out of bounds for array with dimension "
-															  + std::to_string(self.getDim()));
-				}
-				self(i,j) = val;
-			}, py::is_operator())
-			.def("__getitem__", [](const ET::UGrid<double> &self, int i)
+				throw py::index_error("Index " + std::to_string(j) +
+														  " out of bounds for array with dimension "
+														  + std::to_string(self.getDim()));
+			}
+			return self(i,j);
+		}, py::is_operator())
+		.def("__setitem__", [](ET::UGrid<double> &self,
+					std::tuple<uint32_t, uint32_t> ij, const double& val)
+		{
+			uint32_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getN())
 			{
-				if (i < 0 || i >= self.getN())
-				{
-					throw py::index_error("Index " + std::to_string(i) +
-																" out of bounds for array with "
-																+ std::to_string(self.getN())
-																+ " rows!");
-				}
-				return self.getPoint(i);
-			}, py::is_operator())
-			.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
-			.def("query_radius", &ET::UGrid<double>::queryRadius)
-			;
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " points!");
+			}
+			if (j < 0 || j >= self.getDim())
+			{
+				throw py::index_error("Index " + std::to_string(j) +
+														  " out of bounds for array with dimension "
+														  + std::to_string(self.getDim()));
+			}
+			self(i,j) = val;
+		}, py::is_operator())
+		.def("__getitem__", [](const ET::UGrid<double> &self, int i)
+		{
+			if (i < 0 || i >= self.getN())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " rows!");
+			}
+			return self.getPoint(i);
+		}, py::is_operator())
+		.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
+		.def("query_radius", &ET::UGrid<double>::queryRadius)
+		;
+	//----------------------------------------------------------------------------
 
-		py::class_<ET::ScalarField<double>, std::shared_ptr<ET::ScalarField<double>>>(m, "ScalarField")
-			.def(py::init<>())
-			.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-			.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())
-			.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
-			.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
-			//	Getters and Setters
-			.def("get_field", &ET::ScalarField<double>::getField, py::return_value_policy::reference)
-			.def("access_field", &ET::ScalarField<double>::accessField, py::return_value_policy::reference)
-			.def("data", &ET::ScalarField<double>::data, py::return_value_policy::reference)
-			.def("get_name", &ET::ScalarField<double>::getName, py::return_value_policy::reference)
-			.def("get_N", &ET::ScalarField<double>::getN, py::return_value_policy::reference)
-			.def("get_approximator", &ET::ScalarField<double>::getApproximator, py::return_value_policy::reference)
-			.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
-			.def("set_field", &ET::ScalarField<double>::setField)
-			.def("set_name", &ET::ScalarField<double>::setName)
-			.def("set_approx_type", &ET::ScalarField<double>::setApproxType)
-			//	Operator overloads
-			.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
+	//----------------------------------------------------------------------------
+	//	ScalarField class
+	//----------------------------------------------------------------------------
+	py::class_<ET::ScalarField<double>, std::shared_ptr<ET::ScalarField<double>>>(m, "ScalarField")
+		.def(py::init<>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
+		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
+		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
+		//	Getters and Setters
+		.def("get_field", &ET::ScalarField<double>::getField, py::return_value_policy::reference)
+		.def("access_field", &ET::ScalarField<double>::accessField, py::return_value_policy::reference)
+		.def("data", &ET::ScalarField<double>::data, py::return_value_policy::reference)
+		.def("get_name", &ET::ScalarField<double>::getName, py::return_value_policy::reference)
+		.def("get_N", &ET::ScalarField<double>::getN, py::return_value_policy::reference)
+		.def("get_approximator", &ET::ScalarField<double>::getApproximator, py::return_value_policy::reference)
+		.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
+		.def("set_field", &ET::ScalarField<double>::setField)
+		.def("set_name", &ET::ScalarField<double>::setName)
+		.def("set_approx_type", &ET::ScalarField<double>::setApproxType)
+		//	Operator overloads
+		.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
+		{
+			if (i < 0 || i >= self.getN())
 			{
-				if (i < 0 || i >= self.getN())
-				{
-					throw py::index_error("Index " + std::to_string(i) +
-																" out of bounds for scalar field with "
-																+ std::to_string(self.getN()) + " points!");
-				}
-				return self(i);
-			}, py::is_operator())
-			.def("__setitem__", [](ET::ScalarField<double> &self,
-														 int i, const double& val)
-			{
-				if (i < 0 || i >= self.getN())
-				{
-					throw py::index_error("Index " + std::to_string(i) +
+				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for scalar field with "
 															+ std::to_string(self.getN()) + " points!");
-				}
-				self(i) = val;
-			}, py::is_operator())
-			;
-
-		py::class_<ET::Approximator<double>, std::shared_ptr<ET::Approximator<double>>>(m, "Approximator")
-			.def(py::init<>())
-			.def(py::init<int>())
-			.def(py::init<std::string>())
-			//	Getters and setters
-			.def("get_approx_type", &ET::Approximator<double>::getApproxType, py::return_value_policy::reference)
-			.def("get_approx_params", &ET::Approximator<double>::getApproxParams, py::return_value_policy::reference)
-			.def("get_lsdriver", &ET::Approximator<double>::getLSDriver, py::return_value_policy::reference)
-			.def("get_flag", &ET::Approximator<double>::getFlag, py::return_value_policy::reference)
-			.def("get_info", &ET::Approximator<double>::getInfo, py::return_value_policy::reference)
-			.def("set_approx_type", &ET::Approximator<double>::setApproxType)
-			.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
-			.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
-			.def("set_k", &ET::Approximator<double>::set_k)
-			.def("set_n", &ET::Approximator<double>::set_n)
-			.def("set_flag", &ET::Approximator<double>::setFlag)
-			.def("set_info", &ET::Approximator<double>::setInfo)
-			//	scalar field methods
-			.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
-			.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
-			.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
-	                                    const std::vector<uint64_t>,uint64_t,uint64_t)) &ET::Approximator<double>::constructTaylorMatrix)
-			.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
-	                                    const std::vector<uint64_t>,uint64_t,ET::Monomial&)) &ET::Approximator<double>::constructTaylorMatrix)
-			//	print functionality
-			.def("__repr__", [](const ET::Approximator<double> &app)
+			}
+			return self(i);
+		}, py::is_operator())
+		.def("__setitem__", [](ET::ScalarField<double> &self,
+													 int i, const double& val)
+		{
+			if (i < 0 || i >= self.getN())
 			{
-					return app.summary();
-			})
-			;
+				throw py::index_error("Index " + std::to_string(i) +
+														" out of bounds for scalar field with "
+														+ std::to_string(self.getN()) + " points!");
+			}
+			self(i) = val;
+		}, py::is_operator())
+		;
+	//----------------------------------------------------------------------------
 
-		py::class_<ET::ApproxParams>(m, "ApproxParams")
-			.def(py::init<>())
-			.def_readwrite("k", &ET::ApproxParams::k)
-			.def_readwrite("n", &ET::ApproxParams::n)
-			;
+	//----------------------------------------------------------------------------
+	//	Approximator class
+	//----------------------------------------------------------------------------
+	py::class_<ET::Approximator<double>, std::shared_ptr<ET::Approximator<double>>>(m, "Approximator")
+		.def(py::init<>())
+		.def(py::init<int>())
+		.def(py::init<std::string>())
+		//	Getters and setters
+		.def("get_approx_type", &ET::Approximator<double>::getApproxType, py::return_value_policy::reference)
+		.def("get_approx_params", &ET::Approximator<double>::getApproxParams, py::return_value_policy::reference)
+		.def("get_lsdriver", &ET::Approximator<double>::getLSDriver, py::return_value_policy::reference)
+		.def("get_flag", &ET::Approximator<double>::getFlag, py::return_value_policy::reference)
+		.def("get_info", &ET::Approximator<double>::getInfo, py::return_value_policy::reference)
+		.def("set_approx_type", &ET::Approximator<double>::setApproxType)
+		.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
+		.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
+		.def("set_k", &ET::Approximator<double>::set_k)
+		.def("set_n", &ET::Approximator<double>::set_n)
+		.def("set_flag", &ET::Approximator<double>::setFlag)
+		.def("set_info", &ET::Approximator<double>::setInfo)
+		//	scalar field methods
+		.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
+		.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
+		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
+                                    const std::vector<uint64_t>,uint64_t,uint64_t)) &ET::Approximator<double>::constructTaylorMatrix)
+		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
+                                    const std::vector<uint64_t>,uint64_t,ET::Monomial&)) &ET::Approximator<double>::constructTaylorMatrix)
+		//	print functionality
+		.def("__repr__", [](const ET::Approximator<double> &app)
+		{
+				return app.summary();
+		})
+		;
+	//----------------------------------------------------------------------------
 
-		py::class_<ET::Monomial>(m, "Monomial")
-			.def(py::init<>())
-			.def(py::init<uint32_t>())
-			.def(py::init<uint32_t,uint32_t>())
-			.def("get_dim", &ET::Monomial::getDim, py::return_value_policy::reference)
-			.def("get_deg", &ET::Monomial::getDeg, py::return_value_policy::reference)
-			.def("get_mono", (std::vector<std::vector<uint32_t>>
-				   (ET::Monomial::*)()) &ET::Monomial::getMono, py::return_value_policy::reference)
-			.def("get_mono", (std::vector<std::vector<uint32_t>>
-					 (ET::Monomial::*)(uint32_t)) &ET::Monomial::getMono, py::return_value_policy::reference)
-			.def("get_mono_factors", &ET::Monomial::getMonoFactors, py::return_value_policy::reference)
-			.def("get_multiset_coeff", &ET::Monomial::getMultisetCoefficient, py::return_value_policy::reference)
-			.def("get_taylor_index", &ET::Monomial::getTaylorIndex, py::return_value_policy::reference)
-			.def("set_dim", &ET::Monomial::setDim)
-			.def("set_deg", &ET::Monomial::setDeg)
-			.def("generate_monomial", (void (ET::Monomial::*)())
-			     &ET::Monomial::generateMonomial)
-			.def("generate_monomial", (void (ET::Monomial::*)(uint32_t))
-			 		 &ET::Monomial::generateMonomial)
-			.def("taylor_monomial_expansion", (std::vector<double>
-				   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&))
-				   &ET::Monomial::taylorMonomialExpansion)
-			.def("taylor_monomial_expansion", (std::vector<double>
-		 		   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&,uint32_t))
-		 		   &ET::Monomial::taylorMonomialExpansion)
-		  //	print functionality
-			.def("__repr__", [](const ET::Monomial &mon)
-			{
-					return mon.summary();
-			})
-			;
+	//----------------------------------------------------------------------------
+	//	Approximator Parameters Struct
+	//----------------------------------------------------------------------------
+	py::class_<ET::ApproxParams>(m, "ApproxParams")
+		.def(py::init<>())
+		.def_readwrite("k", &ET::ApproxParams::k)
+		.def_readwrite("n", &ET::ApproxParams::n)
+		;
+	//----------------------------------------------------------------------------
 
-		//	various functions
-		m.def("taylor_polynomial", &ET::taylorPolynomial);
+	//----------------------------------------------------------------------------
+	//	Monomial class
+	//----------------------------------------------------------------------------
+	py::class_<ET::Monomial>(m, "Monomial")
+		.def(py::init<>())
+		.def(py::init<uint32_t>())
+		.def(py::init<uint32_t,uint32_t>())
+		.def("get_dim", &ET::Monomial::getDim, py::return_value_policy::reference)
+		.def("get_deg", &ET::Monomial::getDeg, py::return_value_policy::reference)
+		.def("get_mono", (std::vector<std::vector<uint32_t>>
+			   (ET::Monomial::*)()) &ET::Monomial::getMono, py::return_value_policy::reference)
+		.def("get_mono", (std::vector<std::vector<uint32_t>>
+				 (ET::Monomial::*)(uint32_t)) &ET::Monomial::getMono, py::return_value_policy::reference)
+		.def("get_mono_factors", &ET::Monomial::getMonoFactors, py::return_value_policy::reference)
+		.def("get_multiset_coeff", &ET::Monomial::getMultisetCoefficient, py::return_value_policy::reference)
+		.def("get_taylor_index", &ET::Monomial::getTaylorIndex, py::return_value_policy::reference)
+		.def("set_dim", &ET::Monomial::setDim)
+		.def("set_deg", &ET::Monomial::setDeg)
+		.def("generate_monomial", (void (ET::Monomial::*)())
+		     &ET::Monomial::generateMonomial)
+		.def("generate_monomial", (void (ET::Monomial::*)(uint32_t))
+		 		 &ET::Monomial::generateMonomial)
+		.def("taylor_monomial_expansion", (std::vector<double>
+			   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&))
+			   &ET::Monomial::taylorMonomialExpansion)
+		.def("taylor_monomial_expansion", (std::vector<double>
+	 		   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&,uint32_t))
+	 		   &ET::Monomial::taylorMonomialExpansion)
+	  //	print functionality
+		.def("__repr__", [](const ET::Monomial &mon)
+		{
+				return mon.summary();
+		})
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Dynamical System class
+	//----------------------------------------------------------------------------
+	py::class_<ET::DynamicalSystem<double>>(m, "DynamicalSystem")
+		.def(py::init<>())
+		.def(py::init<std::string>())
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	various functions
+	//----------------------------------------------------------------------------
+	m.def("taylor_polynomial", &ET::taylorPolynomial);
+	//----------------------------------------------------------------------------
+
 }
