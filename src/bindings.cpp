@@ -412,7 +412,7 @@ PYBIND11_MODULE(etraj, m) {
 			.def("get_N", &ET::UGrid<double>::getN, py::return_value_policy::reference)
 			.def("get_grid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
 			.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
-			.def("get_neighbors", (std::vector<std::vector<size_t> >
+			.def("get_neighbors", (std::vector<std::vector<size_t>>
 					 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
 			.def("get_neighbors", (std::vector<size_t> (ET::UGrid<double>::*)
 					 (uint64_t)) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
@@ -540,7 +540,10 @@ PYBIND11_MODULE(etraj, m) {
 			//	scalar field methods
 			.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
 			.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
-			.def("construct_taylor_matrix", &ET::Approximator<double>::constructTaylorMatrix)
+			.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
+	                                    const std::vector<uint64_t>,uint64_t,uint64_t)) &ET::Approximator<double>::constructTaylorMatrix)
+			.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
+	                                    const std::vector<uint64_t>,uint64_t,ET::Monomial&)) &ET::Approximator<double>::constructTaylorMatrix)
 			//	print functionality
 			.def("__repr__", [](const ET::Approximator<double> &app)
 			{

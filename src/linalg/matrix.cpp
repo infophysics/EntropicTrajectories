@@ -1509,7 +1509,7 @@ namespace ET
     //  WARNING: The previous correction was actually wrong.  The vector u
     //  must be initialized with std::max(A.getNumCols(),A.getNumRows()).
     //  (N. Carrara - 6/30/2020)
-    //  Error fixed with commit - 
+    //  Error fixed with commit - ab0767e605414d121ff6c8d844afc28e9867ea0f.
     //--------------------------------------------------------------------------
     std::vector<double> u(std::max(A.getNumCols(),A.getNumRows()),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)

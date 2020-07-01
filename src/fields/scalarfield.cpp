@@ -36,38 +36,38 @@ namespace ET
     std::cout << "\nScalar Field at location " << this << " destroyed.";
   }
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> micro) : _micro(micro)
+  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid) : _ugrid(ugrid)
   {
     //std::cout << "\nScalar Field created at location " << this;
-    _N = _micro->getN();
-    _approx = new Approximator<T>();
+    _N = _ugrid->getN();
+    _approx = std::make_shared<Approximator<T>>();
     _name = " ";
   }
   template<typename T>
-  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> micro)
-  : _name(name), _micro(micro)
+  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid)
+  : _name(name), _ugrid(ugrid)
   {
     //std::cout << "\nScalar Field created at location " << this;
-    _N = _micro->getN();
-    _approx = new Approximator<T>();
+    _N = _ugrid->getN();
+    _approx = std::make_shared<Approximator<T>>();
   }
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> micro, std::vector<T> field)
-  : _micro(micro), _field(field)
+  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field)
+  : _ugrid(ugrid), _field(field)
   {
     //std::cout << "\nScalar Field created at location " << this;
-    _N = micro->getN();
-    _approx = new Approximator<T>();
+    _N = ugrid->getN();
+    _approx = std::make_shared<Approximator<T>>();
     _name = " ";
   }
   template<typename T>
-  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> micro,
+  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid,
                               std::vector<T> field)
-  : _name(name), _micro(micro), _field(field)
+  : _name(name), _ugrid(ugrid), _field(field)
   {
     //std::cout << "\nScalar Field created at location " << this;
-    _N = micro->getN();
-    _approx = new Approximator<T>();
+    _N = ugrid->getN();
+    _approx = std::make_shared<Approximator<T>>();
     _name = " ";
   }
   //----------------------------------------------------------------------------
@@ -101,14 +101,29 @@ namespace ET
     return _N;
   }
   template<typename T>
-  Approximator<T>* ScalarField<T>::getApproximator()
+  uint32_t ScalarField<T>::getDim() const
+  {
+    return _dim;
+  }
+  template<typename T>
+  std::shared_ptr<Approximator<T>> ScalarField<T>::getApproximator() const
   {
     return _approx;
   }
   template<typename T>
-  void ScalarField<T>::setUGrid(std::shared_ptr<UGrid<T>> micro)
+  int ScalarField<T>::getFlag() const
   {
-    _micro = micro;
+    return _flag;
+  }
+  template<typename T>
+  std::string ScalarField<T>::getInfo() const
+  {
+    return _info;
+  }
+  template<typename T>
+  void ScalarField<T>::setUGrid(std::shared_ptr<UGrid<T>> ugrid)
+  {
+    _ugrid = ugrid;
   }
   template<typename T>
   void ScalarField<T>::setField(std::vector<T> field)
@@ -142,4 +157,13 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Methods for calculating derivatives
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<T>> ScalarField<T>::gradient()
+  {
+    return _approx->scalarGradient(_ugrid,std::make_shared<ScalarField<T>>(*this));
+  }
+  //----------------------------------------------------------------------------
 }

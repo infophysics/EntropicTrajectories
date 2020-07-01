@@ -63,16 +63,23 @@ namespace ET
     void setInfo(std::string info);
 
     //  Gradient functions
-    std::vector<T> scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                                  const std::shared_ptr<ScalarField<T>> field,
-                                  uint64_t index);
-    std::vector<T> scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
-                                     const std::shared_ptr<ScalarField<T>> field,
-                                     uint64_t index);
+    std::vector<T> scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                                      const std::shared_ptr<ScalarField<T>> field,
+                                      uint64_t index);
+    std::vector<T> scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                                          const std::shared_ptr<ScalarField<T>> field,
+                                          uint64_t index);
+    std::vector<std::vector<T>> scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+                                  const std::shared_ptr<ScalarField<T>> field);
+    std::vector<std::vector<T>> scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+                                     const std::shared_ptr<ScalarField<T>> field);
 
     Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,
                                     uint64_t index, uint64_t order);
+    Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const std::vector<uint64_t> neighbors,
+                                    uint64_t index, Monomial& mono);
     //  various functions
     std::string summary();
   private:

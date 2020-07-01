@@ -33,15 +33,15 @@ namespace ET
 namespace ET
 {
   template<typename T>
-  class ScalarField
+  class ScalarField: public std::enable_shared_from_this<ScalarField<T>>
   {
   public:
     ScalarField();
     ~ScalarField();
-    ScalarField(std::shared_ptr<UGrid<T>> micro);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> micro);
-    ScalarField(std::shared_ptr<UGrid<T>> micro, std::vector<T> field);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> micro, std::vector<T> field);
+    ScalarField(std::shared_ptr<UGrid<T>> ugrid);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid);
+    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
 
     //  Getters
     //  get const reference to field
@@ -52,12 +52,13 @@ namespace ET
     T* data();
     std::string getName() const;
     uint64_t getN() const;
-    Approximator<T>* getApproximator();
-    int getFlag();
-    std::string getInfo();
+    uint32_t getDim() const;
+    std::shared_ptr<Approximator<T>> getApproximator() const;
+    int getFlag() const;
+    std::string getInfo() const;
 
     //  Setters
-    void setUGrid(std::shared_ptr<UGrid<T>> micro);
+    void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
     void setField(std::vector<T> field);
     void setName(std::string name);
     void setApproxType(std::string type);
@@ -70,17 +71,20 @@ namespace ET
 
     //  Methods for calculating derivatives
     Matrix<T> constructTaylorMatrix();
+    std::vector<std::vector<T>> gradient();
 
 
   private:
     //  number of points
     uint64_t _N;
-    //  pointer to associated microstates
-    std::shared_ptr<UGrid<T>> _micro;
+    //  dimension
+    uint32_t _dim;
+    //  pointer to associated ugridstates
+    std::shared_ptr<UGrid<T>> _ugrid;
     //  vector for field values
     std::vector<T> _field;
     //  pointer to associated approximator
-    Approximator<T>* _approx;
+    std::shared_ptr<Approximator<T>> _approx;
     //  name of the field
     std::string _name;
     //  conatiner for message status
