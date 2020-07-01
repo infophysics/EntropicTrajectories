@@ -1,113 +1,66 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
-from etraj.etraj import Grid
+from etraj.etraj import Vector, Matrix, UGrid, Approximator, ScalarField, Monomial
+import etraj.etraj as et
 import time
+import sys
 
 
-g = Grid("10D",10)
+print("\n-----------Tests for Vector class--------------")
+print("\n-----------------------------------------------")
+
 
 N = 1000
-#   generate random 2d data
-x = np.random.normal(0,1,N)
-y = np.random.normal(0,1,N)
-data = np.vstack((x,y,x,y,y,x,y,x,x,y)).T
+x = np.random.uniform(-np.pi,np.pi,N)
+g = UGrid(x)
 
-g.set_grid(data)
-print("k neighbors search")
-#   nearest neighbor test
-start = time.time()
-g.query_neighbors(10)
-end = time.time()
-print("Nanoflann: ", end - start)
-nano_neighbors = g.get_neighbors()
-nano_distances = g.get_distances()
-start = time.time()
-tree = cKDTree(data)
-ckdtree_distances, ckdtree_neighbors = tree.query(data,10)
-end = time.time()
-print("cKDTree: ", end - start)
-print(nano_neighbors == ckdtree_neighbors)
-print(np.sqrt(nano_distances) - ckdtree_distances)
+k = 11
+n = 20
+g.query_neighbors(k)
+print("References to g: ", sys.getrefcount(g))
+print("Location of g: ", hex(id(g)))
 
-print("\nRadius search")
-start = time.time()
-g.query_radius(2.0)
-end = time.time()
-print("Nanoflann: ", end - start)
-nano_neighbors_radius = g.get_neighbors_radius()
-nano_distances_radius = g.get_distances_radius()
-start = time.time()
-tree = cKDTree(data)
-ckdtree_neighbors_radius = tree.query_ball_point(data,2.0)
-end = time.time()
-print("cKDTree: ", end - start)
-nano = [len(nano_neighbors_radius[i]) for i in range(len(nano_neighbors_radius))]
-ckdt = [len(ckdtree_neighbors_radius[i]) for i in range(len(ckdtree_neighbors_radius))]
-diff = [nano[i] - ckdt[i] for i in range(len(nano))]
-print(sum(diff))
+f = np.cos(1.5*x)
+f_der = []
+f_derr = []
 
+mon = Monomial(g.get_dim(),n)
+for i in range(len(x)):
+    point = g[i]
+    print("Point: ",point)
+    neighbors = g.get_neighbors(i)
+    print("Neighbors: ", neighbors)
+    b = []
+    for j in range(len(neighbors)):
+        b.append(mon.taylor_monomial_expansion(point,g[neighbors[j]]))
+    b_matrix = Matrix('b',b)
+    print("B Matrix: ")
+    print(b_matrix)
+    f_neighbors = [f[m] for m in neighbors]
+    v = Vector(f_neighbors)
+    print("Vector: ")
+    print(v)
+    print("References to b_matrix: ", sys.getrefcount(b_matrix))
+    print("Location of b_matrix: ", hex(id(b_matrix)))
+    print("References to v: ", sys.getrefcount(v))
+    print("Location of v: ", hex(id(v)))
+    f_app = et.dgels(b_matrix,v)
+    f_der.append(f_app[1])
+    f_derr.append(f_app[2])
 
-g = Grid("10D",10)
-#   generate random 2d data
-
-nano_times = []
-ckdtree_times = []
-nano_times_radius = []
-ckdtree_times_radius = []
-N = 10
-nums = []
-for i in range(10):
-    x = np.random.normal(0,1,N)
-    y = np.random.normal(0,1,N)
-    data = np.vstack((x,y,x,y,x,y,x,y,x,y)).T
-    g.set_grid(data)
-    start = time.time()
-    g.query_neighbors(10)
-    end = time.time()
-    nano_times.append(end - start)
-    print("Nanoflann: ", end - start)
-    nano_neighbors = g.get_neighbors()
-    nano_distances = g.get_distances()
-    start = time.time()
-    tree = cKDTree(data)
-    ckdtree_distances, ckdtree_neighbors = tree.query(data,10)
-    end = time.time()
-    ckdtree_times.append(end - start)
-    print("cKDTree: ", end - start)
-
-    print("\nRadius search")
-    start = time.time()
-    g.query_radius(2.0)
-    end = time.time()
-    nano_times_radius.append(end - start)
-    print("Nanoflann: ", end - start)
-    nano_neighbors_radius = g.get_neighbors_radius()
-    nano_distances_radius = g.get_distances_radius()
-    start = time.time()
-    tree = cKDTree(data)
-    ckdtree_neighbors_radius = tree.query_ball_point(data,2.0)
-    end = time.time()
-    ckdtree_times_radius.append(end - start)
-    print("cKDTree: ", end - start)
-    nums.append(N)
-    N += 25
-fig, axs = plt.subplots()
-axs.plot(nums,nano_times,color='r',linestyle='--',label="NanoFLANN")
-axs.plot(nums,ckdtree_times,color='k',linestyle='--',label="cKDTree")
-axs.set_xlabel("N")
-axs.set_ylabel("Time (sec)")
-axs.set_title("Time (sec) vs. N, d = 10, k = 10")
-plt.legend()
-plt.savefig("s_vs_N_d10_k10.png")
-plt.show()
-
-fig, axs = plt.subplots()
-axs.plot(nums,nano_times_radius,color='r',linestyle='--',label="NanoFLANN")
-axs.plot(nums,ckdtree_times_radius,color='k',linestyle='--',label="cKDTree")
-axs.set_xlabel("N")
-axs.set_ylabel("Time (sec)")
-axs.set_title("Time (sec) vs. N, d = 10, r = 2.0")
-plt.savefig("s_vs_N_d10_r2.png")
+print("Location of b_matrix", hex(id(b_matrix)))
+print("Location of v", hex(id(v)))
+print("Location of g", hex(id(g)))
+print("References to g: ", sys.getrefcount(g))
+print("References to b: ", sys.getrefcount(b))
+print("References to point: ", sys.getrefcount(point))
+fig, axs = plt.subplots(figsize=(12,8))
+axs.scatter(x,f,color='k',label='f(x) = cos(1.5*x)')
+axs.scatter(x,f_der,color='r',label=r'$\approx df/dx$')
+axs.scatter(x,f_derr,color='g',label=r'$\approx d^2f/dx^2$')
+axs.set_xlabel("x")
+axs.set_ylabel("f(x)")
+axs.set_title("f(x) vs. x")
 plt.legend()
 plt.show()

@@ -3,23 +3,21 @@
 #include <vector>
 #include "vector.h"
 #include "matrix.h"
-#include "grid.h"
-#include "matrix.cpp"
-#include "vector.cpp"
-#include "grid.cpp"
+#include "ugrid.h"
+#include "utils.h"
 #include <lapacke.h>
 #include <cblas.h>
 
 int main()
 {
   ET::Matrix<double> mat1("A",4,4,1.0);
-  ET::Grid<double> g("2D",2);
+  ET::UGrid<double> g("2D",2);
 
-  std::cout << mat1;
+  std::cout << mat1.summary();
 
-	ET::Matrix<double> id  = ET::identity<double>(10);
+	ET::Matrix<double> id  = ET::identity_d(10);
 
-	std::cout << id;
+	std::cout << id.summary();
 
 	unsigned int N = 10000;
 	unsigned int dim = 25;
@@ -32,8 +30,8 @@ int main()
 		for (size_t d = 0; d < dim; d++)
 			samples[i][d] = max_range * (rand() % 1000) / (1000.0);
 	}
-	g.set_grid(samples);
-	g.find_neighbors(10);
+	g.setUGrid(samples);
+	g.queryNeighbors(10);
 
 
 

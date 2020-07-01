@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 # we'll need Matrix, UGrid, and Approximator
-from etraj.etraj import Vector, Matrix, UGrid, Approximator, ScalarField
+from etraj.etraj import Vector, Matrix, UGrid, Approximator, ScalarField, Monomial
 import etraj.etraj as et
 import time
 
@@ -46,7 +46,8 @@ f_app = et.dgelsd(b_matrix,v)
 print(f_app)
 
 # let's approximate the derivative of the entire function
-k = 6
+k = 10
+n = 9
 g.query_neighbors(k)
 f_der = []
 f_derr = []
@@ -54,8 +55,18 @@ f_der_true = -1.5*np.sin(1.5*x)
 #y = g.get_neighbors()
 print("looping...", flush=True)
 for i in range(len(x)):
+    print(i)
     temp_neighbors = g.get_neighbors(i)
-    b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,6)
+    print(hex(id(temp_neighbors)))
+    #b_matrix = app.construct_taylor_matrix(g,temp_neighbors,i,6)
+    mon = Monomial(g.get_dim(),n)
+    print(hex(id(g)))
+    b = [mon.taylor_monomial_expansion(g[i],g[temp_neighbors[j]]) for j in range(k)]
+    print(hex(id(b)))
+    b_matrix = Matrix(b)
+    print(hex(id(b_matrix)))
+    print(b_matrix)
+    print(hex(id(b_matrix)))
     x_neighbors = [x[m] for m in temp_neighbors]
     f_neighbors = [f[m] for m in temp_neighbors]
     v = Vector(f_neighbors)

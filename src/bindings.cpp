@@ -37,7 +37,7 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(etraj, m) {
 
-  py::class_<ET::Vector<double>>(m, "Vector", py::buffer_protocol())
+  py::class_<ET::Vector<double>, std::shared_ptr<ET::Vector<double>>>(m, "Vector", py::buffer_protocol())
     .def(py::init<>())
 		.def(py::init<ET::Vector<double>>())
     .def(py::init<uint32_t>())
@@ -148,7 +148,7 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	//	Matrix class
 	//----------------------------------------------------------------------------
-	py::class_<ET::Matrix<double>>(m, "Matrix", py::buffer_protocol())
+	py::class_<ET::Matrix<double>,std::shared_ptr<ET::Matrix<double>>>(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
     .def(py::init<uint32_t>())

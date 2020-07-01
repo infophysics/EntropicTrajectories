@@ -196,7 +196,7 @@ namespace ET
   Matrix<T>::Matrix(uint32_t m, std::vector<T> flat)
   : _m(m), _n(m), _name(" "), _array(flat)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
   }
   template<typename T>
   Matrix<T>::Matrix(std::string name, uint32_t m, std::vector<T> flat)
@@ -1506,11 +1506,17 @@ namespace ET
     //  (N. Carrara - 6/30/2020)
     //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
     //--------------------------------------------------------------------------
-    std::vector<double> u(A.getNumCols(),0.0);
+    //  WARNING: The previous correction was actually wrong.  The vector u
+    //  must be initialized with std::max(A.getNumCols(),A.getNumRows()).
+    //  (N. Carrara - 6/30/2020)
+    //  Error fixed with commit - 
+    //--------------------------------------------------------------------------
+    std::vector<double> u(std::max(A.getNumCols(),A.getNumRows()),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)
     {
       u[i] = v(i);
     }
+    //std::cout << "\nC++ Location of v: " << &v;
     int info;
     info = LAPACKE_dgels(LAPACK_ROW_MAJOR,//  row major layout
                          'N',             //  don't transpose A
@@ -1602,7 +1608,7 @@ namespace ET
   //           using complete orthogonal factorization
   //  Arguments:  A     - (m x k)-matrix
   //              v     - (m)-dim vector
-  //
+  //A.getNumCols()
   //  Returns:    u_min  ( (k)-dim vector )
   //----------------------------------------------------------------------------
   Vector<double> DGELSY(const Matrix<double>& A, const Vector<double>& v)
@@ -1622,11 +1628,12 @@ namespace ET
     //  (N. Carrara - 6/30/2020)
     //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
     //--------------------------------------------------------------------------
-    std::vector<double> u(A.getNumCols(),0.0);
+    std::vector<double> u(std::max(A.getNumCols(),A.getNumRows()),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)
     {
       u[i] = v(i);
-    }    int info;
+    }
+    int info;
     int jpvt[A.getNumCols()];
     double rcond;
     int rank;
@@ -1746,7 +1753,7 @@ namespace ET
     //  (N. Carrara - 6/30/2020)
     //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
     //--------------------------------------------------------------------------
-    std::vector<double> u(A.getNumCols(),0.0);
+    std::vector<double> u(std::max(A.getNumCols(),A.getNumRows()),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)
     {
       u[i] = v(i);
@@ -1873,7 +1880,7 @@ namespace ET
     //  (N. Carrara - 6/30/2020)
     //  Error fixed with commit - bc555791c2ebc9aadebe44e5b74fbc367b7e2123.
     //--------------------------------------------------------------------------
-    std::vector<double> u(A.getNumCols(),0.0);
+    std::vector<double> u(std::max(A.getNumCols(),A.getNumRows()),0.0);
     for (uint32_t i = 0; i < v.getDim(); i++)
     {
       u[i] = v(i);

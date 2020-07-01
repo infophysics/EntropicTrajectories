@@ -89,7 +89,7 @@ namespace ET
   template<typename T>
   Vector<T>::~Vector()
   {
-    //std::cout << "\nVector " + _name + " at location " << this << " destroyed.";
+    //std::cout << "\nVector at location " << this << " destroyed.";
   }
   //----------------------------------------------------------------------------
   //  Copy constructor

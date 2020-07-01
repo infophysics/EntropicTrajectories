@@ -49,10 +49,10 @@ namespace ET
     uint64_t getN();
     std::vector<std::vector<T> >  getUGrid();
     std::string getName();
-    std::vector<std::vector<size_t> > getNeighbors();
-    std::vector<std::vector<double> > getDistances();
-    std::vector<std::vector<size_t> > getNeighborsRadius();
-    std::vector<std::vector<double> > getDistancesRadius();
+    std::vector<std::vector<size_t>> getNeighbors();
+    std::vector<std::vector<double>> getDistances();
+    std::vector<std::vector<size_t>> getNeighborsRadius();
+    std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(uint64_t index);
 
     //  Setters
