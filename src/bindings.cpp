@@ -674,23 +674,61 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	py::class_<ET::ScalarField<double>,
 	           std::shared_ptr<ET::ScalarField<double>>>(m, "ScalarField")
+		//--------------------------------------------------------------------------
+		//	Constructors
+		//--------------------------------------------------------------------------
 		.def(py::init<>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
 		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
-		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
+		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+			            std::vector<double>>())
+		//--------------------------------------------------------------------------
+		//	Constructors with shared loggers
+		//--------------------------------------------------------------------------
+		.def(py::init<std::shared_ptr<ET::Log>>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,
+			            std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+			            std::shared_ptr<ET::Log>>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>,
+			            std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+			            std::vector<double>,std::shared_ptr<ET::Log>>())
+		//--------------------------------------------------------------------------
 		//	Getters and Setters
-		.def("get_field", &ET::ScalarField<double>::getField, py::return_value_policy::reference)
-		.def("access_field", &ET::ScalarField<double>::accessField, py::return_value_policy::reference)
-		.def("data", &ET::ScalarField<double>::data, py::return_value_policy::reference)
-		.def("get_name", &ET::ScalarField<double>::getName, py::return_value_policy::reference)
-		.def("get_N", &ET::ScalarField<double>::getN, py::return_value_policy::reference)
-		.def("get_approximator", &ET::ScalarField<double>::getApproximator, py::return_value_policy::reference)
+		//--------------------------------------------------------------------------
+		.def("get_field", &ET::ScalarField<double>::getField,
+		     py::return_value_policy::reference)
+		.def("access_field", &ET::ScalarField<double>::accessField,
+		     py::return_value_policy::reference)
+		.def("data", &ET::ScalarField<double>::data,
+		     py::return_value_policy::reference)
+		.def("get_name", &ET::ScalarField<double>::getName,
+		     py::return_value_policy::reference)
+		.def("get_N", &ET::ScalarField<double>::getN,
+		     py::return_value_policy::reference)
+		.def("get_approximator", &ET::ScalarField<double>::getApproximator,
+		     py::return_value_policy::reference)
+		.def("get_logger", &ET::ScalarField<double>::getLogger,
+ 		     py::return_value_policy::reference)
 		.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
 		.def("set_field", &ET::ScalarField<double>::setField)
 		.def("set_name", &ET::ScalarField<double>::setName)
 		.def("set_approx_type", &ET::ScalarField<double>::setApproxType)
+		.def("output", [](const ET::ScalarField<double>& self)
+		{
+			std::string out = self.getLogger()->getOutput();
+			py::print(out);
+		})
+		.def("output", [](const ET::ScalarField<double>& self, uint64_t i)
+		{
+			std::string out = self.getLogger()->getOutput(i);
+			py::print(out);
+		})
+		//--------------------------------------------------------------------------
 		//	Operator overloads
+		//--------------------------------------------------------------------------
 		.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())
@@ -718,16 +756,35 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	//	Approximator class
 	//----------------------------------------------------------------------------
-	py::class_<ET::Approximator<double>, std::shared_ptr<ET::Approximator<double>>>(m, "Approximator")
+	py::class_<ET::Approximator<double>,
+	           std::shared_ptr<ET::Approximator<double>>>(m, "Approximator")
+		//--------------------------------------------------------------------------
+		//	Constructors
+		//--------------------------------------------------------------------------
 		.def(py::init<>())
 		.def(py::init<int>())
 		.def(py::init<std::string>())
+		//--------------------------------------------------------------------------
+		//	Constructors with shared loggers
+		//--------------------------------------------------------------------------
+		.def(py::init<std::shared_ptr<ET::Log>>())
+		.def(py::init<int,std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string,std::shared_ptr<ET::Log>>())
+		//--------------------------------------------------------------------------
 		//	Getters and setters
-		.def("get_approx_type", &ET::Approximator<double>::getApproxType, py::return_value_policy::reference)
-		.def("get_approx_params", &ET::Approximator<double>::getApproxParams, py::return_value_policy::reference)
-		.def("get_lsdriver", &ET::Approximator<double>::getLSDriver, py::return_value_policy::reference)
-		.def("get_flag", &ET::Approximator<double>::getFlag, py::return_value_policy::reference)
-		.def("get_info", &ET::Approximator<double>::getInfo, py::return_value_policy::reference)
+		//--------------------------------------------------------------------------
+		.def("get_approx_type", &ET::Approximator<double>::getApproxType,
+		     py::return_value_policy::reference)
+		.def("get_approx_params", &ET::Approximator<double>::getApproxParams,
+		     py::return_value_policy::reference)
+		.def("get_lsdriver", &ET::Approximator<double>::getLSDriver,
+		     py::return_value_policy::reference)
+		.def("get_flag", &ET::Approximator<double>::getFlag,
+		     py::return_value_policy::reference)
+		.def("get_info", &ET::Approximator<double>::getInfo,
+		     py::return_value_policy::reference)
+		 .def("get_logger", &ET::Approximator<double>::getLogger,
+  		     py::return_value_policy::reference)
 		.def("set_approx_type", &ET::Approximator<double>::setApproxType)
 		.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
 		.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
@@ -735,14 +792,28 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_n", &ET::Approximator<double>::set_n)
 		.def("set_flag", &ET::Approximator<double>::setFlag)
 		.def("set_info", &ET::Approximator<double>::setInfo)
+		.def("output", [](const ET::Approximator<double>& self)
+		{
+			std::string out = self.getLogger()->getOutput();
+			py::print(out);
+		})
+		.def("output", [](const ET::Approximator<double>& self, uint64_t i)
+		{
+			std::string out = self.getLogger()->getOutput(i);
+			py::print(out);
+		})
+		//--------------------------------------------------------------------------
 		//	scalar field methods
+		//--------------------------------------------------------------------------
 		.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
 		.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
 		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
                                     const std::vector<uint64_t>,uint64_t,uint64_t)) &ET::Approximator<double>::constructTaylorMatrix)
 		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
                                     const std::vector<uint64_t>,uint64_t,ET::Monomial&)) &ET::Approximator<double>::constructTaylorMatrix)
+		//--------------------------------------------------------------------------
 		//	print functionality
+		//--------------------------------------------------------------------------
 		.def("__repr__", [](const ET::Approximator<double> &app)
 		{
 				return app.summary();

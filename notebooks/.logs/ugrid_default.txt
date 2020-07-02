@@ -1,23 +1,26 @@
-[14:02:14] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x560335bbe4c0
-[14:02:16] [info] ET:UGrid:default: UGrid default: Setting _ugrid to array of size 100 with dimension 2
-[14:02:16] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 100 and dimension 2 for the nearest 3 neighbors
-[14:02:16] [error] ET:UGrid:default: UGrid default: Attempted to access neighbors array of size 100 with index 1000
-[14:02:16] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
-[14:02:17] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
-[14:02:17] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of dimension 2 with index 4
-[14:02:18] [info] ET:UGrid:default: UGrid default: Renaming 'default' to 'new_name'
-[14:02:18] [warning] ET:UGrid:default: UGrid new_name: New array size 101 does not match array _ugrid of size 100
-[14:02:18] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 101
-[14:02:18] [warning] ET:UGrid:default: UGrid new_name: New dimension 3 does not match array _ugrid of dimension 2
-[14:02:18] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 3
-[14:02:19] [warning] ET:UGrid:default: UGrid new_name: Attribute _N with value 101 does not match array _ugrid with size 100
-[14:02:19] [warning] ET:UGrid:default: UGrid new_name: Attribute _dim with value 3 does not match array _ugrid with dimension 2
-[14:02:19] [error] ET:UGrid:default: UGrid new_name: Attempted to query 10 neighbors for points in array _ugrid with inconsistent  attributes
-[14:02:19] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 100
-[14:02:19] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 2
-[14:02:19] [info] ET:UGrid:default: UGrid new_name: Querying each point in array _grid of size 100 and dimension 2 for the nearest 10 neighbors
-[14:02:21] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x56033663e130
-[14:02:21] [info] ET:UGrid:default: Logger passed to Unstructured Grid 'default'
-[14:03:05] [info] ET:UGrid:default: UGrid default: Renaming 'default' to 'UGrid2'
-[14:03:44] [info] ET:UGrid:default: UGrid new_name: Renaming 'new_name' to 'Parent'
-[14:03:44] [info] ET:UGrid:default: UGrid UGrid2: Renaming 'UGrid2' to 'Child'
+[15:08:29] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x559dd677fe20
+[15:08:30] [info] ET:UGrid:default: UGrid default: Setting _ugrid to array of size 100 with dimension 2
+[15:08:30] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 100 and dimension 2 for the nearest 3 neighbors
+[15:08:30] [error] ET:UGrid:default: UGrid default: Attempted to access neighbors array of size 100 with index 1000
+[15:08:30] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
+[15:08:31] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
+[15:08:31] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of dimension 2 with index 4
+[15:08:31] [info] ET:UGrid:default: UGrid default: Renaming 'default' to 'new_name'
+[15:08:31] [warning] ET:UGrid:default: UGrid new_name: New array size 101 does not match array _ugrid of size 100
+[15:08:31] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 101
+[15:08:31] [warning] ET:UGrid:default: UGrid new_name: New dimension 3 does not match array _ugrid of dimension 2
+[15:08:31] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 3
+[15:08:32] [warning] ET:UGrid:default: UGrid new_name: Attribute _N with value 101 does not match array _ugrid with size 100
+[15:08:32] [warning] ET:UGrid:default: UGrid new_name: Attribute _dim with value 3 does not match array _ugrid with dimension 2
+[15:08:32] [error] ET:UGrid:default: UGrid new_name: Attempted to query 10 neighbors for points in array _ugrid with inconsistent  attributes
+[15:08:32] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 100
+[15:08:32] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 2
+[15:08:32] [info] ET:UGrid:default: UGrid new_name: Querying each point in array _grid of size 100 and dimension 2 for the nearest 10 neighbors
+[15:08:32] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x559dd73f9cb0
+[15:08:32] [info] ET:UGrid:default: Logger passed to Unstructured Grid 'default'
+[15:08:32] [info] ET:UGrid:default: UGrid new_name: Renaming 'new_name' to 'Parent'
+[15:08:32] [info] ET:UGrid:default: UGrid default: Renaming 'default' to 'Child'
+[15:08:33] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x559dd6985cd0
+[15:08:33] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
+[15:08:33] [trace] ET:UGrid:default: Approximator 'default' created at location 0x559dd6d54190
+[15:08:33] [info] ET:UGrid:default: Logger passed to Approximator 'default'

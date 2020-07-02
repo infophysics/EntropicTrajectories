@@ -57,32 +57,125 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Constructors
   //----------------------------------------------------------------------------
-  template<typename T>
-  Approximator<T>::Approximator()
+
+	//----------------------------------------------------------------------------
+  //  Default constructor
+  //    sets name = "default"
+  //----------------------------------------------------------------------------
+	template<typename T>
+  Approximator<T>::Approximator() : _name("default")
   {
-    //std::cout << "\nApproximator created at location " << this;
     _type = 0;
     _lsdriver = 0;
+    //##########################################################################
+		_log = std::make_shared<Log>();
+		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
+		_log->TRACE("Approximator 'default' created at location "
+		            + getMem(*this));
+		//##########################################################################
   }
+	//----------------------------------------------------------------------------
+  //  Default destructor
+  //----------------------------------------------------------------------------
   template<typename T>
   Approximator<T>::~Approximator()
   {
-    //std::cout << "\nApproximator at location " << this << " destroyed.";
-  }
+		//##########################################################################
+		_log->TRACE("Approximator '" + _name
+								+ "' destroyed at location " + getMem(*this));
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+  //  Various constructors taking in arguments for
+	//
+  //----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with approximator type
+	//----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::Approximator(int type) : _type(type)
+  Approximator<T>::Approximator(int type) : _type(type), _name("default")
   {
-    //std::cout << "\nApproximator created at location " << this;
-  }
+		//##########################################################################
+		_log = std::make_shared<Log>();
+		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
+		_log->TRACE("Approximator 'default' created at location "
+								+ getMem(*this));
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+  //  Constructor taking in approximator type as a string
+  //----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::Approximator(std::string type)
+  Approximator<T>::Approximator(std::string type) : _name("default")
   {
-    //std::cout << "\nApproximator created at location " << this;
     _type = ApproxTypeMap[type];
+		//##########################################################################
+		_log = std::make_shared<Log>();
+		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
+		_log->TRACE("Approximator 'default' created at location "
+		            + getMem(*this));
+		//##########################################################################
   }
   //----------------------------------------------------------------------------
 
+	//----------------------------------------------------------------------------
+	//	Various constructors taking in shared logger
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with shared logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+  Approximator<T>::Approximator(std::shared_ptr<Log> log) : _name("default")
+  {
+    _type = 0;
+    _lsdriver = 0;
+    //##########################################################################
+		_log = log;
+		_log->TRACE("Approximator 'default' created at location "
+		            + getMem(*this));
+		_log->INFO("Logger passed to Approximator 'default'");
+		//##########################################################################
+  }
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with approximator type
+	//----------------------------------------------------------------------------
+  template<typename T>
+  Approximator<T>::Approximator(int type, std::shared_ptr<Log> log)
+	: _type(type), _name("default")
+  {
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Approximator 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Approximator 'default'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+  //  Constructor taking in approximator type as a string
   //----------------------------------------------------------------------------
+  template<typename T>
+  Approximator<T>::Approximator(std::string type, std::shared_ptr<Log> log)
+	: _name("default")
+  {
+    _type = ApproxTypeMap[type];
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Approximator 'default' created at location "
+		            + getMem(*this));
+		_log->INFO("Logger passed to Approximator 'default'");
+		//##########################################################################
+  }
+  //----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
@@ -110,6 +203,11 @@ namespace ET
   {
     return _info;
   }
+	template<typename T>
+	std::shared_ptr<Log> Approximator<T>::getLogger()
+	{
+		return _log;
+	}
   template<typename T>
   void Approximator<T>::setApproxType(std::string type)
   {

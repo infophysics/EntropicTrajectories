@@ -2,9 +2,8 @@
 //  scalarfield.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -24,7 +23,11 @@
 #include <memory>
 
 #include "ugrid.h"
+#include "log.h"
 
+//------------------------------------------------------------------------------
+//  Forward declaration of Approximator
+//------------------------------------------------------------------------------
 namespace ET
 {
   template<typename T> class Approximator;
@@ -32,23 +35,41 @@ namespace ET
 #include "approximator.h"
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Scalar fields class.
+  //----------------------------------------------------------------------------
   template<typename T>
   class ScalarField: public std::enable_shared_from_this<ScalarField<T>>
   {
   public:
+    //--------------------------------------------------------------------------
+    //  Constructors
+    //--------------------------------------------------------------------------
     ScalarField();
     ~ScalarField();
     ScalarField(std::shared_ptr<UGrid<T>> ugrid);
     ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid);
     ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+                std::vector<T> field);
+    //--------------------------------------------------------------------------
+    //  Constructors with shared loggers
+    //--------------------------------------------------------------------------
+    ScalarField(std::shared_ptr<Log> log);
+    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+                std::shared_ptr<Log> log);
+    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field,
+                std::shared_ptr<Log> log);
+    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+                std::vector<T> field, std::shared_ptr<Log> log);
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Getters
-    //  get const reference to field
+    //--------------------------------------------------------------------------
     std::vector<T> getField() const;
-    //  get access to field
     std::vector<T>* accessField();
-    //  get access to beginning of field
     T* data();
     std::string getName() const;
     uint64_t getN() const;
@@ -56,43 +77,56 @@ namespace ET
     std::shared_ptr<Approximator<T>> getApproximator() const;
     int getFlag() const;
     std::string getInfo() const;
+    std::shared_ptr<Log> getLogger();
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Setters
+    //--------------------------------------------------------------------------
     void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
     void setField(std::vector<T> field);
     void setName(std::string name);
     void setApproxType(std::string type);
     void setFlag(int flag);
     void setInfo(std::string info);
+    //--------------------------------------------------------------------------
 
-    //  operator overloads
+    //--------------------------------------------------------------------------
+    //  Operator overloads
+    //--------------------------------------------------------------------------
     T& operator()(const uint32_t& i);
     const T& operator()(const uint32_t& i) const;
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Methods for calculating derivatives
+    //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
-
+    //--------------------------------------------------------------------------
 
   private:
-    //  number of points
-    uint64_t _N;
-    //  dimension
-    uint32_t _dim;
-    //  pointer to associated ugridstates
-    std::shared_ptr<UGrid<T>> _ugrid;
-    //  vector for field values
-    std::vector<T> _field;
-    //  pointer to associated approximator
-    std::shared_ptr<Approximator<T>> _approx;
-    //  name of the field
+    //--------------------------------------------------------------------------
+    //  Basic attributes
+    //--------------------------------------------------------------------------
     std::string _name;
-    //  conatiner for message status
+    uint32_t _dim;
+    uint64_t _N;
+    std::vector<T> _field;
+    //--------------------------------------------------------------------------
+    //  Shared objects
+    //--------------------------------------------------------------------------
+    std::shared_ptr<UGrid<T>> _ugrid;
+    std::shared_ptr<Approximator<T>> _approx;
+    std::shared_ptr<Log> _log;
+
     int _flag;
-    //  container for messages
     std::string _info;
+    //--------------------------------------------------------------------------
 
   };
+  //----------------------------------------------------------------------------
 
+  //  Explicit instantiation of double
   template class ScalarField<double>;
 }

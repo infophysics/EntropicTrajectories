@@ -29,6 +29,9 @@
 #include "utils.h"
 #include "matrix.h"
 
+//------------------------------------------------------------------------------
+//  Forward declaration of ScalarField
+//------------------------------------------------------------------------------
 namespace ET
 {
   template<typename T> class ScalarField;
@@ -36,23 +39,40 @@ namespace ET
 #include "scalarfield.h"
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Approximator class.
+  //----------------------------------------------------------------------------
   template<typename T>
   class Approximator
   {
   public:
+    //--------------------------------------------------------------------------
+    //  Constructors
+    //--------------------------------------------------------------------------
     Approximator();
     ~Approximator();
     Approximator(int type);
     Approximator(std::string type);
-
+    //--------------------------------------------------------------------------
+    //  Constructors with shared loggers
+    //--------------------------------------------------------------------------
+    Approximator(std::shared_ptr<Log> log);
+    Approximator(int type, std::shared_ptr<Log> log);
+    Approximator(std::string type, std::shared_ptr<Log> log);
+    //--------------------------------------------------------------------------
     //  Getters
+    //--------------------------------------------------------------------------
     int getApproxType() const;
     ApproxParams getApproxParams() const;
     int getLSDriver() const;
     int getFlag() const;
     std::string getInfo() const;
+    std::shared_ptr<Log> getLogger();
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Setters
+    //--------------------------------------------------------------------------
     void setApproxType(std::string type);
     void setApproxParams(ApproxParams params);
     void setLSDriver(std::string type);
@@ -61,10 +81,13 @@ namespace ET
     void set_n(uint64_t n);
     void setFlag(int flag);
     void setInfo(std::string info);
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Gradient functions
+    //--------------------------------------------------------------------------
     std::vector<T> scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                                      const std::shared_ptr<ScalarField<T>> field,
+                                       const std::shared_ptr<ScalarField<T>> field,
                                       uint64_t index);
     std::vector<T> scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
                                           const std::shared_ptr<ScalarField<T>> field,
@@ -73,19 +96,38 @@ namespace ET
                                   const std::shared_ptr<ScalarField<T>> field);
     std::vector<std::vector<T>> scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
                                      const std::shared_ptr<ScalarField<T>> field);
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  MLS functions
+    //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,
                                     uint64_t index, uint64_t order);
     Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,
                                     uint64_t index, Monomial& mono);
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     //  various functions
+    //--------------------------------------------------------------------------
     std::string summary();
+    //--------------------------------------------------------------------------
+
   private:
+    //--------------------------------------------------------------------------
+    //  Basic attributes
+    //--------------------------------------------------------------------------
+    std::string _name;
     enum ApproxType _type;
     struct ApproxParams _params;
     enum LSDriver _lsdriver;
+    //--------------------------------------------------------------------------
+    //  Shared objects
+    //--------------------------------------------------------------------------
+    std::shared_ptr<Log> _log;
+
     //  conatiner for message status
     int _flag;
     //  container for messages
