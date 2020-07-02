@@ -1,2 +1,18 @@
-[22:34:46] [trace] ET:UGrid:default_3: Unstructured Grid 'default' created at location 0x556087ed9c50
-[22:35:17] [trace] ET:UGrid:default_3: Unstructured Grid 'default' destroyed at location 0x556087ed9c50
+[07:39:05] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x558144182650
+[07:39:05] [info] ET:UGrid:default: UGrid default: Setting _ugrid to array of size 100 with dimension 2
+[07:39:06] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 100 and dimension 2 for the nearest 3 neighbors
+[07:39:06] [error] ET:UGrid:default: UGrid default: Attempted to access neighbors array of size 100 with index 1000
+[07:39:06] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
+[07:39:07] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of size 100 with invalid value -1
+[07:39:07] [error] ET:UGrid:default: UGrid default: Attempted to access _ugrid array of dimension 2 with index 4
+[07:39:08] [info] ET:UGrid:default: UGrid default: Renaming 'default' to 'new_name'
+[07:39:08] [warning] ET:UGrid:default: UGrid new_name: New array size 101 does not match array _ugrid of size 100
+[07:39:08] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 101
+[07:39:08] [warning] ET:UGrid:default: UGrid new_name: New dimension 3 does not match array _ugrid of dimension 2
+[07:39:08] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 3
+[07:39:08] [warning] ET:UGrid:default: UGrid new_name: Attribute _N with value 101 does not match array _ugrid with size 100
+[07:39:08] [warning] ET:UGrid:default: UGrid new_name: Attribute _dim with value 3 does not match array _ugrid with dimension 2
+[07:39:08] [error] ET:UGrid:default: UGrid new_name: Attempted to query 10 neighbors for points in array _ugrid with inconsistent  attributes
+[07:39:09] [info] ET:UGrid:default: UGrid new_name: Setting number of elements _N to 100
+[07:39:09] [info] ET:UGrid:default: UGrid new_name: Setting dimension _dim to 2
+[07:39:09] [info] ET:UGrid:default: UGrid new_name: Querying each point in array _grid of size 100 and dimension 2 for the nearest 10 neighbors

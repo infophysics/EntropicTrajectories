@@ -419,24 +419,67 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
 				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
-		.def("get_neighbors", (std::vector<size_t> (ET::UGrid<double>::*)
-				 (uint64_t)) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
+		.def("get_neighbors", [](const ET::UGrid<double>& self, uint64_t i)
+		{
+			if (i < 0 || i >= self.getN())
+			{
+				//######################################################################
+				self.getLogger()->ERROR("UGrid " + self.getName()
+										+ ": Attempted to access neighbors array of size "
+										+ std::to_string(self.getN()) + " with index "
+										+ std::to_string(i));
+				//######################################################################
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " points!");
+			}
+			return self.getNeighbors(i);
+		}, py::return_value_policy::reference)
 		.def("get_distances", &ET::UGrid<double>::getDistances, py::return_value_policy::reference)
 		.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius, py::return_value_policy::reference)
 		.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius, py::return_value_policy::reference)
 		.def("get_logger", &ET::UGrid<double>::getLogger, py::return_value_policy::reference)
+		.def("output", [](const ET::UGrid<double>& self)
+		{
+			std::string out = self.getLogger()->getOutput();
+			py::print(out);
+		})
+		.def("output", [](const ET::UGrid<double>& self, uint64_t i)
+		{
+			std::string out = self.getLogger()->getOutput(i);
+			py::print(out);
+		})
 		.def("set_dim", &ET::UGrid<double>::setDim)
 		.def("set_N", &ET::UGrid<double>::setN)
 		.def("set_grid", &ET::UGrid<double>::setUGrid)
 		.def("set_name", &ET::UGrid<double>::setName)
 		//	access operators
 		.def("__getitem__", [](const ET::UGrid<double> &self,
-					std::tuple<uint64_t, uint64_t> ij)
+					std::tuple<int, int> ij)
 		{
-			uint32_t i, j;
+			int i, j;
 			std::tie(i, j) = ij;
 			if (i < 0 || i >= self.getN())
 			{
+				if (i < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with invalid value "
+											+ std::to_string(i));
+					//####################################################################
+				}
+				else if (i >= self.getN())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with index "
+											+ std::to_string(i));
+					//####################################################################
+				}
 				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for array with "
 															+ std::to_string(self.getN())
@@ -444,6 +487,24 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			if (j < 0 || j >= self.getDim())
 			{
+				if (j < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of dimension "
+											+ std::to_string(self.getDim()) + " with invalid value "
+											+ std::to_string(j));
+					//####################################################################
+				}
+				else if (j >= self.getDim())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of dimension "
+											+ std::to_string(self.getDim()) + " with index "
+											+ std::to_string(j));
+					//####################################################################
+				}
 				throw py::index_error("Index " + std::to_string(j) +
 														  " out of bounds for array with dimension "
 														  + std::to_string(self.getDim()));
@@ -451,12 +512,30 @@ PYBIND11_MODULE(etraj, m) {
 			return self(i,j);
 		}, py::is_operator())
 		.def("__setitem__", [](ET::UGrid<double> &self,
-					std::tuple<uint32_t, uint32_t> ij, const double& val)
+					std::tuple<int, int> ij, const double& val)
 		{
-			uint32_t i, j;
+			int i, j;
 			std::tie(i, j) = ij;
 			if (i < 0 || i >= self.getN())
 			{
+				if (i < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with invalid value "
+											+ std::to_string(i));
+					//####################################################################
+				}
+				else if (i >= self.getN())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with index "
+											+ std::to_string(i));
+					//####################################################################
+				}
 				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for array with "
 															+ std::to_string(self.getN())
@@ -464,6 +543,24 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			if (j < 0 || j >= self.getDim())
 			{
+				if (j < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of dimension "
+											+ std::to_string(self.getDim()) + " with invalid value "
+											+ std::to_string(j));
+					//####################################################################
+				}
+				else if (j >= self.getDim())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of dimension "
+											+ std::to_string(self.getDim()) + " with index "
+											+ std::to_string(j));
+					//####################################################################
+				}
 				throw py::index_error("Index " + std::to_string(j) +
 														  " out of bounds for array with dimension "
 														  + std::to_string(self.getDim()));
@@ -474,12 +571,66 @@ PYBIND11_MODULE(etraj, m) {
 		{
 			if (i < 0 || i >= self.getN())
 			{
+				if (i < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with invalid value "
+											+ std::to_string(i));
+					//####################################################################
+				}
+				else if (i >= self.getN())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with index "
+											+ std::to_string(i));
+					//####################################################################
+				}
 				throw py::index_error("Index " + std::to_string(i) +
 															" out of bounds for array with "
 															+ std::to_string(self.getN())
 															+ " rows!");
 			}
-			return self.getPoint(i);
+			else
+			{
+				return self(i);
+			}
+		}, py::is_operator())
+		.def("__setitem__", [](const ET::UGrid<double> &self, int i,
+			                     std::vector<double> x)
+		{
+			if (i < 0 || i >= self.getN())
+			{
+				if (i < 0)
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with invalid value "
+											+ std::to_string(i));
+					//####################################################################
+				}
+				else if (i >= self.getN())
+				{
+					//####################################################################
+					self.getLogger()->ERROR("UGrid " + self.getName()
+											+ ": Attempted to access _ugrid array of size "
+											+ std::to_string(self.getN()) + " with index "
+											+ std::to_string(i));
+					//####################################################################
+				}
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " rows!");
+			}
+			else
+			{
+				self(i) = x;
+			}
 		}, py::is_operator())
 		.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
 		.def("query_radius", &ET::UGrid<double>::queryRadius)
@@ -618,6 +769,7 @@ PYBIND11_MODULE(etraj, m) {
 	py::class_<ET::Log, std::shared_ptr<ET::Log>>(m, "Log")
 		.def(py::init<>())
 		.def("get_output", (std::string (ET::Log::*)(uint64_t)) &ET::Log::getOutput)
+		.def("get_output", (std::string (ET::Log::*)()) &ET::Log::getOutput)
 		;
 	//----------------------------------------------------------------------------
 

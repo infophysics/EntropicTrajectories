@@ -79,6 +79,9 @@ namespace ET
     void queryNeighbors(uint64_t k);
     void queryRadius(double radius);
 
+    //  various functions
+    bool checkConsistency();
+
   private:
     //  dimension of the ugrid
     uint64_t _dim;
