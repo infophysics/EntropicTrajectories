@@ -412,10 +412,26 @@ PYBIND11_MODULE(etraj, m) {
 		.def(py::init<std::string, uint64_t, uint64_t>())
 		.def(py::init<std::vector<double>>(), py::keep_alive<1, 2>())
 		.def(py::init<std::vector<std::vector<double>>>(), py::keep_alive<1, 2>())
-		//	getters
-		.def("get_dim", &ET::UGrid<double>::getDim, py::return_value_policy::reference)
-		.def("get_N", &ET::UGrid<double>::getN, py::return_value_policy::reference)
-		.def("get_grid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
+		//--------------------------------------------------------------------------
+		//	Constructors with shared loggers
+		//--------------------------------------------------------------------------
+		.def(py::init<std::shared_ptr<ET::Log>>())
+		.def(py::init<uint64_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string, uint64_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<uint64_t, uint64_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string, uint64_t, uint64_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<std::vector<double>, std::shared_ptr<ET::Log>>(),
+		     py::keep_alive<1, 2>())
+		.def(py::init<std::vector<std::vector<double>>,
+			            std::shared_ptr<ET::Log>>(), py::keep_alive<1, 2>())
+		//--------------------------------------------------------------------------
+		//	Getters
+		//--------------------------------------------------------------------------
+		.def("get_dim", &ET::UGrid<double>::getDim,
+		     py::return_value_policy::reference)
+		.def("get_N", &ET::UGrid<double>::getN,
+		     py::return_value_policy::reference)
+		.def("get_ugrid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
 		.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
 				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
@@ -436,10 +452,14 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			return self.getNeighbors(i);
 		}, py::return_value_policy::reference)
-		.def("get_distances", &ET::UGrid<double>::getDistances, py::return_value_policy::reference)
-		.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius, py::return_value_policy::reference)
-		.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius, py::return_value_policy::reference)
-		.def("get_logger", &ET::UGrid<double>::getLogger, py::return_value_policy::reference)
+		.def("get_distances", &ET::UGrid<double>::getDistances,
+		     py::return_value_policy::reference)
+		.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius,
+		     py::return_value_policy::reference)
+		.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius,
+		     py::return_value_policy::reference)
+		.def("get_logger", &ET::UGrid<double>::getLogger,
+		     py::return_value_policy::reference)
 		.def("output", [](const ET::UGrid<double>& self)
 		{
 			std::string out = self.getLogger()->getOutput();
@@ -450,11 +470,16 @@ PYBIND11_MODULE(etraj, m) {
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
 		})
+		//--------------------------------------------------------------------------
+		//	Setters
+		//--------------------------------------------------------------------------
 		.def("set_dim", &ET::UGrid<double>::setDim)
 		.def("set_N", &ET::UGrid<double>::setN)
-		.def("set_grid", &ET::UGrid<double>::setUGrid)
+		.def("set_ugrid", &ET::UGrid<double>::setUGrid)
 		.def("set_name", &ET::UGrid<double>::setName)
-		//	access operators
+		//--------------------------------------------------------------------------
+		//	Access operators
+		//--------------------------------------------------------------------------
 		.def("__getitem__", [](const ET::UGrid<double> &self,
 					std::tuple<int, int> ij)
 		{
@@ -511,6 +536,7 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			return self(i,j);
 		}, py::is_operator())
+		//--------------------------------------------------------------------------
 		.def("__setitem__", [](ET::UGrid<double> &self,
 					std::tuple<int, int> ij, const double& val)
 		{
@@ -567,6 +593,7 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			self(i,j) = val;
 		}, py::is_operator())
+		//--------------------------------------------------------------------------
 		.def("__getitem__", [](const ET::UGrid<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())
@@ -599,6 +626,7 @@ PYBIND11_MODULE(etraj, m) {
 				return self(i);
 			}
 		}, py::is_operator())
+		//--------------------------------------------------------------------------
 		.def("__setitem__", [](const ET::UGrid<double> &self, int i,
 			                     std::vector<double> x)
 		{
@@ -632,15 +660,20 @@ PYBIND11_MODULE(etraj, m) {
 				self(i) = x;
 			}
 		}, py::is_operator())
+		//--------------------------------------------------------------------------
+		//  KDTree functions
+		//--------------------------------------------------------------------------
 		.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
 		.def("query_radius", &ET::UGrid<double>::queryRadius)
+		//--------------------------------------------------------------------------
 		;
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	ScalarField class
 	//----------------------------------------------------------------------------
-	py::class_<ET::ScalarField<double>, std::shared_ptr<ET::ScalarField<double>>>(m, "ScalarField")
+	py::class_<ET::ScalarField<double>,
+	           std::shared_ptr<ET::ScalarField<double>>>(m, "ScalarField")
 		.def(py::init<>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
 		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())

@@ -2,9 +2,8 @@
 //  ugrid.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -36,6 +35,9 @@ namespace ET
   class UGrid
   {
   public:
+    //--------------------------------------------------------------------------
+    //  Constructors
+    //--------------------------------------------------------------------------
     UGrid();
     ~UGrid();
     UGrid(uint64_t dim);
@@ -43,9 +45,22 @@ namespace ET
     UGrid(uint64_t dim, uint64_t N);
     UGrid(std::string name, uint64_t dim, uint64_t N);
     UGrid(std::vector<T> ugrid);
-    UGrid(std::vector<std::vector<T> > ugrid);
+    UGrid(std::vector<std::vector<T>> ugrid);
+    //--------------------------------------------------------------------------
+    //  Constructors with shared loggers
+    //--------------------------------------------------------------------------
+    UGrid(std::shared_ptr<Log> log);
+    UGrid(uint64_t dim, std::shared_ptr<Log> log);
+    UGrid(std::string name, uint64_t dim, std::shared_ptr<Log> log);
+    UGrid(uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
+    UGrid(std::string name, uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
+    UGrid(std::vector<T> ugrid, std::shared_ptr<Log> log);
+    UGrid(std::vector<std::vector<T>> ugrid, std::shared_ptr<Log> log);
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Getters
+    //--------------------------------------------------------------------------
     uint64_t getDim();
     uint64_t getN();
     std::vector<std::vector<T> >  getUGrid();
@@ -56,50 +71,71 @@ namespace ET
     std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(uint64_t index);
     std::shared_ptr<Log> getLogger();
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Setters
+    //--------------------------------------------------------------------------
     void setDim(uint64_t dim);
     void setN(uint64_t N);
     void setUGrid(std::vector<std::vector<T> > ugrid);
     void setName(std::string name);
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
     //  Access operators for ugrid
+    //--------------------------------------------------------------------------
     T& operator()(const uint64_t i, const uint64_t j);
     const T& operator()(const uint64_t i, const uint64_t j) const;
-    //  Access operators for points
     std::vector<T>& operator()(const uint64_t i);
     const std::vector<T>& operator()(const uint64_t i) const;
+    //--------------------------------------------------------------------------
 
-    //  points and projections
+    //--------------------------------------------------------------------------
+    //  Points and projections
+    //--------------------------------------------------------------------------
     const std::vector<T>& getPoint(const uint64_t i) const;
     std::vector<T> projection(uint64_t j);
     void setPoint(uint64_t i, std::vector<T> p);
+    //--------------------------------------------------------------------------
 
-    //  find nearest neighbors
+    //--------------------------------------------------------------------------
+    //  KDTree methods
+    //--------------------------------------------------------------------------
     void queryNeighbors(uint64_t k);
     void queryRadius(double radius);
+    //--------------------------------------------------------------------------
 
-    //  various functions
+    //--------------------------------------------------------------------------
+    //  Various functions
+    //--------------------------------------------------------------------------
     bool checkConsistency();
+    //--------------------------------------------------------------------------
 
   private:
-    //  dimension of the ugrid
-    uint64_t _dim;
-    //  number of points in the ugrid
-    uint64_t _N;
-    //  Unstructured ugrid
-    std::vector<std::vector<T> > _ugrid;
-    std::string _name;
-    std::vector<std::string> _coords;
-    //  associated kdTree neighbors
-    std::vector<std::vector<size_t> > _neighbors;
-    std::vector<std::vector<double> > _distances;
-    std::vector<std::vector<size_t> > _neighbors_radius;
-    std::vector<std::vector<double> > _distances_radius;
-    //KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> _kdt;
+    //--------------------------------------------------------------------------
+    //  Basic attributes
+    //--------------------------------------------------------------------------
+    std::string _name;                 //  Name of the grid
+    uint64_t _dim;                     //  Dimension of the grid
+    uint64_t _N;                       //  Number of points in the grid
+    std::vector<std::vector<T>> _ugrid;//  Vector of vectors array
+    std::vector<std::string> _coords;  //  Coordinate labels
+    //--------------------------------------------------------------------------
+    //  Results from KDTree searches
+    //--------------------------------------------------------------------------
+    std::vector<std::vector<size_t>> _neighbors;
+    std::vector<std::vector<double>> _distances;
+    std::vector<std::vector<size_t>> _neighbors_radius;
+    std::vector<std::vector<double>> _distances_radius;
+    //--------------------------------------------------------------------------
+    //  Logger
+    //--------------------------------------------------------------------------
     std::shared_ptr<Log> _log;
+    //--------------------------------------------------------------------------
   };
+  //----------------------------------------------------------------------------
 
+  //  Explicit construction of type double
   template class UGrid<double>;
-
 }

@@ -123,7 +123,8 @@ namespace ET
     {
       uint32_t m = matrix.getNumRows();
       uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + "I + "  + matrix.getName() + ")";
+      std::string name = "(" + std::to_string(s) + "I + "
+                         + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       for (uint32_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) + s;
@@ -134,7 +135,8 @@ namespace ET
     {
       uint32_t m = matrix.getNumRows();
       uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + "I - "  + matrix.getName() + ")";
+      std::string name = "(" + std::to_string(s) + "I - "
+                         + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       for (uint32_t i = 0; i < m*n; i++) {
           l(i) = s - matrix(i);
@@ -145,7 +147,8 @@ namespace ET
     {
       uint32_t m = matrix.getNumRows();
       uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + " * "  + matrix.getName() + ")";
+      std::string name = "(" + std::to_string(s) + " * "
+                         + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       for (uint32_t i = 0; i < m*n; i++) {
           l(i) = matrix(i) * s;
@@ -156,7 +159,8 @@ namespace ET
     {
       uint32_t m = matrix.getNumRows();
       uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + " / "  + matrix.getName() + ")";
+      std::string name = "(" + std::to_string(s) + " / "
+                         + matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       std::vector<T> mat(n*m);
       for (uint32_t i = 0; i < m*n; i++)

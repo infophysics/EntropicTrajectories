@@ -2,9 +2,8 @@
 //  ugrid.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -51,8 +50,13 @@ namespace ET
 		//##########################################################################
   }
 	//----------------------------------------------------------------------------
-  //  Various constructors
+  //  Various constructors taking in arguments for
+	//		_dim, _name, _N, _ugrid and _log.
   //----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with dimension
+	//----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim) : _dim(dim), _name("default")
   {
@@ -62,9 +66,14 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-	 }
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with name and dimension
+	//----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(std::string name, uint64_t dim) : _dim(dim), _name(name)
+  UGrid<T>::UGrid(std::string name, uint64_t dim) : _name(name), _dim(dim)
   {
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -74,6 +83,11 @@ namespace ET
 		            + "' created at location " + getMem(*this));
 		//##########################################################################
   }
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with dimension and number of points
+	//----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N), _name("default")
   {
@@ -84,9 +98,14 @@ namespace ET
 		            + getMem(*this));
 		//##########################################################################
   }
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with name, dimension and number of points
+	//----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim, uint64_t N)
-  : _dim(dim), _N(N), _name(name)
+  : _name(name), _dim(dim), _N(N)
   {
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -95,7 +114,11 @@ namespace ET
 		            + "' created at location " + getMem(*this));
 	  //##########################################################################
   }
-	//	One dimensional constructor
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with one dimensional array
+	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<T> ugrid) : _name("default")
 	{
@@ -114,7 +137,11 @@ namespace ET
 		            + getMem(*this));
 		//##########################################################################
 	}
-	//	n-dimensional constructor
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with vector of vectors array
+	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<std::vector<T>> ugrid) : _name("default")
 	{
@@ -127,6 +154,133 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 	  //##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructors with shared loggers
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(std::shared_ptr<Log> log) : _dim(0), _N(0), _name("default")
+	{
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with dimension and logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(uint64_t dim, std::shared_ptr<Log> log)
+	: _dim(dim), _name("default")
+	{
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with name, dimension and shared logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(std::string name, uint64_t dim, std::shared_ptr<Log> log)
+	: _dim(dim), _name(name)
+	{
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid '" + _name
+								+ "' created at location " + getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Constructor with dimension, number of points and shared logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(uint64_t dim, uint64_t N, std::shared_ptr<Log> log)
+	: _dim(dim), _N(N), _name("default")
+	{
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with name, dimension, number of points and shared logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(std::string name, uint64_t dim,
+		              uint64_t N, std::shared_ptr<Log> log)
+	: _name(name), _dim(dim), _N(N)
+	{
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid '" + _name
+								+ "' created at location " + getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with one dimensional array and shared logger
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(std::vector<T> ugrid, std::shared_ptr<Log> log)
+	: _name("default")
+	{
+		_N = ugrid.size();
+		_ugrid.resize(_N);
+		_dim = 1;
+		for (uint32_t i = 0; i < _N; i++)
+		{
+			std::vector<T> temp = {ugrid[i]};
+			_ugrid[i] = temp;
+		}
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		//##########################################################################
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Constructor with vector of vectors array
+	//----------------------------------------------------------------------------
+	template<typename T>
+	UGrid<T>::UGrid(std::vector<std::vector<T>> ugrid, std::shared_ptr<Log> log)
+	: _name("default")
+	{
+		_N = ugrid.size();
+		_dim = ugrid[0].size();
+		_ugrid = ugrid;
+		//##########################################################################
+		_log = log;
+		_log->TRACE("Unstructured Grid 'default' created at location "
+								+ getMem(*this));
+		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		//##########################################################################
 	}
 	//----------------------------------------------------------------------------
 
@@ -406,7 +560,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//  points and projections
+	//  Points and projections
 	//----------------------------------------------------------------------------
   template<typename T>
   const std::vector<T>& UGrid<T>::getPoint(const uint64_t i) const
@@ -498,7 +652,7 @@ namespace ET
 							 + std::to_string(k) + " neighbors");
 		//##########################################################################
     //  generate kdtree
-    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T>
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(_dim, _ugrid, 16);
     kdt.index->buildIndex();
 
@@ -512,7 +666,8 @@ namespace ET
 
       nanoflann::KNNResultSet<double> resultSet(num_results);
       resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
-			kdt.index->findNeighbors(resultSet, &_ugrid[i][0], nanoflann::SearchParams(10));
+			kdt.index->findNeighbors(resultSet, &_ugrid[i][0],
+				                       nanoflann::SearchParams(10));
 			_neighbors[i] = std::move(ret_indexes);
 			_distances[i] = std::move(out_dists_sqr);
     }
@@ -520,20 +675,37 @@ namespace ET
 	template<typename T>
   void UGrid<T>::queryRadius(double radius)
   {
+		if(checkConsistency() == false)
+		{
+			//########################################################################
+			_log->ERROR("UGrid " + _name
+									+ ": Attempted to query neighbors for points in array"
+									+ " _ugrid with inconsistent attributes");
+			//########################################################################
+			return;
+		}
     _neighbors_radius.resize(_N);
 		_distances_radius.resize(_N);
 		//	the algorithm looks for points that satisfy the squared
 		//	distance rather than the square root.
+		//##########################################################################
+		_log->INFO("UGrid " + _name + ": Querying each point in array _grid of"
+	             + " size " + std::to_string(_N) + " and dimension "
+						   + std::to_string(_dim) + " for the nearest points within radius"
+							 + std::to_string(radius));
+		//##########################################################################
 		radius *= radius;
-    //  generate kdtree
-    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> kdt(_dim, _ugrid, 16);
+		//  generate kdtree
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
+		kdt(_dim, _ugrid, 16);
     kdt.index->buildIndex();
 
     for (uint64_t i = 0; i < _N; i++)
     {
       std::vector<std::pair<size_t,double> > ret_matches;
 
-			kdt.index->radiusSearch(&_ugrid[i][0], radius, ret_matches, nanoflann::SearchParams(10));
+			kdt.index->radiusSearch(&_ugrid[i][0], radius, ret_matches,
+				                      nanoflann::SearchParams(10));
 			std::vector<size_t> indices(ret_matches.size());
 			std::vector<double> distances(ret_matches.size());
 			for (uint64_t j = 0; j < ret_matches.size(); j++)
@@ -574,5 +746,5 @@ namespace ET
 		}
 		return consistency;
 	}
-
+	//----------------------------------------------------------------------------
 }
