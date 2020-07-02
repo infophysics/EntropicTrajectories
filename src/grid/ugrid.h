@@ -23,6 +23,7 @@
 #include <string>
 #include "utils.h"
 #include "matrix.h"
+#include "log.h"
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"
 
@@ -54,6 +55,7 @@ namespace ET
     std::vector<std::vector<size_t>> getNeighborsRadius();
     std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(uint64_t index);
+    std::shared_ptr<Log> getLogger();
 
     //  Setters
     void setDim(uint64_t dim);
@@ -92,6 +94,7 @@ namespace ET
     std::vector<std::vector<size_t> > _neighbors_radius;
     std::vector<std::vector<double> > _distances_radius;
     //KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T> >, T> _kdt;
+    std::shared_ptr<Log> _log;
   };
 
   template class UGrid<double>;

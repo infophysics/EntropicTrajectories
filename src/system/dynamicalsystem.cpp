@@ -26,7 +26,7 @@ namespace ET
   DynamicalSystem<T>::DynamicalSystem() : _name("default")
   {
     _log = std::make_shared<Log>();
-    _log->init("ET:DS:" + _name,"logs/system_default.txt");
+    _log->init("ET:DS:" + _name,".logs/system_default.txt");
     _log->TRACE("Dynamical System created at location " + getMem(*this));
   }
   template<typename T>
@@ -39,7 +39,7 @@ namespace ET
   DynamicalSystem<T>::DynamicalSystem(std::string name) : _name(name)
   {
     _log = std::make_shared<Log>();
-    _log->init("ET:DS:" + _name,"logs/system_" + _name + ".txt");
+    _log->init("ET:DS:" + _name,".logs/system_" + _name + ".txt");
     _log->TRACE("Dynamical System created at location " + getMem(*this));
   }
 

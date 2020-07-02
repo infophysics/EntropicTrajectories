@@ -26,9 +26,10 @@
 #include <lapacke.h>
 #include <memory>
 #include <cblas.h>
-#include "linalg/vector.h"
-#include "linalg/matrix.h"
+#include "vector.h"
+#include "matrix.h"
 #include "ugrid.h"
+#include "log.h"
 #include "scalarfield.h"
 #include "utils.h"
 #include "approximator.h"
@@ -423,6 +424,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_distances", &ET::UGrid<double>::getDistances, py::return_value_policy::reference)
 		.def("get_neighbors_radius", &ET::UGrid<double>::getNeighborsRadius, py::return_value_policy::reference)
 		.def("get_distances_radius", &ET::UGrid<double>::getDistancesRadius, py::return_value_policy::reference)
+		.def("get_logger", &ET::UGrid<double>::getLogger, py::return_value_policy::reference)
 		.def("set_dim", &ET::UGrid<double>::setDim)
 		.def("set_N", &ET::UGrid<double>::setN)
 		.def("set_grid", &ET::UGrid<double>::setUGrid)
@@ -607,6 +609,15 @@ PYBIND11_MODULE(etraj, m) {
 		{
 				return mon.summary();
 		})
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Logger class
+	//----------------------------------------------------------------------------
+	py::class_<ET::Log, std::shared_ptr<ET::Log>>(m, "Log")
+		.def(py::init<>())
+		.def("get_output", (std::string (ET::Log::*)(uint64_t)) &ET::Log::getOutput)
 		;
 	//----------------------------------------------------------------------------
 

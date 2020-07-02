@@ -114,7 +114,7 @@ namespace ET
   template<typename T>
   Matrix<T>::Matrix() : _name(" "), _m(0), _n(0)
   {
-    std::cout << "\nMatrix created at location " << this;
+    //std::cout << "\nMatrix created at location " << this;
   }
   //----------------------------------------------------------------------------
   //  Default destructor

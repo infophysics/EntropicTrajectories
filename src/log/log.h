@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
 #include <iostream>
 #include <ostream>
 #include <stdio.h>
@@ -36,6 +37,8 @@
 #include <complex>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 namespace ET
 {
@@ -45,19 +48,38 @@ namespace ET
 	public:
 		Log();
 		~Log();
+		//--------------------------------------------------------------------------
     //  initializer for the logging system for an object
-    void init(std::string name, const std::string& outputFile);
-    //  getter for the pointer for the logger object
-    std::shared_ptr<spdlog::logger>& getLogger() { return _logger; }
+		//--------------------------------------------------------------------------
+    void init(std::string name, const std::string& outputFile=".log/default.txt",
+							uint32_t debug=2);
 
+		//--------------------------------------------------------------------------
+    //  getter for the pointer for the logger object
+		//--------------------------------------------------------------------------
+    std::shared_ptr<spdlog::logger>& getLogger() { return _logger; }
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	Generators for logging messages
+		//--------------------------------------------------------------------------
 		void TRACE(std::string data);
 		void INFO(std::string data);
 		void WARN(std::string data);
 		void ERROR(std::string data);
 		void CRITICAL(std::string data);
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
+		//	Get the last 'n' lines of the outputFile
+		//--------------------------------------------------------------------------
+		std::string getOutput(uint64_t lines);
+		std::string getOutput();
+		//--------------------------------------------------------------------------
 
   private:
 		std::string _name;
+		std::string _outputFile;
     //  shared pointer to our logger object
     std::shared_ptr<spdlog::logger> _logger;
 	};

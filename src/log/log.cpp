@@ -37,23 +37,53 @@ namespace ET
 	Log::~Log()
 	{
 	}
-
-	void Log::init(std::string name, const std::string& outputFile)
+	//----------------------------------------------------------------------------
+	//  Initializer for the logger.
+	//	the 'debug' argument determins the verbosity of the logger.
+	//	If one wants the full functionality then debug = 2.
+	//	For only an output file use debug = 1.
+	//----------------------------------------------------------------------------
+	void Log::init(std::string name, const std::string& outputFile, uint32_t debug)
 	{
 		_name = name;
+		_outputFile = outputFile;
 		std::vector<spdlog::sink_ptr> logSinks;
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(outputFile, true));
-
 		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
-		logSinks[1]->set_pattern("[%T] [%l] %n: %v");
+		if (debug == 2)
+		{
+			//	The mkdir command only works on Linux.  Would need to add support for
+			//	Windows and MAC.
+			if (mkdir(".logs",0777) == -1)
+			{
+				std::cout << "ERROR: directory logs could not be created!" << std::endl;
+			}
+			//	check that the logger doesn't exist already
+			auto l = spdlog::get(name);
+			//	if so, try and add numbers to the name
+			std::string new_name = name;
+			int i = 0;
+			while (l != NULL)
+			{
+				new_name = name + "_" + std::to_string(i);
+				i += 1;
+				l = spdlog::get(new_name);
+			}
+			_name = new_name;
+			logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(outputFile, true));
+			logSinks[1]->set_pattern("[%T] [%l] %n: %v");
+		}
 
 		_logger = std::make_shared<spdlog::logger>(_name, begin(logSinks), end(logSinks));
 		spdlog::register_logger(_logger);
 		_logger->set_level(spdlog::level::trace);
 		_logger->flush_on(spdlog::level::trace);
 	}
+	//--------------------------------------------------------------------------
 
+	//--------------------------------------------------------------------------
+	//	Generators for logging messages
+	//--------------------------------------------------------------------------
 	void Log::TRACE(std::string data)
 	{
 		_logger->trace(data);
@@ -74,4 +104,36 @@ namespace ET
 	{
 		_logger->critical(data);
 	}
+	//--------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------
+	//	Get the last 'n' lines of the outputFile
+	//--------------------------------------------------------------------------
+	std::string Log::getOutput(uint64_t lines)
+	{
+    std::ifstream file(_outputFile);
+		std::vector<std::string> l;
+		std::string str;
+		if (!file.good())
+		{
+			return "ERROR: Could not open log file";
+		}
+		while (std::getline(file,str))
+		{
+			l.push_back(str);
+		}
+		std::string result;
+		if (lines > l.size())
+		{
+			lines = l.size();
+		}
+		for (uint64_t i = l.size()-lines; i < l.size(); i++)
+		{
+			result += l[i] + "\n";
+		}
+		std::cout << result;
+		return result;
+	}
+	//--------------------------------------------------------------------------
+
 }

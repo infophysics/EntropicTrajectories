@@ -30,41 +30,50 @@ namespace ET
   //    sets name = " ", and _dim, _N = 0
   //----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid() : _dim(0), _N(0)
+  UGrid<T>::UGrid() : _dim(0), _N(0), _name("default")
   {
-		//std::cout << "\nUGrid created at location " << this;
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		_log->TRACE("Unstructured Grid 'default' created at location " + getMem(*this));
   }
   template<typename T>
   UGrid<T>::~UGrid()
   {
-		//std::cout << "\nUGrid at location " << this << " destroyed.";
+		_log->TRACE("Unstructured Grid '" + _name + "' destroyed at location " + getMem(*this));
   }
   template<typename T>
-  UGrid<T>::UGrid(uint64_t dim) : _dim(dim)
+  UGrid<T>::UGrid(uint64_t dim) : _dim(dim), _name("default")
   {
-		//std::cout << "\nUGrid created at location " << this;
-  }
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		_log->TRACE("Unstructured Grid 'default' created at location " + getMem(*this));
+	 }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim) : _dim(dim), _name(name)
   {
-		//std::cout << "\nUGrid created at location " << this;
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:" + _name, ".logs/ugrid_" + _name + ".txt");
+		_log->TRACE("Unstructured Grid '" + _name + "' created at location " + getMem(*this));
   }
   template<typename T>
-  UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N)
+  UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N), _name("default")
   {
-		//std::cout << "\nUGrid created at location " << this;
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		_log->TRACE("Unstructured Grid 'default' created at location " + getMem(*this));
   }
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim, uint64_t N)
   : _dim(dim), _N(N), _name(name)
   {
-		//std::cout << "\nUGrid created at location " << this;
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:" + _name, ".logs/ugrid_" + _name + ".txt");
+		_log->TRACE("Unstructured Grid '" + _name + "' created at location " + getMem(*this));
   }
 	//	One dimensional constructor
 	template<typename T>
-	UGrid<T>::UGrid(std::vector<T> ugrid)
+	UGrid<T>::UGrid(std::vector<T> ugrid) : _name("default")
 	{
-		//std::cout << "\nUGrid created at location " << this;
 		_N = ugrid.size();
 		_ugrid.resize(_N);
 		_dim = 1;
@@ -73,15 +82,20 @@ namespace ET
 			std::vector<T> temp = {ugrid[i]};
 			_ugrid[i] = temp;
 		}
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		_log->TRACE("Unstructured Grid 'default' created at location " + getMem(*this));
 	}
 	//	n-dimensional constructor
 	template<typename T>
-	UGrid<T>::UGrid(std::vector<std::vector<T> > ugrid)
+	UGrid<T>::UGrid(std::vector<std::vector<T> > ugrid) : _name("default")
 	{
 		_N = ugrid.size();
-		//std::cout << "\nUGrid created at location " << this;
 		_dim = ugrid[0].size();
 		_ugrid = ugrid;
+		_log = std::make_shared<Log>();
+		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		_log->TRACE("Unstructured Grid 'default' created at location " + getMem(*this));
 	}
   template<typename T>
   uint64_t UGrid<T>::getDim()
@@ -131,6 +145,11 @@ namespace ET
 			std::cout << "Index " << std::to_string(index) << " exceeds array of length " << _N;
 		}
 		return _neighbors[index];
+	}
+	template<typename T>
+	std::shared_ptr<Log> UGrid<T>::getLogger()
+	{
+		return _log;
 	}
   //  Setters
   template<typename T>
