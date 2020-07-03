@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  scalarfield.h
+//  vectorfield.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -36,40 +36,42 @@ namespace ET
 namespace ET
 {
   //----------------------------------------------------------------------------
-  //  Scalar fields class.
+  //  Vector fields class.
   //----------------------------------------------------------------------------
   template<typename T>
-  class ScalarField: public std::enable_shared_from_this<ScalarField<T>>
+  class VectorField: public std::enable_shared_from_this<VectorField<T>>
   {
   public:
     //--------------------------------------------------------------------------
     //  Constructors
     //--------------------------------------------------------------------------
-    ScalarField();
-    ~ScalarField();
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+    VectorField();
+    ~VectorField();
+    VectorField(std::shared_ptr<UGrid<T>> ugrid);
+    VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid);
+    VectorField(std::shared_ptr<UGrid<T>> ugrid,
+                std::vector<std::vector<T>> field);
+    VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid,
                 std::vector<T> field);
     //--------------------------------------------------------------------------
     //  Constructors with shared loggers
     //--------------------------------------------------------------------------
-    ScalarField(std::shared_ptr<Log> log);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+    VectorField(std::shared_ptr<Log> log);
+    VectorField(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
+    VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid,
                 std::shared_ptr<Log> log);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field,
+    VectorField(std::shared_ptr<UGrid<T>> ugrid,
+                std::vector<std::vector<T>> field,
                 std::shared_ptr<Log> log);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
+    VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid,
                 std::vector<T> field, std::shared_ptr<Log> log);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Getters
     //--------------------------------------------------------------------------
-    std::vector<T> getField() const;
-    std::vector<T>* accessField();
+    std::vector<std::vector<T>> getField() const;
+    std::vector<std::vector<T>>* accessField();
     T* data();
     std::string getName() const;
     uint64_t getN() const;
@@ -84,7 +86,7 @@ namespace ET
     //  Setters
     //--------------------------------------------------------------------------
     void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
-    void setField(std::vector<T> field);
+    void setField(std::vector<std::vector<T>> field);
     void setName(std::string name);
     void setApproxType(std::string type);
     void setFlag(int flag);
@@ -103,11 +105,8 @@ namespace ET
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
-    std::vector<std::vector<T>> derivative(uint32_t n);
     std::vector<T> derivative(uint32_t dir, uint32_t n);
-    std::vector<T> derivative(uint64_t index, uint32_t n);
-    std::vector<T> laplacian();
-    T laplacian(uint64_t index);
+    T divergence();
     //--------------------------------------------------------------------------
 
   private:
@@ -117,7 +116,7 @@ namespace ET
     std::string _name;
     uint32_t _dim;
     uint64_t _N;
-    std::vector<T> _field;
+    std::vector<std::vector<T>> _field;
     //--------------------------------------------------------------------------
     //  Shared objects
     //--------------------------------------------------------------------------
@@ -133,5 +132,5 @@ namespace ET
   //----------------------------------------------------------------------------
 
   //  Explicit instantiation of double
-  template class ScalarField<double>;
+  template class VectorField<double>;
 }

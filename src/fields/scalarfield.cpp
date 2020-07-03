@@ -380,12 +380,61 @@ namespace ET
   //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	nth-derivative in the ith-direction
+	//	nth-derivative for every point in all directions
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<std::vector<T>>
+	ScalarField<T>::derivative(uint32_t n)
+	{
+		return _approx->scalarDerivative(_ugrid, (*this), n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	nth-derivative in the ith-direction for every point
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T> ScalarField<T>::derivative(uint32_t dir, uint32_t n)
 	{
-		return _approx->scalarDerivative(_ugrid, (*this), dir,n);
+		return _approx->scalarDerivative(_ugrid, (*this), dir, n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	nth-derivative for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T> ScalarField<T>::derivative(uint64_t index, uint32_t n)
+	{
+		return _approx->scalarDerivative(_ugrid, (*this), index, n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Laplacian for every point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T> ScalarField<T>::laplacian()
+	{
+		std::vector<T> result(_N);
+		std::vector<std::vector<T>> second_derivative = derivative(2);
+		for (uint64_t i = 0; i < _N; i++)
+		{
+			result[i] = std::accumulate(second_derivative[i].begin(),
+		                              second_derivative[i].end(),0);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Laplacian for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T ScalarField<T>::laplacian(uint64_t index)
+	{
+		std::vector<T> second_derivative = derivative(index, 2);
+		return std::accumulate(second_derivative.begin(),second_derivative.end(),0);
 	}
 	//----------------------------------------------------------------------------
 }

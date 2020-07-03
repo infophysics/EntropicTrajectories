@@ -780,7 +780,17 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		.def("gradient", &ET::ScalarField<double>::gradient,
 				 py::return_value_policy::reference)
-		.def("derivative", &ET::ScalarField<double>::derivative,
+		.def("derivative",
+		     (std::vector<std::vector<double>> (ET::ScalarField<double>::*)
+			    (uint32_t)) &ET::ScalarField<double>::derivative,
+	       py::return_value_policy::reference)
+	 	.def("derivative",
+		     (std::vector<double> (ET::ScalarField<double>::*)
+			    (uint32_t, uint32_t)) &ET::ScalarField<double>::derivative,
+	       py::return_value_policy::reference)
+	  .def("derivative",
+		     (std::vector<double> (ET::ScalarField<double>::*)
+			    (uint64_t, uint32_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		;
@@ -885,18 +895,47 @@ PYBIND11_MODULE(etraj, m) {
  				 &ET::Approximator<double>::scalarGradientMLS,
  	       py::return_value_policy::reference)
 	  .def("scalar_derivative",
-				 (std::vector<double> (ET::Approximator<double>::*)
+				 (std::vector<std::vector<double>> (ET::Approximator<double>::*)
 				 	(const std::shared_ptr<ET::UGrid<double>>,
 		 			 const std::shared_ptr<ET::ScalarField<double>>,
-					 uint32_t, uint32_t))
+					 uint32_t))
 		 		 &ET::Approximator<double>::scalarDerivative,
 	       py::return_value_policy::reference)
 		.def("scalar_derivative",
 				 (std::vector<double> (ET::Approximator<double>::*)
 				 	(const std::shared_ptr<ET::UGrid<double>>,
-		 			 const ET::ScalarField<double>&, uint32_t, uint32_t))
-		 		 &ET::Approximator<double>::scalarDerivative,
-	       py::return_value_policy::reference)
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 uint32_t, uint32_t))
+				 &ET::Approximator<double>::scalarDerivative,
+				 py::return_value_policy::reference)
+		.def("scalar_derivative",
+				 (std::vector<double> (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 uint64_t, uint32_t))
+				 &ET::Approximator<double>::scalarDerivative,
+				 py::return_value_policy::reference)
+		.def("scalar_derivative",
+ 				 (std::vector<std::vector<double>> (ET::Approximator<double>::*)
+ 				 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		 			 const ET::ScalarField<double>&,
+ 					 uint32_t))
+ 		 		 &ET::Approximator<double>::scalarDerivative,
+ 	       py::return_value_policy::reference)
+ 	  .def("scalar_derivative",
+ 				 (std::vector<double> (ET::Approximator<double>::*)
+ 				 	(const std::shared_ptr<ET::UGrid<double>>,
+ 					 const ET::ScalarField<double>&,
+ 					 uint32_t, uint32_t))
+ 				 &ET::Approximator<double>::scalarDerivative,
+ 				 py::return_value_policy::reference)
+ 		.def("scalar_derivative",
+ 				 (std::vector<double> (ET::Approximator<double>::*)
+ 				 	(const std::shared_ptr<ET::UGrid<double>>,
+ 					 const ET::ScalarField<double>&,
+ 					 uint64_t, uint32_t))
+ 				 &ET::Approximator<double>::scalarDerivative,
+ 				 py::return_value_policy::reference)
 		.def("construct_taylor_matrix",
 		     (ET::Matrix<double> (ET::Approximator<double>::*)
 				  (const std::shared_ptr<ET::UGrid<double>>,
