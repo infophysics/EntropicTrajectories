@@ -103,6 +103,7 @@ namespace ET
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
+    std::vector<T> derivative(uint32_t dir, uint32_t n);
     //--------------------------------------------------------------------------
 
   private:

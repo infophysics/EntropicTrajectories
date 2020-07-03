@@ -1,30 +1,20 @@
-[22:48:46] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x556f8b5d1ac0
-[22:48:47] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 10000 and dimension 1 for the nearest 6 neighbors
-[22:48:48] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 10000 and dimension 1 for the nearest 3 neighbors
-[22:48:50] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bcf9c20
-[22:48:50] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:48:50] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:49:08] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bec4620
-[22:49:08] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:49:08] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bcf9c20
-[22:49:09] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:50:22] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bcf9c20
-[22:50:22] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:50:22] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bec4620
-[22:50:22] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:50:34] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bc169e0
-[22:50:34] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:50:34] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bcf9c20
-[22:50:34] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:50:46] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bec4620
-[22:50:46] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:50:46] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bc169e0
-[22:50:46] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:50:50] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bc169e0
-[22:50:50] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:50:50] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bec4620
-[22:50:50] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
-[22:51:02] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x556f8bec4620
-[22:51:02] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[22:51:02] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8bc169e0
-[22:51:02] [trace] ET:UGrid:default: Scalar Field 'default' destroyed at location 0x556f8b6915a0
+[07:36:19] [trace] ET:UGrid:default_0: Unstructured Grid 'default' created at location 0x5586f3fd9890
+[07:36:21] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:36:32] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 3 neighbors
+[07:36:36] [trace] ET:UGrid:default_0: Scalar Field 'default' created at location 0x5586f3ffe0f0
+[07:36:36] [info] ET:UGrid:default_0: Logger passed to Scalar Field 'default'
+[07:36:36] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:51] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:36:51] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:51] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:51] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:53] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:36:53] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:53] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:36:53] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:37:16] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:37:20] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:37:24] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:37:24] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0
+[07:37:33] [info] ET:UGrid:default_0: UGrid default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 6 neighbors
+[07:37:33] [trace] ET:UGrid:default_0: Scalar Field 'default' destroyed at location 0x5586f40091d0

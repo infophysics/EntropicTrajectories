@@ -86,16 +86,35 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Gradient functions
     //--------------------------------------------------------------------------
-    std::vector<T> scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                                       const std::shared_ptr<ScalarField<T>> field,
-                                      uint64_t index);
-    std::vector<T> scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                                          const std::shared_ptr<ScalarField<T>> field,
-                                          uint64_t index);
-    std::vector<std::vector<T>> scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                                  const std::shared_ptr<ScalarField<T>> field);
-    std::vector<std::vector<T>> scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
-                                     const std::shared_ptr<ScalarField<T>> field);
+
+    //--------------------------------------------------------------------------
+    //  Scalar fields
+    //--------------------------------------------------------------------------
+    std::vector<T>
+    scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                        const std::shared_ptr<ScalarField<T>> field,
+                        uint64_t index);
+    std::vector<T>
+    scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                           const std::shared_ptr<ScalarField<T>> field,
+                           uint64_t index);
+    std::vector<std::vector<T>>
+    scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+                   const std::shared_ptr<ScalarField<T>> field);
+    std::vector<std::vector<T>>
+    scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+                      const std::shared_ptr<ScalarField<T>> field);
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    //  nth-derivatives of scalar field
+    //--------------------------------------------------------------------------
+    std::vector<T> scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const std::shared_ptr<ScalarField<T>> field,
+                                    uint32_t dir, uint32_t n);
+    //--------------------------------------------------------------------------
+
+
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------

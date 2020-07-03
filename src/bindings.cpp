@@ -39,6 +39,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(etraj, m) {
 
+	//----------------------------------------------------------------------------
+	//	Vector class
+	//----------------------------------------------------------------------------
   py::class_<ET::Vector<double>,
 	           std::shared_ptr<ET::Vector<double>>>
 						 (m, "Vector", py::buffer_protocol())
@@ -128,7 +131,7 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 
 		//--------------------------------------------------------------------------
-		//	Instantiations of matrices
+		//	Instantiations of vectors
 		//--------------------------------------------------------------------------
 		//m.def("zeros", (ET::Vector<double> (*)(uint32_t)) &ET::zeros);
 		//m.def("zeros", (ET::Vector<double> (*)(uint32_t,uint32_t)) &ET::zeros);
@@ -155,7 +158,9 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	//	Matrix class
 	//----------------------------------------------------------------------------
-	py::class_<ET::Matrix<double>,std::shared_ptr<ET::Matrix<double>>>(m, "Matrix", py::buffer_protocol())
+	py::class_<ET::Matrix<double>,
+	           std::shared_ptr<ET::Matrix<double>>>
+						(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
     .def(py::init<uint32_t>())
@@ -184,16 +189,26 @@ PYBIND11_MODULE(etraj, m) {
       return v;
     }))
 		//	getters
-		.def("get_num_rows", &ET::Matrix<double>::getNumRows, py::return_value_policy::reference)
-		.def("get_num_cols", &ET::Matrix<double>::getNumCols, py::return_value_policy::reference)
-		.def("get_name", &ET::Matrix<double>::getName, py::return_value_policy::reference)
-		.def("get_array", &ET::Matrix<double>::getArray, py::return_value_policy::reference)
-		.def("get_row", &ET::Matrix<double>::getRow, py::return_value_policy::reference)
-		.def("get_col", &ET::Matrix<double>::getCol, py::return_value_policy::reference)
-		.def("get_info", &ET::Matrix<double>::getInfo, py::return_value_policy::reference)
-		.def("get_flag", &ET::Matrix<double>::getFlag, py::return_value_policy::reference)
-		.def("get_rank", &ET::Matrix<double>::getRank, py::return_value_policy::reference)
-		.def("get_singular_values", &ET::Matrix<double>::getSingularValues, py::return_value_policy::reference)
+		.def("get_num_rows", &ET::Matrix<double>::getNumRows,
+		     py::return_value_policy::reference)
+		.def("get_num_cols", &ET::Matrix<double>::getNumCols,
+		     py::return_value_policy::reference)
+		.def("get_name", &ET::Matrix<double>::getName,
+		     py::return_value_policy::reference)
+		.def("get_array", &ET::Matrix<double>::getArray,
+		     py::return_value_policy::reference)
+		.def("get_row", &ET::Matrix<double>::getRow,
+		     py::return_value_policy::reference)
+		.def("get_col", &ET::Matrix<double>::getCol,
+		     py::return_value_policy::reference)
+		.def("get_info", &ET::Matrix<double>::getInfo,
+		     py::return_value_policy::reference)
+		.def("get_flag", &ET::Matrix<double>::getFlag,
+		     py::return_value_policy::reference)
+		.def("get_rank", &ET::Matrix<double>::getRank,
+		     py::return_value_policy::reference)
+		.def("get_singular_values", &ET::Matrix<double>::getSingularValues,
+		     py::return_value_policy::reference)
 		//	setters
 		.def("set_name", &ET::Matrix<double>::setName)
 		.def("set_row", &ET::Matrix<double>::setRow)
@@ -298,10 +313,10 @@ PYBIND11_MODULE(etraj, m) {
       return py::buffer_info(
 				m.data(),                               /* Pointer to buffer */
 				sizeof(float),                          /* Size of one scalar */
-				py::format_descriptor<float>::format(), /* Python struct-style format descriptor */
+				py::format_descriptor<float>::format(), /* format descriptor */
 				2,                                      /* Number of dimensions */
 				{ m.getNumRows(), m.getNumCols() },     /* Buffer dimensions */
-				{ sizeof(float) * m.getNumCols(),       /* Strides (in bytes) for each index */
+				{ sizeof(float) * m.getNumCols(),       /* Strides for each index */
 					sizeof(float) });
 		})
 		//--------------------------------------------------------------------------
@@ -436,10 +451,13 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_N", &ET::UGrid<double>::getN,
 		     py::return_value_policy::reference)
-		.def("get_ugrid", &ET::UGrid<double>::getUGrid, py::return_value_policy::reference)
-		.def("get_name", &ET::UGrid<double>::getName, py::return_value_policy::reference)
+		.def("get_ugrid", &ET::UGrid<double>::getUGrid,
+		     py::return_value_policy::reference)
+		.def("get_name", &ET::UGrid<double>::getName,
+		     py::return_value_policy::reference)
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
-				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors, py::return_value_policy::reference)
+				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors,
+				 py::return_value_policy::reference)
 		.def("get_neighbors", [](const ET::UGrid<double>& self, uint64_t i)
 		{
 			if (i < 0 || i >= self.getN())
@@ -760,7 +778,10 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//  Various functions
 		//--------------------------------------------------------------------------
-		.def("gradient", &ET::ScalarField<double>::gradient)
+		.def("gradient", &ET::ScalarField<double>::gradient,
+				 py::return_value_policy::reference)
+		.def("derivative", &ET::ScalarField<double>::derivative,
+	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		;
 	//----------------------------------------------------------------------------
@@ -839,12 +860,22 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	scalar field methods
 		//--------------------------------------------------------------------------
-		.def("scalar_gradient", &ET::Approximator<double>::scalarGradient)
-		.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS)
-		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
-                                    const std::vector<uint64_t>,uint64_t,uint64_t)) &ET::Approximator<double>::constructTaylorMatrix)
-		.def("construct_taylor_matrix", (ET::Matrix<double> (ET::Approximator<double>::*)(const std::shared_ptr<ET::UGrid<double>>,
-                                    const std::vector<uint64_t>,uint64_t,ET::Monomial&)) &ET::Approximator<double>::constructTaylorMatrix)
+		.def("scalar_gradient", &ET::Approximator<double>::scalarGradient,
+	       py::return_value_policy::reference)
+		.def("scalar_gradient_mls", &ET::Approximator<double>::scalarGradientMLS,
+	       py::return_value_policy::reference)
+		.def("scalar_derivative", &ET::Approximator<double>::scalarDerivative,
+	       py::return_value_policy::reference)
+		.def("construct_taylor_matrix",
+		     (ET::Matrix<double> (ET::Approximator<double>::*)
+				  (const std::shared_ptr<ET::UGrid<double>>,
+           const std::vector<uint64_t>,uint64_t,uint64_t))
+				 &ET::Approximator<double>::constructTaylorMatrix)
+		.def("construct_taylor_matrix",
+		     (ET::Matrix<double> (ET::Approximator<double>::*)
+				  (const std::shared_ptr<ET::UGrid<double>>,
+           const std::vector<uint64_t>,uint64_t,ET::Monomial&))
+				 &ET::Approximator<double>::constructTaylorMatrix)
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------
@@ -888,19 +919,26 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	//	Monomial class
 	//----------------------------------------------------------------------------
-	py::class_<ET::Monomial>(m, "Monomial")
+	py::class_<ET::Monomial, std::shared_ptr<ET::Monomial>>(m, "Monomial")
 		.def(py::init<>())
 		.def(py::init<uint32_t>())
 		.def(py::init<uint32_t,uint32_t>())
-		.def("get_dim", &ET::Monomial::getDim, py::return_value_policy::reference)
-		.def("get_deg", &ET::Monomial::getDeg, py::return_value_policy::reference)
+		.def("get_dim", &ET::Monomial::getDim,
+		     py::return_value_policy::reference)
+		.def("get_deg", &ET::Monomial::getDeg,
+		     py::return_value_policy::reference)
 		.def("get_mono", (std::vector<std::vector<uint32_t>>
-			   (ET::Monomial::*)()) &ET::Monomial::getMono, py::return_value_policy::reference)
+			   (ET::Monomial::*)()) &ET::Monomial::getMono,
+				 py::return_value_policy::reference)
 		.def("get_mono", (std::vector<std::vector<uint32_t>>
-				 (ET::Monomial::*)(uint32_t)) &ET::Monomial::getMono, py::return_value_policy::reference)
-		.def("get_mono_factors", &ET::Monomial::getMonoFactors, py::return_value_policy::reference)
-		.def("get_multiset_coeff", &ET::Monomial::getMultisetCoefficient, py::return_value_policy::reference)
-		.def("get_taylor_index", &ET::Monomial::getTaylorIndex, py::return_value_policy::reference)
+				 (ET::Monomial::*)(uint32_t)) &ET::Monomial::getMono,
+				 py::return_value_policy::reference)
+		.def("get_mono_factors", &ET::Monomial::getMonoFactors,
+		     py::return_value_policy::reference)
+		.def("get_multiset_coeff", &ET::Monomial::getMultisetCoefficient,
+		     py::return_value_policy::reference)
+		.def("get_taylor_index", &ET::Monomial::getTaylorIndex,
+		     py::return_value_policy::reference)
 		.def("set_dim", &ET::Monomial::setDim)
 		.def("set_deg", &ET::Monomial::setDeg)
 		.def("generate_monomial", (void (ET::Monomial::*)())
@@ -908,10 +946,12 @@ PYBIND11_MODULE(etraj, m) {
 		.def("generate_monomial", (void (ET::Monomial::*)(uint32_t))
 		 		 &ET::Monomial::generateMonomial)
 		.def("taylor_monomial_expansion", (std::vector<double>
-			   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&))
+			   (ET::Monomial::*)(const std::vector<double>&,
+					                 const std::vector<double>&))
 			   &ET::Monomial::taylorMonomialExpansion)
 		.def("taylor_monomial_expansion", (std::vector<double>
-	 		   (ET::Monomial::*)(const std::vector<double>&,const std::vector<double>&,uint32_t))
+	 		   (ET::Monomial::*)(const std::vector<double>&,
+					                 const std::vector<double>&,uint32_t))
 	 		   &ET::Monomial::taylorMonomialExpansion)
 	  //	print functionality
 		.def("__repr__", [](const ET::Monomial &mon)
