@@ -365,31 +365,90 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Construct the Taylor expansion matrix
+	//----------------------------------------------------------------------------
+  //  Passing field as a const reference
   //----------------------------------------------------------------------------
   template<typename T>
-  Matrix<T>
-	Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
+  std::vector<T>
+	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    const ScalarField<T>& field, uint64_t index)
   {
-    Monomial mono(ugrid->getDim(),order);
-    std::vector<std::vector<double>> B;
-    for (uint64_t i = 0; i < neighbors.size(); i++)
-    {
-      uint64_t id = neighbors[i];
-      std::vector<double>
-			temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
-                                          ugrid->getPoint(id));
-      B.push_back(temp);
-    }
-    return Matrix<T>("B",B);
+    if (_type == 0)
+      return scalarGradientMLSPoint(ugrid, field, index);
   }
   //----------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  //
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+	Approximator<T>::scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    const ScalarField<T>& field, uint64_t index)
+  {
+    std::vector<T> result(field.getDim());
+		Monomial mono(ugrid->getDim(),_params.n);
+    //  First, find the nearest neighbors associated to the point specified by
+    //  index.
+    ugrid->queryNeighbors(_params.k);
+    std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
+    //  Construct the matrix associated with the ugrid spacing
+    Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+    //  Construct the vector of field values associated to each point
+    std::vector<T> field_neighbors(_params.k);
+    for (uint32_t i = 0; i < _params.k; i++)
+    {
+      field_neighbors[i] = field(neighbors[i]);
+    }
+    Vector<T> field_vals(field_neighbors);
+    Vector<T> answer = DGELS(B,field_vals);
+    return answer.getVec();
+  }
+  //----------------------------------------------------------------------------
+
+  template<typename T>
+  std::vector<std::vector<T>>
+	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+                                  const ScalarField<T>& field)
+  {
+    if (_type == 0)
+      return scalarGradientMLS(ugrid, field);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<T>>
+	Approximator<T>::scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+    													const ScalarField<T>& field)
+  {
+    std::vector<std::vector<T>> result(field.getN());
+    Monomial mono(ugrid->getDim(),_params.n);
+    for (uint64_t i = 0; i < field.getN(); i++)
+    {
+      std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+      Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+      std::vector<T> field_neighbors(_params.k);
+      for (uint32_t i = 0; i < _params.k; i++)
+      {
+        field_neighbors[i] = field(neighbors[i]);
+      }
+      Vector<T> field_vals(field_neighbors);
+      Vector<T> answer = DGELS(B,field_vals);
+      //  Trim result to the first field->getDim() elements
+			std::vector<T> v = answer.getVec();
+      std::vector<T> u = {v.begin()+1,v.begin()+field.getDim()+1};
+      result[i] = u;
+    }
+		return result;
+  }
+  //----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
 	//  nth-derivatives of scalar field
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
 	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
@@ -416,12 +475,68 @@ namespace ET
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = DGELS(B,field_vals);
 			//  Trim result to the first field->getDim() elements
-			std::vector<T> v = answer.getVec();
 			result[i] = answer(index);
 		}
 		return result;
 	}
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Passing field as a const reference
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+													        	const ScalarField<T>& field,
+														        uint32_t dir, uint32_t n)
+	{
+		std::vector<T> result(field.getN());
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the index of the monomial expansion corresponding to
+		//	the nth-derivative in the 'dir'-direction
+		std::vector<uint32_t> deriv(field.getDim(),0);
+		deriv[dir] = n;
+		uint32_t index = mono.getTaylorIndex(deriv);
+		//	Loop over every point
+		for (uint64_t i = 0; i < field.getN(); i++)
+		{
+			std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+			Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+			std::vector<T> field_neighbors(_params.k);
+			for (uint32_t i = 0; i < _params.k; i++)
+			{
+				field_neighbors[i] = field(neighbors[i]);
+			}
+			Vector<T> field_vals(field_neighbors);
+			Vector<T> answer = DGELS(B,field_vals);
+			//  Trim result to the first field->getDim() elements
+			result[i] = answer(index);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Construct the Taylor expansion matrix
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Matrix<T>
+	Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
+  {
+    Monomial mono(ugrid->getDim(),order);
+    std::vector<std::vector<double>> B;
+    for (uint64_t i = 0; i < neighbors.size(); i++)
+    {
+      uint64_t id = neighbors[i];
+      std::vector<double>
+			temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
+                                          ugrid->getPoint(id));
+      B.push_back(temp);
+    }
+    return Matrix<T>("B",B);
+  }
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Construct the Taylor expansion matrix

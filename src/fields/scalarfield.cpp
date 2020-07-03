@@ -375,8 +375,7 @@ namespace ET
   template<typename T>
   std::vector<std::vector<T>> ScalarField<T>::gradient()
   {
-    return _approx->scalarGradient(_ugrid,
-			                             std::make_shared<ScalarField<T>>(*this));
+    return _approx->scalarGradient(_ugrid,(*this));
   }
   //----------------------------------------------------------------------------
 
@@ -386,9 +385,7 @@ namespace ET
 	template<typename T>
 	std::vector<T> ScalarField<T>::derivative(uint32_t dir, uint32_t n)
 	{
-		return _approx->scalarDerivative(_ugrid,
-			                               std::make_shared<ScalarField<T>>(*this),
-	                             			 dir,n);
+		return _approx->scalarDerivative(_ugrid, (*this), dir,n);
 	}
 	//----------------------------------------------------------------------------
 }
