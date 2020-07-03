@@ -211,27 +211,66 @@ namespace ET
   template<typename T>
   void Approximator<T>::setApproxType(std::string type)
   {
-    _type = ApproxTypeMap[type];
+    auto res = ApproxTypeMap.find(type);
+		if (res == ApproxTypeMap.end())
+		{
+			//########################################################################
+			_log->ERROR("Approximator " + _name + ": Attempted to set ApproxType "
+		              + "to " + type + " which is not a valid type");
+			return;
+			//########################################################################
+		}
+		else
+		{
+			_type = ApproxTypeMap[type];
+			//########################################################################
+			_log->INFO("Approximator " + _name + ": ApproxType set to " + type);
+			//########################################################################
+		}
   }
   template<typename T>
   void Approximator<T>::setApproxParams(ApproxParams params)
   {
     _params = params;
+		//##########################################################################
+		_log->INFO("Approximator " + _name + ": ApproxParams set");
+		//##########################################################################
   }
   template<typename T>
   void Approximator<T>::setLSDriver(std::string type)
   {
-    _lsdriver = LSDriverMap[type];
-  }
+		auto res = LSDriverMap.find(type);
+		if (res == LSDriverMap.end())
+		{
+			//########################################################################
+			_log->ERROR("Approximator " + _name + ": Attempted to set LSDriver "
+		              + "to " + type + " which is not a valid type");
+			return;
+			//########################################################################
+		}
+		else
+		{
+			_lsdriver = LSDriverMap[type];
+			//########################################################################
+			_log->INFO("Approximator " + _name + ": LSDriver set to " + type);
+			//########################################################################
+		}
+	}
   template<typename T>
   void Approximator<T>::set_k(uint64_t k)
   {
     _params.k = k;
+		//##########################################################################
+		_log->INFO("Approximator " + _name + ": k set to " + std::to_string(k));
+		//##########################################################################
   }
   template<typename T>
   void Approximator<T>::set_n(uint64_t n)
   {
     _params.n = n;
+		//##########################################################################
+		_log->INFO("Approximator " + _name + ": n set to " + std::to_string(n));
+		//##########################################################################
   }
   template<typename T>
   void Approximator<T>::setFlag(int flag)
@@ -313,9 +352,11 @@ namespace ET
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = DGELS(B,field_vals);
       //  Trim result to the first field->getDim() elements
-      std::vector<T> v(answer.getVec().begin()+1,answer.getVec().begin() + 1 + field->getDim());
-      result[i] = v;
+			std::vector<T> v = answer.getVec();
+      std::vector<T> u = {v.begin()+1,v.begin()+field->getDim()+1};
+      result[i] = u;
     }
+		return result;
   }
   //----------------------------------------------------------------------------
 

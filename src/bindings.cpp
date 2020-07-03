@@ -39,7 +39,9 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(etraj, m) {
 
-  py::class_<ET::Vector<double>, std::shared_ptr<ET::Vector<double>>>(m, "Vector", py::buffer_protocol())
+  py::class_<ET::Vector<double>,
+	           std::shared_ptr<ET::Vector<double>>>
+						 (m, "Vector", py::buffer_protocol())
     .def(py::init<>())
 		.def(py::init<ET::Vector<double>>())
     .def(py::init<uint32_t>())
@@ -61,9 +63,12 @@ PYBIND11_MODULE(etraj, m) {
 						 sizeof(double) * (size_t) (v->getDim()));
       return v;
     }))
-		.def("get_dim", &ET::Vector<double>::getDim, py::return_value_policy::reference)
-		.def("get_vec", &ET::Vector<double>::getVec, py::return_value_policy::reference)
-		.def("get_name", &ET::Vector<double>::getName, py::return_value_policy::reference)
+		.def("get_dim", &ET::Vector<double>::getDim,
+		     py::return_value_policy::reference)
+		.def("get_vec", &ET::Vector<double>::getVec,
+		     py::return_value_policy::reference)
+		.def("get_name", &ET::Vector<double>::getName,
+		     py::return_value_policy::reference)
 		.def("set_dim", &ET::Vector<double>::setDim)
 		.def("set_vec", &ET::Vector<double>::setVec)
 		.def("set_name", &ET::Vector<double>::setName)
@@ -708,6 +713,8 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_N", &ET::ScalarField<double>::getN,
 		     py::return_value_policy::reference)
+	  .def("get_dim", &ET::ScalarField<double>::getDim,
+		     py::return_value_policy::reference)
 		.def("get_approximator", &ET::ScalarField<double>::getApproximator,
 		     py::return_value_policy::reference)
 		.def("get_logger", &ET::ScalarField<double>::getLogger,
@@ -750,6 +757,11 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			self(i) = val;
 		}, py::is_operator())
+		//--------------------------------------------------------------------------
+		//  Various functions
+		//--------------------------------------------------------------------------
+		.def("gradient", &ET::ScalarField<double>::gradient)
+		//--------------------------------------------------------------------------
 		;
 	//----------------------------------------------------------------------------
 
@@ -788,8 +800,30 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_approx_type", &ET::Approximator<double>::setApproxType)
 		.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
 		.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
-		.def("set_k", &ET::Approximator<double>::set_k)
-		.def("set_n", &ET::Approximator<double>::set_n)
+		.def("set_k", []( const ET::Approximator<double>& self, int k)
+		{
+			if (k <= 0)
+			{
+				throw py::value_error("Invalid value " + std::to_string(k)
+				                      + " passed to Approximator::set_k");
+			}
+			else
+			{
+				return self.set_k(k);
+			}
+		})
+		.def("set_n", []( const ET::Approximator<double>& self, int n)
+		{
+			if (n <= 0)
+			{
+				throw py::value_error("Invalid value " + std::to_string(n)
+				                      + " passed to Approximator::set_n");
+			}
+			else
+			{
+				return self.set_n(n);
+			}
+		})
 		.def("set_flag", &ET::Approximator<double>::setFlag)
 		.def("set_info", &ET::Approximator<double>::setInfo)
 		.def("output", [](const ET::Approximator<double>& self)
@@ -818,6 +852,26 @@ PYBIND11_MODULE(etraj, m) {
 		{
 				return app.summary();
 		})
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Appproximator enum
+	//----------------------------------------------------------------------------
+	py::enum_<ET::ApproxType>(m, "ApproxType")
+		.value("MLS", ET::ApproxType::MLS)
+		.value("RBF", ET::ApproxType::RBF)
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	LSDriver enum
+	//----------------------------------------------------------------------------
+	py::enum_<ET::LSDriver>(m, "LSDriver")
+		.value("xGELS", ET::LSDriver::xGELS)
+		.value("xGELSY", ET::LSDriver::xGELSY)
+		.value("xGELSD", ET::LSDriver::xGELSD)
+		.value("xGELSS", ET::LSDriver::xGELSS)
 		;
 	//----------------------------------------------------------------------------
 

@@ -63,6 +63,7 @@ namespace ET
 	: _ugrid(ugrid), _name("default")
   {
     _N = _ugrid->getN();
+		_dim = _ugrid->getDim();
     _approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -81,6 +82,7 @@ namespace ET
   : _name(name), _ugrid(ugrid)
   {
     _N = _ugrid->getN();
+		_dim = _ugrid->getDim();
     _approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -100,6 +102,7 @@ namespace ET
   : _ugrid(ugrid), _field(field), _name("default")
   {
     _N = ugrid->getN();
+		_dim = _ugrid->getDim();
     _approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -119,6 +122,7 @@ namespace ET
   : _name(name), _ugrid(ugrid), _field(field)
   {
     _N = ugrid->getN();
+		_dim = _ugrid->getDim();
     _approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -158,6 +162,7 @@ namespace ET
 	: _ugrid(ugrid), _name("default")
 	{
 		_N = _ugrid->getN();
+		_dim = _ugrid->getDim();
 		_approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = log;
@@ -177,6 +182,7 @@ namespace ET
 	: _name(name), _ugrid(ugrid)
 	{
 		_N = _ugrid->getN();
+		_dim = _ugrid->getDim();
 		_approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = log;
@@ -196,6 +202,7 @@ namespace ET
 	: _ugrid(ugrid), _field(field), _name("default")
 	{
 		_N = ugrid->getN();
+		_dim = _ugrid->getDim();
 		_approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = log;
@@ -215,6 +222,7 @@ namespace ET
 	: _name(name), _ugrid(ugrid), _field(field)
 	{
 		_N = ugrid->getN();
+		_dim = _ugrid->getDim();
 		_approx = std::make_shared<Approximator<T>>();
 		//##########################################################################
 		_log = log;
