@@ -1,2 +1,2 @@
-[10:42:19] [trace] ET:Approximator:default_0: Approximator 'default' created at location 0x561e516af7e0
-[10:42:21] [info] ET:Approximator:default_0: Approximator default: k set to 6
+[15:50:50] [trace] ET:Approximator:default_3: Approximator 'default' created at location 0x562bf7b782a0
+[15:50:50] [trace] ET:Approximator:default_2: Approximator 'default' destroyed at location 0x562bf7e14ae0

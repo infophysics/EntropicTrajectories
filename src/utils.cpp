@@ -239,7 +239,7 @@ namespace ET
     return taylorMonomialExpansion(x1,x2);
   }
 
-  std::string Monomial::summary()
+  const std::string Monomial::summary()
   {
     std::string s;
     s += "\n----";
@@ -309,8 +309,6 @@ namespace ET
     return s;
   }
   //----------------------------------------------------------------------------
-
-
 
   //--------------------------------------------------------------------------
   //  Generates a Taylor polynomial
@@ -396,7 +394,7 @@ namespace ET
                                            const std::string& name1,
                                            const std::string& name2)
   {
-    std::string error = "ERROR: Attempted to multiply incompatible matrices";
+    std::string error = "ERROR: Attempted to add incompatible matrices";
     if (name1 != " " && name2 != " ")
     {
       error += "'" + name1 + "' and '" + name2 + "'";
@@ -410,7 +408,7 @@ namespace ET
                                            const std::string& name1,
                                            const std::string& name2)
   {
-    std::string error = "ERROR: Attempted to multiply incompatible matrices";
+    std::string error = "ERROR: Attempted to add incompatible matrices";
     if (name1 != " " && name2 != " ")
     {
       error += "'" + name1 + "' and '" + name2 + "'";
@@ -420,20 +418,41 @@ namespace ET
     return error;
   }
   std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2)
+                                           const uint32_t& m2,
+                                           const std::string& name1,
+                                           const std::string& name2)
   {
+    std::string error = "ERROR: Attempted to subtract incompatible matrices";
+    if (name1 != " " && name2 != " ")
+    {
+      error += "'" + name1 + "' and '" + name2 + "'";
+    }
+    error += "; row sizes are m1 = " + std::to_string(m1)
+           + " and m2 = " + std::to_string(m2);
+    return error;
   }
   std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2)
+                                           const uint32_t& n2,
+                                           const std::string& name1,
+                                           const std::string& name2)
   {
+    std::string error = "ERROR: Attempted to subtract incompatible matrices";
+    if (name1 != " " && name2 != " ")
+    {
+      error += "'" + name1 + "' and '" + name2 + "'";
+    }
+    error += "; column sizes are n1 = " + std::to_string(n1)
+           + " and n2 = " + std::to_string(n2);
+    return error;
   }
   std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
                                       const uint32_t& m2)
   {
+    return " ";
   }
   std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n)
   {
+    return " ";
   }
-
   //--------------------------------------------------------------------------
 }

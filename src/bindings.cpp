@@ -754,6 +754,7 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	Operator overloads
 		//--------------------------------------------------------------------------
+		.def(py::self + py::self)
 		.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())

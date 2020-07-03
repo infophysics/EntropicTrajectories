@@ -52,7 +52,7 @@ namespace ET
     VectorField(std::shared_ptr<UGrid<T>> ugrid,
                 std::vector<std::vector<T>> field);
     VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid,
-                std::vector<T> field);
+                std::vector<std::vector<T>> field);
     //--------------------------------------------------------------------------
     //  Constructors with shared loggers
     //--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ namespace ET
                 std::vector<std::vector<T>> field,
                 std::shared_ptr<Log> log);
     VectorField(std::string, std::shared_ptr<UGrid<T>> ugrid,
-                std::vector<T> field, std::shared_ptr<Log> log);
+                std::vector<std::vector<T>> field, std::shared_ptr<Log> log);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -96,8 +96,8 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Operator overloads
     //--------------------------------------------------------------------------
-    T& operator()(const uint32_t& i);
-    const T& operator()(const uint32_t& i) const;
+    std::vector<T>& operator()(const uint32_t& i);
+    const std::vector<T>& operator()(const uint32_t& i) const;
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace ET
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
-    std::vector<T> derivative(uint32_t dir, uint32_t n);
+    std::vector<std::vector<T>> derivative(uint32_t dir, uint32_t n);
     T divergence();
     //--------------------------------------------------------------------------
 

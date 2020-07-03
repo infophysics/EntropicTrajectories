@@ -94,6 +94,7 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Operator overloads
     //--------------------------------------------------------------------------
+    ScalarField<T> operator+(const ScalarField<T>& scalar) const;
     T& operator()(const uint32_t& i);
     const T& operator()(const uint32_t& i) const;
     //--------------------------------------------------------------------------

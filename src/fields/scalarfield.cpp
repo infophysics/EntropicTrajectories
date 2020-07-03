@@ -311,7 +311,36 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Operator overloads
   //----------------------------------------------------------------------------
-  template<typename T>
+	template<typename T>
+	ScalarField<T> ScalarField<T>::operator+(const ScalarField<T>& scalar) const
+	{
+		if (_N != scalar.getN())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to add scalar fields " + _name  + " and "
+			            + scalar.getName() + " with sizes " + std::to_string(_N)
+									+ " and " + std::to_string(scalar.getN()));
+			//########################################################################
+			return *this;
+		}
+		if (_dim != scalar.getDim())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to add scalar fields " + _name  + " and "
+			            + scalar.getName() + " with dimensions "
+									+ std::to_string(_dim) + " and "
+									+ std::to_string(scalar.getDim()));
+			//########################################################################
+			return *this;
+		}
+		std::vector<T> _copy = _field;
+		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
+	                 _copy.begin(), std::plus<T>());
+		std::string name;
+		return ScalarField<T>(name,_ugrid,_copy,_log);
+	}
+	//----------------------------------------------------------------------------
+	template<typename T>
   T& ScalarField<T>::operator()(const uint32_t& i)
   {
 		if (i >= _N )

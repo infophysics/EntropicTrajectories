@@ -33,6 +33,7 @@ set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}interpolation/approximator.cpp"
             "${SOURCE_DIR}fields/scalarfield.cpp"
+            "${SOURCE_DIR}fields/vectorfield.cpp"
             "${SOURCE_DIR}log/log.cpp"
             "${SOURCE_DIR}system/dynamicalsystem.cpp"
             "${INCLUDE_DIR}monomial/monomial.cpp")

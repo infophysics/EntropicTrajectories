@@ -90,6 +90,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   std::string scientific_not(T x, uint32_t dec);
+  //  specialization declaration
   template std::string scientific_not<double> (double, uint32_t);
 
   //----------------------------------------------------------------------------
@@ -130,7 +131,7 @@ namespace ET
     std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
                                                 const std::vector<double>& x2,
                                                 uint32_t deg);
-    std::string summary();
+    const std::string summary();
 
   private:
     uint32_t _dim;
@@ -175,9 +176,13 @@ namespace ET
                                            const std::string& name1,
                                            const std::string& name2);
   std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2);
+                                           const uint32_t& m2,
+                                           const std::string& name1,
+                                           const std::string& name2);
   std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2);
+                                           const uint32_t& n2,
+                                           const std::string& name1,
+                                           const std::string& name2);
   std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
                                       const uint32_t& m2);
   std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n);

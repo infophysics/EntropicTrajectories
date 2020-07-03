@@ -35,8 +35,10 @@
 namespace ET
 {
   template<typename T> class ScalarField;
+  template<typename T> class VectorField;
 }
 #include "scalarfield.h"
+#include "vectorfield.h"
 namespace ET
 {
   //----------------------------------------------------------------------------
@@ -151,7 +153,13 @@ namespace ET
                                     uint64_t index, uint32_t n);
     //--------------------------------------------------------------------------
 
-
+    //--------------------------------------------------------------------------
+    //  Vector fields
+    //--------------------------------------------------------------------------
+    std::vector<std::vector<T>>
+    vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                     const VectorField<T>& field,
+                     uint32_t dir, uint32_t n);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
