@@ -96,6 +96,8 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Operator overloads
     //--------------------------------------------------------------------------
+    T& operator()(const uint32_t& i, const uint32_t& j);
+    const T& operator()(const uint32_t& i, const uint32_t& j) const;
     std::vector<T>& operator()(const uint32_t& i);
     const std::vector<T>& operator()(const uint32_t& i) const;
     //--------------------------------------------------------------------------
@@ -105,8 +107,16 @@ namespace ET
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
+    //  Derivative of the vector field along a direction
     std::vector<std::vector<T>> derivative(uint32_t dir, uint32_t n);
-    T divergence();
+    //  Derivative of a vector field component along a particular direction
+    std::vector<T> derivative(uint32_t dir, uint32_t n, uint32_t comp);
+    //  Derivative of a vector field component along a direction for a point
+    T derivative(uint32_t dir, uint32_t n, uint32_t comp, uint64_t index);
+    //  Divergence at a point
+    T divergence(uint64_t index);
+    //  Divergence for the entire field
+    std::vector<T> divergence();
     //--------------------------------------------------------------------------
 
   private:

@@ -373,10 +373,24 @@ namespace ET
     }
     return _field[i];
   }
+  template<typename T>
+  T& VectorField<T>::operator()(const uint32_t& i, const uint32_t& j)
+  {
+    return _field[i][j];
+  }
+  template<typename T>
+  const T& VectorField<T>::operator()(const uint32_t& i, const uint32_t& j) const
+  {
+    return _field[i][j];
+  }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //	nth-derivative in the ith-direction for every point
+  //  Derivative operations
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Derivative of a vector field along a particular direction
   //----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<T>>
@@ -385,5 +399,4 @@ namespace ET
     return _approx->vectorDerivative(_ugrid, (*this), dir, n);
   }
   //----------------------------------------------------------------------------
-
 }

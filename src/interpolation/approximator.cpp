@@ -320,7 +320,7 @@ namespace ET
       field_neighbors[i] = (*field)(neighbors[i]);
     }
     Vector<T> field_vals(field_neighbors);
-    Vector<T> answer = DGELS(B,field_vals);
+    Vector<T> answer = xGELSx(B,field_vals);
     return answer.getVec();
   }
   //----------------------------------------------------------------------------
@@ -356,7 +356,7 @@ namespace ET
         field_neighbors[i] = (*field)(neighbors[i]);
       }
       Vector<T> field_vals(field_neighbors);
-      Vector<T> answer = DGELS(B,field_vals);
+      Vector<T> answer = xGELSx(B,field_vals);
       //  Trim result to the first field->getDim() elements
 			std::vector<T> v = answer.getVec();
       std::vector<T> u = {v.begin()+1,v.begin()+field->getDim()+1};
@@ -402,7 +402,7 @@ namespace ET
       field_neighbors[i] = field(neighbors[i]);
     }
     Vector<T> field_vals(field_neighbors);
-    Vector<T> answer = DGELS(B,field_vals);
+    Vector<T> answer = xGELSx(B,field_vals);
     return answer.getVec();
   }
   //----------------------------------------------------------------------------
@@ -438,7 +438,7 @@ namespace ET
         field_neighbors[i] = field(neighbors[i]);
       }
       Vector<T> field_vals(field_neighbors);
-      Vector<T> answer = DGELS(B,field_vals);
+      Vector<T> answer = xGELSx(B,field_vals);
       //  Trim result to the first field->getDim() elements
 			std::vector<T> v = answer.getVec();
       std::vector<T> u = {v.begin()+1,v.begin()+field.getDim()+1};
@@ -477,7 +477,7 @@ namespace ET
 				field_neighbors[i] = (*field)(neighbors[i]);
 			}
 			Vector<T> field_vals(field_neighbors);
-			Vector<T> answer = DGELS(B,field_vals);
+			Vector<T> answer = xGELSx(B,field_vals);
 			//  Trim result to the first field->getDim() elements
 			std::vector<T> temp_result(field->getDim());
 			for (uint32_t j = 0; j < field->getDim(); j++)
@@ -521,7 +521,7 @@ namespace ET
 				field_neighbors[i] = (*field)(neighbors[i]);
 			}
 			Vector<T> field_vals(field_neighbors);
-			Vector<T> answer = DGELS(B,field_vals);
+			Vector<T> answer = xGELSx(B,field_vals);
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -552,7 +552,7 @@ namespace ET
 			field_neighbors[i] = (*field)(neighbors[i]);
 		}
 		Vector<T> field_vals(field_neighbors);
-		Vector<T> answer = DGELS(B,field_vals);
+		Vector<T> answer = xGELSx(B,field_vals);
 		//  Trim result to the first field->getDim() elements
 		for (uint32_t j = 0; j < field->getDim(); j++)
 		{
@@ -593,7 +593,7 @@ namespace ET
 				field_neighbors[i] = field(neighbors[i]);
 			}
 			Vector<T> field_vals(field_neighbors);
-			Vector<T> answer = DGELS(B,field_vals);
+			Vector<T> answer = xGELSx(B,field_vals);
 			//  Trim result to the first field.getDim() elements
 			std::vector<T> temp_result(field.getDim());
 			for (uint32_t j = 0; j < field.getDim(); j++)
@@ -637,7 +637,7 @@ namespace ET
 				field_neighbors[i] = field(neighbors[i]);
 			}
 			Vector<T> field_vals(field_neighbors);
-			Vector<T> answer = DGELS(B,field_vals);
+			Vector<T> answer = xGELSx(B,field_vals);
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -668,7 +668,7 @@ namespace ET
 			field_neighbors[i] = field(neighbors[i]);
 		}
 		Vector<T> field_vals(field_neighbors);
-		Vector<T> answer = DGELS(B,field_vals);
+		Vector<T> answer = xGELSx(B,field_vals);
 		//  Trim result to the first field.getDim() elements
 		for (uint32_t j = 0; j < field.getDim(); j++)
 		{
@@ -680,6 +680,79 @@ namespace ET
 		return result;
 	}
 	//----------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------
+	//  Helper functions
+	//--------------------------------------------------------------------------
+	template<typename T>
+	Vector<T> Approximator<T>::xGELSx(Matrix<T> B, Vector<T> u)
+	{
+		if (_lsdriver == 0)
+		{
+			return DGELS(B,u);
+		}
+		else if (_lsdriver == 1)
+		{
+			return DGELSY(B,u);
+		}
+		else if (_lsdriver == 2)
+		{
+			return DGELSD(B,u);
+		}
+		else
+		{
+			return DGELSS(B,u);
+		}
+	}
+	//--------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------
+	//	Derivatives of vector fields
+	//--------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------
+	//
+	//--------------------------------------------------------------------------
+	template<typename T>
+	std::vector<std::vector<T>>
+	Approximator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+									                  const VectorField<T>& field,
+									                  uint32_t dir, uint32_t n)
+	{
+		std::vector<std::vector<T>> result(field.getN());
+		Monomial mono(ugrid->getDim(),n);
+		ugrid->queryNeighbors(_params.k);
+		for (uint64_t p = 0; p < field.getN(); p++)
+		{
+			std::vector<uint64_t> neighbors = ugrid->getNeighbors(p);
+			Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,p,mono);
+			std::vector<T> field_neighbors_x(_params.k);
+			std::vector<T> field_neighbors_y(_params.k);
+			std::vector<T> field_neighbors_z(_params.k);
+			for (uint32_t i = 0; i < _params.k; i++)
+			{
+				field_neighbors_x[i] = field(neighbors[i],0);
+				field_neighbors_y[i] = field(neighbors[i],1);
+				field_neighbors_z[i] = field(neighbors[i],2);
+			}
+			Vector<T> field_vals_x(field_neighbors_x);
+			Vector<T> answer_x = xGELSx(B,field_vals_x);
+			Vector<T> field_vals_y(field_neighbors_y);
+			Vector<T> answer_y = xGELSx(B,field_vals_y);
+			Vector<T> field_vals_z(field_neighbors_z);
+			Vector<T> answer_z = xGELSx(B,field_vals_z);
+			//	Get the index of the monomial expansion corresponding to
+			//	the nth-derivative in the 'dir'-direction
+			std::vector<uint32_t> deriv(field.getDim(),0);
+			deriv[dir] = n;
+			uint32_t index = mono.getTaylorIndex(deriv);
+			result[p][0] = answer_x(index);
+			result[p][1] = answer_y(index);
+			result[p][2] = answer_z(index);
+		}
+		return result;
+	}
+	//--------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Construct the Taylor expansion matrix
