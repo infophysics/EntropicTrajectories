@@ -46,7 +46,7 @@ namespace ET
     //  Constructors
     //--------------------------------------------------------------------------
     ScalarField();
-    ~ScalarField();
+    virtual ~ScalarField();
     ScalarField(std::shared_ptr<UGrid<T>> ugrid);
     ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid);
     ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
@@ -75,9 +75,10 @@ namespace ET
     uint64_t getN() const;
     uint32_t getDim() const;
     std::shared_ptr<Approximator<T>> getApproximator() const;
+    std::shared_ptr<UGrid<T>> getUGrid() const;
+    std::shared_ptr<Log> getLogger();
     int getFlag() const;
     std::string getInfo() const;
-    std::shared_ptr<Log> getLogger();
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -143,9 +144,40 @@ namespace ET
     std::string _info;
     //--------------------------------------------------------------------------
 
+  protected:
+    //--------------------------------------------------------------------------
+    // Inherited functions which much be overwritten
+    //--------------------------------------------------------------------------
+    std::vector<T> diffEQ(uint64_t index);
+    //--------------------------------------------------------------------------
+
   };
   //----------------------------------------------------------------------------
 
   //  Explicit instantiation of double
   template class ScalarField<double>;
+
+  //----------------------------------------------------------------------------
+  //  Example scalar fields
+  //----------------------------------------------------------------------------
+  template<typename T>
+  class KleinGordon1D : public ScalarField<T>
+  {
+  public:
+    KleinGordon1D();
+    KleinGordon1D(std::shared_ptr<UGrid<T>> ugrid);
+    KleinGordon1D(std::shared_ptr<UGrid<T>> ugrid, T mass);
+    //  Getters
+    T getMass();
+    //  Setters
+    void setMass(T mass);
+  private:
+    T _mass;
+  protected:
+    std::vector<T> diffEQ(uint64_t index);
+  };
+  //----------------------------------------------------------------------------
+
+  template class KleinGordon1D<double>;
+
 }

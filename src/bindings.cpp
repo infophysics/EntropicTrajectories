@@ -765,6 +765,10 @@ PYBIND11_MODULE(etraj, m) {
 		.def(py::self - py::self)
 		.def(py::self * py::self)
 		.def(py::self / py::self)
+		.def(py::self += py::self)
+		.def(py::self -= py::self)
+		.def(py::self *= py::self)
+		.def(py::self /= py::self)
 		.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())
@@ -809,9 +813,24 @@ PYBIND11_MODULE(etraj, m) {
 		{
 			std::stringstream s;
 			s << &field;
-			std::string res = "<etraj.ScalarField ref at " + s.str() + ">\n";
+			std::string res = "++++++++++++++++++++++++++++++++++++++++++++++++++++";
+			res += "\n<etraj.ScalarField ref at " + s.str() + ">\n";
 			return res + field.summary();
 		})
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Scalarfield examples
+	//----------------------------------------------------------------------------
+	py::class_<ET::KleinGordon1D<double>,
+	           ET::ScalarField<double>,
+						 std::shared_ptr<ET::KleinGordon1D<double>>>(m,"KleinGordon1D")
+		.def(py::init<>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double>())
+		.def("get_mass", &ET::KleinGordon1D<double>::getMass)
+		.def("set_mass", &ET::KleinGordon1D<double>::setMass)
 		;
 	//----------------------------------------------------------------------------
 

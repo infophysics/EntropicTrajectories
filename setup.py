@@ -80,7 +80,7 @@ setup(
     zip_safe=False,
     include_package_data=True,
     project_urls={
-        'ET source': 'https://github.com/infophysics/EDMC'
+        'ET source': 'https://github.com/infophysics/EntropicTrajectories'
     },
     classifiers = [
         'Development Status :: 4 - Beta',

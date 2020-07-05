@@ -273,7 +273,17 @@ namespace ET
   {
     return _approx;
   }
+	template<typename T>
+	std::shared_ptr<UGrid<T>> ScalarField<T>::getUGrid() const
+	{
+		return _ugrid;
+	}
   template<typename T>
+	std::shared_ptr<Log> ScalarField<T>::getLogger()
+	{
+		return _log;
+	}
+	template<typename T>
   int ScalarField<T>::getFlag() const
   {
     return _flag;
@@ -284,11 +294,6 @@ namespace ET
     return _info;
   }
 	template<typename T>
-	std::shared_ptr<Log> ScalarField<T>::getLogger()
-	{
-		return _log;
-	}
-  template<typename T>
   void ScalarField<T>::setUGrid(std::shared_ptr<UGrid<T>> ugrid)
   {
     _ugrid = ugrid;
@@ -335,6 +340,13 @@ namespace ET
 			//########################################################################
 			return *this;
 		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
 		std::vector<T> _copy = _field;
 		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
 	                 _copy.begin(), std::plus<T>());
@@ -367,6 +379,13 @@ namespace ET
 									+ std::to_string(scalar.getDim()));
 			//########################################################################
 			return *this;
+		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
 		}
 		std::vector<T> _copy = _field;
 		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
@@ -401,6 +420,13 @@ namespace ET
 			//########################################################################
 			return *this;
 		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
 		std::vector<T> _copy = _field;
 		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
 	                 _copy.begin(), std::multiplies<T>());
@@ -434,6 +460,13 @@ namespace ET
 			//########################################################################
 			return *this;
 		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
 		std::vector<T> _copy = _field;
 		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
 	                 _copy.begin(), std::divides<T>());
@@ -443,6 +476,174 @@ namespace ET
 			name += "(" + _name + " / " + scalar.getName() + ")";
 		}
 		return ScalarField<T>(name,_ugrid,_copy,_log);
+	}
+	//----------------------------------------------------------------------------
+	template<typename T>
+	ScalarField<T>& ScalarField<T>::operator+=(const ScalarField<T>& scalar)
+	{
+		if (_N != scalar.getN())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to add scalar fields " + _name  + " and "
+			            + scalar.getName() + " with sizes " + std::to_string(_N)
+									+ " and " + std::to_string(scalar.getN()));
+			//########################################################################
+			return *this;
+		}
+		if (_dim != scalar.getDim())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to add scalar fields " + _name  + " and "
+			            + scalar.getName() + " with dimensions "
+									+ std::to_string(_dim) + " and "
+									+ std::to_string(scalar.getDim()));
+			//########################################################################
+			return *this;
+		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
+		std::vector<T> _copy = _field;
+		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
+	                 _copy.begin(), std::plus<T>());
+		std::string name;
+		if (_name != " " && scalar.getName() != " ")
+		{
+			name += "(" + _name + " + " + scalar.getName() + ")";
+		}
+		_name = name;
+		_field = _copy;
+		return *this;
+	}
+	//----------------------------------------------------------------------------
+	template<typename T>
+	ScalarField<T>& ScalarField<T>::operator-=(const ScalarField<T>& scalar)
+	{
+		if (_N != scalar.getN())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to subtract scalar fields " + _name  + " and "
+									+ scalar.getName() + " with sizes " + std::to_string(_N)
+									+ " and " + std::to_string(scalar.getN()));
+			//########################################################################
+			return *this;
+		}
+		if (_dim != scalar.getDim())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to subtract scalar fields " + _name  + " and "
+									+ scalar.getName() + " with dimensions "
+									+ std::to_string(_dim) + " and "
+									+ std::to_string(scalar.getDim()));
+			//########################################################################
+			return *this;
+		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
+		std::vector<T> _copy = _field;
+		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
+									 _copy.begin(), std::minus<T>());
+		std::string name;
+		if (_name != " " && scalar.getName() != " ")
+		{
+			name += "(" + _name + " - " + scalar.getName() + ")";
+		}
+		_name = name;
+		_field = _copy;
+		return *this;
+	}
+	//----------------------------------------------------------------------------
+	template<typename T>
+	ScalarField<T>& ScalarField<T>::operator*=(const ScalarField<T>& scalar)
+	{
+		if (_N != scalar.getN())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to multiply scalar fields " + _name  + " and "
+									+ scalar.getName() + " with sizes " + std::to_string(_N)
+									+ " and " + std::to_string(scalar.getN()));
+			//########################################################################
+			return *this;
+		}
+		if (_dim != scalar.getDim())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to multiply scalar fields " + _name  + " and "
+									+ scalar.getName() + " with dimensions "
+									+ std::to_string(_dim) + " and "
+									+ std::to_string(scalar.getDim()));
+			//########################################################################
+			return *this;
+		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
+		std::vector<T> _copy = _field;
+		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
+									 _copy.begin(), std::multiplies<T>());
+		std::string name;
+		if (_name != " " && scalar.getName() != " ")
+		{
+			name += "(" + _name + " * " + scalar.getName() + ")";
+		}
+		_name = name;
+		_field = _copy;
+		return *this;
+	}
+	//----------------------------------------------------------------------------
+	template<typename T>
+	ScalarField<T>& ScalarField<T>::operator/=(const ScalarField<T>& scalar)
+	{
+		if (_N != scalar.getN())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to divide scalar fields " + _name  + " and "
+									+ scalar.getName() + " with sizes " + std::to_string(_N)
+									+ " and " + std::to_string(scalar.getN()));
+			//########################################################################
+			return *this;
+		}
+		if (_dim != scalar.getDim())
+		{
+			//########################################################################
+			_log->ERROR("Attempted to divide scalar fields " + _name  + " and "
+									+ scalar.getName() + " with dimensions "
+									+ std::to_string(_dim) + " and "
+									+ std::to_string(scalar.getDim()));
+			//########################################################################
+			return *this;
+		}
+		if (_ugrid != scalar.getUGrid())
+		{
+			//########################################################################
+			_log->WARN("UGrids for scalar fields " + _name  + " and "
+			            + scalar.getName() + " do not match");
+			//########################################################################
+		}
+		std::vector<T> _copy = _field;
+		std::transform(_copy.begin(), _copy.end(), scalar.getField().begin(),
+									 _copy.begin(), std::divides<T>());
+		std::string name;
+		if (_name != " " && scalar.getName() != " ")
+		{
+			name += "(" + _name + " / " + scalar.getName() + ")";
+		}
+		_name = name;
+		_field = _copy;
+		return *this;
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -578,17 +779,26 @@ namespace ET
 	template<typename T>
 	std::string ScalarField<T>::summary()
 	{
-		std::string sum = "<ET::ScalarField<"+ type_name<decltype(_field[0])>();
+		std::string sum = "---------------------------------------------------";
+		sum += "\n<ET::ScalarField<"+ type_name<decltype(_field[0])>();
 		sum += "> object at " + getMem(this) + ">";
-		sum += "\ndim: " + std::to_string(_dim);
-		if (_name != " ")
-    {
-      sum +=  ", name: '" + _name + "'";
-    }
-		sum += "\n  N: " + std::to_string(_N);
-		sum += "\nUGrid '" + _ugrid->getName() + "' ref at " + getMem(_ugrid);
-		sum += "\nApproximator ref at " + getMem(_approx);
-		sum += "\nLogger ref at " + getMem(_log);
+		sum += "\n---------------------------------------------------";
+    sum += "\n   name: '" + _name + "'";
+		sum += "\n    dim: " + std::to_string(_dim);
+		sum += "\n      N: " + std::to_string(_N);
+		sum += "\n---------------------------------------------------";
+		std::string grid = "UGrid '" + _ugrid->getName() + "' at: ";
+		int grid_colon_loc = grid.length()-8;
+		sum += "\n" + grid + getMem(*getLogger()) + ",";
+		std::string grid_ref;
+		grid_ref.resize(grid_colon_loc,' ');
+		sum += "\n" + grid_ref;
+		sum += "ref at: " + getMem(_ugrid);
+		sum += "\nApproximator at: " + getMem(*getApproximator()) + ",";
+		sum += "\n         ref at: " + getMem(_approx);
+		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
+		sum += "\n   ref at: " + getMem(_log);
+		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		return sum;
 	}
 	//----------------------------------------------------------------------------
