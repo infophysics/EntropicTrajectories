@@ -1,11 +1,2 @@
-[18:02:14] [trace] ET:Approximator:default_0: Approximator 'default' created at location 0x5615a4760ed0
-[18:02:16] [info] ET:Approximator:default_0: Approximator default: k set to 6
-[18:02:16] [error] ET:Approximator:default_0: Approximator default: Attempted to set LSDriver to DGELSY which is not a valid type
-[18:03:19] [info] ET:Approximator:default_0: Approximator default: k set to 6
-[18:03:19] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSY
-[18:03:30] [info] ET:Approximator:default_0: Approximator default: k set to 6
-[18:03:30] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSD
-[18:03:38] [info] ET:Approximator:default_0: Approximator default: k set to 6
-[18:03:38] [error] ET:Approximator:default_0: Approximator default: Attempted to set LSDriver to xGELSs which is not a valid type
-[18:03:41] [info] ET:Approximator:default_0: Approximator default: k set to 6
-[18:03:41] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSS
+[10:20:25] [trace] ET:Approximator:default_20: Approximator 'default' created at location 0x556d995235a0
+[10:20:25] [trace] ET:Approximator:default_17: Approximator 'default' destroyed at location 0x556d9958fc30

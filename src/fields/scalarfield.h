@@ -95,6 +95,13 @@ namespace ET
     //  Operator overloads
     //--------------------------------------------------------------------------
     ScalarField<T> operator+(const ScalarField<T>& scalar) const;
+    ScalarField<T> operator-(const ScalarField<T>& scalar) const;
+    ScalarField<T> operator*(const ScalarField<T>& scalar) const;
+    ScalarField<T> operator/(const ScalarField<T>& scalar) const;
+    ScalarField<T>& operator+=(const ScalarField<T>& scalar);
+    ScalarField<T>& operator-=(const ScalarField<T>& scalar);
+    ScalarField<T>& operator*=(const ScalarField<T>& scalar);
+    ScalarField<T>& operator/=(const ScalarField<T>& scalar);
     T& operator()(const uint32_t& i);
     const T& operator()(const uint32_t& i) const;
     //--------------------------------------------------------------------------
@@ -109,6 +116,12 @@ namespace ET
     std::vector<T> derivative(uint64_t index, uint32_t n);
     std::vector<T> laplacian();
     T laplacian(uint64_t index);
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+    //  Various functions
+    //--------------------------------------------------------------------------
+    std::string summary();
     //--------------------------------------------------------------------------
 
   private:

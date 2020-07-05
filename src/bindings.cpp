@@ -31,6 +31,7 @@
 #include "ugrid.h"
 #include "log.h"
 #include "scalarfield.h"
+#include "vectorfield.h"
 #include "utils.h"
 #include "approximator.h"
 #include "dynamicalsystem.h"
@@ -752,9 +753,18 @@ PYBIND11_MODULE(etraj, m) {
 			py::print(out);
 		})
 		//--------------------------------------------------------------------------
+		//  Direct exposure
+		//--------------------------------------------------------------------------
+		//.def_readwrite("name", &ET::ScalarField<double>::getName)
+		//--------------------------------------------------------------------------
+
+		//--------------------------------------------------------------------------
 		//	Operator overloads
 		//--------------------------------------------------------------------------
 		.def(py::self + py::self)
+		.def(py::self - py::self)
+		.def(py::self * py::self)
+		.def(py::self / py::self)
 		.def("__getitem__", [](const ET::ScalarField<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())
@@ -794,6 +804,14 @@ PYBIND11_MODULE(etraj, m) {
 			    (uint64_t, uint32_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
+		//	print functionality
+		.def("__repr__", [](const ET::ScalarField<double> &field)
+		{
+			std::stringstream s;
+			s << &field;
+			std::string res = "<etraj.ScalarField ref at " + s.str() + ">\n";
+			return res + field.summary();
+		})
 		;
 	//----------------------------------------------------------------------------
 
@@ -954,6 +972,15 @@ PYBIND11_MODULE(etraj, m) {
 		{
 				return app.summary();
 		})
+		;
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Appproximator enum
+	//----------------------------------------------------------------------------
+	py::class_<ET::VectorField<double>,
+	           std::shared_ptr<ET::VectorField<double>>>(m, "VectorField")
+	  .def(py::init<>())
 		;
 	//----------------------------------------------------------------------------
 
