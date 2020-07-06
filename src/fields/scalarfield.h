@@ -114,8 +114,10 @@ namespace ET
     std::vector<std::vector<T>> gradient();
     std::vector<std::vector<T>> derivative(uint32_t n);
     std::vector<T> derivative(uint32_t dir, uint32_t n);
+    std::vector<T> derivative(std::vector<uint32_t> deriv);
     std::vector<T> derivativePoint(uint64_t index, uint32_t n);
     T derivativePoint(uint64_t index, uint32_t dir, uint32_t n);
+    T derivativePoint(uint64_t index, std::vector<uint32_t> deriv);
     std::vector<T> laplacian();
     T laplacian(uint64_t index);
     //--------------------------------------------------------------------------
@@ -149,6 +151,7 @@ namespace ET
     //--------------------------------------------------------------------------
     // Inherited functions which much be overwritten
     //--------------------------------------------------------------------------
+    std::vector<std::vector<T>> diffEQ();
     std::vector<T> diffEQ(uint64_t index);
     //--------------------------------------------------------------------------
 
@@ -175,6 +178,7 @@ namespace ET
   private:
     T _mass;
   protected:
+    std::vector<std::vector<T>> diffEQ();
     std::vector<T> diffEQ(uint64_t index);
   };
   //----------------------------------------------------------------------------

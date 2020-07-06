@@ -530,6 +530,41 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
+	//  Scalar derivative of order n in the direction 'dir'
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+													        	const std::shared_ptr<ScalarField<T>> field,
+														        std::vector<uint32_t> deriv)
+	{
+		std::vector<T> result(field->getN());
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Monomial mono(ugrid->getDim(),n);
+		ugrid->queryNeighbors(_params.k);
+		//	Get the index of the monomial expansion corresponding to
+		//	the nth-derivative in the 'dir'-direction
+		uint32_t index = mono.getTaylorIndex(deriv);
+		//	Loop over every point
+		for (uint64_t i = 0; i < field->getN(); i++)
+		{
+			std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+			Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+			std::vector<T> field_neighbors(_params.k);
+			for (uint32_t i = 0; i < _params.k; i++)
+			{
+				field_neighbors[i] = (*field)(neighbors[i]);
+			}
+			Vector<T> field_vals(field_neighbors);
+			Vector<T> answer = xGELSx(B,field_vals);
+			//  Trim result to the first field->getDim() elements
+			result[i] = answer(index);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
 	//	Scalar derivative of order n in all directions for a single point
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -590,6 +625,35 @@ namespace ET
 		//  Trim result to the first field->getDim() elements
 		std::vector<uint32_t> deriv(field->getDim(),0);
 		deriv[dir] = n;
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return answer(l);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Scalar derivative of order n in direction dir for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+																		const std::shared_ptr<ScalarField<T>> field,
+																		uint64_t index, std::vector<uint32_t> deriv)
+	{
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Monomial mono(ugrid->getDim(),n);
+		ugrid->queryNeighbors(_params.k);
+		//	Get the index of the monomial expansion corresponding to
+		//	the nth-derivative in the 'dir'-direction
+		//	Loop over every point
+		std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+		std::vector<T> field_neighbors(_params.k);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors[i] = (*field)(neighbors[i]);
+		}
+		Vector<T> field_vals(field_neighbors);
+		Vector<T> answer = xGELSx(B,field_vals);
+		//  Trim result to the first field->getDim() elements
 		uint32_t l = mono.getTaylorIndex(deriv);
 		return answer(l);
 	}
@@ -677,6 +741,41 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
+	//  Scalar derivative of order n in the direction 'dir'
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+													        	const ScalarField<T>& field,
+														        std::vector<uint32_t> deriv)
+	{
+		std::vector<T> result(field.getN());
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Monomial mono(ugrid->getDim(),n);
+		ugrid->queryNeighbors(_params.k);
+		//	Get the index of the monomial expansion corresponding to
+		//	the nth-derivative in the 'dir'-direction
+		uint32_t index = mono.getTaylorIndex(deriv);
+		//	Loop over every point
+		for (uint64_t i = 0; i < field.getN(); i++)
+		{
+			std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+			Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+			std::vector<T> field_neighbors(_params.k);
+			for (uint32_t i = 0; i < _params.k; i++)
+			{
+				field_neighbors[i] = field(neighbors[i]);
+			}
+			Vector<T> field_vals(field_neighbors);
+			Vector<T> answer = xGELSx(B,field_vals);
+			//  Trim result to the first field->getDim() elements
+			result[i] = answer(index);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
 	//	Scalar derivative of order n in all directions for a single point
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -737,6 +836,36 @@ namespace ET
 		//  Trim result to the first field->getDim() elements
 		std::vector<uint32_t> deriv(field.getDim(),0);
 		deriv[dir] = n;
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return answer(l);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Scalar derivative of order n in direction dir for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+																		  const ScalarField<T>& field,
+																		  uint64_t index,
+																			std::vector<uint32_t> deriv)
+	{
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Monomial mono(ugrid->getDim(),n);
+		ugrid->queryNeighbors(_params.k);
+		//	Get the index of the monomial expansion corresponding to
+		//	the nth-derivative in the 'dir'-direction
+		//	Loop over every point
+		std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+		std::vector<T> field_neighbors(_params.k);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors[i] = field(neighbors[i]);
+		}
+		Vector<T> field_vals(field_neighbors);
+		Vector<T> answer = xGELSx(B,field_vals);
+		//  Trim result to the first field->getDim() elements
 		uint32_t l = mono.getTaylorIndex(deriv);
 		return answer(l);
 	}

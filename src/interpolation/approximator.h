@@ -137,10 +137,16 @@ namespace ET
                                     uint32_t dir, uint32_t n);
     std::vector<T> scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::shared_ptr<ScalarField<T>> field,
+                                    std::vector<uint32_t> deriv);
+    std::vector<T> scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const std::shared_ptr<ScalarField<T>> field,
                                     uint64_t index, uint32_t n);
     T scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
                        const std::shared_ptr<ScalarField<T>> field,
                        uint64_t index, uint32_t dir, uint32_t n);
+    T scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                       const std::shared_ptr<ScalarField<T>> field,
+                       uint64_t index, std::vector<uint32_t> deriv);
     //--------------------------------------------------------------------------
     //  Passing field as a const refernce
     //--------------------------------------------------------------------------
@@ -153,10 +159,16 @@ namespace ET
                                     uint32_t dir, uint32_t n);
     std::vector<T> scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
                                     const ScalarField<T>& field,
+                                    std::vector<uint32_t> deriv);
+    std::vector<T> scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const ScalarField<T>& field,
                                     uint64_t index, uint32_t n);
     T scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
                        const ScalarField<T>& field,
                        uint64_t index, uint32_t dir, uint32_t n);
+    T scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                       const ScalarField<T>& field,
+                       uint64_t index, std::vector<uint32_t> deriv);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------

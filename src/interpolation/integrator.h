@@ -23,6 +23,8 @@
 #include <map>
 #include <memory>
 
+#include "rksuite.h"
+
 #include "ugrid.h"
 #include "params.h"
 #include "utils.h"
@@ -52,8 +54,14 @@ namespace ET
     Integrator(int type);
     Integrator(std::string type);
 
+    //--------------------------------------------------------------------------
+    //  Integration methods
+    //--------------------------------------------------------------------------
+    void integrate(UGrid<T>& ugrid, ScalarField<T>& field);
+    //--------------------------------------------------------------------------
   private:
-
+    IntegratorType _type;
+    struct IntegratorParams _params;
     std::shared_ptr<Log> _log;
   };
   //----------------------------------------------------------------------------
