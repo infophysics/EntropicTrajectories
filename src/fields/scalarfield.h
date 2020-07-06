@@ -114,7 +114,8 @@ namespace ET
     std::vector<std::vector<T>> gradient();
     std::vector<std::vector<T>> derivative(uint32_t n);
     std::vector<T> derivative(uint32_t dir, uint32_t n);
-    std::vector<T> derivative(uint64_t index, uint32_t n);
+    std::vector<T> derivativePoint(uint64_t index, uint32_t n);
+    T derivativePoint(uint64_t index, uint32_t dir, uint32_t n);
     std::vector<T> laplacian();
     T laplacian(uint64_t index);
     //--------------------------------------------------------------------------

@@ -803,9 +803,14 @@ PYBIND11_MODULE(etraj, m) {
 		     (std::vector<double> (ET::ScalarField<double>::*)
 			    (uint32_t, uint32_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
-	  .def("derivative",
+	  .def("derivative_point",
 		     (std::vector<double> (ET::ScalarField<double>::*)
-			    (uint64_t, uint32_t)) &ET::ScalarField<double>::derivative,
+			    (uint64_t, uint32_t)) &ET::ScalarField<double>::derivativePoint,
+	       py::return_value_policy::reference)
+	  .def("derivative_point",
+		     (double (ET::ScalarField<double>::*)
+			    (uint64_t, uint32_t, uint32_t))
+				 &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		//	print functionality
@@ -953,6 +958,13 @@ PYBIND11_MODULE(etraj, m) {
 					 uint64_t, uint32_t))
 				 &ET::Approximator<double>::scalarDerivative,
 				 py::return_value_policy::reference)
+	  .def("scalar_derivative",
+	 			 (double (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 uint64_t, uint32_t, uint32_t))
+				 &ET::Approximator<double>::scalarDerivative,
+				 py::return_value_policy::reference)
 		.def("scalar_derivative",
  				 (std::vector<std::vector<double>> (ET::Approximator<double>::*)
  				 	(const std::shared_ptr<ET::UGrid<double>>,
@@ -974,6 +986,13 @@ PYBIND11_MODULE(etraj, m) {
  					 uint64_t, uint32_t))
  				 &ET::Approximator<double>::scalarDerivative,
  				 py::return_value_policy::reference)
+	  .def("scalar_derivative",
+	 			 (double (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const ET::ScalarField<double>&,
+					 uint64_t, uint32_t, uint32_t))
+				 &ET::Approximator<double>::scalarDerivative,
+				 py::return_value_policy::reference)
 		.def("construct_taylor_matrix",
 		     (ET::Matrix<double> (ET::Approximator<double>::*)
 				  (const std::shared_ptr<ET::UGrid<double>>,

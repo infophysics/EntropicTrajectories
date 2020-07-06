@@ -1,1 +1,9 @@
-[19:19:53] [trace] ET:Approximator:default_0: Approximator 'default' created at location 0x564bfb729f9[19:19:53] [trace] ET:Approximator:default: Approximator 'default' destroyed at location 0x564bfb213b20
+[06:35:12] [trace] ET:Approximator:default_0: Approximator 'default' created at location 0x55f3fbd85700
+[06:35:13] [info] ET:Approximator:default_0: Approximator default: k set to 6
+[06:35:13] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSS
+[06:35:14] [info] ET:Approximator:default_0: Approximator default: k set to 6
+[06:35:14] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSS
+[06:35:34] [info] ET:Approximator:default_0: Approximator default: k set to 6
+[06:35:34] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSS
+[06:35:44] [info] ET:Approximator:default_0: Approximator default: k set to 6
+[06:35:44] [info] ET:Approximator:default_0: Approximator default: LSDriver set to xGELSS

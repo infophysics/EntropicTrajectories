@@ -739,9 +739,19 @@ namespace ET
 	//	nth-derivative for a single point
 	//----------------------------------------------------------------------------
 	template<typename T>
-	std::vector<T> ScalarField<T>::derivative(uint64_t index, uint32_t n)
+	std::vector<T> ScalarField<T>::derivativePoint(uint64_t index, uint32_t n)
 	{
 		return _approx->scalarDerivative(_ugrid, (*this), index, n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	nth-derivative in the ith-direction for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T ScalarField<T>::derivativePoint(uint64_t index, uint32_t dir, uint32_t n)
+	{
+		return _approx->scalarDerivative(_ugrid, (*this), index, dir, n);
 	}
 	//----------------------------------------------------------------------------
 
