@@ -687,7 +687,13 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//  KDTree functions
 		//--------------------------------------------------------------------------
-		.def("query_neighbors", &ET::UGrid<double>::queryNeighbors)
+		.def("query_neighbors", (void
+		     (ET::UGrid<double>::*)(uint64_t k))
+				 &ET::UGrid<double>::queryNeighbors)
+		.def("query_neighbors", (std::vector<std::vector<size_t>>
+ 		     (ET::UGrid<double>::*)(const std::vector<std::vector<double>>&,
+					                      uint64_t k))
+ 				 &ET::UGrid<double>::queryNeighbors)
 		.def("query_radius", &ET::UGrid<double>::queryRadius)
 		//--------------------------------------------------------------------------
 		;
@@ -827,6 +833,22 @@ PYBIND11_MODULE(etraj, m) {
 
 	//----------------------------------------------------------------------------
 	//	Scalarfield examples
+	//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//	Gaussian in 1D
+	//----------------------------------------------------------------------------
+	py::class_<ET::Gaussian1D<double>,
+	           ET::ScalarField<double>,
+						 std::shared_ptr<ET::Gaussian1D<double>>>(m,"Gaussian1D")
+		.def(py::init<>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double>())
+		.def("get_mass", &ET::Gaussian1D<double>::getMass)
+		.def("set_mass", &ET::Gaussian1D<double>::setMass)
+		;
+	//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//	Klein-Gordon field in 1D
 	//----------------------------------------------------------------------------
 	py::class_<ET::KleinGordon1D<double>,
 	           ET::ScalarField<double>,

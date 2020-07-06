@@ -37,13 +37,21 @@ namespace ET
   {
   }
 
+  template<typename T>
+  Integrator<T>::Integrator(std::shared_ptr<Log> log)
+  {
+    _log = log;
+  }
+
   //----------------------------------------------------------------------------
   //  Integration methods
   //----------------------------------------------------------------------------
   template<typename T>
   void Integrator<T>::integrate(UGrid<T>& ugrid, ScalarField<T>& field)
   {
-
+    std::vector<T> result(field.getN());
+    const double dt = 0.01;
+    //integrate(field.diffEQ, field.data(), 0.0, 1.0, dt);
   }
   //----------------------------------------------------------------------------
 }

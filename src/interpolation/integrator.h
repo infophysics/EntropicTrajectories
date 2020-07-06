@@ -24,6 +24,7 @@
 #include <memory>
 
 #include "rksuite.h"
+//#include <boost/numeric/odeint.hpp>
 
 #include "ugrid.h"
 #include "params.h"
@@ -54,6 +55,8 @@ namespace ET
     Integrator(int type);
     Integrator(std::string type);
 
+    Integrator(std::shared_ptr<Log> log);
+
     //--------------------------------------------------------------------------
     //  Integration methods
     //--------------------------------------------------------------------------
@@ -65,4 +68,6 @@ namespace ET
     std::shared_ptr<Log> _log;
   };
   //----------------------------------------------------------------------------
+
+  template class Integrator<double>;
 }

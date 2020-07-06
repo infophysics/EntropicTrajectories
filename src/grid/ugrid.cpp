@@ -672,6 +672,64 @@ namespace ET
 			_distances[i] = std::move(out_dists_sqr);
     }
   }
+	//----------------------------------------------------------------------------
+	//	Query the tree for neighbors of some set of points
+	//----------------------------------------------------------------------------
+	template<typename T>
+  std::vector<std::vector<size_t>>
+  UGrid<T>::queryNeighbors(const std::vector<std::vector<T>>& points,
+		                       uint64_t k)
+  {
+		if (k >= _N)
+		{
+			//########################################################################
+			_log->ERROR("UGrid " + _name
+									+ ": Attempted to query " + std::to_string(k)
+									+ " neighbors for points in array _ugrid of size "
+									+ std::to_string(_N));
+			//########################################################################
+			return;
+		}
+		if(checkConsistency() == false)
+		{
+			//########################################################################
+			_log->ERROR("UGrid " + _name
+									+ ": Attempted to query " + std::to_string(k)
+									+ " neighbors for points in array _ugrid with inconsistent "
+									+ " attributes");
+			//########################################################################
+			return;
+		}
+		std::vector<std::vector<size_t>> neighbors(points.size());
+		std::vector<std::vector<double>> distances(points.size());
+		//##########################################################################
+		_log->INFO("UGrid " + _name + ": Querying each point in array _grid of"
+	             + " size " + std::to_string(_N) + " and dimension "
+						   + std::to_string(_dim) + " for the nearest "
+							 + std::to_string(k) + " neighbors of a set of points");
+		//##########################################################################
+    //  generate kdtree
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
+		kdt(_dim, _ugrid, 16);
+    kdt.index->buildIndex();
+
+    const size_t num_results = k;
+    for (uint64_t i = 0; i < points.size(); i++)
+    {
+			neighbors[i].resize(k);
+			distances[i].resize(k);
+      std::vector<size_t> ret_indexes(num_results);
+      std::vector<double> out_dists_sqr(num_results);
+
+      nanoflann::KNNResultSet<double> resultSet(num_results);
+      resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
+			kdt.index->findNeighbors(resultSet, &points[i][0],
+				                       nanoflann::SearchParams(10));
+			neighbors[i] = std::move(ret_indexes);
+			distances[i] = std::move(out_dists_sqr);
+    }
+		return neighbors;
+  }
 	template<typename T>
   void UGrid<T>::queryRadius(double radius)
   {

@@ -31,8 +31,10 @@
 namespace ET
 {
   template<typename T> class Approximator;
+  template<typename T> class Integrator;
 }
 #include "approximator.h"
+#include "integrator.h"
 namespace ET
 {
   //----------------------------------------------------------------------------
@@ -75,6 +77,7 @@ namespace ET
     uint64_t getN() const;
     uint32_t getDim() const;
     std::shared_ptr<Approximator<T>> getApproximator() const;
+    std::shared_ptr<Integrator<T>> getIntegrator() const;
     std::shared_ptr<UGrid<T>> getUGrid() const;
     std::shared_ptr<Log> getLogger();
     int getFlag() const;
@@ -123,6 +126,12 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
+    //  Methods for calculating integrals
+    //--------------------------------------------------------------------------
+    void queryNeighborCache(uint64_t index, uint32_t k);
+    //--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
     //  Various functions
     //--------------------------------------------------------------------------
     std::string summary();
@@ -141,7 +150,14 @@ namespace ET
     //--------------------------------------------------------------------------
     std::shared_ptr<UGrid<T>> _ugrid;
     std::shared_ptr<Approximator<T>> _approx;
+    std::shared_ptr<Integrator<T>> _integrator;
     std::shared_ptr<Log> _log;
+    //--------------------------------------------------------------------------
+    //  Objects for differential equation solver
+    //--------------------------------------------------------------------------
+    uint64_t _point_cache;
+    std::vector<size_t> _neighbor_cache;
+    std::vector<double> _distance_cache;
 
     int _flag;
     std::string _info;
@@ -151,8 +167,7 @@ namespace ET
     //--------------------------------------------------------------------------
     // Inherited functions which much be overwritten
     //--------------------------------------------------------------------------
-    std::vector<std::vector<T>> diffEQ();
-    std::vector<T> diffEQ(uint64_t index);
+    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
     //--------------------------------------------------------------------------
 
   };
@@ -163,6 +178,31 @@ namespace ET
 
   //----------------------------------------------------------------------------
   //  Example scalar fields
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Example scalar fields
+  //----------------------------------------------------------------------------
+  template<typename T>
+  class Gaussian1D : public ScalarField<T>
+  {
+  public:
+    Gaussian1D();
+    Gaussian1D(std::shared_ptr<UGrid<T>> ugrid);
+    Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mass);
+    //  Getters
+    T getMass();
+    //  Setters
+    void setMass(T mass);
+  private:
+    T _mass;
+  protected:
+    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
+  };
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Klein Gordon field in 1D
   //----------------------------------------------------------------------------
   template<typename T>
   class KleinGordon1D : public ScalarField<T>
@@ -178,8 +218,7 @@ namespace ET
   private:
     T _mass;
   protected:
-    std::vector<std::vector<T>> diffEQ();
-    std::vector<T> diffEQ(uint64_t index);
+    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
   };
   //----------------------------------------------------------------------------
 

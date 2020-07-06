@@ -81,6 +81,7 @@ find_package( BLAS REQUIRED )
 find_package( CBLAS REQUIRED )
 find_package( LAPACK REQUIRED )
 find_package( LAPACKE REQUIRED )
+find_package( Boost REQUIRED )
 
 # find CBLAS library
 find_path(BLAS_INCLUDE_DIRS cblas.h
@@ -91,7 +92,8 @@ MESSAGE(STATUS "CBLAS.h location is: " ${BLAS_INCLUDE_DIRS})
 include_directories(${BLAS_INCLUDE_DIRS}
                     ${CBLAS_INCLUDE_DIRS}
                     ${LAPACK_INCLUDE_DIRS}
-                    ${LAPACKE_INCLUDE_DIRS})
+                    ${LAPACKE_INCLUDE_DIRS}
+                    ${BOOST_INCLUDE_DIRS})
 #-L/usr/lib/x86_64-linux-gnu/openblas -llapacke -llapack -lblas -lgfortran
 
 # Generate Python module
@@ -102,4 +104,5 @@ target_link_libraries(etraj PUBLIC ${MY_LIBRARIES}
                                    ${BLAS_LIBRARIES}
                                    ${CBLAS_LIBRARIES}
                                    ${LAPACK_LIBRARIES}
-                                   ${LAPACKE_LIBRARIES})
+                                   ${LAPACKE_LIBRARIES}
+                                   ${BOOST_LIBRARIES})

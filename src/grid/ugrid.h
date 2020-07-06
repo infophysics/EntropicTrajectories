@@ -78,7 +78,7 @@ namespace ET
     //--------------------------------------------------------------------------
     void setDim(uint64_t dim);
     void setN(uint64_t N);
-    void setUGrid(std::vector<std::vector<T> > ugrid);
+    void setUGrid(std::vector<std::vector<T>> ugrid);
     void setName(std::string name);
     //--------------------------------------------------------------------------
 
@@ -103,6 +103,8 @@ namespace ET
     //  KDTree methods
     //--------------------------------------------------------------------------
     void queryNeighbors(uint64_t k);
+    std::vector<std::vector<size_t>>
+    queryNeighbors(const std::vector<std::vector<T>>& points, uint64_t k);
     void queryRadius(double radius);
     //--------------------------------------------------------------------------
 
