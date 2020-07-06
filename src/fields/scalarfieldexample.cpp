@@ -59,9 +59,9 @@ namespace ET
   //  Diff EQ function
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<T> KleinGordon1D(uint64_t index)
+  std::vector<T> KleinGordon1D<T>::diffEQ(uint64_t index)
   {
-    
+
   }
   //----------------------------------------------------------------------------
 }
