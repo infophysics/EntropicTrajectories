@@ -60,8 +60,10 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Integration methods
     //--------------------------------------------------------------------------
-    void integrate(UGrid<T>& ugrid, ScalarField<T>& field);
+    void scalarIntegrate(const UGrid<T>& ugrid, ScalarField<T>& field);
     //--------------------------------------------------------------------------
+    void scalarRK4Step(const UGrid<T>& ugrid, ScalarField<T>& field, double dt);
+
   private:
     IntegratorType _type;
     struct IntegratorParams _params;

@@ -163,11 +163,11 @@ namespace ET
     std::string _info;
     //--------------------------------------------------------------------------
 
-  protected:
+  public:
     //--------------------------------------------------------------------------
     // Inherited functions which much be overwritten
     //--------------------------------------------------------------------------
-    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
+    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
     //--------------------------------------------------------------------------
 
   };
@@ -196,8 +196,8 @@ namespace ET
     void setMass(T mass);
   private:
     T _mass;
-  protected:
-    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
+  public:
+    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
   };
   //----------------------------------------------------------------------------
 
@@ -217,11 +217,12 @@ namespace ET
     void setMass(T mass);
   private:
     T _mass;
-  protected:
-    void diffEQ(const std::vector<T>& f, std::vector<T>& dfdt, const double t);
+  public:
+    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
   };
   //----------------------------------------------------------------------------
 
+  template class Gaussian1D<double>;
   template class KleinGordon1D<double>;
 
 }

@@ -57,16 +57,13 @@ namespace ET
   //  Diff EQ function
   //----------------------------------------------------------------------------
   template<typename T>
-  void Gaussian1D<T>::diffEQ(const std::vector<T>& f,
-                                std::vector<T>& dfdt, const double t)
+  Vector<T> Gaussian1D<T>::diffEQ(const Vector<T>& f,
+                                       double dt, Vector<T> k)
   {
-    //  The differential equation must be defined by the user
-    std::vector<T> v = derivative(0,1);
-    std::vector<T> dpdx = derivative(0,1);
-    for (uint64_t i = 0; i < this->getN(); i++)
-    {
-      dfdt[i] = -_mass*dpdx[i];
-    }
+    Vector<T> y_i = f;
+    Vector<T> d(derivative(0,1));
+    Vector<T> y_f = -d;
+    return y_f;
   }
   //----------------------------------------------------------------------------
 
@@ -108,8 +105,8 @@ namespace ET
   //  Diff EQ function
   //----------------------------------------------------------------------------
   template<typename T>
-  void KleinGordon1D<T>::diffEQ(const std::vector<T>& f,
-                                std::vector<T>& dfdt, const double t)
+  Vector<T> KleinGordon1D<T>::diffEQ(const Vector<T>& f,
+                                          double dt, Vector<T> k)
   {
     //  The differential equation must be defined by the user
     std::vector<T> dd = derivative(0,2);

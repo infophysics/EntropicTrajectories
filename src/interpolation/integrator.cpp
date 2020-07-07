@@ -47,11 +47,38 @@ namespace ET
   //  Integration methods
   //----------------------------------------------------------------------------
   template<typename T>
-  void Integrator<T>::integrate(UGrid<T>& ugrid, ScalarField<T>& field)
+  void Integrator<T>::scalarIntegrate(const UGrid<T>& ugrid,
+                                      ScalarField<T>& field)
   {
     std::vector<T> result(field.getN());
     const double dt = 0.01;
     //integrate(field.diffEQ, field.data(), 0.0, 1.0, dt);
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Runge-Kutta 4th-order single time step
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::scalarRK4Step(const UGrid<T>& ugrid,
+                     ScalarField<T>& field, double dt)
+  {
+    //  grab the initial field values
+    Vector<T> init(field.getField());
+    Vector<T> k0(field.getN(),0.0);
+    //  generate k1-k4
+    Vector<T> k1(field.diffEQ(init,0.0,k0));
+    std::cout << k1.summary() << std::endl;
+    Vector<T> k2(field.diffEQ(init,dt/2,k1));
+    std::cout << k2.summary() << std::endl;
+    Vector<T> k3(field.diffEQ(init,dt/2,k2));
+    std::cout << k3.summary() << std::endl;
+    Vector<T> k4(field.diffEQ(init,dt,k3));
+    std::cout << k4.summary() << std::endl;
+    Vector<T> final = init + (dt/6)*(k1 + 2*k2 + 2*k3 + k4);
+    //  set new field
+    std::cout << final.summary() << std::endl;
+    field.setField(final.getVec());
   }
   //----------------------------------------------------------------------------
 }

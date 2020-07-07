@@ -742,6 +742,8 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_approximator", &ET::ScalarField<double>::getApproximator,
 		     py::return_value_policy::reference)
+		.def("get_integrator", &ET::ScalarField<double>::getIntegrator,
+	       py::return_value_policy::reference)
 		.def("get_logger", &ET::ScalarField<double>::getLogger,
  		     py::return_value_policy::reference)
 		.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
@@ -1101,6 +1103,17 @@ PYBIND11_MODULE(etraj, m) {
 		})
 		;
 	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Integrator class
+	//----------------------------------------------------------------------------
+	py::class_<ET::Integrator<double>,
+	           std::shared_ptr<ET::Integrator<double>>>(m, "Integrator")
+		.def(py::init<>())
+		.def("scalar_RK4_step", &ET::Integrator<double>::scalarRK4Step)
+		;
+	//----------------------------------------------------------------------------
+
 
 	//----------------------------------------------------------------------------
 	//  Appproximator enum
