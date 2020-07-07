@@ -321,6 +321,10 @@ namespace ET
     }
     Vector<T> field_vals(field_neighbors);
     Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
     return answer.getVec();
   }
   //----------------------------------------------------------------------------
@@ -357,6 +361,10 @@ namespace ET
       }
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
       //  Trim result to the first field->getDim() elements
 			std::vector<T> v = answer.getVec();
       std::vector<T> u = {v.begin()+1,v.begin()+field->getDim()+1};
@@ -403,6 +411,10 @@ namespace ET
     }
     Vector<T> field_vals(field_neighbors);
     Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
     return answer.getVec();
   }
   //----------------------------------------------------------------------------
@@ -439,6 +451,10 @@ namespace ET
       }
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
       //  Trim result to the first field->getDim() elements
 			std::vector<T> v = answer.getVec();
       std::vector<T> u = {v.begin()+1,v.begin()+field.getDim()+1};
@@ -478,6 +494,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field->getDim() elements
 			std::vector<T> temp_result(field->getDim());
 			for (uint32_t j = 0; j < field->getDim(); j++)
@@ -522,6 +542,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -557,6 +581,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -588,6 +616,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field->getDim() elements
 		for (uint32_t j = 0; j < field->getDim(); j++)
 		{
@@ -622,6 +654,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field->getDim() elements
 		std::vector<uint32_t> deriv(field->getDim(),0);
 		deriv[dir] = n;
@@ -653,6 +689,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field->getDim() elements
 		uint32_t l = mono.getTaylorIndex(deriv);
 		return answer(l);
@@ -689,6 +729,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field.getDim() elements
 			std::vector<T> temp_result(field.getDim());
 			for (uint32_t j = 0; j < field.getDim(); j++)
@@ -733,6 +777,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -768,6 +816,10 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//  Trim result to the first field->getDim() elements
 			result[i] = answer(index);
 		}
@@ -799,6 +851,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field.getDim() elements
 		for (uint32_t j = 0; j < field.getDim(); j++)
 		{
@@ -833,6 +889,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field->getDim() elements
 		std::vector<uint32_t> deriv(field.getDim(),0);
 		deriv[dir] = n;
@@ -865,6 +925,10 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
 		//  Trim result to the first field->getDim() elements
 		uint32_t l = mono.getTaylorIndex(deriv);
 		return answer(l);
@@ -927,10 +991,22 @@ namespace ET
 			}
 			Vector<T> field_vals_x(field_neighbors_x);
 			Vector<T> answer_x = xGELSx(B,field_vals_x);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			Vector<T> field_vals_y(field_neighbors_y);
 			Vector<T> answer_y = xGELSx(B,field_vals_y);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			Vector<T> field_vals_z(field_neighbors_z);
 			Vector<T> answer_z = xGELSx(B,field_vals_z);
+			if (B.getFlag() == -1)
+			{
+				_log->ERROR(B.getInfo());
+			}
 			//	Get the index of the monomial expansion corresponding to
 			//	the nth-derivative in the 'dir'-direction
 			std::vector<uint32_t> deriv(field.getDim(),0);

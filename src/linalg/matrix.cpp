@@ -1466,6 +1466,17 @@ namespace ET
       std::cout << "The diagonal element " << info << " of the triangular "
                 << "factor of A is zero, so that A does not have full rank;\n"
                 << "the least squares solution could not be computed.\n";
+      A.setFlag(-1);
+      B.setFlag(-1);
+      A.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
+      B.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
+    }
+    else if (info < 0)
+    {
+      A.setFlag(-1);
+      B.setFlag(-1);
+      A.setInfo(std::to_string(info)+"th argument has illegal value");
+      B.setInfo(std::to_string(info)+"th argument has illegal value");
     }
     //  Cut the result according to (A.getNumCols() x B.getNumCols())
     c.resize(A.getNumCols() * B.getNumCols());
@@ -1532,6 +1543,17 @@ namespace ET
       std::cout << "The diagonal element " << info << " of the triangular "
                 << "factor of A is zero, so that A does not have full rank;\n"
                 << "the least squares solution could not be computed.\n";
+      A.setFlag(-1);
+      //v.setFlag(-1);
+      A.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
+      //v.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
+    }
+    else if (info < 0)
+    {
+      A.setFlag(-1);
+      //v.setFlag(-1);
+      A.setInfo(std::to_string(info)+"th argument has illegal value");
+      //v.setInfo(std::to_string(info)+"th argument has illegal value");
     }
     //  Cut the result according to (A.getNumCols())
     u.resize(A.getNumCols());
