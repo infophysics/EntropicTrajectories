@@ -167,7 +167,7 @@ namespace ET
     //--------------------------------------------------------------------------
     // Inherited functions which much be overwritten
     //--------------------------------------------------------------------------
-    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
+    virtual Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
     //--------------------------------------------------------------------------
 
   };
@@ -189,13 +189,16 @@ namespace ET
   public:
     Gaussian1D();
     Gaussian1D(std::shared_ptr<UGrid<T>> ugrid);
-    Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mass);
+    Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mu, T sigma);
     //  Getters
-    T getMass();
+    T getMu();
+    T getSigma();
     //  Setters
-    void setMass(T mass);
+    void setMu(T mu);
+    void setSigma(T sigma);
   private:
-    T _mass;
+    T _mu;
+    T _sigma;
   public:
     Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
   };

@@ -844,9 +844,12 @@ PYBIND11_MODULE(etraj, m) {
 						 std::shared_ptr<ET::Gaussian1D<double>>>(m,"Gaussian1D")
 		.def(py::init<>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double>())
-		.def("get_mass", &ET::Gaussian1D<double>::getMass)
-		.def("set_mass", &ET::Gaussian1D<double>::setMass)
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double,double>())
+		.def("get_mu", &ET::Gaussian1D<double>::getMu)
+		.def("set_mu", &ET::Gaussian1D<double>::setMu)
+		.def("get_sigma", &ET::Gaussian1D<double>::getSigma)
+		.def("set_sigma", &ET::Gaussian1D<double>::setSigma)
+		.def("diffeq", &ET::Gaussian1D<double>::diffEQ)
 		;
 	//----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------

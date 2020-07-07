@@ -43,6 +43,12 @@ namespace ET
     _log = log;
   }
 
+  template<typename T>
+  void Integrator<T>::setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>))
+  {
+    _f = f;
+  }
+
   //----------------------------------------------------------------------------
   //  Integration methods
   //----------------------------------------------------------------------------
@@ -67,17 +73,12 @@ namespace ET
     Vector<T> init(field.getField());
     Vector<T> k0(field.getN(),0.0);
     //  generate k1-k4
-    Vector<T> k1(field.diffEQ(init,0.0,k0));
-    std::cout << k1.summary() << std::endl;
-    Vector<T> k2(field.diffEQ(init,dt/2,k1));
-    std::cout << k2.summary() << std::endl;
-    Vector<T> k3(field.diffEQ(init,dt/2,k2));
-    std::cout << k3.summary() << std::endl;
-    Vector<T> k4(field.diffEQ(init,dt,k3));
-    std::cout << k4.summary() << std::endl;
+    Vector<T> k1 = field.diffEQ(init,0.0,k0);
+    Vector<T> k2 = field.diffEQ(init,dt/2,k1);
+    Vector<T> k3 = field.diffEQ(init,dt/2,k2);
+    Vector<T> k4 = field.diffEQ(init,dt,k3);
     Vector<T> final = init + (dt/6)*(k1 + 2*k2 + 2*k3 + k4);
     //  set new field
-    std::cout << final.summary() << std::endl;
     field.setField(final.getVec());
   }
   //----------------------------------------------------------------------------

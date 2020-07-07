@@ -25,32 +25,45 @@ namespace ET
   //  Gaussian1D Example
   //----------------------------------------------------------------------------
   template<typename T>
-  Gaussian1D<T>::Gaussian1D() : ScalarField<T>(), _mass(0)
+  Gaussian1D<T>::Gaussian1D() : ScalarField<T>(), _mu(0), _sigma(1)
   {
+    //getIntegrator()->setF(&diffEQ);
   }
   template<typename T>
   Gaussian1D<T>::Gaussian1D(std::shared_ptr<UGrid<T>> ugrid)
-  : ScalarField<T>("Gaussian1D",ugrid), _mass(0)
+  : ScalarField<T>("Gaussian1D",ugrid), _mu(0), _sigma(1)
   {
+    //getIntegrator()->setF(&diffEQ);
   }
   template<typename T>
-  Gaussian1D<T>::Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mass)
-  : ScalarField<T>("Gaussian1D",ugrid), _mass(mass)
+  Gaussian1D<T>::Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mu, T sigma)
+  : ScalarField<T>("Gaussian1D",ugrid), _mu(mu), _sigma(sigma)
   {
+    //getIntegrator()->setF(&diffEQ);
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  T Gaussian1D<T>::getMass()
+  T Gaussian1D<T>::getMu()
   {
-    return _mass;
+    return _mu;
   }
   template<typename T>
-  void Gaussian1D<T>::setMass(T mass)
+  T Gaussian1D<T>::getSigma()
   {
-    _mass = mass;
+    return _sigma;
+  }
+  template<typename T>
+  void Gaussian1D<T>::setMu(T mu)
+  {
+    _mu = mu;
+  }
+  template<typename T>
+  void Gaussian1D<T>::setSigma(T sigma)
+  {
+    _sigma = sigma;
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -61,8 +74,16 @@ namespace ET
                                        double dt, Vector<T> k)
   {
     Vector<T> y_i = f;
-    Vector<T> d(derivative(0,1));
-    Vector<T> y_f = -d;
+    uint32_t dir = 0;
+    uint32_t n = 1;
+    std::vector<std::vector<T>> grad = gradient();
+    std::vector<T> grad2(getN());
+    for(uint64_t i = 0; i < getN(); i++)
+    {
+      grad2[i] = grad[i][0];
+    }
+    Vector<T> dy_i(grad2);
+    Vector<T> y_f = -dy_i;
     return y_f;
   }
   //----------------------------------------------------------------------------

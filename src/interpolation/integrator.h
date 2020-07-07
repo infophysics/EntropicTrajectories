@@ -57,6 +57,8 @@ namespace ET
 
     Integrator(std::shared_ptr<Log> log);
 
+    void setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>));
+
     //--------------------------------------------------------------------------
     //  Integration methods
     //--------------------------------------------------------------------------
@@ -67,6 +69,7 @@ namespace ET
   private:
     IntegratorType _type;
     struct IntegratorParams _params;
+    Vector<T>(ScalarField<T>::*_f)(const Vector<T>&,double,Vector<T>);
     std::shared_ptr<Log> _log;
   };
   //----------------------------------------------------------------------------
