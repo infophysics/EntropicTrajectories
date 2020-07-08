@@ -105,8 +105,8 @@ namespace ET
                         const std::shared_ptr<ScalarField<T>> field,
                         uint64_t index);
     //--------------------------------------------------------------------------
-    //  scalarGradientMLSPoint - approximate the gradient at a point
-    //                           using the vanilla MLS method
+    //  scalarGradientLSPoint - approximate the gradient at a point
+    //                           using the vanilla LS method
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - ScalarField<T> pointer
     //              index      - index of the point
@@ -114,7 +114,7 @@ namespace ET
     //  Returns:    std::vector<T> of the gradient.
     //--------------------------------------------------------------------------
     std::vector<T>
-    scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
                            const std::shared_ptr<ScalarField<T>> field,
                            uint64_t index);
     //--------------------------------------------------------------------------
@@ -128,15 +128,15 @@ namespace ET
     scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
                    const std::shared_ptr<ScalarField<T>> field);
     //--------------------------------------------------------------------------
-    //  scalarGradientMLS      - approximate the gradient for an entire field
-    //                           using the vanilla MLS method
+    //  scalarGradientLS      - approximate the gradient for an entire field
+    //                           using the vanilla LS method
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - ScalarField<T> pointer
     //
     //  Returns:    std::vector<std::vector<T>> of the gradient.
     //--------------------------------------------------------------------------
     std::vector<std::vector<T>>
-    scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+    scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
                       const std::shared_ptr<ScalarField<T>> field);
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
@@ -155,8 +155,8 @@ namespace ET
                         const ScalarField<T>& field,
                         uint64_t index);
     //--------------------------------------------------------------------------
-    //  scalarGradientMLSPoint - approximate the gradient at a point
-    //                           using the vanilla MLS method
+    //  scalarGradientLSPoint - approximate the gradient at a point
+    //                           using the vanilla LS method
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - const ScalarField<T>& reference
     //              index      - index of the point
@@ -164,7 +164,7 @@ namespace ET
     //  Returns:    std::vector<T> of the gradient.
     //--------------------------------------------------------------------------
     std::vector<T>
-    scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
                            const ScalarField<T>& field,
                            uint64_t index);
     //--------------------------------------------------------------------------
@@ -179,8 +179,8 @@ namespace ET
     scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
                    const ScalarField<T>& field);
     //--------------------------------------------------------------------------
-    //  scalarGradientMLS      - approximate the gradient for an entire field
-    //                           using the vanilla MLS method
+    //  scalarGradientLS      - approximate the gradient for an entire field
+    //                           using the vanilla LS method
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - const ScalarField<T>& reference
     //              index      - index of the point
@@ -188,7 +188,7 @@ namespace ET
     //  Returns:    std::vector<std::vector<T>> of the gradient.
     //--------------------------------------------------------------------------
     std::vector<std::vector<T>>
-    scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
+    scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
                       const ScalarField<T>& field);
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
@@ -370,8 +370,40 @@ namespace ET
     //  Driver routines for derivatives
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
-    //  scalarDerivativeMLSPoint - approximate the derivative for a point
-    //                             using the vanilla MLS method
+    //  scalarDerivativeLSPoint - approximate the derivative for a point
+    //                             using the vanilla LS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              index        - uint64_t
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const std::shared_ptr<ScalarField<T>> field,
+                            uint64_t index,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeLS      - approximate the derivative for an entire
+    //                             field using the vanilla LS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              n            - order of the derivative
+    //
+    //  Returns:    std::vector<T> of the gradient.
+    //--------------------------------------------------------------------------
+    std::vector<Vector<T>>
+    scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
+                       const std::shared_ptr<ScalarField<T>> field,
+                       uint32_t n);
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //  Passing field as a const reference
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeLSPoint - approximate the derivative for a point
+    //                             using the vanilla LS method
     //  Arguments:  ugrid        - UGrid<T> pointer
     //              field        - ScalarField<T> pointer
     //              index        - uint64_t
@@ -379,28 +411,40 @@ namespace ET
     //
     //  Returns:    std::vector<T> of the gradient.
     //--------------------------------------------------------------------------
-    std::vector<T>
-    scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                             const std::shared_ptr<ScalarField<T>> field,
-                             uint64_t index,
-                             uint32_t n);
+    Vector<T>
+    scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const ScalarField<T>& field,
+                            uint64_t index,
+                            uint32_t n);
     //--------------------------------------------------------------------------
-    //  scalarDerivativeMLS      - approximate the derivative for an entire
-    //                             field using the vanilla MLS method
+    //  scalarDerivativeLS      - approximate the derivative for an entire
+    //                             field using the vanilla LS method
     //  Arguments:  ugrid        - UGrid<T> pointer
     //              field        - ScalarField<T> pointer
     //              n            - order of the derivative
     //
     //  Returns:    std::vector<T> of the gradient.
     //--------------------------------------------------------------------------
-    std::vector<std::vector<T>>
-    scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
-                        const std::shared_ptr<ScalarField<T>> field,
-                        uint32_t n);
+    std::vector<Vector<T>>
+    scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
+                       const ScalarField<T>& field,
+                       uint32_t n);
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     //  Helper functions
     //--------------------------------------------------------------------------
+    Vector<T> xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                                const std::shared_ptr<ScalarField<T>> field,
+                                uint32_t n);
+    Vector<T> xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+                                const ScalarField<T>& field,
+                                uint32_t n);
+    Vector<T> xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                                     const std::shared_ptr<ScalarField<T>> field,
+                                     uint64_t index, uint32_t n);
+    Vector<T> xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const ScalarField<T>& field,
+                                    uint64_t index, uint32_t n);
     Vector<T> xGELSx(Matrix<T> B, Vector<T> u);
     //--------------------------------------------------------------------------
 
@@ -414,7 +458,7 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    //  MLS functions
+    //  LS functions
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,

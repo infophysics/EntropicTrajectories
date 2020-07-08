@@ -952,17 +952,17 @@ PYBIND11_MODULE(etraj, m) {
 					 const ET::ScalarField<double>&))
 				 &ET::Approximator<double>::scalarGradient,
 	       py::return_value_policy::reference)
-		 .def("scalar_gradient_mls",
+		 .def("scalar_gradient_ls",
  		     (std::vector<std::vector<double>> (ET::Approximator<double>::*)
  				  (const std::shared_ptr<ET::UGrid<double>>,
  				   const std::shared_ptr<ET::ScalarField<double>>))
- 				 &ET::Approximator<double>::scalarGradientMLS,
+ 				 &ET::Approximator<double>::scalarGradientLS,
  	       py::return_value_policy::reference)
- 	  .def("scalar_gradient_mls",
+ 	  .def("scalar_gradient_ls",
  		     (std::vector<std::vector<double>> (ET::Approximator<double>::*)
  				  (const std::shared_ptr<ET::UGrid<double>>,
  					 const ET::ScalarField<double>&))
- 				 &ET::Approximator<double>::scalarGradientMLS,
+ 				 &ET::Approximator<double>::scalarGradientLS,
  	       py::return_value_policy::reference)
 	  //--------------------------------------------------------------------------
 		//  Scalar derivative (order n)
@@ -1131,7 +1131,7 @@ PYBIND11_MODULE(etraj, m) {
 	//  Appproximator enum
 	//----------------------------------------------------------------------------
 	py::enum_<ET::ApproxType>(m, "ApproxType")
-		.value("MLS", ET::ApproxType::MLS)
+		.value("LS", ET::ApproxType::LS)
 		.value("RBF", ET::ApproxType::RBF)
 		;
 	//----------------------------------------------------------------------------

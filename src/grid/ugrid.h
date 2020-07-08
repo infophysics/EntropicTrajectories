@@ -126,6 +126,9 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Results from KDTree searches
     //--------------------------------------------------------------------------
+    int _searchFlag;                   //  flag for changes
+    uint32_t _k;                       //  number of neighbors to search
+    double _radius;                         //  search radius
     std::vector<std::vector<size_t>> _neighbors;
     std::vector<std::vector<double>> _distances;
     std::vector<std::vector<size_t>> _neighbors_radius;

@@ -37,6 +37,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
+		_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
   //  Default destructor
@@ -66,6 +67,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -82,6 +84,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid '" + _name
 		            + "' created at location " + getMem(*this));
 		//##########################################################################
+		_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -97,6 +100,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
+		_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -113,6 +117,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid '" + _name
 		            + "' created at location " + getMem(*this));
 	  //##########################################################################
+		_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -136,6 +141,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -154,6 +160,7 @@ namespace ET
 		_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 	  //##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -173,6 +180,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -189,6 +197,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -205,6 +214,7 @@ namespace ET
 								+ "' created at location " + getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -221,6 +231,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -238,6 +249,7 @@ namespace ET
 								+ "' created at location " + getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -262,6 +274,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -281,6 +294,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
+		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -366,34 +380,36 @@ namespace ET
   {
 		if (dim != _ugrid[0].size())
 		{
-			//##########################################################################
+			//########################################################################
 			_log->WARN("UGrid " + _name + ": New dimension "
 		           	+ std::to_string(dim) + " does not match array _ugrid"
 							  + " of dimension " + std::to_string(_dim));
-			//##########################################################################
+			//########################################################################
 		}
     _dim = dim;
 		//##########################################################################
 		_log->INFO("UGrid " + _name + ": Setting dimension _dim to "
 		           + std::to_string(_dim));
 		//##########################################################################
+		_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setN(uint64_t N)
   {
 		if (N != _ugrid.size())
 		{
-			//##########################################################################
+			//########################################################################
 			_log->WARN("UGrid " + _name + ": New array size "
 								+ std::to_string(N) + " does not match array _ugrid"
 								+ " of size " + std::to_string(_N));
-			//##########################################################################
+			//########################################################################
 		}
     _N = N;
 		//##########################################################################
 		_log->INFO("UGrid " + _name+ ": Setting number of elements _N to "
 							 + std::to_string(_N));
 		//##########################################################################
+		_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setUGrid(std::vector<std::vector<T>> ugrid)
@@ -406,6 +422,7 @@ namespace ET
 							 + std::to_string(_N) + " with dimension "
 							 + std::to_string(_dim));
 		//##########################################################################
+		_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setName(std::string name)
@@ -459,6 +476,7 @@ namespace ET
 				exit(0);
 			}
 		}
+		_searchFlag = -1;
     return _ugrid[i][j];
   }
   template<typename T>
@@ -527,6 +545,7 @@ namespace ET
 				exit(0);
 			}
 		}
+		_searchFlag = -1;
     return _ugrid[i];
   }
   template<typename T>
@@ -614,6 +633,7 @@ namespace ET
 			return;
 		}
     _ugrid[i] = point;
+		_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -623,6 +643,11 @@ namespace ET
 	template<typename T>
   void UGrid<T>::queryNeighbors(uint64_t k)
   {
+		//	check if anything has changed since last query
+		if (_searchFlag == 0 && k == _k)
+		{
+			return;
+		}
 		if (k >= _N)
 		{
 			//########################################################################
@@ -645,6 +670,7 @@ namespace ET
 		}
     _neighbors.resize(_N);
 		_distances.resize(_N);
+		_k = k;
 		//##########################################################################
 		_log->INFO("UGrid " + _name + ": Querying each point in array _grid of"
 	             + " size " + std::to_string(_N) + " and dimension "
@@ -671,6 +697,7 @@ namespace ET
 			_neighbors[i] = std::move(ret_indexes);
 			_distances[i] = std::move(out_dists_sqr);
     }
+		_searchFlag = 0;
   }
 	//----------------------------------------------------------------------------
 	//	Query the tree for neighbors of some set of points
@@ -733,6 +760,11 @@ namespace ET
 	template<typename T>
   void UGrid<T>::queryRadius(double radius)
   {
+		//	check if anything has changed since last query
+		if (_searchFlag == 0)
+		{
+			return;
+		}
 		if(checkConsistency() == false)
 		{
 			//########################################################################
@@ -744,6 +776,7 @@ namespace ET
 		}
     _neighbors_radius.resize(_N);
 		_distances_radius.resize(_N);
+		_radius = radius;
 		//	the algorithm looks for points that satisfy the squared
 		//	distance rather than the square root.
 		//##########################################################################
@@ -774,6 +807,7 @@ namespace ET
 			_neighbors_radius[i] = std::move(indices);
 			_distances_radius[i] = std::move(distances);
     }
+		_searchFlag = 0;
   }
 	//----------------------------------------------------------------------------
 
