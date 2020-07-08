@@ -321,7 +321,7 @@ namespace ET
     }
     Vector<T> field_vals(field_neighbors);
     Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -361,7 +361,7 @@ namespace ET
       }
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -411,7 +411,7 @@ namespace ET
     }
     Vector<T> field_vals(field_neighbors);
     Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -451,7 +451,7 @@ namespace ET
       }
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -494,7 +494,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -542,7 +542,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -581,7 +581,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -616,7 +616,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -654,7 +654,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -689,7 +689,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -729,7 +729,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -777,7 +777,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -816,7 +816,7 @@ namespace ET
 			}
 			Vector<T> field_vals(field_neighbors);
 			Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
@@ -851,7 +851,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -889,7 +889,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -925,7 +925,7 @@ namespace ET
 		}
 		Vector<T> field_vals(field_neighbors);
 		Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
+		if (B.getFlag() != 0)
 		{
 			_log->ERROR(B.getInfo());
 		}
@@ -991,19 +991,19 @@ namespace ET
 			}
 			Vector<T> field_vals_x(field_neighbors_x);
 			Vector<T> answer_x = xGELSx(B,field_vals_x);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
 			Vector<T> field_vals_y(field_neighbors_y);
 			Vector<T> answer_y = xGELSx(B,field_vals_y);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
 			Vector<T> field_vals_z(field_neighbors_z);
 			Vector<T> answer_z = xGELSx(B,field_vals_z);
-			if (B.getFlag() == -1)
+			if (B.getFlag() != 0)
 			{
 				_log->ERROR(B.getInfo());
 			}
