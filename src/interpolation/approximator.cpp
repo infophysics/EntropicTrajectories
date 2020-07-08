@@ -284,9 +284,21 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Methods for Scalar fields
-  //----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  Gradient functions
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  Scalar fields
+	//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarGradientPoint - approximate the gradient at a point
+	//  Arguments:  ugrid   - UGrid<T> pointer
+	//              field   - ScalarField<T> pointer
+	//              index   - index of the point
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
 	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
@@ -297,9 +309,15 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //
-  //----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarGradientMLSPoint - approximate the gradient at a point
+	//                           using the vanilla MLS method
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              index      - index of the point
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
 	Approximator<T>::scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
@@ -329,6 +347,13 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
+	//----------------------------------------------------------------------------
+	//  scalarGradient      - approximate the gradient for an entire field
+	//  Arguments:  ugrid   - UGrid<T> pointer
+	//              field   - ScalarField<T> pointer
+	//
+	//  Returns:    std::vector<std::vector<T>> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<T>>
 	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
@@ -339,9 +364,14 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //
-  //----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarGradientMLS      - approximate the gradient for an entire field
+	//                           using the vanilla MLS method
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//
+	//  Returns:    std::vector<std::vector<T>> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<T>>
 	Approximator<T>::scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
@@ -377,6 +407,15 @@ namespace ET
 	//----------------------------------------------------------------------------
   //  Passing field as a const reference
   //----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//  scalarGradientPoint - approximate the gradient at a point
+	//  Arguments:  ugrid   - UGrid<T> pointer
+	//              field   - const ScalarField<T>& reference
+	//              index   - index of the point
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
 	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
@@ -387,9 +426,15 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //
-  //----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarGradientMLSPoint - approximate the gradient at a point
+	//                           using the vanilla MLS method
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              index      - index of the point
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
 	Approximator<T>::scalarGradientMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
@@ -419,6 +464,14 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
+	//----------------------------------------------------------------------------
+	//  scalarGradient      - approximate the gradient for an entire field
+	//  Arguments:  ugrid   - UGrid<T> pointer
+	//              field   - const ScalarField<T>& reference
+	//              index   - index of the point
+	//
+	//  Returns:    std::vector<std::vector<T>> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<T>>
 	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
@@ -429,9 +482,15 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //
-  //----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarGradientMLS      - approximate the gradient for an entire field
+	//                           using the vanilla MLS method
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              index      - index of the point
+	//
+	//  Returns:    std::vector<std::vector<T>> of the gradient.
+	//----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<T>>
 	Approximator<T>::scalarGradientMLS(const std::shared_ptr<UGrid<T>> ugrid,
@@ -469,7 +528,12 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in all directions
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              n          - order of derivative
+	//
+	//  Returns:    std::vector<std::vector<T>> of the derivatives
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
@@ -514,7 +578,14 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//  Scalar derivative of order n in the direction 'dir'
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//                           of order n in the direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the derivative along dir.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
@@ -554,7 +625,13 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//  Scalar derivative of order n in the direction 'dir'
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//                           of order n in the direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              deriv      - vector of ints denoting direction and order
+	//
+	//  Returns:    std::vector<T> of the gradient.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
@@ -593,11 +670,18 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in all directions for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              index      - index of the point
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, uint32_t n)
 	{
@@ -633,10 +717,18 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in direction dir for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              index      - index of the point
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, uint32_t dir, uint32_t n)
 	{
@@ -667,10 +759,17 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in direction dir for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              index      - index of the point
+	//              deriv      - vector denoting the direction and order
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, std::vector<uint32_t> deriv)
 	{
@@ -704,7 +803,12 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in all directions
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              n          - order of derivative
+	//
+	//  Returns:    std::vector<std::vector<T>> of the derivatives
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
@@ -749,7 +853,14 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//  Scalar derivative of order n in the direction 'dir'
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//                           of order n in the direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the derivative along dir.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
@@ -789,7 +900,13 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//  Scalar derivative of order n in the direction 'dir'
+	//  scalarDerivative       - approximate the derivative for an entire field
+	//                           of order n in the direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              deriv      - vector of ints denoting direction and order
+	//
+	//  Returns:    std::vector<T> of the gradient.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
@@ -828,11 +945,18 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in all directions for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              index      - index of the point
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        uint64_t index, uint32_t n)
 	{
@@ -868,10 +992,18 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in direction dir for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& pointer
+	//              index      - index of the point
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  uint64_t index, uint32_t dir, uint32_t n)
 	{
@@ -902,10 +1034,17 @@ namespace ET
 	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
-	//	Scalar derivative of order n in direction dir for a single point
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              index      - index of the point
+	//              deriv      - vector denoting the direction and order
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  uint64_t index,
 																			std::vector<uint32_t> deriv)
@@ -935,9 +1074,50 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  Driver routines for derivatives
+	//----------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
+	//  scalarDerivativeMLSPoint - approximate the derivative for a point
+	//                             using the vanilla MLS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - ScalarField<T> pointer
+	//              index        - uint64_t
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const std::shared_ptr<ScalarField<T>> field,
+													 uint64_t index,
+													 uint32_t n)
+	{
+
+	}
+	//----------------------------------------------------------------------------
+	//  scalarDerivativeMLS      - approximate the derivative for an entire
+	//                             field using the vanilla MLS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - ScalarField<T> pointer
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<std::vector<T>>
+	scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
+											const std::shared_ptr<ScalarField<T>> field,
+											uint32_t n)
+	{
+
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
 	//  Helper functions
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T> Approximator<T>::xGELSx(Matrix<T> B, Vector<T> u)
 	{
@@ -958,15 +1138,15 @@ namespace ET
 			return DGELSS(B,u);
 		}
 	}
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	//	Derivatives of vector fields
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	//
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
 	Approximator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
@@ -1018,7 +1198,7 @@ namespace ET
 		}
 		return result;
 	}
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Construct the Taylor expansion matrix

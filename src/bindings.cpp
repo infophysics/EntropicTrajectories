@@ -997,32 +997,32 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
  	 	//  Scalar derivative (point p, order n)
  	 	//--------------------------------------------------------------------------
-		.def("scalar_derivative",
+		.def("scalar_derivative_point",
 				 (std::vector<double> (ET::Approximator<double>::*)
 				 	(const std::shared_ptr<ET::UGrid<double>>,
 					 const std::shared_ptr<ET::ScalarField<double>>,
 					 uint64_t, uint32_t))
-				 &ET::Approximator<double>::scalarDerivative,
+				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
  	 	//  Scalar derivative (point p, direction dir, order n)
  	 	//--------------------------------------------------------------------------
-	  .def("scalar_derivative",
+	  .def("scalar_derivative_point",
 	 			 (double (ET::Approximator<double>::*)
 				 	(const std::shared_ptr<ET::UGrid<double>>,
 					 const std::shared_ptr<ET::ScalarField<double>>,
 					 uint64_t, uint32_t, uint32_t))
-				 &ET::Approximator<double>::scalarDerivative,
+				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
   	//  Scalar derivative (point p, direction dir, order n)
   	//--------------------------------------------------------------------------
- 	  .def("scalar_derivative",
+ 	  .def("scalar_derivative_point",
  	 			 (double (ET::Approximator<double>::*)
  				 	(const std::shared_ptr<ET::UGrid<double>>,
  					 const std::shared_ptr<ET::ScalarField<double>>,
  					 uint64_t, std::vector<uint32_t>))
- 				 &ET::Approximator<double>::scalarDerivative,
+ 				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		//  Passing Scalarfield by reference
@@ -1060,32 +1060,32 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//  Scalar derivative (point p, order n)
 		//--------------------------------------------------------------------------
- 		.def("scalar_derivative",
+ 		.def("scalar_derivative_point",
  				 (std::vector<double> (ET::Approximator<double>::*)
  				 	(const std::shared_ptr<ET::UGrid<double>>,
  					 const ET::ScalarField<double>&,
  					 uint64_t, uint32_t))
- 				 &ET::Approximator<double>::scalarDerivative,
+ 				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		//  Scalar derivative (point p, direction dir, order n)
 		//--------------------------------------------------------------------------
-	  .def("scalar_derivative",
+	  .def("scalar_derivative_point",
 	 			 (double (ET::Approximator<double>::*)
 				 	(const std::shared_ptr<ET::UGrid<double>>,
 					 const ET::ScalarField<double>&,
 					 uint64_t, uint32_t, uint32_t))
-				 &ET::Approximator<double>::scalarDerivative,
+				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
  		//  Scalar derivative (point p, direction dir, order n)
  		//--------------------------------------------------------------------------
- 	  .def("scalar_derivative",
+ 	  .def("scalar_derivative_point",
  	 			 (double (ET::Approximator<double>::*)
  				 	(const std::shared_ptr<ET::UGrid<double>>,
  					 const ET::ScalarField<double>&,
  					 uint64_t, std::vector<uint32_t>))
- 				 &ET::Approximator<double>::scalarDerivative,
+ 				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
 		.def("construct_taylor_matrix",
 		     (ET::Matrix<double> (ET::Approximator<double>::*)
