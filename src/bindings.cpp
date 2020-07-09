@@ -35,6 +35,7 @@
 #include "utils.h"
 #include "approximator.h"
 #include "dynamicalsystem.h"
+#include "scalarfieldexample.h"
 
 namespace py = pybind11;
 
@@ -420,6 +421,7 @@ PYBIND11_MODULE(etraj, m) {
 	m.def("dgesvd_svd", &ET::DGESVD_SVD);
 	m.def("dgesdd", &ET::DGESDD);
 	m.def("dgesdd_svd", &ET::DGESDD_SVD);
+	m.def("dgetri", &ET::DGETRI);
 	//--------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
@@ -837,19 +839,21 @@ PYBIND11_MODULE(etraj, m) {
 	//	Scalarfield examples
 	//----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------
-	//	Gaussian in 1D
+	//	Wave EQ in 1D
 	//----------------------------------------------------------------------------
-	py::class_<ET::Gaussian1D<double>,
+	py::class_<ET::WaveEQ1D<double>,
 	           ET::ScalarField<double>,
-						 std::shared_ptr<ET::Gaussian1D<double>>>(m,"Gaussian1D")
+						 std::shared_ptr<ET::WaveEQ1D<double>>>(m,"WaveEQ1D")
 		.def(py::init<>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double,double>())
-		.def("get_mu", &ET::Gaussian1D<double>::getMu)
-		.def("set_mu", &ET::Gaussian1D<double>::setMu)
-		.def("get_sigma", &ET::Gaussian1D<double>::getSigma)
-		.def("set_sigma", &ET::Gaussian1D<double>::setSigma)
-		.def("diffeq", &ET::Gaussian1D<double>::diffEQ)
+		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double,double,double>())
+		.def("get_A", &ET::WaveEQ1D<double>::getA)
+		.def("set_A", &ET::WaveEQ1D<double>::setA)
+		.def("get_k", &ET::WaveEQ1D<double>::getk)
+		.def("set_k", &ET::WaveEQ1D<double>::setk)
+		.def("get_w", &ET::WaveEQ1D<double>::getw)
+		.def("set_w", &ET::WaveEQ1D<double>::setw)
+		.def("diffeq", &ET::WaveEQ1D<double>::diffEQ)
 		;
 	//----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------

@@ -103,6 +103,7 @@ namespace ET
     //  KDTree methods
     //--------------------------------------------------------------------------
     void queryNeighbors(uint64_t k);
+    std::vector<size_t> queryNeighbors(const std::vector<T>& point, uint64_t k);
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& points, uint64_t k);
     void queryRadius(double radius);
@@ -124,11 +125,16 @@ namespace ET
     std::vector<std::vector<T>> _ugrid;//  Vector of vectors array
     std::vector<std::string> _coords;  //  Coordinate labels
     //--------------------------------------------------------------------------
+    //  KDTree
+    //--------------------------------------------------------------------------
+    std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
+                     std::vector<std::vector<T>>,T>> _kdtree;
+    //--------------------------------------------------------------------------
     //  Results from KDTree searches
     //--------------------------------------------------------------------------
     int _searchFlag;                   //  flag for changes
     uint32_t _k;                       //  number of neighbors to search
-    double _radius;                         //  search radius
+    double _radius;                    //  search radius
     std::vector<std::vector<size_t>> _neighbors;
     std::vector<std::vector<double>> _distances;
     std::vector<std::vector<size_t>> _neighbors_radius;

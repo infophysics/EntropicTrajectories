@@ -17,27 +17,28 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
 #include "scalarfield.h"
+#include "scalarfieldexample.h"
 
 
 namespace ET
 {
   //----------------------------------------------------------------------------
-  //  Gaussian1D Example
+  //  WaveEQ1D Example
   //----------------------------------------------------------------------------
   template<typename T>
-  Gaussian1D<T>::Gaussian1D() : ScalarField<T>(), _mu(0), _sigma(1)
+  WaveEQ1D<T>::WaveEQ1D() : ScalarField<T>(), _A(1), _k(1), _w(1)
   {
     //getIntegrator()->setF(&diffEQ);
   }
   template<typename T>
-  Gaussian1D<T>::Gaussian1D(std::shared_ptr<UGrid<T>> ugrid)
-  : ScalarField<T>("Gaussian1D",ugrid), _mu(0), _sigma(1)
+  WaveEQ1D<T>::WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid)
+  : ScalarField<T>("WaveEQ1D",ugrid), _A(1), _k(1), _w(1)
   {
     //getIntegrator()->setF(&diffEQ);
   }
   template<typename T>
-  Gaussian1D<T>::Gaussian1D(std::shared_ptr<UGrid<T>> ugrid, T mu, T sigma)
-  : ScalarField<T>("Gaussian1D",ugrid), _mu(mu), _sigma(sigma)
+  WaveEQ1D<T>::WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid, T A, T k, T w)
+  : ScalarField<T>("WaveEQ1D",ugrid), _A(A), _k(k), _w(w)
   {
     //getIntegrator()->setF(&diffEQ);
   }
@@ -46,45 +47,57 @@ namespace ET
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  T Gaussian1D<T>::getMu()
+  T WaveEQ1D<T>::getA()
   {
-    return _mu;
+    return _A;
   }
   template<typename T>
-  T Gaussian1D<T>::getSigma()
+  T WaveEQ1D<T>::getk()
   {
-    return _sigma;
+    return _k;
   }
   template<typename T>
-  void Gaussian1D<T>::setMu(T mu)
+  T WaveEQ1D<T>::getw()
   {
-    _mu = mu;
+    return _w;
   }
   template<typename T>
-  void Gaussian1D<T>::setSigma(T sigma)
+  T WaveEQ1D<T>::getv()
   {
-    _sigma = sigma;
+    return _w/_k;
+  }
+  template<typename T>
+  void WaveEQ1D<T>::setA(T A)
+  {
+    _A = A;
+  }
+  template<typename T>
+  void WaveEQ1D<T>::setk(T k)
+  {
+    _k = k;
+  }
+  template<typename T>
+  void WaveEQ1D<T>::setw(T w)
+  {
+    _w = w;
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //  Diff EQ function
+  //  The first order time derivative of the wave equation is,
+  //  df/dt = wAsin(kx - wt) = -v df/dx
+  //  We can use the fact that the argument inside is (x - vt) to
+  //  replace the time derivative with the spatial derivative.
+  //  We will need to shift x by an amount proportional to vdt in the
+  //  algorithm.
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T> Gaussian1D<T>::diffEQ(const Vector<T>& f,
+  Vector<T> WaveEQ1D<T>::diffEQ(const Vector<T>& f,
                                        double dt, Vector<T> k)
   {
-    Vector<T> y_i = f;
-    uint32_t dir = 0;
-    uint32_t n = 1;
-    std::vector<std::vector<T>> grad = gradient();
-    std::vector<T> grad2(getN());
-    for(uint64_t i = 0; i < getN(); i++)
-    {
-      grad2[i] = grad[i][0];
-    }
-    Vector<T> dy_i(grad2);
-    Vector<T> y_f = -dy_i;
-    return y_f;
+    std::vector<T> grad = derivative(0,1);
+    Vector<T> dy_i(grad);
+    return -(_w/_k)*dy_i;
   }
   //----------------------------------------------------------------------------
 

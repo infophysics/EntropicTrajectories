@@ -2392,4 +2392,50 @@ namespace ET
     return {U,Sigma,VT};
   }
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  DGETRI - compute the inverse of a matrix using the LU decomposition
+  //  Arguments:  A     - (m x m)-matrix
+  //
+  //  Returns:    Matrix<T> inverse
+  //----------------------------------------------------------------------------
+  Matrix<double> DGETRI(const Matrix<double>& A)
+  {
+    if (A.getNumRows() != A.getNumCols())
+    {
+      std::cout << "Matrix is not square!" << std::endl;
+      return A;
+    }
+    Matrix<double> A_copy(A);
+    Matrix<double> LU(A);
+    //  First compute the LU factorization to get the
+    //  pivot indices
+    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    int info;
+    info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          A.getNumCols(),  // number of columns of A
+                          LU.data(),       // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to pivot list
+    //  Now to take the inverse
+    info = LAPACKE_dgetri(LAPACK_ROW_MAJOR,// row major layout
+                          A.getNumRows(),  // number of rows of A
+                          LU.data(),   // pointer to the elements of A
+                          A.getNumCols(),  // leading dimension of A
+                          ipiv.data());    // pointer to the pivot list
+    if (info > 0)
+    {
+      A.setFlag(-1);
+      A.setInfo("Matrix could not be computed, diagonal element " + std::to_string(info) + " is exactly zero");
+    }
+    std::string name;
+    if (A.getName() != " ")
+    {
+      name += "(" + A.getName() + ")^-1";
+    }
+    LU.setName(name);
+    return LU;
+  }
+  //----------------------------------------------------------------------------
 }

@@ -84,10 +84,10 @@ find_package( LAPACKE REQUIRED )
 find_package( Boost REQUIRED )
 
 # find CBLAS library
-find_path(BLAS_INCLUDE_DIRS cblas.h
-  /usr/include
-  /usr/local/include
-  $ENV{BLAS_HOME}/include)
+# find_path(BLAS_INCLUDE_DIRS cblas.h
+#   /usr/include
+#   /usr/local/include
+#   $ENV{BLAS_HOME}/include)
 MESSAGE(STATUS "CBLAS.h location is: " ${BLAS_INCLUDE_DIRS})
 include_directories(${BLAS_INCLUDE_DIRS}
                     ${CBLAS_INCLUDE_DIRS}

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  params.h
+//  geometry.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
@@ -18,106 +18,84 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
 #pragma once
+#include <memory>
+#include <vector>
+#include <string>
+#include <cstdlib>
+#include <sstream>
+#include <iomanip>
+#include <iterator>
+#include <math.h>
+#include <iostream>
+#include <numeric>
+
+#include "monomial.hpp"
 
 namespace ET
 {
-  enum MatrixType
-  {
-    SQUARE,
-    SYMMETRIC,
-    PERSYMMETRIC,
-    CENTROSYMMETRIC,
-    ANTI_SYMMETRIC,
-    UPPER_TRIANGULAR,
-    LOWER_TRIANGULAR,
-    DIAGONAL,
-    BIDIAGONAL,
-    TRIDIAGONAL,
-    ANTI_DIAGONAL,
-    BAND,
-  };
-
   //----------------------------------------------------------------------------
-  //  Least squares driver routine
+  //  Binomial coefficient
   //----------------------------------------------------------------------------
-  enum LSDriver
+  double binomialCoeff(double& n, double& m)
   {
-    xGELS,  //  default driver
-    xGELSY, //  complete orthogonal factorization
-    xGELSD, //  SVD with divide and conquer
-    xGELSS, //  SVD
-  };
+    return (double)i4_choose(n,m);
+  }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  Approximator type
+  //  Bernoulli number
   //----------------------------------------------------------------------------
-  enum ApproxType
+  double bernoulli(double& n, double& m)
   {
-    LS,
-    MLS,
-    WMLS,
-    RBF,
-  };
+    double result = 0;
+    for (uint32_t i = 0; i < n; i++)
+    {
+      for (uint32_t j = 0; j < i; j++)
+      {
+        double sign = pow(-1,j);
+        double coeff = binomialCoeff(j,i);
+        double num = pow((1 + j),n);
+        double den = (m + 1);
+        result += sign*coeff*pow/den;
+      }
+    }
+    return result;
+  }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  Weight function type
+  //  RBF functions
   //----------------------------------------------------------------------------
-  enum WeightFunctionType
+  //----------------------------------------------------------------------------
+  //  Gaussian
+  //----------------------------------------------------------------------------
+  double gaussianRBF(double& val, double& shape)
   {
-    GAUSSIAN,
-  };
+    return exp(-(shape*val)**2);
+  }
   //----------------------------------------------------------------------------
-
+  //  Gaussian first derivative
   //----------------------------------------------------------------------------
-  //  RBF function type
-  //----------------------------------------------------------------------------
-  enum RBFType
+  double gaussianRBFd(double& val, double& shape)
   {
-    GAUSS,
-    MULTIQUADRIC,
-    INVERSE_QUADRATIC,
-    INVERSE_MULTIQUADRIC
-  };
+    return -2*shape*val*gaussianRBF(val,shape);
+  }
   //----------------------------------------------------------------------------
-
+  //  Gaussian second derivative
   //----------------------------------------------------------------------------
-  //  Struct for approximator parameters
-  //----------------------------------------------------------------------------
-  struct ApproxParams
+  double gaussianRBFdd(double& val, double& shape)
   {
-    //  TODO:: implement a set of parameters for each type.
-    //  Basic parameters
-    uint64_t k = 3;             //  number of nearest neighbors
-    uint64_t n = 3;             //  order of polynomial expansion
-    //  type of weight matrix
-    enum WeightFunctionType _weight = 0;
-    //  type of RBF kernel
-    enum RBFType _rbf = 0;
-    //  RBF params
-    double _rbfshape = 3.05048;
-
-    ApproxParams() {}
-  };
+    return -2*shape*gaussianRBF(val,shape)
+           + 4*(shape*val)**2*gaussianRBF(val,shape);
+  }
   //----------------------------------------------------------------------------
-
+  //  Gaussian nth-derivative
+  //  This formula was taken from the paper
+  //  https://pdfs.semanticscholar.org/88a4/6c09acf598170e98d250a86ccf00f69b1544.pdf
   //----------------------------------------------------------------------------
-  //  Integrator type
-  //----------------------------------------------------------------------------
-  enum IntegratorType
+  double gaussianRBFdn(double& val, double& shape, uint32_t n)
   {
-    RG4,
-    VORONOI,
-  };
-  //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Struct for integrator parameters
-  //----------------------------------------------------------------------------
-  struct IntegratorParams
-  {
-    //  TODO: implement a set of parameters for each type
-  };
+  }
   //----------------------------------------------------------------------------
 }
