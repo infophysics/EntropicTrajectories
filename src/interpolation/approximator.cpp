@@ -912,6 +912,43 @@ namespace ET
 		return coefficients;
 	}
 	//----------------------------------------------------------------------------
+	//  scalarDerivativeLSPoint - approximate the derivative for a point
+	//                             using the vanilla LS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - ScalarField<T> pointer
+	//              point        - std::vector<T> of the point
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const std::shared_ptr<ScalarField<T>> field,
+													 std::vector<T> point,
+													 uint32_t n)
+	{
+		//	Generate a monomial up to order n for the vanilla method
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the nearest neighbors for the point 'index'
+		std::vector<uint64_t> neighbors = ugrid->queryNeighbors(point,_params.k);
+		//	Construct the taylor matrix B
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,point,n);
+		//	Construct the vector of corresponding field values for neighboPointrs
+		Vector<T> field_neighbors(_params.k,0.0);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors(i) = (*field)(neighbors[i]);
+		}
+		//	Complete the vanilla least squares to get the coefficients
+		Vector<T> coefficients = xGELSx(B,field_neighbors);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
+		return coefficients;
+	}
+	//----------------------------------------------------------------------------
 	//  scalarDerivativeLS      - approximate the derivative for an entire
 	//                             field using the vanilla LS method
 	//  Arguments:  ugrid        - UGrid<T> pointer
@@ -983,6 +1020,43 @@ namespace ET
 		//	Construct the taylor matrix B
 		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
 		//	Construct the vector of corresponding field values for neighbors
+		Vector<T> field_neighbors(_params.k,0.0);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors(i) = field(neighbors[i]);
+		}
+		//	Complete the vanilla least squares to get the coefficients
+		Vector<T> coefficients = xGELSx(B,field_neighbors);
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+		}
+		return coefficients;
+	}
+	//----------------------------------------------------------------------------
+	//  scalarDerivativeLSPoint - approximate the derivative for a point
+	//                             using the vanilla LS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - const ScalarField<T>& reference
+	//              point        - std::vector<T> of the point
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const ScalarField<T>& field,
+													 std::vector<T> point,
+													 uint32_t n)
+	{
+		//	Generate a monomial up to order n for the vanilla method
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the nearest neighbors for the point 'index'
+		std::vector<uint64_t> neighbors = ugrid->queryNeighbors(point,_params.k);
+		//	Construct the taylor matrix B
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,point,n);
+		//	Construct the vector of corresponding field values for neighboPointrs
 		Vector<T> field_neighbors(_params.k,0.0);
 		for (uint32_t i = 0; i < _params.k; i++)
 		{
@@ -1135,8 +1209,8 @@ namespace ET
 		return coefficients;
 	}
 	//----------------------------------------------------------------------------
-	//  scalarDerivativeLS      - approximate the derivative for an entire
-	//                             field using the vanilla LS method
+	//  scalarDerivativeMLS      - approximate the derivative for an entire
+	//                             field using the MLS method
 	//  Arguments:  ugrid        - UGrid<T> pointer
 	//              field        - ScalarField<T> pointer
 	//              n            - order of the derivative
@@ -1214,6 +1288,51 @@ namespace ET
 		std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
 		//	Construct the taylor matrix B
 		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+		//	Construct the vector of corresponding field values for neighboPointrs
+		Vector<T> field_neighbors(_params.k,0.0);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors(i) = field(neighbors[i]);
+		}
+		//	Complete the vanilla least squares to get the coefficients
+		//	compute the transpose of B
+		Matrix<T> B_T = B.transpose();
+		//	compute the product (B^T*B)
+		Matrix<T> B_TB = B_T * B;
+		//	compute the inverse of the product
+		Matrix<T> B_TB_inv = DGETRI(B_TB);
+		//	finally take the product
+		Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+			_log->ERROR(B_TB.getInfo());
+		}
+		return coefficients;
+	}
+	//----------------------------------------------------------------------------
+	//  scalarDerivativeMLSPoint - approximate the derivative for a point
+	//                             using the MLS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - const ScalarField<T>& reference
+	//              point        - coordinates of the point of interest
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const ScalarField<T>& field,
+													 std::vector<T> point,
+													 uint32_t n)
+	{
+		//	Generate a monomial up to order n for the vanilla method
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the nearest neighbors for the point 'index'
+		std::vector<uint64_t> neighbors = ugrid->queryNeighbors(point,_params.k);
+		//	Construct the taylor matrix B
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,point,n);
 		//	Construct the vector of corresponding field values for neighboPointrs
 		Vector<T> field_neighbors(_params.k,0.0);
 		for (uint32_t i = 0; i < _params.k; i++)
@@ -1341,6 +1460,53 @@ namespace ET
 		return coefficients;
 	}
 	//----------------------------------------------------------------------------
+	//  scalarDerivativeWMLSPoint - approximate the derivative for a point
+	//                             using the WMLS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - ScalarField<T> pointer
+	//              point        - std::vector<T> of the point
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const std::shared_ptr<ScalarField<T>> field,
+													 std::vector<T> point,
+													 uint32_t n)
+	{
+		//	Generate a monomial up to order n for the vanilla method
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the nearest neighbors for the point 'index'
+		std::vector<uint64_t> neighbors = ugrid->queryNeighbors(point,_params.k);
+		//	Construct the taylor matrix B
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,point,n);
+		//	Construct the weight matrix W
+		Matrix<T> W = constructWeightMatrix(ugrid,neighbors,point);
+		//	Construct the vector of corresponding field values for neighboPointrs
+		Vector<T> field_neighbors(_params.k,0.0);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors(i) = (*field)(neighbors[i]);
+		}
+		//	Complete the vanilla least squares to get the coefficients
+		//	compute the transpose of B
+		Matrix<T> B_T = B.transpose();
+		//	compute the product (B^T*B)
+		Matrix<T> B_TWB = B_T * W * B;
+		//	compute the inverse of the product
+		Matrix<T> B_TWB_inv = DGETRI(B_TWB);
+		//	finally take the product
+		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+			_log->ERROR(B_TWB.getInfo());
+		}
+		return coefficients;
+	}
+	//----------------------------------------------------------------------------
 	//  scalarDerivativeWMLS      - approximate the derivative for an entire
 	//                             field using the weighted MLS method
 	//  Arguments:  ugrid        - UGrid<T> pointer
@@ -1428,6 +1594,53 @@ namespace ET
 		{
 			field_neighbors(i) = field(neighbors[i]);
 		}
+		//	compute the transpose of B
+		Matrix<T> B_T = B.transpose();
+		//	compute the product (B^T*B)
+		Matrix<T> B_TWB = B_T * W * B;
+		//	compute the inverse of the product
+		Matrix<T> B_TWB_inv = DGETRI(B_TWB);
+		//	finally take the product
+		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
+		if (B.getFlag() == -1)
+		{
+			_log->ERROR(B.getInfo());
+			_log->ERROR(B_TWB.getInfo());
+		}
+		return coefficients;
+	}
+	//----------------------------------------------------------------------------
+	//  scalarDerivativeWMLSPoint - approximate the derivative for a point
+	//                             using the WMLS method
+	//  Arguments:  ugrid        - UGrid<T> pointer
+	//              field        - const ScalarField<T>& reference
+	//              point        - std::vector<T> of the point
+	//              n            - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+													 const ScalarField<T>& field,
+													 std::vector<T> point,
+													 uint32_t n)
+	{
+		//	Generate a monomial up to order n for the vanilla method
+		Monomial mono(ugrid->getDim(),n);
+		//	Get the nearest neighbors for the point 'index'
+		std::vector<uint64_t> neighbors = ugrid->queryNeighbors(point,_params.k);
+		//	Construct the taylor matrix B
+		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,point,n);
+		//	Construct the weight matrix W
+		Matrix<T> W = constructWeightMatrix(ugrid,neighbors,point);
+		//	Construct the vector of corresponding field values for neighboPointrs
+		Vector<T> field_neighbors(_params.k,0.0);
+		for (uint32_t i = 0; i < _params.k; i++)
+		{
+			field_neighbors(i) = field(neighbors[i]);
+		}
+		//	Complete the vanilla least squares to get the coefficients
 		//	compute the transpose of B
 		Matrix<T> B_T = B.transpose();
 		//	compute the product (B^T*B)
@@ -1535,7 +1748,6 @@ namespace ET
 		{
 			_log->ERROR(A.getInfo());
 		}
-
 		return weights;
 	}
 	//----------------------------------------------------------------------------
@@ -1821,6 +2033,26 @@ namespace ET
 	  //	For a simple gaussian weight, find the distances from index
 		//	to each point in neighbors.
 		std::vector<double> distances = ugrid->getDistances()[index];
+		Matrix<T> W(neighbors.size());
+		for (uint32_t i = 0; i < neighbors.size(); i++)
+		{
+			W(i,i) = exp(-.5*distances[i]);
+		}
+		return W;
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	Construct weight matrix
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Matrix<T>
+	Approximator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::vector<uint64_t> neighbors, std::vector<T> point)
+	{
+	  //	For a simple gaussian weight, find the distances from point
+		//	to each point in neighbors.
+		std::vector<double> distances = ugrid->queryDistances(point,_params.k);
 		Matrix<T> W(neighbors.size());
 		for (uint32_t i = 0; i < neighbors.size(); i++)
 		{

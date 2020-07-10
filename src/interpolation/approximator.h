@@ -388,6 +388,21 @@ namespace ET
                             uint64_t index,
                             uint32_t n);
     //--------------------------------------------------------------------------
+    //  scalarDerivativeLSPoint - approximate the derivative for a point
+    //                             using the vanilla LS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              point        - std::vector<T> of the point
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const std::shared_ptr<ScalarField<T>> field,
+                            std::vector<T> point,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
     //  scalarDerivativeLS      - approximate the derivative for an entire
     //                             field using the vanilla LS method
     //  Arguments:  ugrid        - UGrid<T> pointer
@@ -420,6 +435,21 @@ namespace ET
                             uint64_t index,
                             uint32_t n);
     //--------------------------------------------------------------------------
+    //  scalarDerivativeLSPoint - approximate the derivative for a point
+    //                             using the vanilla LS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - const ScalarField<T>& reference
+    //              point        - std::vector<T> of the point
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const ScalarField<T>& field,
+                            std::vector<T> point,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
     //  scalarDerivativeLS      - approximate the derivative for an entire
     //                             field using the vanilla LS method
     //  Arguments:  ugrid        - UGrid<T> pointer
@@ -450,21 +480,21 @@ namespace ET
                              const std::shared_ptr<ScalarField<T>> field,
                              uint64_t index,
                              uint32_t n);
-     //--------------------------------------------------------------------------
-     //  scalarDerivativeMLSPoint - approximate the derivative for a point
-     //                             using the MLS method
-     //  Arguments:  ugrid        - UGrid<T> pointer
-     //              field        - ScalarField<T> pointer
-     //              point        - coordinates of the point of interest
-     //              n            - order of the derivative
-     //
-     //  Returns:    Vector<T> of the derivatives up to order n.
-     //--------------------------------------------------------------------------
-     Vector<T>
-     scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                              const std::shared_ptr<ScalarField<T>> field,
-                              std::vector<T> point,
-                              uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeMLSPoint - approximate the derivative for a point
+    //                             using the MLS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              point        - coordinates of the point of interest
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const std::shared_ptr<ScalarField<T>> field,
+                            std::vector<T> point,
+                            uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativeMLS      - approximate the derivative for all points
     //                             using the  MLS method
@@ -497,6 +527,21 @@ namespace ET
                              const ScalarField<T>& field,
                              uint64_t index,
                              uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeMLSPoint - approximate the derivative for a point
+    //                             using the MLS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - const ScalarField<T>& referencer
+    //              point        - coordinates of the point of interest
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                           const ScalarField<T>& field,
+                           std::vector<T> point,
+                           uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativeMLS      - approximate the derivative for all points
     //                             using the MLS method
@@ -532,6 +577,21 @@ namespace ET
                               uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativeWMLSPoint - approximate the derivative for a point
+    //                             using the WMLS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              point        - std::vector<T> of the point
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                              const std::shared_ptr<ScalarField<T>> field,
+                              std::vector<T> point,
+                              uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeWMLSPoint - approximate the derivative for a point
     //                             using the  WMLS method
     //  Arguments:  ugrid        - UGrid<T> pointer
     //              field        - ScalarField<T> pointer
@@ -561,6 +621,21 @@ namespace ET
     scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
                               const ScalarField<T>& field,
                               uint64_t index,
+                              uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeWMLSPoint - approximate the derivative for a point
+    //                             using the WMLS method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - const ScalarField<T>& reference
+    //              point        - std::vector<T> of the point
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                              const ScalarField<T>& field,
+                              std::vector<T> point,
                               uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativeWMLSPoint - approximate the derivative for a point
@@ -648,6 +723,9 @@ namespace ET
     Matrix<T> constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,
                                     uint64_t index);
+    Matrix<T> constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+                                    const std::vector<uint64_t> neighbors,
+                                    std::vector<T> point);
     Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                  const std::vector<uint64_t> neighbors,
                                  uint64_t index);

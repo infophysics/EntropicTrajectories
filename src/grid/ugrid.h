@@ -55,7 +55,8 @@ namespace ET
     UGrid(uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
     UGrid(std::string name, uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
     UGrid(std::vector<T> ugrid, std::shared_ptr<Log> log);
-    UGrid(std::vector<std::vector<T>> ugrid, std::shared_ptr<Log> log);
+    UGrid(std::vector<std::vector<T>> ugrid,
+          std::shared_ptr<Log> log);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -63,7 +64,7 @@ namespace ET
     //--------------------------------------------------------------------------
     uint64_t getDim();
     uint64_t getN();
-    std::vector<std::vector<T> >  getUGrid();
+    std::vector<std::vector<T>>  getUGrid();
     std::string getName();
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
@@ -102,10 +103,18 @@ namespace ET
     //--------------------------------------------------------------------------
     //  KDTree methods
     //--------------------------------------------------------------------------
+    void setupTree();
     void queryNeighbors(uint64_t k);
-    std::vector<size_t> queryNeighbors(const std::vector<T>& point, uint64_t k);
+
+    std::vector<size_t>
+    queryNeighbors(const std::vector<T>& point, uint64_t k);
+
+    std::vector<double>
+    queryDistances(const std::vector<T>& point, uint64_t k);
+
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& points, uint64_t k);
+
     void queryRadius(double radius);
     //--------------------------------------------------------------------------
 

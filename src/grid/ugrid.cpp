@@ -142,11 +142,7 @@ namespace ET
 		            + getMem(*this));
 		//##########################################################################
 		//  generate kdtree
-  	KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
-		kdt(_dim, _ugrid, 16);
-    kdt.index->buildIndex();
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-		                            std::vector<std::vector<T>>, T>>(kdt);
+  	setupTree();
 		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
@@ -167,11 +163,7 @@ namespace ET
 		            + getMem(*this));
 	  //##########################################################################
 		//  generate kdtree
-  	KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
-		kdt(_dim, _ugrid, 16);
-    kdt.index->buildIndex();
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-		                            std::vector<std::vector<T>>, T>>(kdt);
+  	setupTree();
 		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
@@ -287,11 +279,7 @@ namespace ET
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
 		//  generate kdtree
-  	KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
-		kdt(_dim, _ugrid, 16);
-    kdt.index->buildIndex();
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-		                            std::vector<std::vector<T>>, T>>(kdt);
+  	setupTree();
 		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
@@ -313,11 +301,7 @@ namespace ET
 		_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
 		//  generate kdtree
-  	KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
-		kdt(_dim, _ugrid, 16);
-    kdt.index->buildIndex();
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-		                            std::vector<std::vector<T>>, T>>(kdt);
+  	setupTree();
 		_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
@@ -671,6 +655,16 @@ namespace ET
 	//	KDTree methods
 	//----------------------------------------------------------------------------
 	template<typename T>
+	void UGrid<T>::setupTree()
+	{
+		//  generate kdtree
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
+		kdt(_dim, _ugrid, 16);
+    kdt.index->buildIndex();
+		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+                     std::vector<std::vector<T>>,T>>(kdt);
+	}
+	template<typename T>
   void UGrid<T>::queryNeighbors(uint64_t k)
   {
 		//	check if anything has changed since last query
@@ -780,6 +774,58 @@ namespace ET
 		distances = std::move(out_dists_sqr);
 
 		return neighbors;
+  }
+	//----------------------------------------------------------------------------
+	//	Query the tree for neighbors of some point
+	//----------------------------------------------------------------------------
+	template<typename T>
+  std::vector<double>
+  UGrid<T>::queryDistances(const std::vector<T>& point,
+		                       uint64_t k)
+  {
+		if (k >= _N)
+		{
+			//########################################################################
+			_log->ERROR("UGrid " + _name
+									+ ": Attempted to query " + std::to_string(k)
+									+ " neighbors for points in array _ugrid of size "
+									+ std::to_string(_N));
+			//########################################################################
+			return;
+		}
+		if(checkConsistency() == false)
+		{
+			//########################################################################
+			_log->ERROR("UGrid " + _name
+									+ ": Attempted to query " + std::to_string(k)
+									+ " neighbors for points in array _ugrid with inconsistent "
+									+ " attributes");
+			//########################################################################
+			return;
+		}
+		std::vector<size_t> neighbors(point.size());
+		std::vector<double> distances(point.size());
+		//##########################################################################
+		_log->INFO("UGrid " + _name + ": Querying each point in array _grid of"
+	             + " size " + std::to_string(_N) + " and dimension "
+						   + std::to_string(_dim) + " for the nearest "
+							 + std::to_string(k) + " neighbors of a set of points");
+		//##########################################################################
+
+    const size_t num_results = k;
+		neighbors.resize(k);
+		distances.resize(k);
+    std::vector<size_t> ret_indexes(num_results);
+    std::vector<double> out_dists_sqr(num_results);
+
+    nanoflann::KNNResultSet<double> resultSet(num_results);
+    resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
+		_kdtree->index->findNeighbors(resultSet, &point[0],
+			                       nanoflann::SearchParams(10));
+		neighbors = std::move(ret_indexes);
+		distances = std::move(out_dists_sqr);
+
+		return distances;
   }
 	//----------------------------------------------------------------------------
 	//	Query the tree for neighbors of some set of points

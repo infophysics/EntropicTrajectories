@@ -1,3 +1,2 @@
-[19:17:56] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x55b2609e92d0
-[19:18:25] [info] ET:UGrid:default: UGrid default: Querying each point in array _grid of size 100 and dimension 1 for the nearest 10 neighbors
-[19:18:55] [trace] ET:UGrid:default: Unstructured Grid 'default' destroyed at location 0x55b2609e92d0
+[07:40:54] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x55ba883fc2d0
+[07:40:54] [trace] ET:UGrid:default: Unstructured Grid 'default' destroyed at location 0x55ba883fc2d0
