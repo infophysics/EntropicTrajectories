@@ -690,6 +690,10 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//  KDTree functions
 		//--------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------
+		//  Query neighbors for points on the grid
+		//--------------------------------------------------------------------------
 		.def("query_neighbors", (void
 		     (ET::UGrid<double>::*)(uint64_t k))
 				 &ET::UGrid<double>::queryNeighbors)
@@ -698,6 +702,19 @@ PYBIND11_MODULE(etraj, m) {
 					                      uint64_t k))
  				 &ET::UGrid<double>::queryNeighbors)
 		.def("query_radius", &ET::UGrid<double>::queryRadius)
+    //--------------------------------------------------------------------------
+		//  Query neighbors for arbitrary points
+		//--------------------------------------------------------------------------
+    .def("query_neighbors", (std::vector<size_t>
+		     (ET::UGrid<double>::*)(const std::vector<double>&, uint64_t))
+				 &ET::UGrid<double>::queryNeighbors)
+    .def("query_distances", (std::vector<size_t>
+         (ET::UGrid<double>::*)(const std::vector<double>&, uint64_t))
+         &ET::UGrid<double>::queryDistances)
+    .def("query_neighbors", (std::vector<std::vector<size_t>>
+         (ET::UGrid<double>::*)(const std::vector<std::vector<double>>&,
+          uint64_t))
+    		 &ET::UGrid<double>::queryNeighbors)
 		//--------------------------------------------------------------------------
 		;
 	//----------------------------------------------------------------------------
@@ -1190,6 +1207,11 @@ PYBIND11_MODULE(etraj, m) {
 				  (const std::shared_ptr<ET::UGrid<double>>,
            const std::vector<uint64_t>,uint64_t,uint64_t))
 				 &ET::Approximator<double>::constructTaylorMatrix)
+    .def("construct_taylor_matrix",
+         (ET::Matrix<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,
+          const std::vector<uint64_t>,std::vector<double>,uint64_t))
+    		 &ET::Approximator<double>::constructTaylorMatrix)
 		.def("construct_taylor_matrix",
 		     (ET::Matrix<double> (ET::Approximator<double>::*)
 				  (const std::shared_ptr<ET::UGrid<double>>,

@@ -211,29 +211,24 @@ namespace ET
       k = 3;
 			//########################################################################
 		}
-		std::vector<size_t> neighbors(point.size());
-		std::vector<T> distances(point.size());
 		//##########################################################################
-		_log->INFO("kdTree " + _name + ": Querying each point in array _grid of"
+		_log->INFO("kdTree " + _name + ": Querying a point in array _grid of"
 	             + " size " + std::to_string(_N) + " and dimension "
 						   + std::to_string(_dim) + " for the nearest "
 							 + std::to_string(k) + " neighbors of a set of points");
 		//##########################################################################
 
     const size_t num_results = k;
-		neighbors.resize(k);
-		distances.resize(k);
     std::vector<size_t> ret_indexes(num_results);
     std::vector<double> out_dists_sqr(num_results);
-
     nanoflann::KNNResultSet<double> resultSet(num_results);
     resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
-		_kdtree->index->findNeighbors(resultSet, &point[0],
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
+		kdt(_dim, *_points, 16);
+    kdt.index->buildIndex();
+		kdt.index->findNeighbors(resultSet, &point[0],
 			                       nanoflann::SearchParams(10));
-		neighbors = std::move(ret_indexes);
-		distances = std::move(out_dists_sqr);
-
-		return neighbors;
+		return ret_indexes;
   }
   template<typename T>
   std::vector<double>
