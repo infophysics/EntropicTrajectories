@@ -91,7 +91,6 @@ namespace ET
   template<typename T>
   std::string scientific_not(T x, uint32_t dec);
   //  specialization declaration
-  template std::string scientific_not<double> (double, uint32_t);
 
   //----------------------------------------------------------------------------
   //  Cartesian product between two vectors

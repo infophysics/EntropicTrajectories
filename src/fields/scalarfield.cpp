@@ -792,6 +792,40 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+	//	nth-derivative for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+  ScalarField<T>::derivativePoint(std::vector<T> point, uint32_t n)
+	{
+		return _approx->scalarDerivativePoint(_ugrid, (*this), point, n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	nth-derivative in the ith-direction for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T ScalarField<T>::derivativePoint(std::vector<T> point, uint32_t dir,
+                                    uint32_t n)
+	{
+		return _approx->scalarDerivativePoint(_ugrid, (*this), point, dir, n);
+	}
+	//----------------------------------------------------------------------------
+
+	//----------------------------------------------------------------------------
+	//	nth-derivative in the ith-direction for a single point
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T ScalarField<T>::derivativePoint(std::vector<T> point,
+                                    std::vector<uint32_t> deriv)
+	{
+		return _approx->scalarDerivativePoint(_ugrid, (*this), point, deriv);
+	}
+	//----------------------------------------------------------------------------
+
+
 	//----------------------------------------------------------------------------
 	//	Laplacian for every point
 	//----------------------------------------------------------------------------
@@ -824,7 +858,7 @@ namespace ET
 	//	Various functions
 	//----------------------------------------------------------------------------
 	template<typename T>
-	std::string ScalarField<T>::summary()
+	const std::string ScalarField<T>::summary()
 	{
 		std::string sum = "---------------------------------------------------";
 		sum += "\n<ET::ScalarField<"+ type_name<decltype(_field[0])>();

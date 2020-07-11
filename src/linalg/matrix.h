@@ -188,22 +188,22 @@ namespace ET
 
     //  Various methods
     void print();
-    std::string summary();
+    const std::string summary();
     Matrix<T> transpose() const;
     void transpose_inplace(bool inplace=true);
     T trace();
 
     //  Linear algebra tools
     //  TODO:
-    bool isInvertible();
-    void findSingularValues();
-    Matrix<T> inverse();
-    Matrix<T> pseudoInverse();
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> LU();
-    Matrix<T> getL(const Matrix<T>& perm);
-    Matrix<T> getU(const Matrix<T>& perm);
-    std::tuple<Matrix<T>,Matrix<T>> QR();
-    std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
+    // bool isInvertible();
+    // void findSingularValues();
+    // Matrix<T> inverse();
+    // Matrix<T> pseudoInverse();
+    // std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> LU();
+    // Matrix<T> getL(const Matrix<T>& perm);
+    // Matrix<T> getU(const Matrix<T>& perm);
+    // std::tuple<Matrix<T>,Matrix<T>> QR();
+    // std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
 
   private:
     //  _m is the number of rows, _n is the number of columns

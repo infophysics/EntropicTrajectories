@@ -19,6 +19,8 @@
 //------------------------------------------------------------------------------
 #pragma once
 
+#include <map>
+
 namespace ET
 {
   enum MatrixType
@@ -92,9 +94,9 @@ namespace ET
     uint64_t k = 3;             //  number of nearest neighbors
     uint64_t n = 3;             //  order of polynomial expansion
     //  type of weight matrix
-    enum WeightFunctionType _weight = 0;
+    enum WeightFunctionType _weight;
     //  type of RBF kernel
-    enum RBFType _rbf = 0;
+    enum RBFType _rbf;
     //  RBF params
     double _rbfshape = 3.05048;
 
@@ -120,4 +122,5 @@ namespace ET
     //  TODO: implement a set of parameters for each type
   };
   //----------------------------------------------------------------------------
+
 }

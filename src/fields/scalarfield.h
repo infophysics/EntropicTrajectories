@@ -115,14 +115,26 @@ namespace ET
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix();
     std::vector<std::vector<T>> gradient();
+    std::vector<T> laplacian();
+    T laplacian(uint64_t index);
+    //--------------------------------------------------------------------------
+    //  Derivatives along the entire grid
+    //--------------------------------------------------------------------------
     std::vector<std::vector<T>> derivative(uint32_t n);
     std::vector<T> derivative(uint32_t dir, uint32_t n);
     std::vector<T> derivative(std::vector<uint32_t> deriv);
+    //--------------------------------------------------------------------------
+    //  Derivatives at points on the grid
+    //--------------------------------------------------------------------------
     std::vector<T> derivativePoint(uint64_t index, uint32_t n);
     T derivativePoint(uint64_t index, uint32_t dir, uint32_t n);
     T derivativePoint(uint64_t index, std::vector<uint32_t> deriv);
-    std::vector<T> laplacian();
-    T laplacian(uint64_t index);
+    //--------------------------------------------------------------------------
+    //  Derivatives at arbitrary points
+    //--------------------------------------------------------------------------
+    std::vector<T> derivativePoint(std::vector<T> point, uint32_t n);
+    T derivativePoint(std::vector<T> point, uint32_t dir, uint32_t n);
+    T derivativePoint(std::vector<T> point, std::vector<uint32_t> deriv);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -134,7 +146,7 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Various functions
     //--------------------------------------------------------------------------
-    std::string summary();
+    const std::string summary();
     //--------------------------------------------------------------------------
 
   private:

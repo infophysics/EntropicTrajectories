@@ -68,6 +68,8 @@ namespace ET
     void setDim(uint32_t dim);
     void setVec(std::vector<T> vec);
     void setName(std::string name);
+    void setFlag(int flag);
+    void setInfo(std::string info);
 
     //  Operator overloads
     Vector<T>& operator=(const Vector<T>& vector);
@@ -148,7 +150,7 @@ namespace ET
     T& operator()(const uint32_t& i);
     const T& operator()(const uint32_t& i) const;
 
-    std::string summary();
+    const std::string summary();
   private:
     //  dimension
     uint32_t _dim;

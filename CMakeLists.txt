@@ -1,6 +1,5 @@
-set(CMAKE_CXX_FLAGS "-fpermissive")
+#set(CMAKE_CXX_FLAGS "-fpermissive")
 cmake_minimum_required(VERSION 2.8.12)
-set(CMAKE_CXX_FLAGS "-fpermissive")
 if (CMAKE_VERSION VERSION_LESS "3.1")
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
@@ -30,6 +29,7 @@ include_directories(${SOURCE_DIR})
 set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}linalg/matrix.cpp"
             "${SOURCE_DIR}grid/ugrid.cpp"
+            "${SOURCE_DIR}grid/kdtree.cpp"
             "${SOURCE_DIR}utils.cpp"
             "${SOURCE_DIR}interpolation/approximator.cpp"
             "${SOURCE_DIR}interpolation/integrator.cpp"
@@ -38,14 +38,12 @@ set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}fields/vectorfield.cpp"
             "${SOURCE_DIR}log/log.cpp"
             "${SOURCE_DIR}system/dynamicalsystem.cpp"
-            "${INCLUDE_DIR}monomial/monomial.cpp"
-            "${INCLUDE_DIR}rksuite/rksuite.cpp")
+            "${INCLUDE_DIR}monomial/monomial.cpp")
 
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
                     "${INCLUDE_DIR}monomial"
-                    "${INCLUDE_DIR}rksuite"
                     "${SOURCE_DIR}fields"
                     "${SOURCE_DIR}geometry"
                     "${SOURCE_DIR}grid"
@@ -76,7 +74,7 @@ MESSAGE(STATUS "CMake Module path is: " ${CMAKE_MODULE_PATH})
 #find_library(blas libblas.a /usr/local/lib)
 #MESSAGE(STATUS "BLAS location is: " ${blas})
 
-# find BLAS, LAPACK, LAPACKE, and OPENBLAS
+# find BLAS, CBLAS, LAPACK, LAPACKE, and OPENBLAS
 find_package( BLAS REQUIRED )
 find_package( CBLAS REQUIRED )
 find_package( LAPACK REQUIRED )
@@ -88,12 +86,17 @@ find_package( Boost REQUIRED )
 #   /usr/include
 #   /usr/local/include
 #   $ENV{BLAS_HOME}/include)
-MESSAGE(STATUS "CBLAS.h location is: " ${BLAS_INCLUDE_DIRS})
+MESSAGE(STATUS "BLAS    location is: " ${BLAS_INCLUDE_DIRS})
+MESSAGE(STATUS "CBLAS   location is: " ${BLAS_INCLUDE_DIRS})
+MESSAGE(STATUS "LAPACK  location is: " ${LAPACK_INCLUDE_DIRS})
+MESSAGE(STATUS "LAPACKE location is: " ${LAPACKE_INCLUDE_DIRS})
+MESSAGE(STATUS "BOOST   location is: " ${Boost_INCLUDE_DIRS})
+
 include_directories(${BLAS_INCLUDE_DIRS}
                     ${CBLAS_INCLUDE_DIRS}
                     ${LAPACK_INCLUDE_DIRS}
                     ${LAPACKE_INCLUDE_DIRS}
-                    ${BOOST_INCLUDE_DIRS})
+                    ${Boost_INCLUDE_DIRS})
 #-L/usr/lib/x86_64-linux-gnu/openblas -llapacke -llapack -lblas -lgfortran
 
 # Generate Python module
@@ -105,4 +108,4 @@ target_link_libraries(etraj PUBLIC ${MY_LIBRARIES}
                                    ${CBLAS_LIBRARIES}
                                    ${LAPACK_LIBRARIES}
                                    ${LAPACKE_LIBRARIES}
-                                   ${BOOST_LIBRARIES})
+                                   ${Boost_LIBRARIES})

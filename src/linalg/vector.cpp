@@ -206,6 +206,16 @@ namespace ET
   {
     _name = name;
   }
+  template<typename T>
+  void Vector<T>::setFlag(int flag)
+  {
+    _flag = flag;
+  }
+  template<typename T>
+  void Vector<T>::setInfo(std::string info)
+  {
+    _info = info;
+  }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -466,7 +476,7 @@ namespace ET
   //  Various methods
   //----------------------------------------------------------------------------
   template<typename T>
-  std::string Vector<T>::summary()
+  const std::string Vector<T>::summary()
   {
     std::stringstream s;
     s.str("");

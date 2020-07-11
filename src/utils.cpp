@@ -455,4 +455,6 @@ namespace ET
     return " ";
   }
   //--------------------------------------------------------------------------
+
+  template std::string scientific_not<double> (double, uint32_t);
 }

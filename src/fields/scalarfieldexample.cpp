@@ -95,7 +95,7 @@ namespace ET
   Vector<T> WaveEQ1D<T>::diffEQ(const Vector<T>& f,
                                        double dt, Vector<T> k)
   {
-    std::vector<T> grad = derivative(0,1);
+    std::vector<T> grad = this->derivative(0,1);
     Vector<T> dy_i(grad);
     return -(_w/_k)*dy_i;
   }
@@ -143,12 +143,12 @@ namespace ET
                                           double dt, Vector<T> k)
   {
     //  The differential equation must be defined by the user
-    std::vector<T> dd = derivative(0,2);
-    for (uint64_t i = 0; i < getN(); i++)
+    std::vector<T> dd = this->derivative(0,2);
+    for (uint64_t i = 0; i < this->getN(); i++)
     {
       dd[i] -= _mass*(*this)(i);
     }
+    return Vector<T>(dd);
   }
   //----------------------------------------------------------------------------
-
 }

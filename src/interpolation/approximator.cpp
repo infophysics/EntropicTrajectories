@@ -29,9 +29,17 @@ namespace ET
   std::map<std::string, ApproxType> ApproxTypeMap =
   {
     { "LS", ApproxType::LS },
-		{ "MLS", ApproxType::MLS },
-		{ "WMLS", ApproxType::WMLS},
+    { "MLS", ApproxType::MLS },
+    { "WMLS", ApproxType::WMLS},
     { "RBF", ApproxType::RBF }
+  };
+  //  map for a int to enum of approximator type
+  std::map<int, ApproxType> ApproxTypeMapInt =
+  {
+    { 0, ApproxType::LS },
+    { 1, ApproxType::MLS },
+    { 2, ApproxType::WMLS},
+    { 3, ApproxType::RBF }
   };
   //  map for a string to enum of LSDriver type
   std::map<std::string, LSDriver> LSDriverMap =
@@ -41,11 +49,19 @@ namespace ET
     { "xGELSD", LSDriver::xGELSD },
     { "xGELSS", LSDriver::xGELSS }
   };
+  //  map for a int to enum of LSDriver type
+  std::map<int, LSDriver> LSDriverMapInt =
+  {
+    { 0,  LSDriver::xGELS },
+    { 1, LSDriver::xGELSY },
+    { 2, LSDriver::xGELSD },
+    { 3, LSDriver::xGELSS }
+  };
   std::map<ApproxType, std::string> ApproxTypeNameMap =
   {
     { ApproxType::LS, "Vanilla least squares" },
-		{ ApproxType::MLS, "Moving least squares" },
-		{ ApproxType::WMLS, "Weighted moving least squares"},
+    { ApproxType::MLS, "Moving least squares" },
+    { ApproxType::WMLS, "Weighted moving least squares"},
     { ApproxType::RBF, "Radial basis functions" }
   };
   //  map for a string to enum of LSDriver type
@@ -57,7 +73,6 @@ namespace ET
     { LSDriver::xGELSS, "xGELSS" }
   };
   //----------------------------------------------------------------------------
-
   //----------------------------------------------------------------------------
   //  Constructors
   //----------------------------------------------------------------------------
@@ -69,8 +84,8 @@ namespace ET
 	template<typename T>
   Approximator<T>::Approximator() : _name("default")
   {
-    _type = 0;
-    _lsdriver = 0;
+    _type = LS;
+    _lsdriver = xGELS;
     //##########################################################################
 		_log = std::make_shared<Log>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
@@ -98,7 +113,7 @@ namespace ET
 	//  Constructor with approximator type
 	//----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::Approximator(int type) : _type(type), _name("default")
+  Approximator<T>::Approximator(int type) : _type(ApproxTypeMapInt[type]), _name("default")
   {
 		//##########################################################################
 		_log = std::make_shared<Log>();
@@ -135,8 +150,8 @@ namespace ET
 	template<typename T>
   Approximator<T>::Approximator(std::shared_ptr<Log> log) : _name("default")
   {
-    _type = 0;
-    _lsdriver = 0;
+    _type = LS;
+    _lsdriver = xGELS;
     //##########################################################################
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
@@ -151,7 +166,7 @@ namespace ET
 	//----------------------------------------------------------------------------
   template<typename T>
   Approximator<T>::Approximator(int type, std::shared_ptr<Log> log)
-	: _type(type), _name("default")
+	: _type(ApproxTypeMapInt[type]), _name("default")
   {
 		//##########################################################################
 		_log = log;
@@ -309,7 +324,13 @@ namespace ET
     const std::shared_ptr<ScalarField<T>> field, uint64_t index)
   {
     if (_type == 0)
+    {
       return scalarGradientLSPoint(ugrid, field, index);
+    }
+    else
+    {
+      return scalarGradientLSPoint(ugrid, field, index);
+    }
   }
   //----------------------------------------------------------------------------
 
@@ -364,7 +385,13 @@ namespace ET
                                   const std::shared_ptr<ScalarField<T>> field)
   {
     if (_type == 0)
+    {
       return scalarGradientLS(ugrid, field);
+    }
+    else
+    {
+      return scalarGradientLS(ugrid, field);
+    }
   }
   //----------------------------------------------------------------------------
 
@@ -426,7 +453,13 @@ namespace ET
     const ScalarField<T>& field, uint64_t index)
   {
     if (_type == 0)
+    {
       return scalarGradientLSPoint(ugrid, field, index);
+    }
+    else
+    {
+      return scalarGradientLSPoint(ugrid, field, index);
+    }
   }
   //----------------------------------------------------------------------------
 
@@ -482,7 +515,13 @@ namespace ET
                                   const ScalarField<T>& field)
   {
     if (_type == 0)
+    {
       return scalarGradientLS(ugrid, field);
+    }
+    else
+    {
+      return scalarGradientLS(ugrid, field);
+    }
   }
   //----------------------------------------------------------------------------
 
@@ -646,6 +685,38 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              point      - std::vector<T> of the point
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+																		const std::shared_ptr<ScalarField<T>> field,
+																		std::vector<T> point, uint32_t n)
+	{
+		std::vector<T> result(field->getDim(),0.0);
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		//  Trim result to the first field.getDim() elements
+		for (uint32_t j = 0; j < field->getDim(); j++)
+		{
+			std::vector<uint32_t> deriv(field->getDim(),0);
+			deriv[j] = n;
+			uint32_t l = mono.getTaylorIndex(deriv);
+			result[j] = coefficients(l);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
 	//----------------------------------------------------------------------------
 	//  scalarDerivativePoint  - approximate the derivative for a point
 	//                           of order n in direction dir
@@ -672,6 +743,33 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              point      - std::vector<T> of the point
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+																		const std::shared_ptr<ScalarField<T>> field,
+																		std::vector<T> point, uint32_t dir,
+                                    uint32_t n)
+	{
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		std::vector<uint32_t> deriv(field->getDim(),0);
+		deriv[dir] = n;
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return coefficients(l);
+	}
+	//----------------------------------------------------------------------------
+
 	//----------------------------------------------------------------------------
 	//  scalarDerivativePoint  - approximate the derivative for a point
 	//                           of order n in direction dir
@@ -689,6 +787,31 @@ namespace ET
 	{
 		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
 		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,index,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return coefficients(l);
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - ScalarField<T> pointer
+	//              point      - std::vector<T> of the point
+  //              deriv      - vector denoting the direction and order
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+																		const std::shared_ptr<ScalarField<T>> field,
+																		std::vector<T> point,
+                                    std::vector<uint32_t> deriv)
+	{
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
 		//  Grab the derivative determined by deriv
 		Monomial mono(ugrid->getDim(),n);
 		uint32_t l = mono.getTaylorIndex(deriv);
@@ -815,6 +938,38 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              point      - std::vector<T> of the point
+	//              n          - order of the derivative
+	//
+	//  Returns:    std::vector<T> of the gradient.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	std::vector<T>
+	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+													        	const ScalarField<T>& field,
+														        std::vector<T> point, uint32_t n)
+	{
+		std::vector<T> result(field.getDim(),0.0);
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		//  Trim result to the first field.getDim() elements
+		for (uint32_t j = 0; j < field.getDim(); j++)
+		{
+			std::vector<uint32_t> deriv(field.getDim(),0);
+			deriv[j] = n;
+			uint32_t l = mono.getTaylorIndex(deriv);
+			result[j] = coefficients(l);
+		}
+		return result;
+	}
+	//----------------------------------------------------------------------------
+
 	//----------------------------------------------------------------------------
 	//  scalarDerivativePoint  - approximate the derivative for a point
 	//                           of order n in direction dir
@@ -832,6 +987,33 @@ namespace ET
 																		  uint64_t index, uint32_t dir, uint32_t n)
 	{
 		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,index,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		std::vector<uint32_t> deriv(field.getDim(),0);
+		deriv[dir] = n;
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return coefficients(l);
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& pointer
+	//              point      - std::vector<T> of the point
+	//              dir        - direction of the derivative
+	//              n          - order of the derivative
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+																		  const ScalarField<T>& field,
+																		  std::vector<T> point, uint32_t dir,
+                                      uint32_t n)
+	{
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
 		//  Grab the derivative determined by deriv
 		Monomial mono(ugrid->getDim(),n);
 		std::vector<uint32_t> deriv(field.getDim(),0);
@@ -859,6 +1041,31 @@ namespace ET
 	{
 		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
 		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,index,n);
+		//  Grab the derivative determined by deriv
+		Monomial mono(ugrid->getDim(),n);
+		uint32_t l = mono.getTaylorIndex(deriv);
+		return coefficients(l);
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//  scalarDerivativePoint  - approximate the derivative for a point
+	//                           of order n in direction dir
+	//  Arguments:  ugrid      - UGrid<T> pointer
+	//              field      - const ScalarField<T>& reference
+	//              point      - std::vector<T> of the point
+	//              deriv      - vector denoting the direction and order
+	//
+	//  Returns:    T          - the gradient in direction dir and order n.
+	//----------------------------------------------------------------------------
+	template<typename T>
+	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+																		  const ScalarField<T>& field,
+																		  std::vector<T> point,
+																			std::vector<uint32_t> deriv)
+	{
+		uint32_t n = std::accumulate(deriv.begin(),deriv.end(),0);
+		Vector<T> coefficients = xScalarDerivativePoint(ugrid,field,point,n);
 		//  Grab the derivative determined by deriv
 		Monomial mono(ugrid->getDim(),n);
 		uint32_t l = mono.getTaylorIndex(deriv);
@@ -2066,7 +2273,7 @@ namespace ET
   //  Various functions
   //----------------------------------------------------------------------------
   template<typename T>
-  std::string Approximator<T>::summary()
+  const std::string Approximator<T>::summary()
   {
     std::string s = "\nApproximator type: " + ApproxTypeNameMap[_type];
     if (_type == LS)

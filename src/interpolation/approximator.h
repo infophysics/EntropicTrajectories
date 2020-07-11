@@ -251,6 +251,21 @@ namespace ET
                           uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n
+    //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - ScalarField<T> pointer
+    //              point      - std::vector<T> of the point
+    //              n          - order of the derivative
+    //
+    //  Returns:    std::vector<T> of the gradient.
+    //--------------------------------------------------------------------------
+    std::vector<T>
+    scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                          const std::shared_ptr<ScalarField<T>> field,
+                          std::vector<T> point,
+                          uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
     //                           of order n in direction dir
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - ScalarField<T> pointer
@@ -270,6 +285,22 @@ namespace ET
     //                           of order n in direction dir
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - ScalarField<T> pointer
+    //              point      - std::vector<T> of the point
+    //              dir        - direction of the derivative
+    //              n          - order of the derivative
+    //
+    //  Returns:    T          - the gradient in direction dir and order n.
+    //--------------------------------------------------------------------------
+    T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const std::shared_ptr<ScalarField<T>> field,
+                            std::vector<T> point,
+                            uint32_t dir,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n in direction dir
+    //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - ScalarField<T> pointer
     //              index      - index of the point
     //              deriv      - vector denoting the direction and order
     //
@@ -278,6 +309,20 @@ namespace ET
     T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
                             const std::shared_ptr<ScalarField<T>> field,
                             uint64_t index,
+                            std::vector<uint32_t> deriv);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n in direction dir
+    //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - ScalarField<T> pointer
+    //              point      - std::vector<T> of the point
+    //              deriv      - vector denoting the direction and order
+    //
+    //  Returns:    T          - the gradient in direction dir and order n.
+    //--------------------------------------------------------------------------
+    T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const std::shared_ptr<ScalarField<T>> field,
+                            std::vector<T> point,
                             std::vector<uint32_t> deriv);
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
@@ -337,6 +382,20 @@ namespace ET
                                          uint32_t n);
     //--------------------------------------------------------------------------
     //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n
+    //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - const ScalarField<T>& reference
+    //              point      - std::vector<T> of the point
+    //              n          - order of the derivative
+    //
+    //  Returns:    std::vector<T> of the gradient.
+    //--------------------------------------------------------------------------
+    std::vector<T> scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                                        const ScalarField<T>& field,
+                                        std::vector<T> point,
+                                        uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
     //                           of order n in direction dir
     //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - const ScalarField<T>& pointer
@@ -355,6 +414,22 @@ namespace ET
     //  scalarDerivativePoint  - approximate the derivative for a point
     //                           of order n in direction dir
     //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - const ScalarField<T>& pointer
+    //              point      - std::vector<T> of the point
+    //              dir        - direction of the derivative
+    //              n          - order of the derivative
+    //
+    //  Returns:    T          - the gradient in direction dir and order n.
+    //--------------------------------------------------------------------------
+    T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const ScalarField<T>& field,
+                            std::vector<T> point,
+                            uint32_t dir,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n in direction dir
+    //  Arguments:  ugrid      - UGrid<T> pointer
     //              field      - const ScalarField<T>& reference
     //              index      - index of the point
     //              deriv      - vector denoting the direction and order
@@ -364,6 +439,20 @@ namespace ET
     T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
                             const ScalarField<T>& field,
                             uint64_t index,
+                            std::vector<uint32_t> deriv);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativePoint  - approximate the derivative for a point
+    //                           of order n in direction dir
+    //  Arguments:  ugrid      - UGrid<T> pointer
+    //              field      - const ScalarField<T>& reference
+    //              point      - std::vector<T> of the point
+    //              deriv      - vector denoting the direction and order
+    //
+    //  Returns:    T          - the gradient in direction dir and order n.
+    //--------------------------------------------------------------------------
+    T scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const ScalarField<T>& field,
+                            std::vector<T> point,
                             std::vector<uint32_t> deriv);
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
@@ -734,7 +823,7 @@ namespace ET
     //--------------------------------------------------------------------------
     //  various functions
     //--------------------------------------------------------------------------
-    std::string summary();
+    const std::string summary();
     //--------------------------------------------------------------------------
 
   private:

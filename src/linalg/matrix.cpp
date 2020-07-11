@@ -482,15 +482,17 @@ namespace ET
   {
     if(_n != matrix.getNumRows())
     {
-      setInfo(MATRIX_ADD_INCOMPATIBLE_ROWS(_n, matrix.getNumRows(),
+      Matrix<T> copy(*this);
+      copy.setInfo(MATRIX_ADD_INCOMPATIBLE_ROWS(_n, matrix.getNumRows(),
                                            _name, matrix.getName()));
-      return *this;
+      return copy;
     }
     if (_m != matrix.getNumCols())
     {
-      setInfo(MATRIX_ADD_INCOMPATIBLE_COLS(_m, matrix.getNumCols(),
+      Matrix<T> copy(*this);
+      copy.setInfo(MATRIX_ADD_INCOMPATIBLE_ROWS(_n, matrix.getNumRows(),
                                            _name, matrix.getName()));
-      return *this;
+      return copy;
     }
     std::string name = "(" + _name + " + " + matrix.getName() + ")";
     Matrix<T> l(name, _m, _n, 0.0);
@@ -754,7 +756,7 @@ namespace ET
     std::cout << " ]" << std::endl;
   }
   template<typename T>
-  std::string Matrix<T>::summary()
+  const std::string Matrix<T>::summary()
   {
     std::stringstream s;
     s.str("");
@@ -1002,51 +1004,6 @@ namespace ET
       result += _array[i*_n + i];
     }
     return result;
-  }
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Linear algebra tools
-  //----------------------------------------------------------------------------
-  template<typename T>
-  bool Matrix<T>::isInvertible()
-  {
-  }
-  template<typename T>
-  void Matrix<T>::findSingularValues()
-  {
-  }
-  template<typename T>
-  Matrix<T> Matrix<T>::inverse()
-  {
-  }
-  template<typename T>
-  Matrix<T> Matrix<T>::pseudoInverse()
-  {
-  }
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::LU()
-  {
-  }
-  //  TODO: implement getL
-  template<typename T>
-  Matrix<T> Matrix<T>::getL(const Matrix<T>& perm)
-  {
-    return *this;
-  }
-  //  TODO: implement getU
-  template<typename T>
-  Matrix<T> Matrix<T>::getU(const Matrix<T>& perm)
-  {
-    return *this;
-  }
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>> Matrix<T>::QR()
-  {
-  }
-  template<typename T>
-  std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> Matrix<T>::SVD()
-  {
   }
   //----------------------------------------------------------------------------
 
@@ -1322,6 +1279,8 @@ namespace ET
       std::cout << "Matrices are incompatible!" << std::endl;
       return Matrix<double>("zeros",1,0.0);
     }
+    Matrix<double> A_copy(A);
+    Matrix<double> B_copy(B);
     std::vector<double> C(A.getNumRows() * B.getNumCols());
     cblas_dgemm(CblasRowMajor,  //  row major order
                 CblasNoTrans,   //  don't tranpose A
@@ -1330,9 +1289,9 @@ namespace ET
                 B.getNumCols(), //  number of cols of B
                 A.getNumCols(), //  number of cols of A
                 alpha,          //  scaling factor for A*B
-                A.data(),       //  pointer to elements of A
+                A_copy.data(),  //  pointer to elements of A
                 A.getNumCols(), //  leading dimension of A
-                B.data(),       //  pointer to elements of B
+                B_copy.data(),  //  pointer to elements of B
                 B.getNumCols(), //  leading dimension of B
                 1,              //  coefficient beta=1
                 C.data(),       //  pointer to elements of C
@@ -1368,6 +1327,8 @@ namespace ET
       std::cout << "Matrices are incompatible!" << std::endl;
       return;
     }
+    Matrix<double> A_copy(A);
+    Matrix<double> B_copy(B);
     cblas_dgemm(CblasRowMajor,  //  row major order
                 CblasNoTrans,   //  don't tranpose A
                 CblasNoTrans,   //  don't transpose B
@@ -1375,9 +1336,9 @@ namespace ET
                 B.getNumCols(), //  number of cols of B
                 A.getNumCols(), //  number of cols of A
                 alpha,          //  scaling factor for A*B
-                A.data(),       //  pointer to elements of A
+                A_copy.data(),  //  pointer to elements of A
                 A.getNumCols(), //  leading dimension of A
-                B.data(),       //  pointer to elements of B
+                B_copy.data(),  //  pointer to elements of B
                 B.getNumCols(), //  leading dimension of B
                 beta,           //  coefficient beta=1
                 C.data(),       //  pointer to elements of C
@@ -1408,6 +1369,8 @@ namespace ET
       std::cout << "Matrices are incompatible!" << std::endl;
       return Matrix<double>("zeros",1,0.0);
     }
+    Matrix<double> A_copy(A);
+    Matrix<double> B_copy(B);
     std::vector<double> C(A.getNumRows() * B.getNumCols());
     cblas_dgemm(CblasRowMajor,  //  row major order
                 CblasNoTrans,   //  don't tranpose A
@@ -1416,9 +1379,9 @@ namespace ET
                 B.getNumCols(), //  number of cols of B
                 A.getNumCols(), //  number of cols of A
                 1.0,            //  scaling factor for A*B
-                A.data(),       //  pointer to elements of A
+                A_copy.data(),  //  pointer to elements of A
                 A.getNumCols(), //  leading dimension of A
-                B.data(),       //  pointer to elements of B
+                B_copy.data(),  //  pointer to elements of B
                 B.getNumCols(), //  leading dimension of B
                 1.0,            //  coefficient beta=1
                 C.data(),       //  pointer to elements of C
@@ -1461,23 +1424,6 @@ namespace ET
                          A.getNumCols(),  //  leading dimension of A
                          c.data(),        //  pointer to elements of B
                          B.getNumCols()); //  leading dimension of B
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-      A.setFlag(-1);
-      B.setFlag(-1);
-      A.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
-      B.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
-    }
-    else if (info < 0)
-    {
-      A.setFlag(-1);
-      B.setFlag(-1);
-      A.setInfo(std::to_string(info)+"th argument has illegal value");
-      B.setInfo(std::to_string(info)+"th argument has illegal value");
-    }
     //  Cut the result according to (A.getNumCols() x B.getNumCols())
     c.resize(A.getNumCols() * B.getNumCols());
     std::string name;
@@ -1489,7 +1435,22 @@ namespace ET
     {
       name  = " ";
     }
-    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+    Matrix<double> C(name,A.getNumCols(),B.getNumCols(),c);
+    if( info > 0 )
+    {
+      std::string s = "The diagonal element " + std::to_string(info)
+                    + " of the triangular factor of A is zero, so that A "
+                    + "does not have full rank;the least squares solution"
+                    + " could not be computed.";
+      C.setFlag(-1);
+      C.setInfo(s);
+    }
+    else if (info < 0)
+    {
+      C.setFlag(-1);
+      C.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return C;
   }
   //----------------------------------------------------------------------------
 
@@ -1538,23 +1499,6 @@ namespace ET
                          A.getNumCols(),  //  leading dimension of A
                          u.data(),        //  pointer to elements of v
                          1);              //  leading dimension of v
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-      A.setFlag(-1);
-      //v.setFlag(-1);
-      A.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
-      //v.setInfo(std::to_string(info)+"th element on the diagonal is zero.  A does not have full rank.");
-    }
-    else if (info < 0)
-    {
-      A.setFlag(-1);
-      //v.setFlag(-1);
-      A.setInfo(std::to_string(info)+"th argument has illegal value");
-      //v.setInfo(std::to_string(info)+"th argument has illegal value");
-    }
     //  Cut the result according to (A.getNumCols())
     u.resize(A.getNumCols());
     std::string name;
@@ -1566,7 +1510,22 @@ namespace ET
     {
       name  = " ";
     }
-    return Vector<double>(name,u);
+    Vector<double> U(name,u);
+    if( info > 0 )
+    {
+     std::string s = "The diagonal element " + std::to_string(info)
+                   + " of the triangular factor of A is zero, so that A "
+                   + "does not have full rank;the least squares solution"
+                   + " could not be computed.";
+     U.setFlag(-1);
+     U.setInfo(s);
+    }
+    else if (info < 0)
+    {
+     U.setFlag(-1);
+     U.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return U;
   }
   //----------------------------------------------------------------------------
 
@@ -1602,12 +1561,6 @@ namespace ET
                           jpvt,            //  workspace array
                           rcond,           //  used for rank of A
                           &rank);          //  the effective rank of A
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-    }
     //  Cut the result according to (A.getNumCols() x B.getNumCols())
     c.resize(A.getNumCols() * B.getNumCols());
     std::string name;
@@ -1619,9 +1572,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+    Matrix<double> C(name,A.getNumCols(),B.getNumCols(),c);
+    if( info > 0 )
+    {
+      std::string s = "The diagonal element " + std::to_string(info)
+                    + " of the triangular factor of A is zero, so that A "
+                    + "does not have full rank;the least squares solution"
+                    + " could not be computed.";
+      C.setFlag(-1);
+      C.setInfo(s);
+    }
+    else if (info < 0)
+    {
+      C.setFlag(-1);
+      C.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return C;
   }
   //----------------------------------------------------------------------------
 
@@ -1687,9 +1653,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Vector<double>(name,u);
+    Vector<double> U(name,u);
+    if( info > 0 )
+    {
+     std::string s = "The diagonal element " + std::to_string(info)
+                   + " of the triangular factor of A is zero, so that A "
+                   + "does not have full rank;the least squares solution"
+                   + " could not be computed.";
+     U.setFlag(-1);
+     U.setInfo(s);
+    }
+    else if (info < 0)
+    {
+     U.setFlag(-1);
+     U.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return U;
   }
   //----------------------------------------------------------------------------
 
@@ -1725,12 +1704,6 @@ namespace ET
                           singular.data(), //  pointer to the singular values
                           rcond,           //  condition number
                           &rank);          //  effective rank of A.
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-    }
     //  Cut the result according to (A.getNumCols() x B.getNumCols())
     c.resize(A.getNumCols() * B.getNumCols());
     std::string name;
@@ -1742,11 +1715,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the singular values of A
-    A.setSingularValues(singular);
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+    Matrix<double> C(name,A.getNumCols(),B.getNumCols(),c);
+    if( info > 0 )
+    {
+      std::string s = "The diagonal element " + std::to_string(info)
+                    + " of the triangular factor of A is zero, so that A "
+                    + "does not have full rank;the least squares solution"
+                    + " could not be computed.";
+      C.setFlag(-1);
+      C.setInfo(s);
+    }
+    else if (info < 0)
+    {
+      C.setFlag(-1);
+      C.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return C;
   }
   //----------------------------------------------------------------------------
 
@@ -1795,12 +1779,6 @@ namespace ET
                           singular.data(), //  pointer to the singular values
                           rcond,           //  condition number
                           &rank);          //  effective rank of A.
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-    }
     //  Cut the result according to (A.getNumCols())
     u.resize(A.getNumCols());
     std::string name;
@@ -1812,11 +1790,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the singular values of A
-    A.setSingularValues(singular);
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Vector<double>(name,u);
+    Vector<double> U(name,u);
+    if( info > 0 )
+    {
+     std::string s = "The diagonal element " + std::to_string(info)
+                   + " of the triangular factor of A is zero, so that A "
+                   + "does not have full rank;the least squares solution"
+                   + " could not be computed.";
+     U.setFlag(-1);
+     U.setInfo(s);
+    }
+    else if (info < 0)
+    {
+     U.setFlag(-1);
+     U.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return U;
   }
   //----------------------------------------------------------------------------
 
@@ -1852,12 +1841,6 @@ namespace ET
                           singular.data(), //  pointer to the singular values
                           rcond,           //  condition number
                           &rank);          //  effective rank of A.
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-    }
     //  Cut the result according to (A.getNumCols() x B.getNumCols())
     c.resize(A.getNumCols() * B.getNumCols());
     std::string name;
@@ -1869,11 +1852,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the singular values of A
-    A.setSingularValues(singular);
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Matrix<double>(name,A.getNumCols(),B.getNumCols(),c);
+    Matrix<double> C(name,A.getNumCols(),B.getNumCols(),c);
+    if( info > 0 )
+    {
+      std::string s = "The diagonal element " + std::to_string(info)
+                    + " of the triangular factor of A is zero, so that A "
+                    + "does not have full rank;the least squares solution"
+                    + " could not be computed.";
+      C.setFlag(-1);
+      C.setInfo(s);
+    }
+    else if (info < 0)
+    {
+      C.setFlag(-1);
+      C.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return C;
   }
   //----------------------------------------------------------------------------
 
@@ -1922,12 +1916,6 @@ namespace ET
                           singular.data(), //  pointer to the singular values
                           rcond,           //  condition number
                           &rank);          //  effective rank of A.
-    if( info > 0 )
-    {
-      std::cout << "The diagonal element " << info << " of the triangular "
-                << "factor of A is zero, so that A does not have full rank;\n"
-                << "the least squares solution could not be computed.\n";
-    }
     //  Cut the result according to (A.getNumCols())
     u.resize(A.getNumCols());
     std::string name;
@@ -1939,11 +1927,22 @@ namespace ET
     {
       name  = " ";
     }
-    //  set the singular values of A
-    A.setSingularValues(singular);
-    //  set the effective rank of A
-    A.setRank(rank);
-    return Vector<double>(name,u);
+    Vector<double> U(name,u);
+    if( info > 0 )
+    {
+     std::string s = "The diagonal element " + std::to_string(info)
+                   + " of the triangular factor of A is zero, so that A "
+                   + "does not have full rank;the least squares solution"
+                   + " could not be computed.";
+     U.setFlag(-1);
+     U.setInfo(s);
+    }
+    else if (info < 0)
+    {
+     U.setFlag(-1);
+     U.setInfo(std::to_string(info)+"th argument has illegal value");
+    }
+    return U;
   }
   //----------------------------------------------------------------------------
 
@@ -1961,7 +1960,7 @@ namespace ET
       return std::vector<uint32_t>(0);
     }
     Matrix<double> LU(A);
-    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    std::vector<int> ipiv(std::min(A.getNumRows(),A.getNumCols()));
     int info;
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
                           A.getNumRows(),  // number of rows of A
@@ -1969,7 +1968,8 @@ namespace ET
                           LU.data(),       // pointer to the elements of A
                           A.getNumCols(),  // leading dimension of A
                           ipiv.data());    // pointer to pivot list
-    return ipiv;
+    std::vector<uint32_t> pivot(ipiv.begin(), ipiv.end());
+    return pivot;
   }
   //----------------------------------------------------------------------------
 
@@ -1991,7 +1991,7 @@ namespace ET
       return Matrix<double>("zeros",1,0.0);
     }
     Matrix<double> LU(A);
-    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    std::vector<int> ipiv(std::min(A.getNumRows(),A.getNumCols()));
     int info;
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
                           A.getNumRows(),  // number of rows of A
@@ -2023,7 +2023,7 @@ namespace ET
       return {Matrix<double>("zeros",1,0.0),Matrix<double>("zeros",1,0.0)};
     }
     Matrix<double> LU(A);
-    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    std::vector<int> ipiv(std::min(A.getNumRows(),A.getNumCols()));
     int info;
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
                           A.getNumRows(),  // number of rows of A
@@ -2073,7 +2073,7 @@ namespace ET
   //              (P, L and U)
   //----------------------------------------------------------------------------
   std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
-  DGETRF_PLU(const Matrix<double>& A)
+  DGETRF_PLU(const Matrix<double>& A)//  set the singular values of A
   {
     if (A.getNumRows() != A.getNumCols())
     {
@@ -2083,7 +2083,7 @@ namespace ET
               Matrix<double>("zeros",1,0.0)};
     }
     Matrix<double> LU(A);
-    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    std::vector<int> ipiv(std::min(A.getNumRows(),A.getNumCols()));
     int info;
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
                           A.getNumRows(),  // number of rows of A
@@ -2121,7 +2121,8 @@ namespace ET
       name_l += " of " + A.getName();
       name_u += " of " + A.getName();
     }
-    Matrix<double> P = permutationMatrix_d(A.getNumRows(),ipiv);
+    std::vector<uint32_t> pivot(ipiv.begin(),ipiv.end());
+    Matrix<double> P = permutationMatrix_d(A.getNumRows(),pivot);
     P.setName(name_p);
     Matrix<double> L(name_l,A.getNumRows(),l);
     Matrix<double> U(name_u,A.getNumRows(),u);
@@ -2167,13 +2168,14 @@ namespace ET
   {
     Matrix<double> QR(A);
     int info;
+    Vector<double> reflect(ref);
     info = LAPACKE_dorgqr(LAPACK_ROW_MAJOR,// row major order
                           A.getNumRows(),  // number of rows of A
                           A.getNumCols(),  // number of columns of A
                           ref.getDim(),    // number of elementary reflectors
                           QR.data(),       // pointer to the elements of A
                           A.getNumCols(),  // leading dimension of A
-                          ref.data());     // pointer to reflectors
+                          reflect.data()); // pointer to reflectors
     std::string name = "Q-Matrix";
     if (A.getName() != " ")
     {
@@ -2410,7 +2412,7 @@ namespace ET
     Matrix<double> LU(A);
     //  First compute the LU factorization to get the
     //  pivot indices
-    std::vector<uint32_t> ipiv(std::min(A.getNumRows(),A.getNumCols()));
+    std::vector<int> ipiv(std::min(A.getNumRows(),A.getNumCols()));
     int info;
     info = LAPACKE_dgetrf(LAPACK_ROW_MAJOR,// row major layout
                           A.getNumRows(),  // number of rows of A
@@ -2426,8 +2428,9 @@ namespace ET
                           ipiv.data());    // pointer to the pivot list
     if (info > 0)
     {
-      A.setFlag(-1);
-      A.setInfo("Matrix could not be computed, diagonal element " + std::to_string(info) + " is exactly zero");
+      LU.setFlag(-1);
+      LU.setInfo("Matrix could not be computed, diagonal element "
+                 + std::to_string(info) + " is exactly zero");
     }
     std::string name;
     if (A.getName() != " ")

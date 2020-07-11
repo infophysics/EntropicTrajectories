@@ -30,6 +30,7 @@
 #include "matrix.h"
 #include "ugrid.h"
 #include "log.h"
+#include "kdtree.h"
 #include "scalarfield.h"
 #include "vectorfield.h"
 #include "utils.h"
@@ -125,7 +126,7 @@ PYBIND11_MODULE(etraj, m) {
 			self(i) = val;
 		}, py::is_operator())
 		//	print functionality
-		.def("__repr__", [](const ET::Vector<double> &vector)
+		.def("__repr__", [](ET::Vector<double> &vector)
 		{
 				return vector.summary();
 		})
@@ -293,7 +294,7 @@ PYBIND11_MODULE(etraj, m) {
 			self(i,j) = val;
 		}, py::is_operator())
 		//	this will allow the user to get entire rows.
-		.def("__getitem__", [](const ET::Matrix<double> &self, int i)
+		.def("__getitem__", [](ET::Matrix<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getNumRows())
 			{
@@ -305,7 +306,7 @@ PYBIND11_MODULE(etraj, m) {
 			return self.getRow(i);
 		}, py::is_operator())
 		//	print functionality
-		.def("__repr__", [](const ET::Matrix<double> &m)
+		.def("__repr__", [](ET::Matrix<double> &m)
 		{
 				return m.summary();
 		})
@@ -332,24 +333,24 @@ PYBIND11_MODULE(etraj, m) {
 		.def("transpose", (void (ET::Matrix<double>::*)(bool))
 				 &ET::Matrix<double>::transpose_inplace)
 		.def("trace", &ET::Matrix<double>::trace)
-		.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
-		.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
+		//.def("find_singular_values", &ET::Matrix<double>::findSingularValues)
+		//.def("get_singular_values", &ET::Matrix<double>::getSingularValues)
 		//--------------------------------------------------------------------------
 
 		//--------------------------------------------------------------------------
 		//	Linear algebra tools
 		//--------------------------------------------------------------------------
-		.def("inverse", &ET::Matrix<double>::inverse)
-		.def("pseudo_inverse", &ET::Matrix<double>::pseudoInverse)
-		.def("LU", [](ET::Matrix<double> &self)
-		{
-			if (self.getNumRows() != self.getNumCols())
-			{
-				throw py::value_error("Expecting square matrix!");
-			}
-			return self.LU();
-		})
-		.def("SVD", &ET::Matrix<double>::SVD)
+		//.def("inverse", &ET::Matrix<double>::inverse)
+		//.def("pseudo_inverse", &ET::Matrix<double>::pseudoInverse)
+		//.def("LU", [](ET::Matrix<double> &self)
+		//{
+		//	if (self.getNumRows() != self.getNumCols())
+		//	{
+		//		throw py::value_error("Expecting square matrix!");
+		//	}
+		//	return self.LU();
+    //})
+		//.def("SVD", &ET::Matrix<double>::SVD)
 		//--------------------------------------------------------------------------
 		;
 	//--------------------------------------------------------------------------
@@ -461,7 +462,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
 				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors,
 				 py::return_value_policy::reference)
-		.def("get_neighbors", [](const ET::UGrid<double>& self, uint64_t i)
+		.def("get_neighbors", [](ET::UGrid<double>& self, uint64_t i)
 		{
 			if (i < 0 || i >= self.getN())
 			{
@@ -486,12 +487,12 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_logger", &ET::UGrid<double>::getLogger,
 		     py::return_value_policy::reference)
-		.def("output", [](const ET::UGrid<double>& self)
+		.def("output", [](ET::UGrid<double>& self)
 		{
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](const ET::UGrid<double>& self, uint64_t i)
+		.def("output", [](ET::UGrid<double>& self, uint64_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
@@ -506,7 +507,7 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	Access operators
 		//--------------------------------------------------------------------------
-		.def("__getitem__", [](const ET::UGrid<double> &self,
+		.def("__getitem__", [](ET::UGrid<double> &self,
 					std::tuple<int, int> ij)
 		{
 			int i, j;
@@ -620,7 +621,7 @@ PYBIND11_MODULE(etraj, m) {
 			self(i,j) = val;
 		}, py::is_operator())
 		//--------------------------------------------------------------------------
-		.def("__getitem__", [](const ET::UGrid<double> &self, int i)
+		.def("__getitem__", [](ET::UGrid<double> &self, int i)
 		{
 			if (i < 0 || i >= self.getN())
 			{
@@ -653,7 +654,7 @@ PYBIND11_MODULE(etraj, m) {
 			}
 		}, py::is_operator())
 		//--------------------------------------------------------------------------
-		.def("__setitem__", [](const ET::UGrid<double> &self, int i,
+		.def("__setitem__", [](ET::UGrid<double> &self, int i,
 			                     std::vector<double> x)
 		{
 			if (i < 0 || i >= self.getN())
@@ -752,12 +753,12 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_field", &ET::ScalarField<double>::setField)
 		.def("set_name", &ET::ScalarField<double>::setName)
 		.def("set_approx_type", &ET::ScalarField<double>::setApproxType)
-		.def("output", [](const ET::ScalarField<double>& self)
+		.def("output", [](ET::ScalarField<double>& self)
 		{
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](const ET::ScalarField<double>& self, uint64_t i)
+		.def("output", [](ET::ScalarField<double>& self, uint64_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
@@ -801,10 +802,13 @@ PYBIND11_MODULE(etraj, m) {
 			self(i) = val;
 		}, py::is_operator())
 		//--------------------------------------------------------------------------
-		//  Various functions
+		//  Derivatives of the field
 		//--------------------------------------------------------------------------
 		.def("gradient", &ET::ScalarField<double>::gradient,
 				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+ 		//  Derivatives along the entire grid
+ 		//--------------------------------------------------------------------------
 		.def("derivative",
 		     (std::vector<std::vector<double>> (ET::ScalarField<double>::*)
 			    (uint32_t)) &ET::ScalarField<double>::derivative,
@@ -813,18 +817,45 @@ PYBIND11_MODULE(etraj, m) {
 		     (std::vector<double> (ET::ScalarField<double>::*)
 			    (uint32_t, uint32_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+ 		//  Derivatives at points on the grid
+ 		//--------------------------------------------------------------------------
 	  .def("derivative_point",
 		     (std::vector<double> (ET::ScalarField<double>::*)
-			    (uint64_t, uint32_t)) &ET::ScalarField<double>::derivativePoint,
+			    (uint64_t, uint32_t))
+          &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
 	  .def("derivative_point",
 		     (double (ET::ScalarField<double>::*)
 			    (uint64_t, uint32_t, uint32_t))
 				 &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
+    .def("derivative_point",
+		     (double (ET::ScalarField<double>::*)
+			    (uint64_t, std::vector<uint32_t>))
+				 &ET::ScalarField<double>::derivativePoint,
+	       py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+ 		//  Derivatives at arbitrary points
+ 		//--------------------------------------------------------------------------
+    .def("derivative_point",
+		     (std::vector<double> (ET::ScalarField<double>::*)
+			    (std::vector<double>, uint32_t))
+          &ET::ScalarField<double>::derivativePoint,
+	       py::return_value_policy::reference)
+	  .def("derivative_point",
+		     (double (ET::ScalarField<double>::*)
+			    (std::vector<double>, uint32_t, uint32_t))
+				 &ET::ScalarField<double>::derivativePoint,
+	       py::return_value_policy::reference)
+     .def("derivative_point",
+ 		     (double (ET::ScalarField<double>::*)
+ 			    (std::vector<double>, std::vector<uint32_t>))
+ 				 &ET::ScalarField<double>::derivativePoint,
+ 	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		//	print functionality
-		.def("__repr__", [](const ET::ScalarField<double> &field)
+		.def("__repr__", [](ET::ScalarField<double> &field)
 		{
 			std::stringstream s;
 			s << &field;
@@ -905,7 +936,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_approx_type", &ET::Approximator<double>::setApproxType)
 		.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
 		.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
-		.def("set_k", []( const ET::Approximator<double>& self, int k)
+		.def("set_k", [](ET::Approximator<double>& self, int k)
 		{
 			if (k <= 0)
 			{
@@ -917,7 +948,7 @@ PYBIND11_MODULE(etraj, m) {
 				return self.set_k(k);
 			}
 		})
-		.def("set_n", []( const ET::Approximator<double>& self, int n)
+		.def("set_n", [](ET::Approximator<double>& self, int n)
 		{
 			if (n <= 0)
 			{
@@ -931,12 +962,12 @@ PYBIND11_MODULE(etraj, m) {
 		})
 		.def("set_flag", &ET::Approximator<double>::setFlag)
 		.def("set_info", &ET::Approximator<double>::setInfo)
-		.def("output", [](const ET::Approximator<double>& self)
+		.def("output", [](ET::Approximator<double>& self)
 		{
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](const ET::Approximator<double>& self, uint64_t i)
+		.def("output", [](ET::Approximator<double>& self, uint64_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
@@ -999,7 +1030,7 @@ PYBIND11_MODULE(etraj, m) {
  				 &ET::Approximator<double>::scalarDerivative,
  				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (point p, order n)
+ 	 	//  Scalar derivative (index i, order n)
  	 	//--------------------------------------------------------------------------
 		.def("scalar_derivative_point",
 				 (std::vector<double> (ET::Approximator<double>::*)
@@ -1008,8 +1039,18 @@ PYBIND11_MODULE(etraj, m) {
 					 uint64_t, uint32_t))
 				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+	 	//  Scalar derivative (point p, order n)
+	 	//--------------------------------------------------------------------------
+		.def("scalar_derivative_point",
+				 (std::vector<double> (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 std::vector<double>, uint32_t))
+				 &ET::Approximator<double>::scalarDerivativePoint,
+				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (point p, direction dir, order n)
+ 	 	//  Scalar derivative (index i, direction dir, order n)
  	 	//--------------------------------------------------------------------------
 	  .def("scalar_derivative_point",
 	 			 (double (ET::Approximator<double>::*)
@@ -1018,8 +1059,18 @@ PYBIND11_MODULE(etraj, m) {
 					 uint64_t, uint32_t, uint32_t))
 				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+	 	//  Scalar derivative (point p, direction dir, order n)
+	 	//--------------------------------------------------------------------------
+	  .def("scalar_derivative_point",
+	 			 (double (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 std::vector<double>, uint32_t, uint32_t))
+				 &ET::Approximator<double>::scalarDerivativePoint,
+				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
-  	//  Scalar derivative (point p, direction dir, order n)
+  	//  Scalar derivative (index i, direction dir, order n)
   	//--------------------------------------------------------------------------
  	  .def("scalar_derivative_point",
  	 			 (double (ET::Approximator<double>::*)
@@ -1028,6 +1079,16 @@ PYBIND11_MODULE(etraj, m) {
  					 uint64_t, std::vector<uint32_t>))
  				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+   	//  Scalar derivative (point p, direction dir, order n)
+   	//--------------------------------------------------------------------------
+	  .def("scalar_derivative_point",
+	 			 (double (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const std::shared_ptr<ET::ScalarField<double>>,
+					 std::vector<double>, std::vector<uint32_t>))
+				 &ET::Approximator<double>::scalarDerivativePoint,
+				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
 		//  Passing Scalarfield by reference
 		//--------------------------------------------------------------------------
@@ -1062,7 +1123,7 @@ PYBIND11_MODULE(etraj, m) {
 				 &ET::Approximator<double>::scalarDerivative,
 				 py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
-		//  Scalar derivative (point p, order n)
+		//  Scalar derivative (index i, order n)
 		//--------------------------------------------------------------------------
  		.def("scalar_derivative_point",
  				 (std::vector<double> (ET::Approximator<double>::*)
@@ -1071,8 +1132,18 @@ PYBIND11_MODULE(etraj, m) {
  					 uint64_t, uint32_t))
  				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+		//  Scalar derivative (point p, order n)
 		//--------------------------------------------------------------------------
-		//  Scalar derivative (point p, direction dir, order n)
+		.def("scalar_derivative_point",
+				 (std::vector<double> (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const ET::ScalarField<double>&,
+					 std::vector<double>, uint32_t))
+				 &ET::Approximator<double>::scalarDerivativePoint,
+				 py::return_value_policy::reference)
+		//--------------------------------------------------------------------------
+		//  Scalar derivative (index i, direction dir, order n)
 		//--------------------------------------------------------------------------
 	  .def("scalar_derivative_point",
 	 			 (double (ET::Approximator<double>::*)
@@ -1081,8 +1152,18 @@ PYBIND11_MODULE(etraj, m) {
 					 uint64_t, uint32_t, uint32_t))
 				 &ET::Approximator<double>::scalarDerivativePoint,
 				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
  		//  Scalar derivative (point p, direction dir, order n)
+ 		//--------------------------------------------------------------------------
+ 	  .def("scalar_derivative_point",
+ 	 			 (double (ET::Approximator<double>::*)
+ 				 	(const std::shared_ptr<ET::UGrid<double>>,
+ 					 const ET::ScalarField<double>&,
+ 					 std::vector<double>, uint32_t, uint32_t))
+ 				 &ET::Approximator<double>::scalarDerivativePoint,
+ 				 py::return_value_policy::reference)
+		//--------------------------------------------------------------------------
+ 		//  Scalar derivative (index i, direction dir, order n)
  		//--------------------------------------------------------------------------
  	  .def("scalar_derivative_point",
  	 			 (double (ET::Approximator<double>::*)
@@ -1091,6 +1172,19 @@ PYBIND11_MODULE(etraj, m) {
  					 uint64_t, std::vector<uint32_t>))
  				 &ET::Approximator<double>::scalarDerivativePoint,
  				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+		//  Scalar derivative (point p, direction dir, order n)
+		//--------------------------------------------------------------------------
+	  .def("scalar_derivative_point",
+	 			 (double (ET::Approximator<double>::*)
+				 	(const std::shared_ptr<ET::UGrid<double>>,
+					 const ET::ScalarField<double>&,
+					 std::vector<double>, std::vector<uint32_t>))
+				 &ET::Approximator<double>::scalarDerivativePoint,
+				 py::return_value_policy::reference)
+    //--------------------------------------------------------------------------
+    //  Various matrices
+    //--------------------------------------------------------------------------
 		.def("construct_taylor_matrix",
 		     (ET::Matrix<double> (ET::Approximator<double>::*)
 				  (const std::shared_ptr<ET::UGrid<double>>,
@@ -1104,7 +1198,7 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------
-		.def("__repr__", [](const ET::Approximator<double> &app)
+		.def("__repr__", [](ET::Approximator<double> &app)
 		{
 				return app.summary();
 		})
@@ -1199,7 +1293,7 @@ PYBIND11_MODULE(etraj, m) {
 					                 const std::vector<double>&,uint32_t))
 	 		   &ET::Monomial::taylorMonomialExpansion)
 	  //	print functionality
-		.def("__repr__", [](const ET::Monomial &mon)
+		.def("__repr__", [](ET::Monomial &mon)
 		{
 				return mon.summary();
 		})

@@ -1,0 +1,4 @@
+[15:03:30] [trace] ET:kdTree:default_2: kdTree 'default' created at location 0x7ffe168bc560
+[15:03:30] [trace] ET:kdTree:default_2: kdTree 'default' destroyed at location 0x7ffe168bc560
+[15:03:34] [info] ET:kdTree:default_2: kdTree default: Querying each point in array _grid of size 100 and dimension 1 for the nearest 10 neighbors
+[15:03:30] [trace] ET:kdTree:default_0: kdTree 'default' destroyed at location 0x5635a4ef8e50

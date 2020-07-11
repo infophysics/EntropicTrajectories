@@ -22,6 +22,7 @@
 #include <string>
 #include "utils.h"
 #include "matrix.h"
+#include "kdtree.h"
 #include "log.h"
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"
@@ -62,10 +63,10 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Getters
     //--------------------------------------------------------------------------
-    uint64_t getDim();
-    uint64_t getN();
+    const uint64_t getDim();
+    const uint64_t getN();
     std::vector<std::vector<T>>  getUGrid();
-    std::string getName();
+    const std::string getName();
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
     std::vector<std::vector<size_t>> getNeighborsRadius();
@@ -125,7 +126,7 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    //--------------------------------------------------------------------------
+    //-------------------------------------------UGrid-------------------------------
     //  Basic attributes
     //--------------------------------------------------------------------------
     std::string _name;                 //  Name of the grid
@@ -136,6 +137,7 @@ namespace ET
     //--------------------------------------------------------------------------
     //  KDTree
     //--------------------------------------------------------------------------
+    kdTree<T> _kdt;
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
                      std::vector<std::vector<T>>,T>> _kdtree;
     //--------------------------------------------------------------------------
