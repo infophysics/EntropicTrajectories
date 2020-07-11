@@ -659,8 +659,7 @@ namespace ET
 	template<typename T>
 	void UGrid<T>::setupTree()
 	{
-    kdTree<T> kdt(std::make_shared<std::vector<std::vector<T>>>(_ugrid));
-    _kdt = kdt;
+    _kdt = kdTree<T>(std::make_shared<std::vector<std::vector<T>>>(_ugrid));
 	}
 	template<typename T>
   void UGrid<T>::queryNeighbors(uint64_t k)

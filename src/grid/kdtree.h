@@ -30,7 +30,7 @@
 namespace ET
 {
   template<typename T>
-  class kdTree
+  class kdTree : public std::enable_shared_from_this<kdTree<T>>
   {
   public:
     kdTree();

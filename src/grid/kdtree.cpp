@@ -194,6 +194,8 @@ namespace ET
 			_neighbors[i] = std::move(ret_indexes);
 			_distances[i] = std::move(out_dists_sqr);
     }
+    // _kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    //                            std::vector<std::vector<T>>, T>>(kdt);
 		_searchFlag = 0;
   }
   template<typename T>
@@ -223,11 +225,14 @@ namespace ET
     std::vector<double> out_dists_sqr(num_results);
     nanoflann::KNNResultSet<double> resultSet(num_results);
     resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
+
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(_dim, *_points, 16);
     kdt.index->buildIndex();
 		kdt.index->findNeighbors(resultSet, &point[0],
 			                       nanoflann::SearchParams(10));
+    // _kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    //                           std::vector<std::vector<T>>, T>>(kdt);
 		return ret_indexes;
   }
   template<typename T>
@@ -262,7 +267,10 @@ namespace ET
 
     nanoflann::KNNResultSet<double> resultSet(num_results);
     resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
-		_kdtree->index->findNeighbors(resultSet, &point[0],
+    KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
+		kdt(_dim, *_points, 16);
+    kdt.index->buildIndex();
+		kdt.index->findNeighbors(resultSet, &point[0],
 			                       nanoflann::SearchParams(10));
 		neighbors = std::move(ret_indexes);
 		distances = std::move(out_dists_sqr);
@@ -313,8 +321,8 @@ namespace ET
 			neighbors[i] = std::move(ret_indexes);
 			distances[i] = std::move(out_dists_sqr);
     }
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>>(kdt);
+		// _kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    //                  std::vector<std::vector<T>>,T>>(kdt);
 		return neighbors;
   }
   template<typename T>
@@ -359,8 +367,8 @@ namespace ET
 			_distances_radius[i] = std::move(distances);
     }
 		_searchFlag = 0;
-		_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>>(kdt);
+		// _kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    //                  std::vector<std::vector<T>>,T>>(kdt);
   }
   //----------------------------------------------------------------------------
 }
