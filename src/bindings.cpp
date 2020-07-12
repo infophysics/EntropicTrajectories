@@ -35,6 +35,7 @@
 #include "vectorfield.h"
 #include "utils.h"
 #include "approximator.h"
+#include "diffeq.h"
 #include "dynamicalsystem.h"
 #include "scalarfieldexample.h"
 
@@ -901,7 +902,6 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_k", &ET::WaveEQ1D<double>::setk)
 		.def("get_w", &ET::WaveEQ1D<double>::getw)
 		.def("set_w", &ET::WaveEQ1D<double>::setw)
-		.def("diffeq", &ET::WaveEQ1D<double>::diffEQ)
 		;
 	//----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------
@@ -1321,6 +1321,59 @@ PYBIND11_MODULE(etraj, m) {
 		})
 		;
 	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	diffEQ Base class
+	//----------------------------------------------------------------------------
+  py::class_<ET::diffEQ<double>,
+             std::shared_ptr<ET::diffEQ<double>>>(m, "diffEQ")
+    .def(py::init<>())
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	firstOrderODE Base class
+	//----------------------------------------------------------------------------
+  py::class_<ET::firstOrderODE<double>, ET::diffEQ<double>,
+             std::shared_ptr<ET::firstOrderODE<double>>>(m, "firstOrderODE")
+    .def(py::init<>())
+    .def("set_scalarfield", &ET::firstOrderODE<double>::setScalarField)
+    .def("set_vectorfield", &ET::firstOrderODE<double>::setVectorField)
+    .def("get_scalarfield", &ET::firstOrderODE<double>::getScalarField)
+    .def("get_vectorfield", &ET::firstOrderODE<double>::getVectorField)
+    //.def("dt", &ET::firstOrderODE<double>::dt)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	secondOrderODE Base class
+	//----------------------------------------------------------------------------
+  py::class_<ET::secondOrderODE<double>, ET::diffEQ<double>,
+             std::shared_ptr<ET::secondOrderODE<double>>>(m, "secondOrderODE")
+    .def(py::init<>())
+    .def("set_scalarfield", &ET::secondOrderODE<double>::setScalarField)
+    .def("set_vectorfield", &ET::secondOrderODE<double>::setVectorField)
+    .def("get_scalarfield", &ET::secondOrderODE<double>::getScalarField)
+    .def("get_vectorfield", &ET::secondOrderODE<double>::getVectorField)
+    //.def("dt", &ET::secondOrderODE<double>::dt)
+    //.def("dt", &ET::secondOrderODE<double>::d2t)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	firstOrderODE Examples
+	//----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+	//	heat equation
+	//----------------------------------------------------------------------------
+  py::class_<ET::heatEquation<double>, ET::firstOrderODE<double>,
+             std::shared_ptr<ET::heatEquation<double>>>(m, "heatEquation")
+    .def(py::init<>())
+    .def("set_alpha", &ET::heatEquation<double>::setAlpha)
+    .def("get_alpha", &ET::heatEquation<double>::getAlpha)
+    .def("dt", &ET::heatEquation<double>::dt)
+    ;
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Logger class

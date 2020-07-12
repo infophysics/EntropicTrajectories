@@ -26,14 +26,16 @@
 #include "log.h"
 
 //------------------------------------------------------------------------------
-//  Forward declaration of Approximator
+//  Forward declaration of Approximator, Integrator and diffEQ
 //------------------------------------------------------------------------------
 namespace ET
 {
   template<typename T> class Approximator;
+  template<typename T> class diffEQ;
   template<typename T> class Integrator;
 }
 #include "approximator.h"
+#include "diffeq.h"
 #include "integrator.h"
 namespace ET
 {
@@ -76,9 +78,10 @@ namespace ET
     std::string getName() const;
     uint64_t getN() const;
     uint32_t getDim() const;
-    std::shared_ptr<Approximator<T>> getApproximator() const;
-    std::shared_ptr<Integrator<T>> getIntegrator() const;
     std::shared_ptr<UGrid<T>> getUGrid() const;
+    std::shared_ptr<Approximator<T>> getApproximator() const;
+    std::shared_ptr<diffEQ<T>> getDiffEQ() const;
+    std::shared_ptr<Integrator<T>> getIntegrator() const;
     std::shared_ptr<Log> getLogger();
     int getFlag() const;
     std::string getInfo() const;
@@ -162,6 +165,7 @@ namespace ET
     //--------------------------------------------------------------------------
     std::shared_ptr<UGrid<T>> _ugrid;
     std::shared_ptr<Approximator<T>> _approx;
+    std::shared_ptr<diffEQ<T>> _diffeq;
     std::shared_ptr<Integrator<T>> _integrator;
     std::shared_ptr<Log> _log;
     //--------------------------------------------------------------------------
@@ -173,13 +177,6 @@ namespace ET
 
     int _flag;
     std::string _info;
-    //--------------------------------------------------------------------------
-
-  public:
-    //--------------------------------------------------------------------------
-    // Inherited functions which much be overwritten
-    //--------------------------------------------------------------------------
-    virtual Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
     //--------------------------------------------------------------------------
 
   };

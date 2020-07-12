@@ -1,0 +1,5 @@
+[21:59:47] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x55de67bdf1d0
+[21:59:47] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x55de6826c190
+[21:59:47] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
+[21:59:47] [trace] ET:UGrid:default: Approximator 'default' created at location 0x55de676c41c0
+[21:59:47] [info] ET:UGrid:default: Logger passed to Approximator 'default'

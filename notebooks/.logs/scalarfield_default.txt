@@ -1,8 +1,8 @@
-[15:03:30] [trace] ET:ScalarField:WaveEQ1D_0: Scalar Field 'WaveEQ1D' created at location 0x5635a576f900
-[15:03:30] [trace] ET:ScalarField:WaveEQ1D_0: Approximator 'default' created at location 0x5635a5647a80
-[15:03:30] [info] ET:ScalarField:WaveEQ1D_0: Logger passed to Approximator 'default'
-[15:03:30] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: k set to 10
-[15:03:30] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: n set to 5
-[15:03:30] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: ApproxType set to LS
-trace] ET:ScalarField:WaveEQ1D: Scalar Field 'WaveEQ1D' destroyed at location 0x5635a45e59e0
-[15:03:30] [trace] ET:ScalarField:WaveEQ1D: Approximator 'default' destroyed at location 0x5635a50f2ec0
+[20:17:57] [trace] ET:ScalarField:WaveEQ1D_0: Scalar Field 'WaveEQ1D' created at location 0x5584279a02e0
+[20:17:57] [trace] ET:ScalarField:WaveEQ1D_0: Approximator 'default' created at location 0x558427b291a0
+[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Logger passed to Approximator 'default'
+[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: k set to 10
+[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: n set to 5
+[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Approximator default: ApproxType set to LS
+trace] ET:ScalarField:WaveEQ1D: Scalar Field 'WaveEQ1D' destroyed at location 0x558426c879e0
+[20:17:57] [trace] ET:ScalarField:WaveEQ1D: Approximator 'default' destroyed at location 0x558426c6ac80

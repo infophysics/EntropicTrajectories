@@ -82,24 +82,6 @@ namespace ET
     _w = w;
   }
   //----------------------------------------------------------------------------
-  //----------------------------------------------------------------------------
-  //  Diff EQ function
-  //  The first order time derivative of the wave equation is,
-  //  df/dt = wAsin(kx - wt) = -v df/dx
-  //  We can use the fact that the argument inside is (x - vt) to
-  //  replace the time derivative with the spatial derivative.
-  //  We will need to shift x by an amount proportional to vdt in the
-  //  algorithm.
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Vector<T> WaveEQ1D<T>::diffEQ(const Vector<T>& f,
-                                       double dt, Vector<T> k)
-  {
-    std::vector<T> grad = this->derivative(0,1);
-    Vector<T> dy_i(grad);
-    return -(_w/_k)*dy_i;
-  }
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  KleinGordon1D Example
@@ -135,20 +117,4 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Diff EQ function
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Vector<T> KleinGordon1D<T>::diffEQ(const Vector<T>& f,
-                                          double dt, Vector<T> k)
-  {
-    //  The differential equation must be defined by the user
-    std::vector<T> dd = this->derivative(0,2);
-    for (uint64_t i = 0; i < this->getN(); i++)
-    {
-      dd[i] -= _mass*(*this)(i);
-    }
-    return Vector<T>(dd);
-  }
-  //----------------------------------------------------------------------------
 }

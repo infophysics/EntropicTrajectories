@@ -49,8 +49,6 @@ namespace ET
     T _A;
     T _k;
     T _w;
-  public:
-    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
   };
   //----------------------------------------------------------------------------
 
@@ -70,8 +68,6 @@ namespace ET
     void setMass(T mass);
   private:
     T _mass;
-  public:
-    Vector<T> diffEQ(const Vector<T>& f, double dt, Vector<T> k);
   };
   //----------------------------------------------------------------------------
 
