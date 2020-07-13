@@ -142,16 +142,25 @@ namespace ET
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  Evaluation function
+  //  Evaluation functions
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<T> heatEquation<T>::dt(std::vector<T> point, double t, T k)
+  T heatEquation<T>::dt(std::vector<T> point, double t, T k)
+  {
+    std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(point,2);
+    return _alpha * std::accumulate(d2f_dx2.begin(),d2f_dx2.end(),0);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> heatEquation<T>::dt(std::vector<std::vector<T>> points,
+                                     double t, std::vector<T> k)
   {
     std::vector<T> result(this->getScalarField()->getN());
     for(uint64_t i = 0; i < this->getScalarField()->getN(); i++)
     {
-      std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(point,2);
-      result[i] = _alpha * std::accumulate(d2f_dx2.begin(),d2f_dx2.end(),0);
+      std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(points[i],2);
+      T val = d2f_dx2[0];
+      result[i] = _alpha * val;
     }
     return result;
   }

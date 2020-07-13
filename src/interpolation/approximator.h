@@ -25,6 +25,7 @@
 #include <memory>
 
 #include "ugrid.h"
+#include "geometry.h"
 #include "params.h"
 #include "utils.h"
 #include "matrix.h"
@@ -760,6 +761,82 @@ namespace ET
                              uint64_t index,
                              uint32_t n);
     //--------------------------------------------------------------------------
+    //  scalarDerivativeRBFPoint - approximate the derivative for a point
+    //                             using the RBF method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              point        - coordinates of the point of interest
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeRBFPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                           const std::shared_ptr<ScalarField<T>> field,
+                           std::vector<T> point,
+                           uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeRBF      - approximate the derivative for all points
+    //                             using the  RBF method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              index        - uint64_t
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    std::vector<Vector<T>>
+    scalarDerivativeRBF(const std::shared_ptr<UGrid<T>> ugrid,
+                       const std::shared_ptr<ScalarField<T>> field,
+                       uint32_t n);
+    //--------------------------------------------------------------------------
+    //  Passing field as a const reference
+    //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeRBFPoint - approximate the derivative for a point
+    //                             using the RBF method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              index        - uint64_t
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeRBFPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                            const ScalarField<T>& field,
+                            uint64_t index,
+                            uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeRBFPoint - approximate the derivative for a point
+    //                             using the RBF method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - const ScalarField<T>& referencer
+    //              point        - coordinates of the point of interest
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    Vector<T>
+    scalarDerivativeRBFPoint(const std::shared_ptr<UGrid<T>> ugrid,
+                          const ScalarField<T>& field,
+                          std::vector<T> point,
+                          uint32_t n);
+    //--------------------------------------------------------------------------
+    //  scalarDerivativeRBF      - approximate the derivative for all points
+    //                             using the RBF method
+    //  Arguments:  ugrid        - UGrid<T> pointer
+    //              field        - ScalarField<T> pointer
+    //              index        - uint64_t
+    //              n            - order of the derivative
+    //
+    //  Returns:    Vector<T> of the derivatives up to order n.
+    //--------------------------------------------------------------------------
+    std::vector<Vector<T>>
+    scalarDerivativeRBF(const std::shared_ptr<UGrid<T>> ugrid,
+                       const ScalarField<T>& field,
+                       uint32_t n);
+    //--------------------------------------------------------------------------
     //  Helper functions
     //--------------------------------------------------------------------------
     std::vector<Vector<T>>
@@ -783,6 +860,7 @@ namespace ET
                                     const ScalarField<T>& field,
                                     std::vector<T> point, uint32_t n);
     Vector<T> xGELSx(Matrix<T> B, Vector<T> u);
+    T xRBFx(const std::vector<T>& p1, const std::vector<T>& p2);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -834,6 +912,7 @@ namespace ET
     enum ApproxType _type;
     struct ApproxParams _params;
     enum LSDriver _lsdriver;
+    enum RBFType _rbftype;
     //--------------------------------------------------------------------------
     //  Shared objects
     //--------------------------------------------------------------------------

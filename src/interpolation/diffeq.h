@@ -72,9 +72,12 @@ namespace ET
     std::shared_ptr<VectorField<T>> getVectorField();
 
     //--------------------------------------------------------------------------
-    //  evaluation function
+    //  evaluation functions
     //--------------------------------------------------------------------------
-    std::vector<T>  dt(std::vector<T> point, double t, T k);
+    T  dt(std::vector<T> point, double t, T k);
+    std::vector<T>  dt(std::vector<std::vector<T>> points, double t,
+                       std::vector<T> k);
+    //--------------------------------------------------------------------------
   private:
     std::shared_ptr<ScalarField<T>> _sfield;
     std::shared_ptr<VectorField<T>> _vfield;
@@ -103,8 +106,13 @@ namespace ET
     //--------------------------------------------------------------------------
     //  evaluation functions
     //--------------------------------------------------------------------------
-    std::vector<T>  dt(std::vector<T> point, double t, T k);
-    std::vector<T>  d2t(std::vector<T> point, double t, T k);
+    T  dt(std::vector<T> point, double t, T k);
+    std::vector<T>  dt(std::vector<std::vector<T>> points, double t,
+                       std::vector<T> k);
+    T  d2t(std::vector<T> point, double t, T k);
+    std::vector<T>  d2t(std::vector<std::vector<T>> points, double t,
+                        std::vector<T> k);
+    //--------------------------------------------------------------------------
   private:
     std::shared_ptr<ScalarField<T>> _sfield;
     std::shared_ptr<VectorField<T>> _vfield;
@@ -132,9 +140,12 @@ namespace ET
     T getAlpha();
 
     //--------------------------------------------------------------------------
-    //  evaluation function
+    //  evaluation functions
     //--------------------------------------------------------------------------
-    std::vector<T>  dt(std::vector<T> point, double t, T k);
+    T  dt(std::vector<T> point, double t, T k);
+    std::vector<T>  dt(std::vector<std::vector<T>> points, double t,
+                       std::vector<T> k);
+    //--------------------------------------------------------------------------
   private:
     T _alpha;
   };

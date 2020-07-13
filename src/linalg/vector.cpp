@@ -22,51 +22,6 @@
 #include <stdio.h>
 #include <complex>
 #include "vector.h"
-//------------------------------------------------------------------------------
-//  vector.cpp
-//
-//  This file contains the instantiations of the definitions given in vector.h.
-//  The various methods are listed below,
-//  ----------------------------------------------------------------------------
-//  Line no.  |   Method
-//  ----------------------------------------------------------------------------
-//  ()        |   Vector()
-//  ()        |   ~Vector()
-//  ()        |   Vector(uin32_t)
-//  ()        |   Vector(std::string, uint32_t)
-//  ()        |   Vector(std::vector<T>)
-//  ()        |   Vector(std::string, std::vector<T>)
-//  ()        |   Vector(uint32_t, const T&)
-//  ()        |   Vector(std:string, uint32_t, const T&)
-//  ()        |   getDim()
-//  ()        |   getVec()
-//  ()        |   accessVec()
-//  ()        |   getName()
-//  ()        |   setDim(uint32_t)
-//  ()        |   setVec(std::vector<T>)
-//  ()        |   setName(std::string)
-//  ()        |   operator=(const Vector<T>&)
-//  ()        |   operator==(const Vector<T>&)
-//  ()        |   operator!=(const Vector<T>&)
-//  ()        |   operator-()
-//  ()        |   operator+(const Vector<T>&)
-//  ()        |   operator+=(const Vector<T>&)
-//  ()        |   operator-(const Vector<T>&)
-//  ()        |   operator-=(const Vector<T>&)
-//  ()        |   operator*(const Vector<T>*)
-//  ()        |   dot(const Vector<T>*)
-//  ()        |   operator+(const T&)
-//  ()        |   operator-(const T&)
-//  ()        |   operator*(const T&)
-//  ()        |   operator/(const T&)
-//  ()        |   operator+=(const T&)
-//  ()        |   operator-=(const T&)
-//  ()        |   operator*=(const T&)
-//  ()        |   operator/=(const T&)
-//  ()        |   operator()(uint32_t&)
-//  ()        |   operator()(uint32_t&)
-//  ()        |   summary()
-//------------------------------------------------------------------------------
 
 namespace ET
 {
@@ -76,10 +31,10 @@ namespace ET
 
   //----------------------------------------------------------------------------
   //  Default constructor
-  //    sets name = " ", and _dim = 0
+  //    sets name = " ", and m_dim = 0
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T>::Vector() : _dim(0), _name(" ")
+  Vector<T>::Vector() : m_dim(0), m_name(" ")
   {
     //std::cout << "\nVector created at location " << this;
   }
@@ -96,63 +51,63 @@ namespace ET
   //    Does not delete the copied object.
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T>::Vector(const Vector<T>& vector)
+  Vector<T>::Vector(const Vector<T>& t_vector)
   {
-    _vec = vector.getVec();
-    _dim = vector.getDim();
-    _name = vector.getName();
+    m_vec = t_vector.getVec();
+    m_dim = t_vector.getDim();
+    m_name = t_vector.getName();
   }
   //----------------------------------------------------------------------------
   //  Constructors with various sets of arguments, such as,
   //    std::string                 name,
-  //    uint32_t                    dim,
-  //    std::vector<T>              vector,
+  //    size_t                      dim,
+  //    std::vector<T>              t_vector,
   //    const T&                    initial value for all elements.
-  //  If the dimension is specified, the internal array element '_vec'
+  //  If the dimension is specified, the internal array element 'm_vec'
   //  is resized accordingly, otherwise it is left uninstantiated.
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T>::Vector(uint32_t dim) : _dim(dim), _name(" ")
+  Vector<T>::Vector(size_t t_dim) : m_dim(t_dim), m_name(" ")
   {
     //std::cout << "\nVector created at location " << this;
-    _vec.resize(_dim);
+    m_vec.resize(m_dim);
   }
   template<typename T>
-  Vector<T>::Vector(std::string name, uint32_t dim)
-  : _dim(dim), _name(name)
+  Vector<T>::Vector(std::string t_name, size_t t_dim)
+  : m_dim(t_dim), m_name(t_name)
   {
     //std::cout << "\nVector created at location " << this;
-    _vec.resize(_dim,0.0);
+    m_vec.resize(m_dim,0.0);
   }
-  //  Notice that the following methods do not MOVE the vectors so that they
-  //  change ownership.  Instead they are copied into _vec.
+  //  Notice that the following methods do not MOVE the t_vectors so that they
+  //  change ownership.  Instead they are copied into m_vec.
   template<typename T>
-  Vector<T>::Vector(std::vector<T> vec)
-  : _dim(vec.size()), _name(" "), _vec(vec)
-  {
-    //std::cout << "\nVector created at location " << this;
-  }
-  template<typename T>
-  Vector<T>::Vector(std::string name, std::vector<T> vec)
-  : _dim(vec.size()), _name(name), _vec(std::move(vec))
+  Vector<T>::Vector(std::vector<T> t_vec)
+  : m_dim(t_vec.size()), m_name(" "), m_vec(t_vec)
   {
     //std::cout << "\nVector created at location " << this;
   }
   template<typename T>
-  Vector<T>::Vector(uint32_t dim, const T& init)
-  : _dim(dim), _name(" ")
+  Vector<T>::Vector(std::string t_name, std::vector<T> t_vec)
+  : m_dim(t_vec.size()), m_name(t_name), m_vec(t_vec)
   {
     //std::cout << "\nVector created at location " << this;
-    std::vector<T> vec(_dim,init);
-    _vec = vec;
   }
   template<typename T>
-  Vector<T>::Vector(std::string name, uint32_t dim, const T& init)
-  : _dim(dim), _name(name)
+  Vector<T>::Vector(size_t t_dim, const T& t_init)
+  : m_dim(t_dim), m_name(" ")
   {
     //std::cout << "\nVector created at location " << this;
-    std::vector<T> vec(_dim,init);
-    _vec = vec;
+    std::vector<T> vec(m_dim,t_init);
+    m_vec = vec;
+  }
+  template<typename T>
+  Vector<T>::Vector(std::string t_name, size_t t_dim, const T& t_init)
+  : m_dim(t_dim), m_name(t_name)
+  {
+    //std::cout << "\nVector created at location " << this;
+    std::vector<T> vec(m_dim,t_init);
+    m_vec = vec;
   }
   //----------------------------------------------------------------------------
 
@@ -161,60 +116,60 @@ namespace ET
   //  Each attribute comes with its own setters and getters.
   //----------------------------------------------------------------------------
   template<typename T>
-  uint32_t Vector<T>::getDim() const
+  size_t Vector<T>::getDim() const
   {
-    return _dim;
+    return m_dim;
   }
-  //  When 'getVec()' is called it will usually create a copy of _vec.
+  //  When 'getVec()' is called it will usually create a copy of m_vec.
   template<typename T>
   std::vector<T> Vector<T>::getVec() const
   {
-    return _vec;
+    return m_vec;
   }
-  //  In order to return the '_vec' attribute so that it can be manipulated
+  //  In order to return the 'm_vec' attribute so that it can be manipulated
   //  by other methods, such as those which utilize BLAS and LAPACK functions,
-  //  we use 'accessVec()' to return a pointer to '_vec'.
+  //  we use 'accessVec()' to return a pointer to 'm_vec'.
   template<typename T>
   std::vector<T>* Vector<T>::accessVec()
   {
-    return &_vec;
+    return &m_vec;
   }
-  //  get access to beginning of _vec
+  //  get access to beginning of m_vec
   template<typename T>
   T* Vector<T>::data()
   {
-    return _vec.data();
+    return m_vec.data();
   }
   template<typename T>
   std::string Vector<T>::getName() const
   {
-    return _name;
+    return m_name;
   }
   template<typename T>
-  void Vector<T>::setDim(uint32_t dim)
+  void Vector<T>::setDim(size_t t_dim)
   {
-    _dim = dim;
+    m_dim = t_dim;
   }
   template<typename T>
-  void Vector<T>::setVec(std::vector<T> vec)
+  void Vector<T>::setVec(std::vector<T> t_vec)
   {
-    _vec = vec;
-    _dim = vec.size();
+    m_vec = t_vec;
+    m_dim = t_vec.size();
   }
   template<typename T>
-  void Vector<T>::setName(std::string name)
+  void Vector<T>::setName(std::string t_name)
   {
-    _name = name;
+    m_name = t_name;
   }
   template<typename T>
-  void Vector<T>::setFlag(int flag)
+  void Vector<T>::setFlag(int t_flag)
   {
-    _flag = flag;
+    m_flag = t_flag;
   }
   template<typename T>
-  void Vector<T>::setInfo(std::string info)
+  void Vector<T>::setInfo(std::string t_info)
   {
-    _info = info;
+    m_info = t_info;
   }
   //----------------------------------------------------------------------------
 
@@ -222,48 +177,40 @@ namespace ET
   //  Operator overloads
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T>& Vector<T>::operator=(const Vector<T>& vector)
+  Vector<T>& Vector<T>::operator=(const Vector<T>& t_vector)
   {
-    if (&vector == this)
-    {
+    if (&t_vector == this) {
       return *this;
     }
-    _dim = vector.getDim();
-    _name = vector.getName();
-    _vec.resize(_dim);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] = vector(i);
+    m_dim = t_vector.getDim();
+    m_name = t_vector.getName();
+    m_vec.resize(m_dim);
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] = t_vector(i);
     }
     return *this;
   }
   template<typename T>
-  bool Vector<T>::operator==(const Vector<T>& vector) const
+  bool Vector<T>::operator==(const Vector<T>& t_vector) const
   {
-    if (_dim != vector.getDim())
-    {
+    if (m_dim != t_vector.getDim()) {
         return false;
     }
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        if (vector(i) != _vec[i])
-        {
+    for (auto i = 0; i < m_dim; i++) {
+        if (t_vector(i) != m_vec[i]) {
           return false;
         }
     }
     return true;
   }
   template<typename T>
-  bool Vector<T>::operator!=(const Vector<T>& vector) const
+  bool Vector<T>::operator!=(const Vector<T>& t_vector) const
   {
-    if (_dim != vector.getDim())
-    {
+    if (m_dim != t_vector.getDim()) {
       return true;
     }
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        if (vector(i) != _vec[i])
-        {
+    for (auto i = 0; i < m_dim; i++) {
+        if (t_vector(i) != m_vec[i]) {
           return true;
         }
     }
@@ -272,95 +219,84 @@ namespace ET
   template<typename T>
   Vector<T> Vector<T>::operator-() const
   {
-    std::vector<T> vec(_dim);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-      vec[i] = -1*_vec[i];
+    std::vector<T> vec(m_dim);
+    for (auto i = 0; i < m_dim; i++) {
+      vec[i] = -1*m_vec[i];
     }
-    std::string name = "-" + _name;
+    std::string name = "-" + m_name;
     return Vector<T>(name,vec);
   }
   template<typename T>
-  Vector<T> Vector<T>::operator+(const Vector<T>& vector) const
+  Vector<T> Vector<T>::operator+(const Vector<T>& t_vector) const
   {
-    if(_dim != vector.getDim())
-    {
+    if(m_dim != t_vector.getDim()) {
       std::cout << "Vectors incompatible!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " + " + vector.getName() + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i] + vector(i);
+    std::string name = "(" + m_name + " + " + t_vector.getName() + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i] + t_vector(i);
     }
     return v;
   }
   template<typename T>
-  Vector<T>& Vector<T>::operator+=(const Vector<T>& vector)
+  Vector<T>& Vector<T>::operator+=(const Vector<T>& t_vector)
   {
-    if(_dim != vector.getDim())
-    {
+    if(m_dim != t_vector.getDim()) {
       std::cout << "Vectors incompatible!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " + " + vector.getName() + ")";
-    _name = name;
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] += vector(i);
+    std::string name = "(" + m_name + " + " + t_vector.getName() + ")";
+    m_name = name;
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] += t_vector(i);
     }
     return *this;
   }
   template<typename T>
-  Vector<T> Vector<T>::operator-(const Vector<T>& vector) const
+  Vector<T> Vector<T>::operator-(const Vector<T>& t_vector) const
   {
-    if(_dim != vector.getDim())
-    {
+    if(m_dim != t_vector.getDim()) {
       std::cout << "Vectors incompatible!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " - " + vector.getName() + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i] - vector(i);
+    std::string name = "(" + m_name + " - " + t_vector.getName() + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i] - t_vector(i);
     }
     return v;
   }
   template<typename T>
-  Vector<T>& Vector<T>::operator-=(const Vector<T>& vector)
+  Vector<T>& Vector<T>::operator-=(const Vector<T>& t_vector)
   {
-    if(_dim != vector.getDim())
-    {
+    if(m_dim != t_vector.getDim()) {
       std::cout << "Vectors incompatible!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " - " + vector.getName() + ")";
-    _name = name;
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] -= vector(i);
+    std::string name = "(" + m_name + " - " + t_vector.getName() + ")";
+    m_name = name;
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] -= t_vector(i);
     }
     return *this;
   }
   template<typename T>
-  T Vector<T>::operator*(const Vector<T>& vector) const
+  T Vector<T>::operator*(const Vector<T>& t_vector) const
   {
-    return dot(vector);
+    return dot(t_vector);
   }
   template<typename T>
-  T Vector<T>::dot(const Vector<T>& vector) const
+  T Vector<T>::dot(const Vector<T>& t_vector) const
   {
-    if(_dim != vector.getDim())
-    {
+    if(m_dim != t_vector.getDim()) {
       std::cout << "Vectors incompatible!" << std::endl;
       return 0;
     }
     T result = 0;
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        result += _vec[i]*vector(i);
+    for (auto i = 0; i < m_dim; i++) {
+        result += m_vec[i]*t_vector(i);
     }
     return result;
   }
@@ -368,11 +304,10 @@ namespace ET
   //  Scalar operators
   Vector<T> Vector<T>::operator+(const T& s) const
   {
-    std::string name = "(" + _name + " + " + std::to_string(s) + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i] + s;
+    std::string name = "(" + m_name + " + " + std::to_string(s) + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i] + s;
     }
     return v;
   }
@@ -380,95 +315,86 @@ namespace ET
   template<typename T>
   Vector<T> Vector<T>::operator-(const T& s) const
   {
-    std::string name = "(" + _name + " - " + std::to_string(s) + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i] - s;
+    std::string name = "(" + m_name + " - " + std::to_string(s) + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i] - s;
     }
     return v;
   }
   template<typename T>
   Vector<T> Vector<T>::operator*(const T& s) const
   {
-    std::string name = "(" + _name + " * " + std::to_string(s) + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i] * s;
+    std::string name = "(" + m_name + " * " + std::to_string(s) + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i] * s;
     }
     return v;
   }
   template<typename T>
   Vector<T> Vector<T>::operator/(const T& s) const
   {
-    if (s == 0)
-    {
+    if (s == 0) {
       std::cout << "Division by zero!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " / " + std::to_string(s) + ")";
-    Vector<T> v(name, _dim, 0.0);
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        v(i) = _vec[i]/s;
+    std::string name = "(" + m_name + " / " + std::to_string(s) + ")";
+    Vector<T> v(name, m_dim, 0.0);
+    for (auto i = 0; i < m_dim; i++) {
+        v(i) = m_vec[i]/s;
     }
     return v;
   }
   template<typename T>
   Vector<T>& Vector<T>::operator+=(const T& s)
   {
-    std::string name = "(" + _name + " + " + std::to_string(s) + ")";
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] += s;
+    std::string name = "(" + m_name + " + " + std::to_string(s) + ")";
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] += s;
     }
     return *this;
   }
   template<typename T>
   Vector<T>& Vector<T>::operator-=(const T& s)
   {
-    std::string name = "(" + _name + " - " + std::to_string(s) + ")";
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] -= s;
+    std::string name = "(" + m_name + " - " + std::to_string(s) + ")";
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] -= s;
     }
     return *this;
   }
   template<typename T>
   Vector<T>& Vector<T>::operator*=(const T& s)
   {
-    std::string name = "(" + _name + " * " + std::to_string(s) + ")";
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] *= s;
+    std::string name = "(" + m_name + " * " + std::to_string(s) + ")";
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] *= s;
     }
     return *this;
   }
   template<typename T>
   Vector<T>& Vector<T>::operator/=(const T& s)
   {
-    if (s == 0)
-    {
+    if (s == 0) {
       std::cout << "Division by zero!" << std::endl;
       return *this;
     }
-    std::string name = "(" + _name + " / " + std::to_string(s) + ")";
-    for (uint32_t i = 0; i < _dim; i++)
-    {
-        _vec[i] /= s;
+    std::string name = "(" + m_name + " / " + std::to_string(s) + ")";
+    for (auto i = 0; i < m_dim; i++) {
+        m_vec[i] /= s;
     }
     return *this;
   }
   template<typename T>
-  T& Vector<T>::operator()(const uint32_t& i)
+  T& Vector<T>::operator()(const size_t& i)
   {
-    return this->_vec[i];
+    return this->m_vec[i];
   }
   template<typename T>
-  const T& Vector<T>::operator()(const uint32_t& i) const
+  const T& Vector<T>::operator()(const size_t& i) const
   {
-    return this->_vec[i];
+    return this->m_vec[i];
   }
   //----------------------------------------------------------------------------
 
@@ -481,65 +407,59 @@ namespace ET
     std::stringstream s;
     s.str("");
     s.clear();
-    std::string sum = "dim: " + std::to_string(_dim)
+    std::string sum = "dim: " + std::to_string(m_dim)
                     +  ", type: "
-                    + type_name<decltype(_vec[0])>();
-    if (_name != " ")
-    {
-      sum +=  ", name: '" + _name + "'";
+                    + type_name<decltype(m_vec[0])>();
+    if (m_name != " ") {
+      sum +=  ", name: '" + m_name + "'";
     }
-    if (_vec.size() == 0)
-    {
+    if (m_vec.size() == 0) {
       sum += "\n[  empty  ]";
       return sum;
     }
     sum += "\n[ ";
-    if (_dim < 10)
-    {
-      if (_vec[0] >= 0.0)
+    if (m_dim < 10) {
+      if (m_vec[0] >= 0.0)
           sum += " ";
-      for (uint32_t i = 0; i < _dim; i++)
-      {
-        sum += scientific_not(this->_vec[i],3);
-        if (i < _dim-1)
-        {
-          if (_vec[i+1] >= 0.0)
+      for (auto i = 0; i < m_dim; i++) {
+        sum += scientific_not(this->m_vec[i],3);
+        if (i < m_dim-1) {
+          if (m_vec[i+1] >= 0.0)
             sum += "   ";
           else
             sum += "  ";
         }
       }
     }
-    else
-    {
-      if (_vec[0] >= 0.0)
+    else {
+      if (m_vec[0] >= 0.0)
           sum += " ";
-      sum += scientific_not(this->_vec[0],3);
-      if (_vec[1] >= 0.0)
+      sum += scientific_not(this->m_vec[0],3);
+      if (m_vec[1] >= 0.0)
         sum += "   ";
       else
         sum += "  ";
-      sum += scientific_not(this->_vec[1],3);
-      if (_vec[2] >= 0.0)
+      sum += scientific_not(this->m_vec[1],3);
+      if (m_vec[2] >= 0.0)
         sum += "   ";
       else
         sum += "  ";
-      sum += scientific_not(this->_vec[2],3);
+      sum += scientific_not(this->m_vec[2],3);
       sum += "   ";
       sum += "...   ";
-      if (_vec[_dim-3] >= 0.0)
+      if (m_vec[m_dim-3] >= 0.0)
         sum += " ";
-      sum += scientific_not(this->_vec[_dim-3],3);
-      if (_vec[_dim-2] >= 0.0)
+      sum += scientific_not(this->m_vec[m_dim-3],3);
+      if (m_vec[m_dim-2] >= 0.0)
         sum += "   ";
       else
         sum += "  ";
-      sum += scientific_not(this->_vec[_dim-2],3);
-      if (_vec[_dim-1] >= 0.0)
+      sum += scientific_not(this->m_vec[m_dim-2],3);
+      if (m_vec[m_dim-1] >= 0.0)
         sum += "   ";
       else
         sum += "  ";
-      sum += scientific_not(this->_vec[_dim-1],3);
+      sum += scientific_not(this->m_vec[m_dim-1],3);
     }
     sum += "  ]";
     return sum;
@@ -550,39 +470,38 @@ namespace ET
   //  Various instantiators
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T> zeroes(uint32_t dim)
+  Vector<T> zeroes(size_t t_dim)
   {
-    return Vector<T>(dim,0.0);
+    return Vector<T>(t_dim,0.0);
   }
   template<typename T>
-  Vector<T> ones(uint32_t dim)
+  Vector<T> ones(size_t t_dim)
   {
-    return Vector<T>(dim,1.0);
+    return Vector<T>(t_dim,1.0);
   }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Level 1 BLAS methods
-  //  vector-vector operations
+  //  Vector-Vector operations
   //----------------------------------------------------------------------------
-  //  DSWAP - swap the contents of two vectors
-  //  Arguments:  v     - (n)-dim vector
-  //              u     - (n)-dim vector
+  //  DSWAP - swap the contents of two Vectors
+  //  Arguments:  v     - (n)-dim Vector
+  //              u     - (n)-dim Vector
   //
   //  Returns:    void
   //----------------------------------------------------------------------------
-  void DSWAP(Vector<double>& v, Vector<double>& u)
+  void DSWAP(Vector<double>& t_v, Vector<double>& t_u)
   {
-    if (v.getDim() != u.getDim())
-    {
+    if (t_v.getDim() != t_u.getDim()) {
       std::cout << "Vectors are incompatible!" << std::endl;
       return;
     }
-    cblas_dswap(v.getDim(),//  dimension of the vectors
-                v.data(),  //  pointer to elements of v
-                1,         //  increment for elements of v
-                u.data(),  //  pointer to elements of u
-                1);        //  increment for elements of u
+    cblas_dswap(t_v.getDim(),//  dimension of the vectors
+                t_v.data(),  //  pointer to elements of v
+                1,           //  increment for elements of v
+                t_u.data(),  //  pointer to elements of u
+                1);          //  increment for elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -593,12 +512,12 @@ namespace ET
   //
   //  Returns:    void
   //----------------------------------------------------------------------------
-  void DSCAL(Vector<double>& v, const double& scale)
+  void DSCAL(Vector<double>& t_v, const double& t_scale)
   {
-    cblas_dscal(v.getDim(),//  dimension of the vector
-                scale,     //  value to scale the vector by
-                v.data(),  //  pointer to the elements of v
-                1);        //  increment for the elements of v
+    cblas_dscal(t_v.getDim(),//  dimension of the t_vector
+                t_scale,     //  value to scale the t_vector by
+                t_v.data(),  //  pointer to the elements of v
+                1);          //  increment for the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -608,21 +527,19 @@ namespace ET
   //
   //  Returns:    Vector<double>
   //----------------------------------------------------------------------------
-  Vector<double> DCOPY(Vector<double>& v)
+  Vector<double> DCOPY(Vector<double>& t_v)
   {
-    std::vector<double> v_copy(v.getDim());
-    cblas_dcopy(v.getDim(),   //  dimension of the vector
-                v.data(),     //  pointer to the elements of v
+    std::vector<double> v_copy(t_v.getDim());
+    cblas_dcopy(t_v.getDim(), //  dimension of the t_vector
+                t_v.data(),   //  pointer to the elements of v
                 1,            //  increment for the elements of v
                 v_copy.data(),//  pointer to the elements of v_copy
                 1);           //  increment for the elements of v_copy
     std::string name;
-    if (v.getName() != " ")
-    {
-      name = v.getName() + "_copy";
+    if (t_v.getName() != " ") {
+      name = t_v.getName() + "_copy";
     }
-    else
-    {
+    else {
       name = " ";
     }
     return Vector<double>(name,v_copy);
@@ -636,18 +553,17 @@ namespace ET
   //
   //  Returns:    void
   //----------------------------------------------------------------------------
-  void DCOPY(Vector<double>& v, Vector<double>& u)
+  void DCOPY(Vector<double>& t_v, Vector<double>& t_u)
   {
-    if (v.getDim() != u.getDim())
-    {
+    if (t_v.getDim() != t_u.getDim()) {
       std::cout << "Vectors are incompatible!" << std::endl;
       return;
     }
-    cblas_dcopy(v.getDim(),//  dimension of the vector
-                v.data(),  //  pointer to the elements of v
-                1,         //  increment for the elements of v
-                u.data(),  //  pointer to the elements of u
-                1);        //  increment for the elements of u
+    cblas_dcopy(t_v.getDim(),//  dimension of the t_vector
+                t_v.data(),  //  pointer to the elements of v
+                1,           //  increment for the elements of v
+                t_u.data(),  //  pointer to the elements of u
+                1);          //  increment for the elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -659,30 +575,27 @@ namespace ET
   //
   //  Returns:    Vector<double>
   //----------------------------------------------------------------------------
-  void DAXPY(Vector<double>& v, const double& scale, Vector<double>& u)
+  void DAXPY(Vector<double>& t_v, const double& t_scale, Vector<double>& t_u)
   {
-    if (v.getDim() != u.getDim())
-    {
+    if (t_v.getDim() != t_u.getDim()) {
       std::cout << "Vectors are imcompatible!" << std::endl;
       return;
     }
-    cblas_daxpy(v.getDim(),//  dimension of the vectors
-                scale,     //  scalar to multiply v
-                v.data(),  //  pointer to the elements of v
-                1,         //  increment for the elements of v
-                u.data(),  //  pointer to the elements of u
-                1);        //  increment for the elements of u
+    cblas_daxpy(t_v.getDim(),//  dimension of the t_vectors
+                t_scale,     //  scalar to multiply v
+                t_v.data(),  //  pointer to the elements of v
+                1,           //  increment for the elements of v
+                t_u.data(),  //  pointer to the elements of u
+                1);          //  increment for the elements of u
     std::string name;
-    if (u.getName() != " " && v.getName() != " ")
-    {
-      name = u.getName() + " + " + std::to_string(scale)
-             + " * " + v.getName();;
+    if (t_u.getName() != " " && t_v.getName() != " ") {
+      name = t_u.getName() + " + " + std::to_string(t_scale)
+             + " * " + t_v.getName();;
     }
-    else if (v.getName() != " " && u.getName() == " ")
-    {
-      name = std::to_string(scale) + " * " + v.getName();
+    else if (t_v.getName() != " " && t_u.getName() == " ") {
+      name = std::to_string(t_scale) + " * " + t_v.getName();
     }
-    u.setName(name);
+    t_u.setName(name);
   }
   //----------------------------------------------------------------------------
 
@@ -693,18 +606,17 @@ namespace ET
   //
   //  Returns:    double
   //----------------------------------------------------------------------------
-  double DDOT(Vector<double>& v, Vector<double>& u)
+  double DDOT(Vector<double>& t_v, Vector<double>& t_u)
   {
-    if (v.getDim() != u.getDim())
-    {
+    if (t_v.getDim() != t_u.getDim()) {
       std::cout << "Vectors are imcompatible!" << std::endl;
       return 0;
     }
-    return cblas_ddot(v.getDim(),//  dimension of the vectors
-                      v.data(),  //  pointer to the elements of v
-                      1,         //  increment of the elements of v
-                      u.data(),  //  pointer to the elements of u
-                      1);        //  increment of the elements of u
+    return cblas_ddot(t_v.getDim(),//  dimension of the t_vectors
+                      t_v.data(),  //  pointer to the elements of v
+                      1,           //  increment of the elements of v
+                      t_u.data(),  //  pointer to the elements of u
+                      1);          //  increment of the elements of u
   }
   //----------------------------------------------------------------------------
 
@@ -714,25 +626,25 @@ namespace ET
   //
   //  Returns:    double
   //----------------------------------------------------------------------------
-  double DNRM2(Vector<double>& v)
+  double DNRM2(Vector<double>& t_v)
   {
-    return cblas_dnrm2(v.getDim(),//  dimension of the vectors
-                       v.data(),  //  pointer to the elements of v
-                       1);        //  increment of the elements of v
+    return cblas_dnrm2(t_v.getDim(),//  dimension of the t_vectors
+                       t_v.data(),  //  pointer to the elements of v
+                       1);          //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-  //  DASUM - returns the sum of the magnitues of the coefficients of a vector v
+  //  DASUM - returns the sum of the magnitues of the coefficients of a vector
   //  Arguments:  v     - (n)-dim vector
   //
   //  Returns:    double
   //----------------------------------------------------------------------------
-  double DASUM(Vector<double>& v)
+  double DASUM(Vector<double>& t_v)
   {
-    return cblas_dasum(v.getDim(),//  dimension of the vectors
-                       v.data(),  //  pointer to the elements of v
-                       1);        //  increment of the elements of v
+    return cblas_dasum(t_v.getDim(),//  dimension of the t_vectors
+                       t_v.data(),  //  pointer to the elements of v
+                       1);          //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -740,13 +652,13 @@ namespace ET
   //  IDAMAX - returns index to the largest element of the vector v
   //  Arguments:  v     - (n)-dim vector
   //
-  //  Returns:    uint32_t
+  //  Returns:    size_t
   //----------------------------------------------------------------------------
-  uint32_t IDAMAX(Vector<double>& v)
+  size_t IDAMAX(Vector<double>& t_v)
   {
-    return cblas_idamax(v.getDim(),//  dimension of the vectors
-                        v.data(),  //  pointer to the elements of v
-                        1);        //  increment of the elements of v
+    return cblas_idamax(t_v.getDim(),//  dimension of the t_vectors
+                        t_v.data(),  //  pointer to the elements of v
+                        1);          //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 
@@ -754,13 +666,13 @@ namespace ET
   //  IDAMIN - returns index to the smallest element of the vector v
   //  Arguments:  v     - (n)-dim vector
   //
-  //  Returns:    uint32_t
+  //  Returns:    size_t
   //----------------------------------------------------------------------------
-  uint32_t IDAMIN(Vector<double>& v)
+  size_t IDAMIN(Vector<double>& t_v)
   {
-    return cblas_idamin(v.getDim(),//  dimension of the vectors
-                        v.data(),  //  pointer to the elements of v
-                        1);        //  increment of the elements of v
+    return cblas_idamin(t_v.getDim(),//  dimension of the t_vectors
+                        t_v.data(),  //  pointer to the elements of v
+                        1);          //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 }

@@ -86,12 +86,10 @@ namespace ET
   {
     _type = LS;
     _lsdriver = xGELS;
-    //##########################################################################
 		_log = std::make_shared<Log>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
-		//##########################################################################
   }
 	//----------------------------------------------------------------------------
   //  Default destructor
@@ -99,28 +97,24 @@ namespace ET
   template<typename T>
   Approximator<T>::~Approximator()
   {
-		//##########################################################################
 		_log->TRACE("Approximator '" + _name
 								+ "' destroyed at location " + getMem(*this));
-		//##########################################################################
 	}
 	//----------------------------------------------------------------------------
-  //  Various constructors taking in arguments for
-	//
+  //  Various constructors taking in arguments
   //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//  Constructor with approximator type
 	//----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::Approximator(int type) : _type(ApproxTypeMapInt[type]), _name("default")
+  Approximator<T>::Approximator(int type)
+  : _type(ApproxTypeMapInt[type]), _name("default")
   {
-		//##########################################################################
 		_log = std::make_shared<Log>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
 								+ getMem(*this));
-		//##########################################################################
 	}
 	//----------------------------------------------------------------------------
 
@@ -131,12 +125,10 @@ namespace ET
   Approximator<T>::Approximator(std::string type) : _name("default")
   {
     _type = ApproxTypeMap[type];
-		//##########################################################################
 		_log = std::make_shared<Log>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
-		//##########################################################################
   }
   //----------------------------------------------------------------------------
 
@@ -152,12 +144,10 @@ namespace ET
   {
     _type = LS;
     _lsdriver = xGELS;
-    //##########################################################################
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
 		_log->INFO("Logger passed to Approximator 'default'");
-		//##########################################################################
   }
 	//----------------------------------------------------------------------------
 
@@ -168,12 +158,10 @@ namespace ET
   Approximator<T>::Approximator(int type, std::shared_ptr<Log> log)
 	: _type(ApproxTypeMapInt[type]), _name("default")
   {
-		//##########################################################################
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 								+ getMem(*this));
 		_log->INFO("Logger passed to Approximator 'default'");
-		//##########################################################################
 	}
 	//----------------------------------------------------------------------------
 
@@ -185,12 +173,10 @@ namespace ET
 	: _name("default")
   {
     _type = ApproxTypeMap[type];
-		//##########################################################################
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
 		_log->INFO("Logger passed to Approximator 'default'");
-		//##########################################################################
   }
   //----------------------------------------------------------------------------
 
@@ -227,69 +213,65 @@ namespace ET
 	{
 		return _log;
 	}
+  //----------------------------------------------------------------------------
+  //  Set approximator type
+  //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::setApproxType(std::string type)
   {
     auto res = ApproxTypeMap.find(type);
-		if (res == ApproxTypeMap.end())
-		{
-			//########################################################################
+		if (res == ApproxTypeMap.end()) {
 			_log->ERROR("Approximator " + _name + ": Attempted to set ApproxType "
 		              + "to " + type + " which is not a valid type");
 			return;
-			//########################################################################
 		}
-		else
-		{
+		else {
 			_type = ApproxTypeMap[type];
-			//########################################################################
 			_log->INFO("Approximator " + _name + ": ApproxType set to " + type);
-			//########################################################################
 		}
   }
+  //----------------------------------------------------------------------------
+  //  Set approximator parameters
+  //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::setApproxParams(ApproxParams params)
   {
     _params = params;
-		//##########################################################################
 		_log->INFO("Approximator " + _name + ": ApproxParams set");
-		//##########################################################################
   }
+  //----------------------------------------------------------------------------
+  //  Set least squares drivers
+  //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::setLSDriver(std::string type)
   {
 		auto res = LSDriverMap.find(type);
-		if (res == LSDriverMap.end())
-		{
-			//########################################################################
+		if (res == LSDriverMap.end()) {
 			_log->ERROR("Approximator " + _name + ": Attempted to set LSDriver "
 		              + "to " + type + " which is not a valid type");
-			return;
-			//########################################################################
 		}
-		else
-		{
+		else {
 			_lsdriver = LSDriverMap[type];
-			//########################################################################
 			_log->INFO("Approximator " + _name + ": LSDriver set to " + type);
-			//########################################################################
 		}
 	}
+  //----------------------------------------------------------------------------
+  //  Set the number of nearest neighbors to use
+  //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::set_k(uint64_t k)
   {
     _params.k = k;
-		//##########################################################################
 		_log->INFO("Approximator " + _name + ": k set to " + std::to_string(k));
-		//##########################################################################
   }
+  //----------------------------------------------------------------------------
+  //  Set the number of terms to use in Taylor expansions
+  //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::set_n(uint64_t n)
   {
     _params.n = n;
-		//##########################################################################
 		_log->INFO("Approximator " + _name + ": n set to " + std::to_string(n));
-		//##########################################################################
   }
   template<typename T>
   void Approximator<T>::setFlag(int flag)
@@ -323,12 +305,10 @@ namespace ET
 	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
     const std::shared_ptr<ScalarField<T>> field, uint64_t index)
   {
-    if (_type == 0)
-    {
+    if (_type == 0) {
       return scalarGradientLSPoint(ugrid, field, index);
     }
-    else
-    {
+    else {
       return scalarGradientLSPoint(ugrid, field, index);
     }
   }
@@ -358,14 +338,12 @@ namespace ET
     Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
     //  Construct the vector of field values associated to each point
     std::vector<T> field_neighbors(_params.k);
-    for (uint32_t i = 0; i < _params.k; i++)
-    {
+    for (uint32_t i = 0; i < _params.k; i++) {
       field_neighbors[i] = (*field)(neighbors[i]);
     }
     Vector<T> field_vals(field_neighbors);
     Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
-		{
+		if (B.getFlag() == -1) {
 			_log->ERROR(B.getInfo());
 		}
     return answer.getVec();
@@ -384,12 +362,10 @@ namespace ET
 	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
                                   const std::shared_ptr<ScalarField<T>> field)
   {
-    if (_type == 0)
-    {
+    if (_type == 0) {
       return scalarGradientLS(ugrid, field);
     }
-    else
-    {
+    else {
       return scalarGradientLS(ugrid, field);
     }
   }
@@ -411,19 +387,17 @@ namespace ET
     std::vector<std::vector<T>> result(field->getN());
     Monomial mono(ugrid->getDim(),_params.n);
 		ugrid->queryNeighbors(_params.k);
-    for (uint64_t i = 0; i < field->getN(); i++)
-    {
+    for (uint64_t i = 0; i < field->getN(); i++) {
       std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
       Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
       std::vector<T> field_neighbors(_params.k);
-      for (uint32_t i = 0; i < _params.k; i++)
-      {
+      
+      for (uint32_t i = 0; i < _params.k; i++) {
         field_neighbors[i] = (*field)(neighbors[i]);
       }
       Vector<T> field_vals(field_neighbors);
       Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
-			{
+			if (B.getFlag() == -1) {
 				_log->ERROR(B.getInfo());
 			}
       //  Trim result to the first field->getDim() elements
@@ -2102,6 +2076,19 @@ namespace ET
 		}
 	}
 	//----------------------------------------------------------------------------
+  template<typename T>
+  T Approximator<T>::xRBFx(const std::vector<T>& p1, const std::vector<T>& p2)
+  {
+    if (_rbftype == 0)
+    {
+      return gaussianRBF(L2(p1,p2));
+    }
+    else
+    {
+      return gaussianRBF(L2(p1,p2));
+    }
+  }
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Derivatives of vector fields
@@ -2266,6 +2253,30 @@ namespace ET
 			W(i,i) = exp(-.5*distances[i]);
 		}
 		return W;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct RBF matrix
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Matrix<T>
+	Approximator<T>::constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::vector<uint64_t> neighbors, uint64_t index)
+	{
+	  //	For a simple gaussian weight, find the distances from index
+		//	to each point in neighbors.
+    ugrid->queryNeighbors(_params.k);
+		std::vector<size_t> points = ugrid->getNeighbors(index);
+		Matrix<T> RBF(points.size());
+		for (uint32_t i = 0; i < points.size(); i++)
+		{
+      for (uint32_t j = 0; j < points.size(); j++)
+      {
+        RBF(i,j) = xRBFx(ugrid->getPoint(points[i]),ugrid->getPoint(points[j]));
+      }
+		}
+		return RBF;
 	}
 	//----------------------------------------------------------------------------
 

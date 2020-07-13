@@ -1371,7 +1371,12 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<>())
     .def("set_alpha", &ET::heatEquation<double>::setAlpha)
     .def("get_alpha", &ET::heatEquation<double>::getAlpha)
-    .def("dt", &ET::heatEquation<double>::dt)
+    .def("dt", (double (ET::heatEquation<double>::*)
+         (std::vector<double>,double,double))
+         &ET::heatEquation<double>::dt)
+    .def("dt", (std::vector<double> (ET::heatEquation<double>::*)
+        (std::vector<std::vector<double>>,double,std::vector<double>))
+        &ET::heatEquation<double>::dt)
     ;
   //----------------------------------------------------------------------------
 

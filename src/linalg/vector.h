@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  vector.h
+//  t_vector.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
@@ -38,8 +38,8 @@
 namespace ET
 {
   //--------------------------------------------------------------------------
-  //  This vector class acts as a general container for (n)-dimensional
-  //  vectors.  It wraps several methods from BLAS level one.
+  //  This t_vector class acts as a general container for (n)-dimensional
+  //  t_vectors.  It wraps several methods from BLAS level one.
   //--------------------------------------------------------------------------
   template<typename T>
   class Vector
@@ -47,99 +47,101 @@ namespace ET
   public:
     Vector();
     ~Vector();
-    Vector(const Vector<T>& vector);
-    Vector(uint32_t dim);
-    Vector(std::string name, uint32_t dim);
-    Vector(std::vector<T> vec);
-    Vector(std::string name, std::vector<T> vec);
-    Vector(uint32_t dim, const T& init);
-    Vector(std::string name, uint32_t dim, const T& init);
+    Vector(const Vector<T>& t_vector);
+    Vector(size_t t_dim);
+    Vector(std::string t_name, size_t t_dim);
+    Vector(std::vector<T> t_vec);
+    Vector(std::string t_name, std::vector<T> t_vec);
+    Vector(size_t t_dim, const T& t_init);
+    Vector(std::string t_name, size_t t_dim, const T& t_init);
 
     //  Getters
-    uint32_t getDim() const;
-    //  get const reference to vec
-    std::vector<T> getVec() const;
-    //  get access to vec
-    std::vector<T>* accessVec();
-    //  get access to beginning of vec
-    T* data();
+    size_t getDim() const;
+    //  There are several ways we can interact with the m_vec attribute.
+    //  Some methods, such as Level one BLAS, will require access to
+    //  the pointer for the first entry in m_vec.  The data() method does
+    //  just this.
+    std::vector<T> getVec() const;  //  get const reference to m_vec
+    std::vector<T>* accessVec();    //  get access to m_vec
+    T* data();                      //  get access to beginning of m_vec
     std::string getName() const;
     //  Setters
-    void setDim(uint32_t dim);
-    void setVec(std::vector<T> vec);
-    void setName(std::string name);
-    void setFlag(int flag);
-    void setInfo(std::string info);
+    void setDim(size_t t_dim);
+    void setVec(std::vector<T> t_vec);
+    void setName(std::string t_name);
+    void setFlag(int t_flag);
+    void setInfo(std::string t_info);
 
     //  Operator overloads
-    Vector<T>& operator=(const Vector<T>& vector);
-    bool operator==(const Vector<T>& vector) const;
-    bool operator!=(const Vector<T>& vector) const;
+    Vector<T>& operator=(const Vector<T>& t_vector);
+    bool operator==(const Vector<T>& t_vector) const;
+    bool operator!=(const Vector<T>& t_vector) const;
     Vector<T> operator-() const;
-    Vector<T> operator+(const Vector<T>& vector) const;
-    Vector<T>& operator+=(const Vector<T>& vector);
-    Vector<T> operator-(const Vector<T>& vector) const;
-    Vector<T>& operator-=(const Vector<T>& vector);
+    Vector<T> operator+(const Vector<T>& t_vector) const;
+    Vector<T>& operator+=(const Vector<T>& t_vector);
+    Vector<T> operator-(const Vector<T>& t_vector) const;
+    Vector<T>& operator-=(const Vector<T>& t_vector);
     //  Scalar product
-    T operator*(const Vector<T>& vector) const;
-    T dot(const Vector<T>& vector) const;
+    T operator*(const Vector<T>& t_vector) const;
+    T dot(const Vector<T>& t_vector) const;
     //  Scalar operators
-    Vector<T> operator+(const T& s) const;
-    Vector<T> operator-(const T& s) const;
-    Vector<T> operator*(const T& s) const;
-    Vector<T> operator/(const T& s) const;
-    Vector<T>& operator+=(const T& s);
-    Vector<T>& operator-=(const T& s);
-    Vector<T>& operator*=(const T& s);
-    Vector<T>& operator/=(const T& s);
+    Vector<T> operator+(const T& t_s) const;
+    Vector<T> operator-(const T& t_s) const;
+    Vector<T> operator*(const T& t_s) const;
+    Vector<T> operator/(const T& t_s) const;
+    Vector<T>& operator+=(const T& t_s);
+    Vector<T>& operator-=(const T& t_s);
+    Vector<T>& operator*=(const T& t_s);
+    Vector<T>& operator/=(const T& t_s);
     //  Overloads of scalar operations from the left.
     //  since we are trying to friend a template argument,
     //  the friend method must be defined within the class block.
-    friend Vector<T> operator+(T s, const Vector<T>& vector)
+    friend Vector<T> operator+(T t_s, const Vector<T>& t_vector)
     {
-      uint32_t dim = vector.getDim();
-      std::string name = "(" + std::to_string(s) + " + "  + vector.getName() + ")";
+      size_t dim = t_vector.getDim();
+      std::string name = "(" + std::to_string(t_s) + " + "
+                         + t_vector.getName() + ")";
       Vector<T> v(name,dim,0.0);
-      for (uint32_t i = 0; i < dim; i++) {
-          v(i) = vector(i) + s;
+      for (auto i = 0; i < dim; i++) {
+          v(i) = t_vector(i) + t_s;
       }
       return v;
     }
-    friend Vector<T> operator-(T s, const Vector<T>& vector)
+    friend Vector<T> operator-(T t_s, const Vector<T>& t_vector)
     {
-      uint32_t dim = vector.getDim();
-      std::string name = "(" + std::to_string(s) + " - "  + vector.getName() + ")";
+      size_t dim = t_vector.getDim();
+      std::string name = "(" + std::to_string(t_s) + " - "
+                       + t_vector.getName() + ")";
       Vector<T> v(name,dim,0.0);
-      for (uint32_t i = 0; i < dim; i++) {
-          v(i) = s - vector(i);
+      for (auto i = 0; i < dim; i++) {
+          v(i) = t_s - t_vector(i);
       }
       return v;
     }
-    friend Vector<T> operator*(T s, const Vector<T>& vector)
+    friend Vector<T> operator*(T t_s, const Vector<T>& t_vector)
     {
-      uint32_t dim = vector.getDim();
-      std::string name = "(" + std::to_string(s) + " * "  + vector.getName() + ")";
+      size_t dim = t_vector.getDim();
+      std::string name = "(" + std::to_string(t_s) + " * "
+                       + t_vector.getName() + ")";
       Vector<T> v(name,dim,0.0);
-      for (uint32_t i = 0; i < dim; i++) {
-          v(i) = vector(i) * s;
+      for (auto i = 0; i < dim; i++) {
+          v(i) = t_vector(i) * t_s;
       }
       return v;
     }
-    friend Vector<T> operator/(T s, const Vector<T>& vector)
+    friend Vector<T> operator/(T t_s, const Vector<T>& t_vector)
     {
-      uint32_t dim = vector.getDim();
-      std::string name = "(" + std::to_string(s) + " / "  + vector.getName() + ")";
+      size_t dim = t_vector.getDim();
+      std::string name = "(" + std::to_string(t_s) + " / "
+                       + t_vector.getName() + ")";
       Vector<T> v(name,dim,0.0);
       std::vector<T> vec(dim);
-      for (uint32_t i = 0; i < dim; i++)
-      {
-        if (vector(i) == 0)
-        {
+      for (auto i = 0; i < dim; i++) {
+        if (t_vector(i) == 0) {
           return v;
         }
-        else
-        {
-          vec[i] = s / vector(i);
+        else {
+         vec[i] = t_s / t_vector(i);
         }
       }
       v.setVec(vec);
@@ -147,30 +149,26 @@ namespace ET
     }
 
     //  Access operators
-    T& operator()(const uint32_t& i);
-    const T& operator()(const uint32_t& i) const;
+    T& operator()(const size_t& i);
+    const T& operator()(const size_t& i) const;
 
     const std::string summary();
+
   private:
-    //  dimension
-    uint32_t _dim;
-    //  container for the coefficients in R^n
-    std::vector<T> _vec;
-    //  name
-    std::string _name;
-    //  conatiner for message status
-    int _flag;
-    //  container for messages
-    std::string _info;
+    size_t m_dim{0};            //  dimension
+    std::vector<T> m_vec{{0}};  //  container for the coefficients in R^n
+    std::string m_name{""};     //  t_name
+    int m_flag{0};              //  conatiner for message status
+    std::string m_info{""};     //  container for messages
   };
 
   //----------------------------------------------------------------------------
-  //  Special vector initializers
+  //  Special t_vector initializers
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T> zeroes(uint32_t dim);
+  Vector<T> zeroes(size_t t_dim);
   template<typename T>
-  Vector<T> ones(uint32_t dim);
+  Vector<T> ones(size_t t_dim);
   //----------------------------------------------------------------------------
 
   template class Vector<double>;
@@ -179,15 +177,15 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Level 1 BLAS methods
   //----------------------------------------------------------------------------
-  void DSWAP(Vector<double>& v, Vector<double>& u);
-  void DSCAL(Vector<double>& v, const double& scale);
-  Vector<double> DCOPY(Vector<double>& v);
-  void DCOPY(Vector<double>& v, Vector<double>& u);
-  void DAXPY(Vector<double>& v, const double& scale, Vector<double>& u);
-  double DDOT(Vector<double>& v, Vector<double>& u);
-  double DNRM2(Vector<double>& v);
-  double DASUM(Vector<double>& v);
-  uint32_t IDAMAX(Vector<double>& v);
-  uint32_t IDAMIN(Vector<double>& v);
+  void DSWAP(Vector<double>& t_v, Vector<double>& t_u);
+  void DSCAL(Vector<double>& t_v, const double& t_scale);
+  Vector<double> DCOPY(Vector<double>& t_v);
+  void DCOPY(Vector<double>& t_v, Vector<double>& t_u);
+  void DAXPY(Vector<double>& t_v, const double& scale, Vector<double>& t_u);
+  double DDOT(Vector<double>& t_v, Vector<double>& t_u);
+  double DNRM2(Vector<double>& t_v);
+  double DASUM(Vector<double>& t_v);
+  size_t IDAMAX(Vector<double>& t_v);
+  size_t IDAMIN(Vector<double>& t_v);
   //----------------------------------------------------------------------------
 }

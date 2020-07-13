@@ -1,5 +1,10 @@
-[21:59:47] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x55de67bdf1d0
-[21:59:47] [trace] ET:UGrid:default: Scalar Field 'default' created at location 0x55de6826c190
-[21:59:47] [info] ET:UGrid:default: Logger passed to Scalar Field 'default'
-[21:59:47] [trace] ET:UGrid:default: Approximator 'default' created at location 0x55de676c41c0
-[21:59:47] [info] ET:UGrid:default: Logger passed to Approximator 'default'
+[13:05:52] [trace] ET:UGrid:default_21: Unstructured Grid 'default' created at location 0x55fc83cab880
+[13:05:52] [trace] ET:UGrid:default_21: Scalar Field 'default' created at location 0x55fc8400e790
+[13:05:52] [info] ET:UGrid:default_21: Logger passed to Scalar Field 'default'
+[13:05:52] [trace] ET:UGrid:default_21: Approximator 'default' created at location 0x55fc8401f240
+[13:05:52] [info] ET:UGrid:default_21: Logger passed to Approximator 'default'
+[13:05:52] [info] ET:UGrid:default_21: Approximator default: k set to 20
+[13:05:52] [info] ET:UGrid:default_21: Approximator default: n set to 20
+[13:05:54] [trace] ET:UGrid:default_20: Scalar Field 'default' destroyed at location 0x55fc84f964f0
+[13:05:54] [trace] ET:UGrid:default_20: Approximator 'default' destroyed at location 0x55fc84377e70
+[13:05:54] [trace] ET:UGrid:default_20: Unstructured Grid 'default' destroyed at location 0x55fc84f983c0
