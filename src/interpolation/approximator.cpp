@@ -273,6 +273,16 @@ namespace ET
     _params.n = n;
 		_log->INFO("Approximator " + _name + ": n set to " + std::to_string(n));
   }
+  //----------------------------------------------------------------------------
+  //  Set the shape parameter for RBF interpolants
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Approximator<T>::set_shape(double shape)
+  {
+    _params._rbfshape = shape;
+		_log->INFO("Approximator " + _name + ": shape set to "
+               + std::to_string(shape));
+  }
   template<typename T>
   void Approximator<T>::setFlag(int flag)
   {
@@ -391,7 +401,7 @@ namespace ET
       std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
       Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
       std::vector<T> field_neighbors(_params.k);
-      
+
       for (uint32_t i = 0; i < _params.k; i++) {
         field_neighbors[i] = (*field)(neighbors[i]);
       }
@@ -2081,11 +2091,24 @@ namespace ET
   {
     if (_rbftype == 0)
     {
-      return gaussianRBF(L2(p1,p2));
+      return gaussianRBF(L2(p1,p2),_params._rbfshape);
     }
     else
     {
-      return gaussianRBF(L2(p1,p2));
+      return gaussianRBF(L2(p1,p2),_params._rbfshape);
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T Approximator<T>::xRBFdx(const std::vector<T>& p1, const std::vector<T>& p2)
+  {
+    if (_rbftype == 0)
+    {
+      return gaussianRBFd(L2(p1,p2),_params._rbfshape);
+    }
+    else
+    {
+      return gaussianRBFd(L2(p1,p2),_params._rbfshape);
     }
   }
   //----------------------------------------------------------------------------
@@ -2160,9 +2183,9 @@ namespace ET
   {
     Monomial mono(ugrid->getDim(),order);
     std::vector<std::vector<double>> B;
-    for (uint64_t i = 0; i < neighbors.size(); i++)
+    for (auto i = 0; i < neighbors.size(); i++)
     {
-      uint64_t id = neighbors[i];
+      auto id = neighbors[i];
       std::vector<double>
 			temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
                                           ugrid->getPoint(id));
@@ -2257,7 +2280,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-	//	Construct RBF matrix
+	//	Construct local RBF matrix
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Matrix<T>
@@ -2266,15 +2289,75 @@ namespace ET
 	{
 	  //	For a simple gaussian weight, find the distances from index
 		//	to each point in neighbors.
-    ugrid->queryNeighbors(_params.k);
-		std::vector<size_t> points = ugrid->getNeighbors(index);
-		Matrix<T> RBF(points.size());
-		for (uint32_t i = 0; i < points.size(); i++)
+		Matrix<T> RBF(neighbors.size());
+		for (uint32_t i = 0; i < neighbors.size(); i++)
 		{
-      for (uint32_t j = 0; j < points.size(); j++)
+      for (uint32_t j = 0; j < neighbors.size(); j++)
       {
-        RBF(i,j) = xRBFx(ugrid->getPoint(points[i]),ugrid->getPoint(points[j]));
+        RBF(i,j) = xRBFx(ugrid->getPoint(neighbors[i]),
+                         ugrid->getPoint(neighbors[j]));
       }
+		}
+		return RBF;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct local RBF derivative matrix
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Matrix<T>
+	Approximator<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    const std::vector<uint64_t> neighbors, uint64_t index)
+	{
+	  //	For a simple gaussian weight, find the distances from index
+		//	to each point in neighbors.
+		Matrix<T> RBFd(neighbors.size());
+		for (uint32_t i = 0; i < neighbors.size(); i++)
+		{
+      for (uint32_t j = 0; j < neighbors.size(); j++)
+      {
+        RBFd(i,j) = xRBFdx(ugrid->getPoint(neighbors[i]),
+                           ugrid->getPoint(neighbors[j]));
+      }
+		}
+		return RBFd;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct RBF matrix
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Matrix<T>
+	Approximator<T>::constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid)
+	{
+	  //	For a simple gaussian weight, find the distances between each point
+		Matrix<T> RBF(ugrid->getN());
+		for (auto i = 0; i < ugrid->getN(); i++)
+		{
+      for (auto j = 0; j < ugrid->getN(); j++)
+      {
+        RBF(i,j) = xRBFx(ugrid->getPoint(i),
+                         ugrid->getPoint(j));
+      }
+		}
+		return RBF;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct RBF vector
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
+                                      std::vector<T> point)
+	{
+	  //	For a simple gaussian weight, find the distances between each point
+		Vector<T> RBF(ugrid->getN());
+		for (auto i = 0; i < ugrid->getN(); i++) {
+      RBF(i) = xRBFx(ugrid->getPoint(i),point);
 		}
 		return RBF;
 	}

@@ -155,36 +155,36 @@ namespace ET
   //  array are the same.
   //----------------------------------------------------------------------------
   bool checkConsistency(std::vector<std::vector<double>>& array,
-                        std::vector<std::pair<uint32_t,uint32_t>>& rows);
+                        std::vector<std::pair<size_t,size_t>>& rows);
 
   //----------------------------------------------------------------------------
   //  Error messages
   //  Here we have a set of functions for generating various
   //  error messages
   //----------------------------------------------------------------------------
-  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows);
-  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
-                                   const uint32_t& attempt,
+  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<size_t,size_t>>& rows);
+  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const size_t& bound,
+                                   const size_t& attempt,
                                    const std::string& name);
-  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2,
+  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const size_t& m1,
+                                           const size_t& m2,
                                            const std::string& name1,
                                            const std::string& name2);
-  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2,
+  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const size_t& n1,
+                                           const size_t& n2,
                                            const std::string& name1,
                                            const std::string& name2);
-  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2,
+  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const size_t& m1,
+                                           const size_t& m2,
                                            const std::string& name1,
                                            const std::string& name2);
-  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2,
+  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const size_t& n1,
+                                           const size_t& n2,
                                            const std::string& name1,
                                            const std::string& name2);
-  std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
-                                      const uint32_t& m2);
-  std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n);
+  std::string MATRIX_MUL_INCOMPATIBLE(const size_t& n1,
+                                      const size_t& m2);
+  std::string MATRIX_ZERO_DIV(const size_t& m, const size_t& n);
 
   //----------------------------------------------------------------------------
 

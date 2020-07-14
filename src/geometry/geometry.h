@@ -51,15 +51,15 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Gaussian
   //----------------------------------------------------------------------------
-  double gaussianRBF(double val, double shape=.35);
+  double gaussianRBF(double val, double shape=3.05048);
   //----------------------------------------------------------------------------
   //  Gaussian first derivative
   //----------------------------------------------------------------------------
-  double gaussianRBFd(double val, double shape=.35);
+  double gaussianRBFd(double val, double shape=3.05048);
   //----------------------------------------------------------------------------
   //  Gaussian second derivative
   //----------------------------------------------------------------------------
-  double gaussianRBFdd(double val, double shape=.35);
+  double gaussianRBFdd(double val, double shape=3.05048);
   //----------------------------------------------------------------------------
   //  Gaussian nth-derivative
   //  This formula was taken from the paper

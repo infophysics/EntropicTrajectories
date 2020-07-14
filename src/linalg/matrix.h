@@ -46,27 +46,27 @@ namespace ET
   public:
     Matrix();
     ~Matrix();
-    Matrix(const Matrix<T>& matrix);
-    Matrix(uint32_t m);
-    Matrix(std::string name, uint32_t m);
-    Matrix(uint32_t m, uint32_t n);
-    Matrix(std::string name, uint32_t m, uint32_t n);
-    Matrix(uint32_t m, uint32_t n, const T& init);
-    Matrix(std::string name, uint32_t m, uint32_t n, const T& init);
+    Matrix(const Matrix<T>& t_matrix);
+    Matrix(size_t t_m);
+    Matrix(std::string t_name, size_t t_m);
+    Matrix(size_t t_m, size_t t_n);
+    Matrix(std::string t_name, size_t t_m, size_t t_n);
+    Matrix(size_t t_m, size_t t_n, const T& t_init);
+    Matrix(std::string t_name, size_t t_m, size_t t_n, const T& t_init);
 
     //  Constructors passing elements
-    Matrix(uint32_t m, std::vector<T> flat);
-    Matrix(std::string name, uint32_t m, std::vector<T> flat);
-    Matrix(uint32_t m, uint32_t n, std::vector<T> flat);
-    Matrix(std::string name, uint32_t m,
-      uint32_t n, std::vector<T> flat);
-    Matrix(std::string name, uint32_t m, uint32_t n, T* array);
-    Matrix(std::vector<std::vector<T> > array);
-    Matrix(std::string name, std::vector<std::vector<T> > array);
+    Matrix(size_t t_m, std::vector<T> t_flat);
+    Matrix(std::string t_name, size_t t_m, std::vector<T> t_flat);
+    Matrix(size_t t_m, size_t t_n, std::vector<T> t_flat);
+    Matrix(std::string t_name, size_t t_m,
+      size_t t_n, std::vector<T> t_flat);
+    Matrix(std::string t_name, size_t t_m, size_t t_n, T* t_array);
+    Matrix(std::vector<std::vector<T>> t_array);
+    Matrix(std::string t_name, std::vector<std::vector<T>> t_array);
 
     //  Getters
-    uint32_t getNumRows() const;
-    uint32_t getNumCols() const;
+    size_t getNumRows() const;
+    size_t getNumCols() const;
     std::string getName() const;
     //  get a const reference to array
     std::vector<T> getArray() const;
@@ -74,123 +74,121 @@ namespace ET
     std::vector<T>* accessArray();
     //  get access to the beginning of the array
     T* data();
-    std::vector<T> getRow(uint32_t i);
-    std::vector<T> getCol(uint32_t i);
+    std::vector<T> getRow(size_t t_i);
+    std::vector<T> getCol(size_t t_i);
     std::vector<T> getSingularValues();
     std::string getInfo();
     int getFlag();
-    uint32_t getRank();
+    size_t getRank();
 
 
     //  Setters
-    void setName(std::string name);
-    void setRow(uint32_t i, std::vector<T> row);
-    void setCol(uint32_t i, std::vector<T> col);
-    void setArray(uint32_t m, std::vector<T> mat);
-    void setArray(std::vector<std::vector<T> > mat);
-    void setSingularValues(std::vector<T> singular);
-    void setInfo(std::string info);
-    void setFlag(int flag);
-    void setRank(uint32_t rank);
+    void setName(std::string t_name);
+    void setRow(size_t t_i, std::vector<T> t_row);
+    void setCol(size_t t_i, std::vector<T> t_col);
+    void setArray(size_t t_m, std::vector<T> t_mat);
+    void setArray(std::vector<std::vector<T>> t_mat);
+    void setSingularValues(std::vector<T> t_singular);
+    void setInfo(std::string t_info);
+    void setFlag(int t_flag);
+    void setRank(size_t t_rank);
 
     //  Operator overloads
-    Matrix<T>& operator=(const Matrix<T>& matrix);
-    bool operator==(const Matrix<T>& matrix) const;
-    bool operator!=(const Matrix<T>& matrix) const;
+    Matrix<T>& operator=(const Matrix<T>& t_matrix);
+    bool operator==(const Matrix<T>& t_matrix) const;
+    bool operator!=(const Matrix<T>& t_matrix) const;
     Matrix<T> operator-() const;
     //  Matrix algebra
-    Matrix<T> operator+(const Matrix<T>& matrix) const;
-    Matrix<T>& operator+=(const Matrix<T>& matrix);
-    Matrix<T> operator-(const Matrix<T>& matrix) const;
-    Matrix<T>& operator-=(const Matrix<T>& matrix);
+    Matrix<T> operator+(const Matrix<T>& t_matrix) const;
+    Matrix<T>& operator+=(const Matrix<T>& t_matrix);
+    Matrix<T> operator-(const Matrix<T>& t_matrix) const;
+    Matrix<T>& operator-=(const Matrix<T>& t_matrix);
     //  Using CBLAS for multiplication
-    Matrix<T> operator*(const Matrix<T>& matrix) const;
-    Matrix<T> brute_mul(const Matrix<T>& matrix) const;
-    Matrix<T>& operator*=(const Matrix<T>& matrix);
+    Matrix<T> operator*(const Matrix<T>& t_matrix) const;
+    Matrix<T> brutem_mul(const Matrix<T>& t_matrix) const;
+    Matrix<T>& operator*=(const Matrix<T>& t_matrix);
     //  Scalar algebra
-    Matrix<T> operator+(const T& s) const;
-    Matrix<T> operator-(const T& s) const;
-    Matrix<T> operator*(const T& s) const;
-    Matrix<T> operator/(const T& s) const;
-    Matrix<T>& operator+=(const T& s);
-    Matrix<T>& operator-=(const T& s);
-    Matrix<T>& operator*=(const T& s);
-    Matrix<T>& operator/=(const T& s);
+    Matrix<T> operator+(const T& t_s) const;
+    Matrix<T> operator-(const T& t_s) const;
+    Matrix<T> operator*(const T& t_s) const;
+    Matrix<T> operator/(const T& t_s) const;
+    Matrix<T>& operator+=(const T& t_s);
+    Matrix<T>& operator-=(const T& t_s);
+    Matrix<T>& operator*=(const T& t_s);
+    Matrix<T>& operator/=(const T& t_s);
     //  Overloads of scalar operations from the left.
     //  since we are trying to friend a template argument,
     //  the friend method must be defined within the class block.
-    friend Matrix<T> operator+(T s, const Matrix<T>& matrix)
+    friend Matrix<T> operator+(T t_s, const Matrix<T>& t_matrix)
     {
-      uint32_t m = matrix.getNumRows();
-      uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + "I + "
-                         + matrix.getName() + ")";
+      size_t m = t_matrix.getNumRows();
+      size_t n = t_matrix.getNumCols();
+      std::string name = "(" + std::to_string(t_s) + "I + "
+                         + t_matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint32_t i = 0; i < m*n; i++) {
-          l(i) = matrix(i) + s;
+      for (size_t i = 0; i < m*n; i++) {
+          l(i) = t_matrix(i) + t_s;
       }
       return l;
     }
-    friend Matrix<T> operator-(T s, const Matrix<T>& matrix)
+    friend Matrix<T> operator-(T t_s, const Matrix<T>& t_matrix)
     {
-      uint32_t m = matrix.getNumRows();
-      uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + "I - "
-                         + matrix.getName() + ")";
+      size_t m = t_matrix.getNumRows();
+      size_t n = t_matrix.getNumCols();
+      std::string name = "(" + std::to_string(t_s) + "I - "
+                         + t_matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint32_t i = 0; i < m*n; i++) {
-          l(i) = s - matrix(i);
+      for (size_t i = 0; i < m*n; i++) {
+          l(i) = t_s - t_matrix(i);
       }
       return l;
     }
-    friend Matrix<T> operator*(T s, const Matrix<T>& matrix)
+    friend Matrix<T> operator*(T t_s, const Matrix<T>& t_matrix)
     {
-      uint32_t m = matrix.getNumRows();
-      uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + " * "
-                         + matrix.getName() + ")";
+      size_t m = t_matrix.getNumRows();
+      size_t n = t_matrix.getNumCols();
+      std::string name = "(" + std::to_string(t_s) + " * "
+                         + t_matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
-      for (uint32_t i = 0; i < m*n; i++) {
-          l(i) = matrix(i) * s;
+      for (size_t i = 0; i < m*n; i++) {
+          l(i) = t_matrix(i) * t_s;
       }
       return l;
     }
-    friend Matrix<T> operator/(T s, const Matrix<T>& matrix)
+    friend Matrix<T> operator/(T t_s, const Matrix<T>& t_matrix)
     {
-      uint32_t m = matrix.getNumRows();
-      uint32_t n = matrix.getNumCols();
-      std::string name = "(" + std::to_string(s) + " / "
-                         + matrix.getName() + ")";
+      size_t m = t_matrix.getNumRows();
+      size_t n = t_matrix.getNumCols();
+      std::string name = "(" + std::to_string(t_s) + " / "
+                         + t_matrix.getName() + ")";
       Matrix<T> l(name,m,n,0.0);
       std::vector<T> mat(n*m);
-      for (uint32_t i = 0; i < m*n; i++)
+      for (size_t i = 0; i < m*n; i++)
       {
-        if (matrix(i) == 0)
-        {
+        if (t_matrix(i) == 0) {
           return l;
         }
-        else
-        {
-          mat[i] = s / matrix(i);
+        else {
+          mat[i] = t_s / t_matrix(i);
         }
       }
       l.setArray(n, mat);
       return l;
     }
     //  Multiplying a vector
-    Vector<T> operator*(const Vector<T>& v);
+    Vector<T> operator*(const Vector<T>& t_v);
     //  Access operators
-    T& operator()(const uint32_t& i, const uint32_t& j);
-    const T& operator()(const uint32_t& i, const uint32_t& j) const;
+    T& operator()(const size_t& t_i, const size_t& t_j);
+    const T& operator()(const size_t& t_i, const size_t& t_j) const;
     //  Flattened access
-    T& operator()(const uint32_t& i);
-    const T& operator()(const uint32_t& i) const;
+    T& operator()(const size_t& t_i);
+    const T& operator()(const size_t& t_i) const;
 
     //  Various methods
     void print();
     const std::string summary();
     Matrix<T> transpose() const;
-    void transpose_inplace(bool inplace=true);
+    void transpose_inplace(bool t_inplace=true);
     T trace();
 
     //  Linear algebra tools
@@ -206,33 +204,33 @@ namespace ET
     // std::tuple<Matrix<T>,Matrix<T>,Matrix<T>> SVD();
 
   private:
-    //  _m is the number of rows, _n is the number of columns
-    uint32_t _m, _n;
-    std::vector<T> _array;
-    //  possible name for the matrix
-    std::string _name;
+    //  m_m is the number of rows, m_n is the number of columns
+    size_t m_m, m_n;
+    std::vector<T> m_array;
+    //  possible name for the t_matrix
+    std::string m_name;
     //  container for singular values
-    std::vector<T> _singular_values;
+    std::vector<T> m_singular_values;
     //  conatiner for message status
-    int _flag;
+    int m_flag;
     //  container for messages
-    std::string _info;
+    std::string m_info;
     //  assign rank to -1 at initilization.
-    uint32_t _rank = -1;
+    size_t m_rank = -1;
   };
 
   //----------------------------------------------------------------------------
   //  Various Initializers
   //----------------------------------------------------------------------------
-  Matrix<double> identity_d(uint32_t m);
-  Matrix<double> zeros_d(uint32_t m);
-  Matrix<double> zeros_d(uint32_t m, uint32_t n);
-  Matrix<double> ones_d(uint32_t m);
-  Matrix<double> ones_d(uint32_t m, uint32_t n);
-  Matrix<double> permutationMatrix_d(const uint32_t& m,
-                              const std::vector<uint32_t> pivot);
+  Matrix<double> identity_d(size_t t_m);
+  Matrix<double> zeros_d(size_t t_m);
+  Matrix<double> zeros_d(size_t t_m, size_t t_n);
+  Matrix<double> ones_d(size_t t_m);
+  Matrix<double> ones_d(size_t t_m, size_t t_n);
+  Matrix<double> permutationMatrix_d(const size_t& t_m,
+                              const std::vector<size_t> t_pivot);
   template<typename T>
-  std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix);
+  std::ostream& operator<<(std::ostream& t_os, const Matrix<T>& t_matrix);
 
   template class Matrix<double>;
   //template class Matrix<std::complex<double>>;
@@ -240,26 +238,26 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Level 2 BLAS methods
   //----------------------------------------------------------------------------
-  Vector<double> DGEMV(double& alpha, Matrix<double>& A,
-                       Vector<double>& x);
-  void DGEMV(double& alpha, Matrix<double>& A, Vector<double>& x,
-             double& beta, Vector<double>& y);
-  Matrix<double> DGER(double& alpha, Vector<double>& x,
-                      Vector<double>& y);
-  void DGER(double& alpha, Vector<double>& x,
-            Vector<double>& y, Matrix<double>& m);
+  Vector<double> DGEMV(double& t_alpha, Matrix<double>& t_A,
+                       Vector<double>& t_x);
+  void DGEMV(double& t_alpha, Matrix<double>& t_A, Vector<double>& t_x,
+             double& t_beta, Vector<double>& t_y);
+  Matrix<double> DGER(double& t_alpha, Vector<double>& t_x,
+                      Vector<double>& t_y);
+  void DGER(double& t_alpha, Vector<double>& t_x,
+            Vector<double>& t_y, Matrix<double>& t_m);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Level 3 BLAS methods
   //----------------------------------------------------------------------------
-  Matrix<double> DGEMM(const double& alpha, const Matrix<double>& A,
-                       const Matrix<double>& B);
-  Matrix<double> DGEMM(const Matrix<double>& A,
-                       const Matrix<double>& B);
-  void DGEMM(const double& alpha, const Matrix<double>& A,
-             const Matrix<double>& B, const double& beta,
-             Matrix<double>& C);
+  Matrix<double> DGEMM(const double& t_alpha, const Matrix<double>& t_A,
+                       const Matrix<double>& t_B);
+  Matrix<double> DGEMM(const Matrix<double>& t_A,
+                       const Matrix<double>& t_B);
+  void DGEMM(const double& t_alpha, const Matrix<double>& t_A,
+             const Matrix<double>& t_B, const double& t_beta,
+             Matrix<double>& t_C);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -269,58 +267,59 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Linear least squares
   //----------------------------------------------------------------------------
-  Matrix<double> DGELS(const Matrix<double>& A,
-                       const Matrix<double>& B);
-  Vector<double> DGELS(const Matrix<double>& A,
-                       const Vector<double>& u);
-  Matrix<double> DGELSY(const Matrix<double>& A,
-                        const Matrix<double>& B);
-  Vector<double> DGELSY(const Matrix<double>& A,
-                        const Vector<double>& u);
-  Matrix<double> DGELSD(const Matrix<double>& A,
-                        const Matrix<double>& B);
-  Vector<double> DGELSD(const Matrix<double>& A,
-                        const Vector<double>& u);
-  Matrix<double> DGELSS(const Matrix<double>& A,
-                        const Matrix<double>& B);
-  Vector<double> DGELSS(const Matrix<double>& A,
-                        const Vector<double>& u);
+  Matrix<double> DGELS(const Matrix<double>& t_A,
+                       const Matrix<double>& t_B);
+  Vector<double> DGELS(const Matrix<double>& t_A,
+                       const Vector<double>& t_u);
+  Matrix<double> DGELSY(const Matrix<double>& t_A,
+                        const Matrix<double>& t_B);
+  Vector<double> DGELSY(const Matrix<double>& t_A,
+                        const Vector<double>& t_u);
+  Matrix<double> DGELSD(const Matrix<double>& t_A,
+                        const Matrix<double>& t_B);
+  Vector<double> DGELSD(const Matrix<double>& t_A,
+                        const Vector<double>& t_u);
+  Matrix<double> DGELSS(const Matrix<double>& t_A,
+                        const Matrix<double>& t_B);
+  Vector<double> DGELSS(const Matrix<double>& t_A,
+                        const Vector<double>& t_u);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  LU decomposition
   //----------------------------------------------------------------------------
-  std::vector<uint32_t> DGETRF(const Matrix<double>& A);
-  Matrix<double> DGETRF_L_U(const Matrix<double>& A);
-  std::tuple<Matrix<double>,Matrix<double>> DGETRF_LU(const Matrix<double>& A);
+  std::vector<size_t> DGETRF(const Matrix<double>& t_A);
+  Matrix<double> DGETRF_L_U(const Matrix<double>& t_A);
+  std::tuple<Matrix<double>,Matrix<double>>
+  DGETRF_LU(const Matrix<double>& t_A);
   std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
-  DGETRF_PLU(const Matrix<double>& A);
+  DGETRF_PLU(const Matrix<double>& t_A);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  QR decomposition
   //----------------------------------------------------------------------------
-  Vector<double> DGEQRF(const Matrix<double>& A);
-  Matrix<double> DORGQR(const Matrix<double>& A,
-                        const Vector<double>& ref);
+  Vector<double> DGEQRF(const Matrix<double>& t_A);
+  Matrix<double> DORGQR(const Matrix<double>& t_A,
+                        const Vector<double>& t_ref);
   std::tuple<Matrix<double>,Matrix<double>>
-  DGEQRF_QR(const Matrix<double>& A);
+  DGEQRF_QR(const Matrix<double>& t_A);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  SVD decomposition
   //----------------------------------------------------------------------------
-  Vector<double> DGESVD(const Matrix<double>& A);
+  Vector<double> DGESVD(const Matrix<double>& t_A);
   std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
-  DGESVD_SVD(const Matrix<double>& A);
-  Vector<double> DGESDD(const Matrix<double>& A);
+  DGESVD_SVD(const Matrix<double>& t_A);
+  Vector<double> DGESDD(const Matrix<double>& t_A);
   std::tuple<Matrix<double>,Matrix<double>,Matrix<double>>
-  DGESDD_SVD(const Matrix<double>& A);
+  DGESDD_SVD(const Matrix<double>& t_A);
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Inverses
   //----------------------------------------------------------------------------
-  Matrix<double> DGETRI(const Matrix<double>& A);
+  Matrix<double> DGETRI(const Matrix<double>& t_A);
   //----------------------------------------------------------------------------
 }

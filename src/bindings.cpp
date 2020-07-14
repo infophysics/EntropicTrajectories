@@ -218,7 +218,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_row", &ET::Matrix<double>::setRow)
 		.def("set_col", &ET::Matrix<double>::setCol)
 		.def("set_array", (void (ET::Matrix<double>::*)
-				 (uint32_t,std::vector<double>)) &ET::Matrix<double>::setArray)
+				 (size_t,std::vector<double>)) &ET::Matrix<double>::setArray)
 		.def("set_array", (void (ET::Matrix<double>::*)
 				 (std::vector<std::vector<double>>)) &ET::Matrix<double>::setArray)
 		.def("set_singular_values", &ET::Matrix<double>::setSingularValues)
@@ -977,6 +977,7 @@ PYBIND11_MODULE(etraj, m) {
 				return self.set_n(n);
 			}
 		})
+    .def("set_shape", &ET::Approximator<double>::set_shape)
 		.def("set_flag", &ET::Approximator<double>::setFlag)
 		.def("set_info", &ET::Approximator<double>::setInfo)
 		.def("output", [](ET::Approximator<double>& self)
@@ -1217,6 +1218,24 @@ PYBIND11_MODULE(etraj, m) {
 				  (const std::shared_ptr<ET::UGrid<double>>,
            const std::vector<uint64_t>,uint64_t,ET::Monomial&))
 				 &ET::Approximator<double>::constructTaylorMatrix)
+    .def("construct_rbf_matrix",
+         (ET::Matrix<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,
+          const std::vector<uint64_t>,uint64_t))
+    		 &ET::Approximator<double>::constructRBFMatrix)
+    .def("construct_rbfd_matrix",
+        (ET::Matrix<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,
+         const std::vector<uint64_t>,uint64_t))
+    		 &ET::Approximator<double>::constructRBFdMatrix)
+    .def("construct_rbf_matrix",
+        (ET::Matrix<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>))
+    		 &ET::Approximator<double>::constructRBFMatrix)
+    .def("construct_rbf_vector",
+       (ET::Vector<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
+    		 &ET::Approximator<double>::constructRBFVector)
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------

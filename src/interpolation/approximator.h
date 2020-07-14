@@ -82,6 +82,7 @@ namespace ET
     //  Set parameters
     void set_k(uint64_t k);
     void set_n(uint64_t n);
+    void set_shape(double shape);
     void setFlag(int flag);
     void setInfo(std::string info);
     //--------------------------------------------------------------------------
@@ -861,6 +862,7 @@ namespace ET
                                     std::vector<T> point, uint32_t n);
     Vector<T> xGELSx(Matrix<T> B, Vector<T> u);
     T xRBFx(const std::vector<T>& p1, const std::vector<T>& p2);
+    T xRBFdx(const std::vector<T>& p1, const std::vector<T>& p2);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -873,7 +875,7 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    //  LS, MLS and WMLS functions
+    //  LS, MLS, WMLS and RBF functions
     //--------------------------------------------------------------------------
     Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                     const std::vector<uint64_t> neighbors,
@@ -896,6 +898,12 @@ namespace ET
     Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                  const std::vector<uint64_t> neighbors,
                                  uint64_t index);
+    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+                                 const std::vector<uint64_t> neighbors,
+                                 uint64_t index);
+    Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid);
+    Vector<T> constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
+                                 std::vector<T> point);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------

@@ -328,19 +328,19 @@ namespace ET
   //  Checks if an array is consistently defined.
   //--------------------------------------------------------------------------
   bool checkConsistency(std::vector<std::vector<double>>& array,
-                        std::vector<std::pair<uint32_t,uint32_t>>& rows)
+                        std::vector<std::pair<size_t,size_t>>& rows)
   {
     //  check that the array is well defined
     bool well_defined = true;
     auto p = std::make_pair(array[0].size(),1);
     rows.push_back(p);
-    for (uint32_t i = 0; i < array.size(); i++)
+    for (size_t i = 0; i < array.size(); i++)
     {
       if (array[0].size() != array[i].size())
       {
         well_defined = false;
         bool unique = false;
-        for (uint32_t j = 0; j < rows.size(); j++)
+        for (size_t j = 0; j < rows.size(); j++)
         {
           if (std::get<0>(rows[j]) == array[i].size())
           {
@@ -364,19 +364,19 @@ namespace ET
   //  Here we have a set of functions for generating various
   //  error messages
   //--------------------------------------------------------------------------
-  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<uint32_t,uint32_t>>& rows)
+  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<size_t,size_t>>& rows)
   {
     std::string error = "ERROR: Attempted to construct matrix with";
     error += " inconsistent numbers of columns.";
-    for (uint32_t i = 0; i < rows.size(); i++)
+    for (size_t i = 0; i < rows.size(); i++)
     {
       error += "  There are " + std::to_string(std::get<1>(rows[i]))
             +  " rows of size " + std::to_string(std::get<0>(rows[i])) + ".";
     }
     return error;
   }
-  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const uint32_t& bound,
-                                   const uint32_t& attempt,
+  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const size_t& bound,
+                                   const size_t& attempt,
                                    const std::string& name)
   {
     std::string error = "ERROR: Attempted to access index "
@@ -389,8 +389,8 @@ namespace ET
            + " with size " + std::to_string(bound);
     return error;
   }
-  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2,
+  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const size_t& m1,
+                                           const size_t& m2,
                                            const std::string& name1,
                                            const std::string& name2)
   {
@@ -403,8 +403,8 @@ namespace ET
            + " and m2 = " + std::to_string(m2);
     return error;
   }
-  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2,
+  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const size_t& n1,
+                                           const size_t& n2,
                                            const std::string& name1,
                                            const std::string& name2)
   {
@@ -417,8 +417,8 @@ namespace ET
            + " and n2 = " + std::to_string(n2);
     return error;
   }
-  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const uint32_t& m1,
-                                           const uint32_t& m2,
+  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const size_t& m1,
+                                           const size_t& m2,
                                            const std::string& name1,
                                            const std::string& name2)
   {
@@ -431,8 +431,8 @@ namespace ET
            + " and m2 = " + std::to_string(m2);
     return error;
   }
-  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const uint32_t& n1,
-                                           const uint32_t& n2,
+  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const size_t& n1,
+                                           const size_t& n2,
                                            const std::string& name1,
                                            const std::string& name2)
   {
@@ -445,12 +445,12 @@ namespace ET
            + " and n2 = " + std::to_string(n2);
     return error;
   }
-  std::string MATRIX_MUL_INCOMPATIBLE(const uint32_t& n1,
-                                      const uint32_t& m2)
+  std::string MATRIX_MUL_INCOMPATIBLE(const size_t& n1,
+                                      const size_t& m2)
   {
     return " ";
   }
-  std::string MATRIX_ZERO_DIV(const uint32_t& m, const uint32_t& n)
+  std::string MATRIX_ZERO_DIV(const size_t& m, const size_t& n)
   {
     return " ";
   }

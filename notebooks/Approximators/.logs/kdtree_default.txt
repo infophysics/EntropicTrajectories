@@ -1,0 +1,3 @@
+[07:55:08] [trace] ET:kdTree:default_6: kdTree 'default' created at location 0x7ffe89a16710
+[07:55:08] [trace] ET:kdTree:default_6: kdTree 'default' destroyed at location 0x7ffe89a16710
+[07:55:08] [trace] ET:kdTree:default_4: kdTree 'default' destroyed at location 0x5630157df500
