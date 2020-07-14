@@ -30,6 +30,8 @@
 #include "utils.h"
 #include "matrix.h"
 
+#include "rbf.h"
+
 //------------------------------------------------------------------------------
 //  Forward declaration of ScalarField
 //------------------------------------------------------------------------------
@@ -904,6 +906,9 @@ namespace ET
     Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid);
     Vector<T> constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
                                  std::vector<T> point);
+    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid);
+    Vector<T> constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
+                                  std::vector<T> point);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -924,6 +929,7 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Shared objects
     //--------------------------------------------------------------------------
+    std::shared_ptr<RadialBasisFunction<T>> _rbf;
     std::shared_ptr<Log> _log;
 
     //  conatiner for message status

@@ -51,11 +51,15 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Gaussian
   //----------------------------------------------------------------------------
-  double gaussianRBF(double val, double shape=3.05048);
+  double gaussianRBF(const std::vector<double>& p1,
+                     const std::vector<double>& p2,
+                     double shape=3.05048);
   //----------------------------------------------------------------------------
   //  Gaussian first derivative
   //----------------------------------------------------------------------------
-  double gaussianRBFd(double val, double shape=3.05048);
+  double gaussianRBFd(const std::vector<double>& p1,
+                     const std::vector<double>& p2,
+                     double shape=3.05048);
   //----------------------------------------------------------------------------
   //  Gaussian second derivative
   //----------------------------------------------------------------------------

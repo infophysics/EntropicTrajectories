@@ -2091,11 +2091,11 @@ namespace ET
   {
     if (_rbftype == 0)
     {
-      return gaussianRBF(L2(p1,p2),_params._rbfshape);
+      return gaussianRBF(p1,p2,_params._rbfshape);
     }
     else
     {
-      return gaussianRBF(L2(p1,p2),_params._rbfshape);
+      return gaussianRBF(p1,p2,_params._rbfshape);
     }
   }
   //----------------------------------------------------------------------------
@@ -2104,11 +2104,11 @@ namespace ET
   {
     if (_rbftype == 0)
     {
-      return gaussianRBFd(L2(p1,p2),_params._rbfshape);
+      return gaussianRBFd(p1,p2,_params._rbfshape);
     }
     else
     {
-      return gaussianRBFd(L2(p1,p2),_params._rbfshape);
+      return gaussianRBFd(p1,p2,_params._rbfshape);
     }
   }
   //----------------------------------------------------------------------------
@@ -2357,9 +2357,47 @@ namespace ET
 	  //	For a simple gaussian weight, find the distances between each point
 		Vector<T> RBF(ugrid->getN());
 		for (auto i = 0; i < ugrid->getN(); i++) {
-      RBF(i) = xRBFx(ugrid->getPoint(i),point);
+      RBF(i) = xRBFx(point,ugrid->getPoint(i));
 		}
 		return RBF;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct RBF derivative matrix
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Matrix<T>
+	Approximator<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid)
+	{
+	  //	For a simple gaussian weight, find the distances between each point
+		Matrix<T> RBFd(ugrid->getN());
+		for (auto i = 0; i < ugrid->getN(); i++)
+		{
+      for (auto j = 0; j < ugrid->getN(); j++)
+      {
+        RBFd(i,j) = xRBFdx(ugrid->getPoint(i),
+                           ugrid->getPoint(j));
+      }
+		}
+		return RBFd;
+	}
+	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Construct RBF derivative vector
+	//----------------------------------------------------------------------------
+	template<typename T>
+	Vector<T>
+	Approximator<T>::constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
+                                       std::vector<T> point)
+	{
+	  //	For a simple gaussian weight, find the distances between each point
+		Vector<T> RBFd(ugrid->getN());
+		for (auto i = 0; i < ugrid->getN(); i++) {
+      RBFd(i) = xRBFdx(ugrid->getPoint(i),point);
+		}
+		return RBFd;
 	}
 	//----------------------------------------------------------------------------
 

@@ -34,6 +34,7 @@
 #include "scalarfield.h"
 #include "vectorfield.h"
 #include "utils.h"
+#include "rbf.h"
 #include "approximator.h"
 #include "diffeq.h"
 #include "dynamicalsystem.h"
@@ -1236,6 +1237,14 @@ PYBIND11_MODULE(etraj, m) {
        (ET::Vector<double> (ET::Approximator<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
     		 &ET::Approximator<double>::constructRBFVector)
+    .def("construct_rbfd_matrix",
+       (ET::Matrix<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>))
+    		 &ET::Approximator<double>::constructRBFdMatrix)
+    .def("construct_rbfd_vector",
+      (ET::Vector<double> (ET::Approximator<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
+    		 &ET::Approximator<double>::constructRBFdVector)
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------

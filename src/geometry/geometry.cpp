@@ -57,24 +57,34 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Gaussian
   //----------------------------------------------------------------------------
-  double gaussianRBF(double val, double shape)
+  double gaussianRBF(const std::vector<double>& p1,
+                     const std::vector<double>& p2,
+                     double shape)
   {
-    return exp(-pow((shape*val),2));
+    double dist = L2(p1,p2);
+    return exp(-pow((shape*dist),2));
   }
   //----------------------------------------------------------------------------
   //  Gaussian first derivative
   //----------------------------------------------------------------------------
-  double gaussianRBFd(double val, double shape)
+  double gaussianRBFd(const std::vector<double>& p1,
+                     const std::vector<double>& p2,
+                     double shape)
   {
-    return -2*shape*val*gaussianRBF(val,shape);
+    double diff = 0.0;
+    double dist = L2(p1,p2);
+    for (auto i = 0; i < p1.size(); i++) {
+      diff += p1[i] - p2[i];
+    }
+    return -2*shape*diff*gaussianRBF(p1,p2,shape);
   }
   //----------------------------------------------------------------------------
   //  Gaussian second derivative
   //----------------------------------------------------------------------------
   double gaussianRBFdd(double val, double shape)
   {
-    return -2*shape*gaussianRBF(val,shape)
-           + 4*pow((shape*val),2)*gaussianRBF(val,shape);
+    return -2*shape;//*gaussianRBF(val,shape)
+           //+ 4*pow((shape*val),2)*gaussianRBF(val,shape);
   }
   //----------------------------------------------------------------------------
   //  Gaussian nth-derivative
