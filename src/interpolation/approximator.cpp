@@ -52,7 +52,7 @@ namespace ET
   //  map for a int to enum of LSDriver type
   std::map<int, LSDriver> LSDriverMapInt =
   {
-    { 0,  LSDriver::xGELS },
+    { 0, LSDriver::xGELS },
     { 1, LSDriver::xGELSY },
     { 2, LSDriver::xGELSD },
     { 3, LSDriver::xGELSS }
@@ -84,8 +84,9 @@ namespace ET
 	template<typename T>
   Approximator<T>::Approximator() : _name("default")
   {
-    _type = LS;
-    _lsdriver = xGELS;
+    _type = ApproxType::LS;
+    _lsdriver = LSDriver::xGELS;
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log = std::make_shared<Log>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
@@ -112,6 +113,7 @@ namespace ET
   : _type(ApproxTypeMapInt[type]), _name("default")
   {
 		_log = std::make_shared<Log>();
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
 								+ getMem(*this));
@@ -126,6 +128,7 @@ namespace ET
   {
     _type = ApproxTypeMap[type];
 		_log = std::make_shared<Log>();
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
@@ -142,8 +145,9 @@ namespace ET
 	template<typename T>
   Approximator<T>::Approximator(std::shared_ptr<Log> log) : _name("default")
   {
-    _type = LS;
-    _lsdriver = xGELS;
+    _type = ApproxType::LS;
+    _lsdriver = LSDriver::xGELS;
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
@@ -158,6 +162,7 @@ namespace ET
   Approximator<T>::Approximator(int type, std::shared_ptr<Log> log)
 	: _type(ApproxTypeMapInt[type]), _name("default")
   {
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 								+ getMem(*this));
@@ -173,6 +178,7 @@ namespace ET
 	: _name("default")
   {
     _type = ApproxTypeMap[type];
+    m_rbf = std::make_shared<RadialBasisFunction<T>>();
 		_log = log;
 		_log->TRACE("Approximator 'default' created at location "
 		            + getMem(*this));
@@ -184,7 +190,7 @@ namespace ET
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  int Approximator<T>::getApproxType() const
+  ApproxType Approximator<T>::getApproxType() const
   {
     return _type;
   }
@@ -194,7 +200,7 @@ namespace ET
     return _params;
   }
   template<typename T>
-  int Approximator<T>::getLSDriver() const
+  LSDriver Approximator<T>::getLSDriver() const
   {
     return _lsdriver;
   }
@@ -207,6 +213,11 @@ namespace ET
   std::string Approximator<T>::getInfo() const
   {
     return _info;
+  }
+  template<typename T>
+  std::shared_ptr<RadialBasisFunction<T>> Approximator<T>::getRadialBasisFunction()
+  {
+    return m_rbf;
   }
 	template<typename T>
 	std::shared_ptr<Log> Approximator<T>::getLogger()
@@ -256,7 +267,7 @@ namespace ET
 		}
 	}
   //----------------------------------------------------------------------------
-  //  Set the number of nearest neighbors to use
+  //  Set the number of neareApproxTypest neighbors to use
   //----------------------------------------------------------------------------
   template<typename T>
   void Approximator<T>::set_k(uint64_t k)
@@ -279,7 +290,7 @@ namespace ET
   template<typename T>
   void Approximator<T>::set_shape(double shape)
   {
-    _params._rbfshape = shape;
+    m_rbf->getRBFParams()->m_rbfshape = shape;
 		_log->INFO("Approximator " + _name + ": shape set to "
                + std::to_string(shape));
   }
@@ -315,7 +326,7 @@ namespace ET
 	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
     const std::shared_ptr<ScalarField<T>> field, uint64_t index)
   {
-    if (_type == 0) {
+    if (_type == ApproxType::LS) {
       return scalarGradientLSPoint(ugrid, field, index);
     }
     else {
@@ -372,7 +383,7 @@ namespace ET
 	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
                                   const std::shared_ptr<ScalarField<T>> field)
   {
-    if (_type == 0) {
+    if (_type == ApproxType::LS) {
       return scalarGradientLS(ugrid, field);
     }
     else {
@@ -436,7 +447,7 @@ namespace ET
 	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
     const ScalarField<T>& field, uint64_t index)
   {
-    if (_type == 0)
+    if (_type == ApproxType::LS)
     {
       return scalarGradientLSPoint(ugrid, field, index);
     }
@@ -498,7 +509,7 @@ namespace ET
 	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
                                   const ScalarField<T>& field)
   {
-    if (_type == 0)
+    if (_type == ApproxType::LS)
     {
       return scalarGradientLS(ugrid, field);
     }
@@ -1900,47 +1911,7 @@ namespace ET
 		return result;
 	}
 	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	//  Radial basis interpolation
-	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	//  scalarDerivativeRBFPoint - approximate the derivative for a point
-	//                             using the RBF method
-	//  Arguments:  ugrid        - UGrid<T> pointer
-	//              field        - ScalarField<T> pointer
-	//              index        - uint64_t
-	//              n            - order of the derivative
-	//
-	//  Returns:    std::vector<T> of the gradient.
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Approximator<T>::scalarDerivativeRBFPoint(const std::shared_ptr<UGrid<T>> ugrid,
-													 const std::shared_ptr<ScalarField<T>> field,
-													 uint64_t index,
-													 uint32_t n)
-	{
-		//	Query the nearest neighbors of ugrid
-		ugrid->queryNeighbors(_params.k);
-		//	Get the nearest neighbors for the point 'index'
-		std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
-		//	Construct the RBF matrix A
-		Matrix<T> A = constructRBFMatrix(ugrid,neighbors,index);
-		//	Construct the vector of corresponding field values for neighboPointrs
-		Vector<T> field_neighbors(_params.k,0.0);
-		for (uint32_t i = 0; i < _params.k; i++)
-		{
-			field_neighbors(i) = (*field)(neighbors[i]);
-		}
-		//	Complete the weights using least squares
-		//	finally take the product
-		Vector<T> weights = DGELS(A,field_neighbors);
-		if (A.getFlag() == -1)
-		{
-			_log->ERROR(A.getInfo());
-		}
-		return weights;
-	}
+
 	//----------------------------------------------------------------------------
 	//  Helper functions
 	//----------------------------------------------------------------------------
@@ -1951,11 +1922,11 @@ namespace ET
 																	 	 const std::shared_ptr<ScalarField<T>> field,
 																	 	 uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLS(ugrid,field,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLS(ugrid,field,n);
 		}
@@ -1971,11 +1942,11 @@ namespace ET
 																	 	 const ScalarField<T>& field,
 																	 	 uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLS(ugrid,field,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLS(ugrid,field,n);
 		}
@@ -1991,11 +1962,11 @@ namespace ET
 																	 const std::shared_ptr<ScalarField<T>> field,
 																	 uint64_t index, uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,index,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
 		}
@@ -2011,11 +1982,11 @@ namespace ET
 																	 const ScalarField<T>& field,
 																	 uint64_t index, uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,index,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
 		}
@@ -2031,11 +2002,11 @@ namespace ET
 																	 const std::shared_ptr<ScalarField<T>> field,
 																	 std::vector<T> point, uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,point,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
 		}
@@ -2051,11 +2022,11 @@ namespace ET
 																	 const ScalarField<T>& field,
 																	 std::vector<T> point, uint32_t n)
 	{
-		if (_type == 1)
+		if (_type == ApproxType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,point,n);
 		}
-		else if (_type == 2)
+		else if (_type == ApproxType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
 		}
@@ -2068,50 +2039,20 @@ namespace ET
 	template<typename T>
 	Vector<T> Approximator<T>::xGELSx(Matrix<T> B, Vector<T> u)
 	{
-		if (_lsdriver == 0)
-		{
+		if (_lsdriver == LSDriver::xGELS) {
 			return DGELS(B,u);
 		}
-		else if (_lsdriver == 1)
-		{
+		else if (_lsdriver == LSDriver::xGELSY) {
 			return DGELSY(B,u);
 		}
-		else if (_lsdriver == 2)
-		{
+		else if (_lsdriver == LSDriver::xGELSD) {
 			return DGELSD(B,u);
 		}
-		else
-		{
+		else {
 			return DGELSS(B,u);
 		}
 	}
 	//----------------------------------------------------------------------------
-  template<typename T>
-  T Approximator<T>::xRBFx(const std::vector<T>& p1, const std::vector<T>& p2)
-  {
-    if (_rbftype == 0)
-    {
-      return gaussianRBF(p1,p2,_params._rbfshape);
-    }
-    else
-    {
-      return gaussianRBF(p1,p2,_params._rbfshape);
-    }
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  T Approximator<T>::xRBFdx(const std::vector<T>& p1, const std::vector<T>& p2)
-  {
-    if (_rbftype == 0)
-    {
-      return gaussianRBFd(p1,p2,_params._rbfshape);
-    }
-    else
-    {
-      return gaussianRBFd(p1,p2,_params._rbfshape);
-    }
-  }
-  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Derivatives of vector fields
@@ -2280,135 +2221,13 @@ namespace ET
 	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
-	//	Construct local RBF matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Approximator<T>::constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index)
-	{
-	  //	For a simple gaussian weight, find the distances from index
-		//	to each point in neighbors.
-		Matrix<T> RBF(neighbors.size());
-		for (uint32_t i = 0; i < neighbors.size(); i++)
-		{
-      for (uint32_t j = 0; j < neighbors.size(); j++)
-      {
-        RBF(i,j) = xRBFx(ugrid->getPoint(neighbors[i]),
-                         ugrid->getPoint(neighbors[j]));
-      }
-		}
-		return RBF;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	Construct local RBF derivative matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Approximator<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index)
-	{
-	  //	For a simple gaussian weight, find the distances from index
-		//	to each point in neighbors.
-		Matrix<T> RBFd(neighbors.size());
-		for (uint32_t i = 0; i < neighbors.size(); i++)
-		{
-      for (uint32_t j = 0; j < neighbors.size(); j++)
-      {
-        RBFd(i,j) = xRBFdx(ugrid->getPoint(neighbors[i]),
-                           ugrid->getPoint(neighbors[j]));
-      }
-		}
-		return RBFd;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	Construct RBF matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Approximator<T>::constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid)
-	{
-	  //	For a simple gaussian weight, find the distances between each point
-		Matrix<T> RBF(ugrid->getN());
-		for (auto i = 0; i < ugrid->getN(); i++)
-		{
-      for (auto j = 0; j < ugrid->getN(); j++)
-      {
-        RBF(i,j) = xRBFx(ugrid->getPoint(i),
-                         ugrid->getPoint(j));
-      }
-		}
-		return RBF;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	Construct RBF vector
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Approximator<T>::constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
-                                      std::vector<T> point)
-	{
-	  //	For a simple gaussian weight, find the distances between each point
-		Vector<T> RBF(ugrid->getN());
-		for (auto i = 0; i < ugrid->getN(); i++) {
-      RBF(i) = xRBFx(point,ugrid->getPoint(i));
-		}
-		return RBF;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	Construct RBF derivative matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Approximator<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid)
-	{
-	  //	For a simple gaussian weight, find the distances between each point
-		Matrix<T> RBFd(ugrid->getN());
-		for (auto i = 0; i < ugrid->getN(); i++)
-		{
-      for (auto j = 0; j < ugrid->getN(); j++)
-      {
-        RBFd(i,j) = xRBFdx(ugrid->getPoint(i),
-                           ugrid->getPoint(j));
-      }
-		}
-		return RBFd;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	Construct RBF derivative vector
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Approximator<T>::constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
-                                       std::vector<T> point)
-	{
-	  //	For a simple gaussian weight, find the distances between each point
-		Vector<T> RBFd(ugrid->getN());
-		for (auto i = 0; i < ugrid->getN(); i++) {
-      RBFd(i) = xRBFdx(ugrid->getPoint(i),point);
-		}
-		return RBFd;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
   //  Various functions
   //----------------------------------------------------------------------------
   template<typename T>
   const std::string Approximator<T>::summary()
   {
     std::string s = "\nApproximator type: " + ApproxTypeNameMap[_type];
-    if (_type == LS)
+    if (_type == ApproxType::LS)
     {
       s += "\nLeast squares driver type: " + LSDriverNameMap[_lsdriver];
     }

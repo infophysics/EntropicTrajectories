@@ -23,7 +23,7 @@
 
 namespace ET
 {
-  enum MatrixType
+  enum class MatrixType
   {
     SQUARE,
     SYMMETRIC,
@@ -42,7 +42,7 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Least squares driver routine
   //----------------------------------------------------------------------------
-  enum LSDriver
+  enum class LSDriver
   {
     xGELS,  //  default driver
     xGELSY, //  complete orthogonal factorization
@@ -54,7 +54,7 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Approximator type
   //----------------------------------------------------------------------------
-  enum ApproxType
+  enum class ApproxType
   {
     LS,
     MLS,
@@ -66,7 +66,7 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Weight function type
   //----------------------------------------------------------------------------
-  enum WeightFunctionType
+  enum class WeightFunctionType
   {
     GAUSSIAN,
   };
@@ -75,12 +75,24 @@ namespace ET
   //----------------------------------------------------------------------------
   //  RBF function type
   //----------------------------------------------------------------------------
-  enum RBFType
+  enum class RBFKernelType
   {
-    GAUSS,
+    GAUSSIAN,
     MULTIQUADRIC,
     INVERSE_QUADRATIC,
     INVERSE_MULTIQUADRIC
+  };
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  RBF Parameters
+  //----------------------------------------------------------------------------
+  struct RBFParams
+  {
+    //  TODO: implement a set of basic RBF parameters
+    double m_rbfshape = 3.05048;
+
+    RBFParams() {}
   };
   //----------------------------------------------------------------------------
 
@@ -96,9 +108,8 @@ namespace ET
     //  type of weight matrix
     enum WeightFunctionType _weight;
     //  type of RBF kernel
-    enum RBFType _rbf;
+    enum RBFKernelType _rbf;
     //  RBF params
-    double _rbfshape = 3.05048;
 
     ApproxParams() {}
   };
@@ -107,7 +118,7 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Integrator type
   //----------------------------------------------------------------------------
-  enum IntegratorType
+  enum class IntegratorType
   {
     RG4,
     VORONOI,

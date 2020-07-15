@@ -949,8 +949,11 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_info", &ET::Approximator<double>::getInfo,
 		     py::return_value_policy::reference)
-		 .def("get_logger", &ET::Approximator<double>::getLogger,
-  		     py::return_value_policy::reference)
+    .def("get_radial_basis_function",
+         &ET::Approximator<double>::getRadialBasisFunction,
+         py::return_value_policy::reference)
+		.def("get_logger", &ET::Approximator<double>::getLogger,
+  	     py::return_value_policy::reference)
 		.def("set_approx_type", &ET::Approximator<double>::setApproxType)
 		.def("set_approx_params", &ET::Approximator<double>::setApproxParams)
 		.def("set_lsdriver", &ET::Approximator<double>::setLSDriver)
@@ -1219,32 +1222,6 @@ PYBIND11_MODULE(etraj, m) {
 				  (const std::shared_ptr<ET::UGrid<double>>,
            const std::vector<uint64_t>,uint64_t,ET::Monomial&))
 				 &ET::Approximator<double>::constructTaylorMatrix)
-    .def("construct_rbf_matrix",
-         (ET::Matrix<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>,
-          const std::vector<uint64_t>,uint64_t))
-    		 &ET::Approximator<double>::constructRBFMatrix)
-    .def("construct_rbfd_matrix",
-        (ET::Matrix<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>,
-         const std::vector<uint64_t>,uint64_t))
-    		 &ET::Approximator<double>::constructRBFdMatrix)
-    .def("construct_rbf_matrix",
-        (ET::Matrix<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>))
-    		 &ET::Approximator<double>::constructRBFMatrix)
-    .def("construct_rbf_vector",
-       (ET::Vector<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
-    		 &ET::Approximator<double>::constructRBFVector)
-    .def("construct_rbfd_matrix",
-       (ET::Matrix<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>))
-    		 &ET::Approximator<double>::constructRBFdMatrix)
-    .def("construct_rbfd_vector",
-      (ET::Vector<double> (ET::Approximator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
-    		 &ET::Approximator<double>::constructRBFdVector)
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------
@@ -1254,6 +1231,42 @@ PYBIND11_MODULE(etraj, m) {
 		})
 		;
 	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//  RBF class
+	//----------------------------------------------------------------------------
+  py::class_<ET::RadialBasisFunction<double>,
+             std::shared_ptr<ET::RadialBasisFunction<double>>>
+             (m, "RadialBasisFunction")
+    .def(py::init<>())
+    .def("construct_rbf_matrix",
+         (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,
+          const std::vector<uint64_t>,uint64_t))
+    		 &ET::RadialBasisFunction<double>::constructRBFMatrix)
+    .def("construct_rbfd_matrix",
+        (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,
+         const std::vector<uint64_t>,size_t,size_t))
+    		 &ET::RadialBasisFunction<double>::constructRBFdMatrix)
+    .def("construct_rbf_matrix",
+        (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>))
+    		 &ET::RadialBasisFunction<double>::constructRBFMatrix)
+    .def("construct_rbf_vector",
+       (ET::Vector<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
+    		 &ET::RadialBasisFunction<double>::constructRBFVector)
+    .def("construct_rbfd_matrix",
+       (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,size_t))
+    		 &ET::RadialBasisFunction<double>::constructRBFdMatrix)
+    .def("construct_rbfd_vector",
+      (ET::Vector<double> (ET::RadialBasisFunction<double>::*)
+    		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
+    		 &ET::RadialBasisFunction<double>::constructRBFdVector)
+    ;
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//  Integrator class
