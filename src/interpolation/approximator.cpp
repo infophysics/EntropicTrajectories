@@ -290,7 +290,7 @@ namespace ET
   template<typename T>
   void Approximator<T>::set_shape(double shape)
   {
-    m_rbf->getRBFParams()->m_rbfshape = shape;
+    m_rbf->setShape(shape);
 		_log->INFO("Approximator " + _name + ": shape set to "
                + std::to_string(shape));
   }
@@ -2226,14 +2226,22 @@ namespace ET
   template<typename T>
   const std::string Approximator<T>::summary()
   {
-    std::string s = "\nApproximator type: " + ApproxTypeNameMap[_type];
-    if (_type == ApproxType::LS)
-    {
-      s += "\nLeast squares driver type: " + LSDriverNameMap[_lsdriver];
-    }
-    s += "\nApproximator parameters - k = " + std::to_string(_params.k);
-    s += "\n                          n = " + std::to_string(_params.n);
-    return s;
+		std::string sum = "---------------------------------------------------";
+		sum += "\n<ET::Approximator<double";
+		sum += "> object at " + getMem(this) + ">";
+		sum += "\n---------------------------------------------------";
+    sum += "\n       name:  '" + _name + "'";
+    sum += "\n       type:  '" + ApproxTypeNameMap[_type] + "'";
+    sum += "\n   LSDriver:  '" + LSDriverNameMap[_lsdriver] + "'";
+		sum += "\n          k:   " + std::to_string(_params.k);
+    sum += "\n          n:   " + std::to_string(_params.n);
+		sum += "\n---------------------------------------------------";
+    sum += "\n   RBF at: " + getMem(*getRadialBasisFunction()) + ",";
+		sum += "\n   ref at: " + getMem(m_rbf);
+		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
+		sum += "\n   ref at: " + getMem(_log);
+		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
+		return sum;
   }
   //----------------------------------------------------------------------------
 }

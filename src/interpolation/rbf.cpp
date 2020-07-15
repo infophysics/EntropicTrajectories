@@ -20,19 +20,82 @@
 
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Enum maps
+  //----------------------------------------------------------------------------
+  //  map for a string to enum of rbf type
+  std::map<std::string, RBFKernelType> RBFTypeMap =
+  {
+    { "GAUSSIAN", RBFKernelType::GAUSSIAN },
+    { "MULTIQUADRIC", RBFKernelType::MULTIQUADRIC },
+    { "INVERSE_MULTIQUADRIC", RBFKernelType::INVERSE_MULTIQUADRIC},
+    { "INVERSE_QUADRATIC", RBFKernelType::INVERSE_QUADRATIC }
+  };
+
+  std::map<RBFKernelType, std::string> RBFKernelTypeNameMap =
+  {
+    { RBFKernelType::GAUSSIAN, "Gaussian - exp(-(er)^2)" },
+    { RBFKernelType::MULTIQUADRIC, "Multiquadric - sqrt(1 + (er)^2)" },
+    { RBFKernelType::INVERSE_MULTIQUADRIC, "Inverse Multiquadric - 1/sqrt(1 + (er)^2)"},
+    { RBFKernelType::INVERSE_QUADRATIC, "Inverse Quadratic - 1/(1 + (er)^2)" }
+  };
+
   template<typename T>
   RadialBasisFunction<T>::RadialBasisFunction()
   {
+    m_log = std::make_shared<Log>();
+    m_log->init("ET:RadialBasisFunction:default", ".logs/rbf_default.txt");
+		m_log->TRACE("RadialBasisFunction 'default' created at location "
+		            + getMem(*this));
   }
   template<typename T>
   RadialBasisFunction<T>::~RadialBasisFunction()
   {
   }
 
+
+  //--------------------------------------------------------------------------
+  //  Getters and setters
+  //--------------------------------------------------------------------------
+  template<typename T>
+  RBFKernelType RadialBasisFunction<T>::getType()
+  {
+    return m_type;
+  }
+  template<typename T>
+  double RadialBasisFunction<T>::getShape()
+  {
+    return m_params.m_rbfshape;
+  }
   template<typename T>
   std::shared_ptr<RBFParams> RadialBasisFunction<T>::getRBFParams()
   {
     return std::make_shared<RBFParams>(m_params);
+  }
+  template<typename T>
+  std::shared_ptr<Log> RadialBasisFunction<T>::getLogger()
+  {
+    return m_log;
+  }
+  template<typename T>
+  void RadialBasisFunction<T>::setType(RBFKernelType t_type)
+  {
+    m_type = t_type;
+  }
+  template<typename T>
+  void RadialBasisFunction<T>::setType(std::string t_type)
+  {
+    m_type = RBFTypeMap[t_type];
+  }
+  template<typename T>
+  void RadialBasisFunction<T>::setShape(double shape)
+  {
+    m_params.m_rbfshape = shape;
+  }
+  template<typename T>
+  void RadialBasisFunction<T>::setLogger(std::shared_ptr<Log> t_log)
+  {
+    m_log = t_log;
   }
   //----------------------------------------------------------------------------
   //	Construct local RBF matrix
@@ -62,7 +125,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
-  RadialBasisFunction<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  RadialBasisFunction<T>::constructRBFFirstDerivativeMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<size_t> neighbors, size_t index, size_t dir)
   {
     //	For a simple gaussian weight, find the distances from index
@@ -123,7 +186,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
-  RadialBasisFunction<T>::constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  RadialBasisFunction<T>::constructRBFFirstDerivativeMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                               size_t dir)
   {
     //	For a simple gaussian weight, find the distances between each point
@@ -145,7 +208,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  RadialBasisFunction<T>::constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
+  RadialBasisFunction<T>::constructRBFFirstDerivativeVector(const std::shared_ptr<UGrid<T>> ugrid,
                                               std::vector<T> point, size_t dir)
   {
     //	For a simple gaussian weight, find the distances between each point
@@ -161,13 +224,17 @@ namespace ET
   T RadialBasisFunction<T>::xRBFx(const std::vector<T>& p1,
                                   const std::vector<T>& p2)
   {
-    if (m_type == RBFKernelType::GAUSSIAN)
-    {
+    if (m_type == RBFKernelType::GAUSSIAN) {
       return gaussianKernel(p1,p2,m_params.m_rbfshape);
     }
-    else
-    {
-      return gaussianKernel(p1,p2,m_params.m_rbfshape);
+    else if (m_type == RBFKernelType::MULTIQUADRIC) {
+      return multiquadricKernel(p1,p2,m_params.m_rbfshape);
+    }
+    else if (m_type == RBFKernelType::INVERSE_MULTIQUADRIC) {
+      return inverseMultiquadricKernel(p1,p2,m_params.m_rbfshape);
+    }
+    else {
+      return inverseQuadraticKernel(p1,p2,m_params.m_rbfshape);
     }
   }
   //----------------------------------------------------------------------------
@@ -175,16 +242,34 @@ namespace ET
   std::vector<T> RadialBasisFunction<T>::xRBFdx(const std::vector<T>& p1,
                                                 const std::vector<T>& p2)
   {
-    if (m_type == RBFKernelType::GAUSSIAN)
-    {
+    if (m_type == RBFKernelType::GAUSSIAN) {
       return gaussianKernelFirstDerivative(p1,p2,m_params.m_rbfshape);
     }
-    else
-    {
+    else {
       return gaussianKernelFirstDerivative(p1,p2,m_params.m_rbfshape);
     }
   }
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+	//	Various functions
+	//----------------------------------------------------------------------------
+	template<typename T>
+	const std::string RadialBasisFunction<T>::summary()
+	{
+		std::string sum = "---------------------------------------------------";
+		sum += "\n<ET::RadialBasisFunction<double";
+		sum += "> object at " + getMem(this) + ">";
+		sum += "\n---------------------------------------------------";
+    sum += "\n   type: '" + RBFKernelTypeNameMap[m_type] + "'";
+    sum += "\n  shape:  " + std::to_string(m_params.m_rbfshape);
+		sum += "\n---------------------------------------------------";
+		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
+		sum += "\n   ref at: " + getMem(m_log);
+		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
+		return sum;
+	}
+	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  RBF functions
@@ -255,7 +340,7 @@ namespace ET
                             const std::vector<double>& p2,
                             double shape)
   {
-    double dist = L2(p1,p1);
+    double dist = L2(p1,p2);
     return std::sqrt(1 + std::pow(shape*dist,2));
   }
   //----------------------------------------------------------------------------
@@ -284,6 +369,8 @@ namespace ET
                             const std::vector<double>& p2,
                             double shape)
   {
+    double dist = L2(p1,p2);
+    return 1.0 / std::sqrt(1 + std::pow(shape*dist,2));
   }
   //----------------------------------------------------------------------------
   //  Inverse Multiquadric first derivative
@@ -313,6 +400,8 @@ namespace ET
                          const std::vector<double>& p2,
                          double shape)
   {
+    double dist = L2(p1,p2);
+    return 1.0 / (1 + std::pow(shape*dist,2));
   }
   //----------------------------------------------------------------------------
   //  Inverse Quadratic first derivative

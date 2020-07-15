@@ -1,22 +1,21 @@
-//------------------------------------------------------------------------------
-//  t_vector.h
-//  The Entropic Trajectories Framework
-//  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
-//
-//  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-//  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-//  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
-//  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-//  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-//  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
-//  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-//------------------------------------------------------------------------------
+/*!
+*  t_vector.h
+*  The Entropic Trajectories Framework
+*  -----------------------------------
+*  Copyright (C) [2020] by [N. Carrara]
+*  [ncarrara@albany.edu]
+*
+*  Permission to use, copy, modify, and/or distribute this software for any
+*  purpose with or without fee is hereby granted.
+*
+*  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+*  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+*  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+*  SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+*  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+*  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+*  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
 #pragma once
 
 #include <vector>
@@ -31,39 +30,82 @@
 
 #include "utils.h"
 
-//------------------------------------------------------------------------------
-//  Vector class
-//
-//------------------------------------------------------------------------------
 namespace ET
 {
-  //--------------------------------------------------------------------------
-  //  This t_vector class acts as a general container for (n)-dimensional
-  //  t_vectors.  It wraps several methods from BLAS level one.
-  //--------------------------------------------------------------------------
+  /*! \class Vector
+  *   The Vector class acts as a general container for (n)-dimensional
+  *   Vectors.  It wraps several methods from BLAS level one.
+  */
   template<typename T>
   class Vector
   {
   public:
+    //! Default constructor
+    /*!
+      Default constructor for a Vector object.
+    */
     Vector();
+    //! Destructor
     ~Vector();
+    //! Constructor
+    /*!
+      @param t_vector a const Vector<T>& reference.
+    */
     Vector(const Vector<T>& t_vector);
+    //! Constructor
+    /*!
+      @param t_dim a size_t for the dimension of the vector space.
+    */
     Vector(size_t t_dim);
+    //! Constructor
+    /*!
+      @param t_name a std::string for the name of the Vector.
+      @param t_dim a size_t for the dimension of the vector space.
+    */
     Vector(std::string t_name, size_t t_dim);
+    //! Constructor
+    /*!
+      @param t_vec an std::vector<T> containing the coefficients of the Vector.
+    */
     Vector(std::vector<T> t_vec);
+    //! Constructor
+    /*!
+      @param t_name a std::string for the name of the Vector.
+      @param t_dim a size_t for the dimension of the vector space.
+    */
     Vector(std::string t_name, std::vector<T> t_vec);
+    //! Constructor
+    /*!
+      @param t_dim a size_t for the dimension of the vector space.
+      @param t_init an initial value to set all of the elements to.
+    */
     Vector(size_t t_dim, const T& t_init);
+    //! Constructor
+    /*!
+      @param t_name a std::string for the name of the Vector.
+      @param t_dim a size_t for the dimension of the vector space.
+      @param t_init an initial value to set all of the elements to.
+    */
     Vector(std::string t_name, size_t t_dim, const T& t_init);
 
-    //  Getters
+    /*! get dimension.  Returns the dimension of the Vector.*/
     size_t getDim() const;
-    //  There are several ways we can interact with the m_vec attribute.
-    //  Some methods, such as Level one BLAS, will require access to
-    //  the pointer for the first entry in m_vec.  The data() method does
-    //  just this.
-    std::vector<T> getVec() const;  //  get const reference to m_vec
-    std::vector<T>* accessVec();    //  get access to m_vec
-    T* data();                      //  get access to beginning of m_vec
+    /*! get vec container.  Returns a const reference of the
+     std::vector<T> vec.
+    */
+    std::vector<T> getVec() const;
+    /*! access vec container.  Returns a raw pointer to the std::vector<T>
+     container.
+    */
+    std::vector<T>* accessVec();
+    /*! get vec pointer.  Returns a pointer to the beginning of the
+        std::vector<T> vec.  There are several ways we can interact with the
+        m_vec attribute.  Some methods, such as Level one BLAS,
+        will require access to the pointer for the first entry in m_vec.
+        The data() method does just this.
+    */
+    T* data();
+    /*! get name.  Returns the name of the Vector.*/
     std::string getName() const;
     //  Setters
     void setDim(size_t t_dim);
@@ -155,11 +197,16 @@ namespace ET
     const std::string summary();
 
   private:
-    size_t m_dim{0};            //  dimension
-    std::vector<T> m_vec{{0}};  //  container for the coefficients in R^n
-    std::string m_name{""};     //  t_name
-    int m_flag{0};              //  conatiner for message status
-    std::string m_info{""};     //  container for messages
+    /*!  Dimension \f$n\f$ of the vector space \f$\mathbb{R}^n\f$*/
+    size_t m_dim{0};
+    /*!  Container for the coefficients in \f$R^n\f$ */
+    std::vector<T> m_vec{{0}};
+    /*!  Name of the Vector.*/
+    std::string m_name{""};
+    /*!  A flag for the type of message stored in m_info */
+    int m_flag{0};
+    /*!  Useful runtime information */
+    std::string m_info{""};
   };
 
   //----------------------------------------------------------------------------

@@ -35,20 +35,20 @@ namespace ET
   public:
     kdTree();
     ~kdTree();
-    kdTree(std::shared_ptr<std::vector<std::vector<T>>> points);
+    kdTree(std::shared_ptr<std::vector<std::vector<T>>> t_points);
 
     //--------------------------------------------------------------------------
     //  Getters
     //--------------------------------------------------------------------------
-    uint64_t getDim();
-    uint64_t getN();
+    size_t getDim();
+    size_t getN();
     std::shared_ptr<std::vector<std::vector<T>>>  getPoints();
     std::string getName();
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
     std::vector<std::vector<size_t>> getNeighborsRadius();
     std::vector<std::vector<double>> getDistancesRadius();
-    std::vector<size_t> getNeighbors(uint64_t index);
+    std::vector<size_t> getNeighbors(size_t t_index);
     std::shared_ptr<Log> getLogger();
     //--------------------------------------------------------------------------
 
@@ -57,38 +57,38 @@ namespace ET
     //--------------------------------------------------------------------------
     void setupTree();
 
-    void queryNeighbors(uint64_t k);
+    void queryNeighbors(size_t t_k);
 
     std::vector<size_t>
-    queryNeighbors(const std::vector<T>& point, uint64_t k);
+    queryNeighbors(const std::vector<T>& t_point, size_t t_k);
 
     std::vector<double>
-    queryDistances(const std::vector<T>& point, uint64_t k);
+    queryDistances(const std::vector<T>& t_point, size_t t_k);
 
     std::vector<std::vector<size_t>>
-    queryNeighbors(const std::vector<std::vector<T>>& points, uint64_t k);
+    queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
 
-    void queryRadius(double radius);
+    void queryRadius(double t_radius);
     //--------------------------------------------------------------------------
 
   private:
-    std::string _name;
-    uint64_t _N;
-    uint32_t _dim;
-    std::shared_ptr<std::vector<std::vector<T>>> _points;
+    std::string m_name{""};
+    size_t m_N{0};
+    size_t m_dim{0};
+    std::shared_ptr<std::vector<std::vector<T>>> m_points;
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> _kdtree;
-    std::shared_ptr<Log> _log;
+                     std::vector<std::vector<T>>,T>> m_kdtree;
+    std::shared_ptr<Log> m_log;
     //--------------------------------------------------------------------------
     //  Results from KDTree searches
     //--------------------------------------------------------------------------
-    int _searchFlag;                   //  flag for changes
-    uint32_t _k;                       //  number of neighbors to search
-    double _radius;                    //  search radius
-    std::vector<std::vector<size_t>> _neighbors;
-    std::vector<std::vector<double>> _distances;
-    std::vector<std::vector<size_t>> _neighbors_radius;
-    std::vector<std::vector<double>> _distances_radius;
+    int m_searchFlag;          //  flag for changes
+    size_t m_k;               //  number of neighbors to search
+    double m_radius;          //  search radius
+    std::vector<std::vector<size_t>> m_neighbors;
+    std::vector<std::vector<double>> m_distances;
+    std::vector<std::vector<size_t>> m_neighbors_radius;
+    std::vector<std::vector<double>> m_distances_radius;
     //--------------------------------------------------------------------------
   };
 

@@ -6,7 +6,7 @@
 //  [ncarrara@albany.edu]
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
-//  purpose with or without fee is hereby granted.
+//  purpose with or without fee t_is hereby granted.
 //
 //  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
 //  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
@@ -41,82 +41,82 @@ namespace ET
     //--------------------------------------------------------------------------
     UGrid();
     ~UGrid();
-    UGrid(uint64_t dim);
-    UGrid(std::string name, uint64_t dim);
-    UGrid(uint64_t dim, uint64_t N);
-    UGrid(std::string name, uint64_t dim, uint64_t N);
-    UGrid(std::vector<T> ugrid);
-    UGrid(std::vector<std::vector<T>> ugrid);
+    UGrid(size_t t_dim);
+    UGrid(std::string t_name, size_t t_dim);
+    UGrid(size_t t_dim, size_t t_N);
+    UGrid(std::string t_name, size_t t_dim, size_t t_N);
+    UGrid(std::vector<T> t_ugrid);
+    UGrid(std::vector<std::vector<T>> t_ugrid);
     //--------------------------------------------------------------------------
     //  Constructors with shared loggers
     //--------------------------------------------------------------------------
-    UGrid(std::shared_ptr<Log> log);
-    UGrid(uint64_t dim, std::shared_ptr<Log> log);
-    UGrid(std::string name, uint64_t dim, std::shared_ptr<Log> log);
-    UGrid(uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
-    UGrid(std::string name, uint64_t dim, uint64_t N, std::shared_ptr<Log> log);
-    UGrid(std::vector<T> ugrid, std::shared_ptr<Log> log);
-    UGrid(std::vector<std::vector<T>> ugrid,
-          std::shared_ptr<Log> log);
+    UGrid(std::shared_ptr<Log> t_log);
+    UGrid(size_t t_dim, std::shared_ptr<Log> t_log);
+    UGrid(std::string t_name, size_t t_dim, std::shared_ptr<Log> t_log);
+    UGrid(size_t t_dim, size_t t_N, std::shared_ptr<Log> t_log);
+    UGrid(std::string t_name, size_t t_dim, size_t t_N, std::shared_ptr<Log> t_log);
+    UGrid(std::vector<T> t_ugrid, std::shared_ptr<Log> t_log);
+    UGrid(std::vector<std::vector<T>> t_ugrid,
+          std::shared_ptr<Log> t_log);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Getters
     //--------------------------------------------------------------------------
-    const uint64_t getDim();
-    const uint64_t getN();
+    const size_t getDim();
+    const size_t getN();
     std::vector<std::vector<T>>  getUGrid();
     const std::string getName();
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
     std::vector<std::vector<size_t>> getNeighborsRadius();
     std::vector<std::vector<double>> getDistancesRadius();
-    std::vector<size_t> getNeighbors(uint64_t index);
+    std::vector<size_t> getNeighbors(size_t t_index);
     std::shared_ptr<Log> getLogger();
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Setters
     //--------------------------------------------------------------------------
-    void setDim(uint64_t dim);
-    void setN(uint64_t N);
-    void setUGrid(std::vector<std::vector<T>> ugrid);
-    void setName(std::string name);
+    void setDim(size_t t_dim);
+    void setN(size_t t_N);
+    void setUGrid(std::vector<std::vector<T>> t_ugrid);
+    void setName(std::string t_name);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    //  Access operators for ugrid
+    //  Access operators for t_ugrid
     //--------------------------------------------------------------------------
-    T& operator()(const uint64_t i, const uint64_t j);
-    const T& operator()(const uint64_t i, const uint64_t j) const;
-    std::vector<T>& operator()(const uint64_t i);
-    const std::vector<T>& operator()(const uint64_t i) const;
+    T& operator()(const size_t t_i, const size_t t_j);
+    const T& operator()(const size_t t_i, const size_t t_j) const;
+    std::vector<T>& operator()(const size_t t_i);
+    const std::vector<T>& operator()(const size_t t_i) const;
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Points and projections
     //--------------------------------------------------------------------------
-    const std::vector<T>& getPoint(const uint64_t i) const;
-    std::vector<T> projection(uint64_t j);
-    void setPoint(uint64_t i, std::vector<T> p);
+    const std::vector<T>& getPoint(const size_t t_i) const;
+    std::vector<T> projection(size_t t_j);
+    void setPoint(size_t t_i, std::vector<T> t_p);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  KDTree methods
     //--------------------------------------------------------------------------
     void setupTree();
-    void queryNeighbors(uint64_t k);
+    void queryNeighbors(size_t t_k);
 
     std::vector<size_t>
-    queryNeighbors(const std::vector<T>& point, uint64_t k);
+    queryNeighbors(const std::vector<T>& t_point, size_t t_k);
 
     std::vector<double>
-    queryDistances(const std::vector<T>& point, uint64_t k);
+    queryDistances(const std::vector<T>& t_point, size_t t_k);
 
     std::vector<std::vector<size_t>>
-    queryNeighbors(const std::vector<std::vector<T>>& points, uint64_t k);
+    queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
 
-    void queryRadius(double radius);
+    void queryRadius(double t_radius);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -129,31 +129,31 @@ namespace ET
     //-------------------------------------------UGrid-------------------------------
     //  Basic attributes
     //--------------------------------------------------------------------------
-    std::string _name;                 //  Name of the grid
-    uint64_t _dim;                     //  Dimension of the grid
-    uint64_t _N;                       //  Number of points in the grid
-    std::vector<std::vector<T>> _ugrid;//  Vector of vectors array
-    std::vector<std::string> _coords;  //  Coordinate labels
+    std::string m_name{""};                    //  Name of the grid
+    size_t m_dim{0};                           //  Dimension of the grid
+    size_t m_N{0};                             //  Number of points t_in the grid
+    std::vector<std::vector<T>> m_ugrid{{{0}}};//  Vector of vectors array
+    std::vector<std::string> m_coords{{""}};   //  Coordinate labels
     //--------------------------------------------------------------------------
     //  KDTree
     //--------------------------------------------------------------------------
-    kdTree<T> _kdt;
+    kdTree<T> m_kdt;
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> _kdtree;
+                     std::vector<std::vector<T>>,T>> m_kdtree;
     //--------------------------------------------------------------------------
     //  Results from KDTree searches
     //--------------------------------------------------------------------------
-    int _searchFlag;                   //  flag for changes
-    uint32_t _k;                       //  number of neighbors to search
-    double _radius;                    //  search radius
-    std::vector<std::vector<size_t>> _neighbors;
-    std::vector<std::vector<double>> _distances;
-    std::vector<std::vector<size_t>> _neighbors_radius;
-    std::vector<std::vector<double>> _distances_radius;
+    int m_searchFlag;                   //  flag for changes
+    size_t m_k;                       //  number of neighbors to search
+    double m_radius;                    //  search radius
+    std::vector<std::vector<size_t>> m_neighbors;
+    std::vector<std::vector<double>> m_distances;
+    std::vector<std::vector<size_t>> m_neighbors_radius;
+    std::vector<std::vector<double>> m_distances_radius;
     //--------------------------------------------------------------------------
     //  Logger
     //--------------------------------------------------------------------------
-    std::shared_ptr<Log> _log;
+    std::shared_ptr<Log> m_log;
     //--------------------------------------------------------------------------
   };
   //----------------------------------------------------------------------------

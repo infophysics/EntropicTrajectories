@@ -26,18 +26,18 @@ namespace ET
 
   //----------------------------------------------------------------------------
   //  Default constructor
-  //    sets name = "default", and _dim, _N = 0
+  //    sets name = "default", and m_dim, m_N = 0
   //----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid() : _dim(0), _N(0), _name("default")
+  UGrid<T>::UGrid() : m_dim(0), m_N(0), m_name("default")
   {
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
   //  Default destructor
@@ -46,28 +46,28 @@ namespace ET
   UGrid<T>::~UGrid()
   {
 		//##########################################################################
-		_log->TRACE("Unstructured Grid '" + _name
+		m_log->TRACE("Unstructured Grid '" + m_name
 		            + "' destroyed at location " + getMem(*this));
 		//##########################################################################
   }
 	//----------------------------------------------------------------------------
   //  Various constructors taking in arguments for
-	//		_dim, _name, _N, _ugrid and _log.
+	//		m_dim, m_name, m_N, m_ugrid and m_log.
   //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Constructor with dimension
 	//----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(uint64_t dim) : _dim(dim), _name("default")
+  UGrid<T>::UGrid(uint64_t dim) : m_dim(dim), m_name("default")
   {
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -75,16 +75,16 @@ namespace ET
 	//  Constructor with name and dimension
 	//----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(std::string name, uint64_t dim) : _name(name), _dim(dim)
+  UGrid<T>::UGrid(std::string name, uint64_t dim) : m_name(name), m_dim(dim)
   {
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:" + _name, ".logs/ugrid_" + _name
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:" + m_name, ".logs/ugrid_" + m_name
 		           + ".txt");
-		_log->TRACE("Unstructured Grid '" + _name
+		m_log->TRACE("Unstructured Grid '" + m_name
 		            + "' created at location " + getMem(*this));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -92,15 +92,15 @@ namespace ET
 	//  Constructor with dimension and number of points
 	//----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(uint64_t dim, uint64_t N) : _dim(dim), _N(N), _name("default")
+  UGrid<T>::UGrid(uint64_t dim, uint64_t N) : m_dim(dim), m_N(N), m_name("default")
   {
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -109,15 +109,15 @@ namespace ET
 	//----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::UGrid(std::string name, uint64_t dim, uint64_t N)
-  : _name(name), _dim(dim), _N(N)
+  : m_name(name), m_dim(dim), m_N(N)
   {
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:" + _name, ".logs/ugrid_" + _name + ".txt");
-		_log->TRACE("Unstructured Grid '" + _name
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:" + m_name, ".logs/ugrid_" + m_name + ".txt");
+		m_log->TRACE("Unstructured Grid '" + m_name
 		            + "' created at location " + getMem(*this));
 	  //##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -125,25 +125,25 @@ namespace ET
 	//	Constructor with one dimensional array
 	//----------------------------------------------------------------------------
 	template<typename T>
-	UGrid<T>::UGrid(std::vector<T> ugrid) : _name("default")
+	UGrid<T>::UGrid(std::vector<T> ugrid) : m_name("default")
 	{
-		_N = ugrid.size();
-		_ugrid.resize(_N);
-		_dim = 1;
-		for (uint32_t i = 0; i < _N; i++)
+		m_N = ugrid.size();
+		m_ugrid.resize(m_N);
+		m_dim = 1;
+		for (uint32_t i = 0; i < m_N; i++)
 		{
 			std::vector<T> temp = {ugrid[i]};
-			_ugrid[i] = temp;
+			m_ugrid[i] = temp;
 		}
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
 		//  generate kdtree
   	setupTree();
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -151,20 +151,20 @@ namespace ET
 	//	Constructor with vector of vectors array
 	//----------------------------------------------------------------------------
 	template<typename T>
-	UGrid<T>::UGrid(std::vector<std::vector<T>> ugrid) : _name("default")
+	UGrid<T>::UGrid(std::vector<std::vector<T>> ugrid) : m_name("default")
 	{
-		_N = ugrid.size();
-		_dim = ugrid[0].size();
-		_ugrid = ugrid;
+		m_N = ugrid.size();
+		m_dim = ugrid[0].size();
+		m_ugrid = ugrid;
 		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:UGrid:default", ".logs/ugrid_default.txt");
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 	  //##########################################################################
 		//  generate kdtree
   	setupTree();
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -176,15 +176,15 @@ namespace ET
 	//	Constructor with logger
 	//----------------------------------------------------------------------------
 	template<typename T>
-	UGrid<T>::UGrid(std::shared_ptr<Log> log) : _dim(0), _N(0), _name("default")
+	UGrid<T>::UGrid(std::shared_ptr<Log> log) : m_dim(0), m_N(0), m_name("default")
 	{
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = log;
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 								+ getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -193,15 +193,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(uint64_t dim, std::shared_ptr<Log> log)
-	: _dim(dim), _name("default")
+	: m_dim(dim), m_name("default")
 	{
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = log;
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 								+ getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -210,15 +210,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(std::string name, uint64_t dim, std::shared_ptr<Log> log)
-	: _dim(dim), _name(name)
+	: m_dim(dim), m_name(name)
 	{
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid '" + _name
+		m_log = log;
+		m_log->TRACE("Unstructured Grid '" + m_name
 								+ "' created at location " + getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
+		m_log->INFO("Logger passed to Unstructured Grid '" + m_name + "'");
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -227,15 +227,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(uint64_t dim, uint64_t N, std::shared_ptr<Log> log)
-	: _dim(dim), _N(N), _name("default")
+	: m_dim(dim), m_N(N), m_name("default")
 	{
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = log;
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 								+ getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -245,15 +245,15 @@ namespace ET
 	template<typename T>
 	UGrid<T>::UGrid(std::string name, uint64_t dim,
 		              uint64_t N, std::shared_ptr<Log> log)
-	: _name(name), _dim(dim), _N(N)
+	: m_name(name), m_dim(dim), m_N(N)
 	{
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid '" + _name
+		m_log = log;
+		m_log->TRACE("Unstructured Grid '" + m_name
 								+ "' created at location " + getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid '" + _name + "'");
+		m_log->INFO("Logger passed to Unstructured Grid '" + m_name + "'");
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -262,25 +262,25 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<T> ugrid, std::shared_ptr<Log> log)
-	: _name("default")
+	: m_name("default")
 	{
-		_N = ugrid.size();
-		_ugrid.resize(_N);
-		_dim = 1;
-		for (uint32_t i = 0; i < _N; i++)
+		m_N = ugrid.size();
+		m_ugrid.resize(m_N);
+		m_dim = 1;
+		for (uint32_t i = 0; i < m_N; i++)
 		{
 			std::vector<T> temp = {ugrid[i]};
-			_ugrid[i] = temp;
+			m_ugrid[i] = temp;
 		}
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = log;
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 								+ getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
 		//  generate kdtree
   	setupTree();
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -289,20 +289,20 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	UGrid<T>::UGrid(std::vector<std::vector<T>> ugrid, std::shared_ptr<Log> log)
-	: _name("default")
+	: m_name("default")
 	{
-		_N = ugrid.size();
-		_dim = ugrid[0].size();
-		_ugrid = ugrid;
+		m_N = ugrid.size();
+		m_dim = ugrid[0].size();
+		m_ugrid = ugrid;
 		//##########################################################################
-		_log = log;
-		_log->TRACE("Unstructured Grid 'default' created at location "
+		m_log = log;
+		m_log->TRACE("Unstructured Grid 'default' created at location "
 								+ getMem(*this));
-		_log->INFO("Logger passed to Unstructured Grid 'default'");
+		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
 		//  generate kdtree
   	setupTree();
-		_searchFlag = -1;
+		m_searchFlag = -1;
 	}
 	//----------------------------------------------------------------------------
 
@@ -312,142 +312,142 @@ namespace ET
   template<typename T>
   const uint64_t UGrid<T>::getDim()
   {
-    return _dim;
+    return m_dim;
   }
   template<typename T>
   const uint64_t UGrid<T>::getN()
   {
-    return _N;
+    return m_N;
   }
   template<typename T>
   std::vector<std::vector<T> > UGrid<T>::getUGrid()
   {
-    return _ugrid;
+    return m_ugrid;
   }
   template<typename T>
   const std::string UGrid<T>::getName()
   {
-    return _name;
+    return m_name;
   }
 	template<typename T>
 	std::vector<std::vector<size_t>> UGrid<T>::getNeighbors()
 	{
-		return _kdt.getNeighbors();
+		return m_kdt.getNeighbors();
 	}
 	template<typename T>
 	std::vector<std::vector<double>> UGrid<T>::getDistances()
 	{
-		return _kdt.getDistances();
+		return m_kdt.getDistances();
 	}
 	template<typename T>
 	std::vector<std::vector<size_t>> UGrid<T>::getNeighborsRadius()
 	{
-		return _kdt.getNeighborsRadius();
+		return m_kdt.getNeighborsRadius();
 	}
 	template<typename T>
 	std::vector<std::vector<double>> UGrid<T>::getDistancesRadius()
 	{
-		return _kdt.getDistancesRadius();
+		return m_kdt.getDistancesRadius();
 	}
 	template<typename T>
 	std::vector<size_t> UGrid<T>::getNeighbors(uint64_t index)
 	{
-		if (index > _N)
+		if (index > m_N)
 		{
 			//########################################################################
-			_log->ERROR("UGrid " + _name
+			m_log->ERROR("UGrid " + m_name
 									+ ": Attempted to access neighbors array of size "
-									+ std::to_string(_N) + " with index "
+									+ std::to_string(m_N) + " with index "
 									+ std::to_string(index));
 			//########################################################################
-			if(_neighbors.size() > 0)
+			if(m_neighbors.size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index 0");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index 0");
 				//######################################################################
-				return _neighbors[0];
+				return m_neighbors[0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning empty neighbors array");
+				m_log->INFO("UGrid " + m_name + ": Returning empty neighbors array");
 				//######################################################################
 				return std::vector<size_t>(1,0);
 			}
 		}
-		return _kdt.getNeighbors(index);
+		return m_kdt.getNeighbors(index);
 	}
 	template<typename T>
 	std::shared_ptr<Log> UGrid<T>::getLogger()
 	{
-		return _log;
+		return m_log;
 	}
   //  Setters
   template<typename T>
   void UGrid<T>::setDim(uint64_t dim)
   {
-		if (dim != _ugrid[0].size())
+		if (dim != m_ugrid[0].size())
 		{
 			//########################################################################
-			_log->WARN("UGrid " + _name + ": New dimension "
-		           	+ std::to_string(dim) + " does not match array _ugrid"
-							  + " of dimension " + std::to_string(_dim));
+			m_log->WARN("UGrid " + m_name + ": New dimension "
+		           	+ std::to_string(dim) + " does not match array m_ugrid"
+							  + " of dimension " + std::to_string(m_dim));
 			//########################################################################
 		}
-    _dim = dim;
+    m_dim = dim;
 		//##########################################################################
-		_log->INFO("UGrid " + _name + ": Setting dimension _dim to "
-		           + std::to_string(_dim));
+		m_log->INFO("UGrid " + m_name + ": Setting dimension m_dim to "
+		           + std::to_string(m_dim));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setN(uint64_t N)
   {
-		if (N != _ugrid.size())
+		if (N != m_ugrid.size())
 		{
 			//########################################################################
-			_log->WARN("UGrid " + _name + ": New array size "
-								+ std::to_string(N) + " does not match array _ugrid"
-								+ " of size " + std::to_string(_N));
+			m_log->WARN("UGrid " + m_name + ": New array size "
+								+ std::to_string(N) + " does not match array m_ugrid"
+								+ " of size " + std::to_string(m_N));
 			//########################################################################
 		}
-    _N = N;
+    m_N = N;
 		//##########################################################################
-		_log->INFO("UGrid " + _name+ ": Setting number of elements _N to "
-							 + std::to_string(_N));
+		m_log->INFO("UGrid " + m_name+ ": Setting number of elements m_N to "
+							 + std::to_string(m_N));
 		//##########################################################################
-		_searchFlag = -1;
+		m_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setUGrid(std::vector<std::vector<T>> ugrid)
   {
-    _ugrid = ugrid;
-		_N = ugrid.size();
-		_dim = ugrid[0].size();
+    m_ugrid = ugrid;
+		m_N = ugrid.size();
+		m_dim = ugrid[0].size();
 		//##########################################################################
-		_log->INFO("UGrid " + _name + ": Setting _ugrid to array of size "
-							 + std::to_string(_N) + " with dimension "
-							 + std::to_string(_dim));
+		m_log->INFO("UGrid " + m_name + ": Setting m_ugrid to array of size "
+							 + std::to_string(m_N) + " with dimension "
+							 + std::to_string(m_dim));
 		//##########################################################################
-    kdTree<T> kdt(std::make_shared<std::vector<std::vector<T>>>(_ugrid));
-    _kdt = kdt;
+    kdTree<T> kdt(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
+    m_kdt = kdt;
 		// //  generate kdtree
   	// KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
-		// kdt(_dim, _ugrid, 16);
+		// kdt(m_dim, m_ugrid, 16);
     // kdt.index->buildIndex();
-		// _kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+		// m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
 		//                             std::vector<std::vector<T>>, T>>(kdt);
-		// _searchFlag = -1;
+		// m_searchFlag = -1;
   }
   template<typename T>
   void UGrid<T>::setName(std::string name)
   {
 		//##########################################################################
-		_log->INFO("UGrid " + _name + ": Renaming '"
-		           + _name + "' to '" + name + "'");
+		m_log->INFO("UGrid " + m_name + ": Renaming '"
+		           + m_name + "' to '" + name + "'");
     //##########################################################################
-    _name = name;
+    m_name = name;
   }
 	//----------------------------------------------------------------------------
 
@@ -457,140 +457,140 @@ namespace ET
 	template<typename T>
   T& UGrid<T>::operator()(const uint64_t i, const uint64_t j)
   {
-		if (i >= _N || j >= _dim)
+		if (i >= m_N || j >= m_dim)
 		{
-			if(i >= _N)
+			if(i >= m_N)
 			{
 				//######################################################################
-				_log->ERROR("UGrid " + _name
-										+ ": Attempted to access _ugrid array of size "
-										+ std::to_string(_N) + " with index "
+				m_log->ERROR("UGrid " + m_name
+										+ ": Attempted to access m_ugrid array of size "
+										+ std::to_string(m_N) + " with index "
 										+ std::to_string(i));
 				//######################################################################
 			}
-			if(j >= _dim)
+			if(j >= m_dim)
 			{
 				//######################################################################
-				_log->ERROR("UGrid " + _name
-										+ ": Attempted to access _ugrid array of dimension "
-										+ std::to_string(_dim) + " with index "
+				m_log->ERROR("UGrid " + m_name
+										+ ": Attempted to access m_ugrid array of dimension "
+										+ std::to_string(m_dim) + " with index "
 										+ std::to_string(j));
 				//######################################################################
 			}
-			if(_ugrid.size() > 0 && _ugrid[0].size() > 0)
+			if(m_ugrid.size() > 0 && m_ugrid[0].size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index (0,0)");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index (0,0)");
 				//######################################################################
-				return _ugrid[0][0];
+				return m_ugrid[0][0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Terminating program");
+				m_log->INFO("UGrid " + m_name + ": Terminating program");
 				//######################################################################
 				exit(0);
 			}
 		}
-		_searchFlag = -1;
-    return _ugrid[i][j];
+		m_searchFlag = -1;
+    return m_ugrid[i][j];
   }
   template<typename T>
   const T& UGrid<T>::operator()(const uint64_t i, const uint64_t j) const
   {
-		if (i >= _N || j >= _dim)
+		if (i >= m_N || j >= m_dim)
 		{
-			if(i >= _N)
+			if(i >= m_N)
 			{
 				//######################################################################
-				_log->ERROR("UGrid " + _name
-										+ ": Attempted to access _ugrid array of size "
-										+ std::to_string(_N) + " with index "
+				m_log->ERROR("UGrid " + m_name
+										+ ": Attempted to access m_ugrid array of size "
+										+ std::to_string(m_N) + " with index "
 										+ std::to_string(i));
 				//######################################################################
 			}
-			if(j >= _dim)
+			if(j >= m_dim)
 			{
 				//######################################################################
-				_log->ERROR("UGrid " + _name
-										+ ": Attempted to access _ugrid array of dimension "
-										+ std::to_string(_dim) + " with index "
+				m_log->ERROR("UGrid " + m_name
+										+ ": Attempted to access m_ugrid array of dimension "
+										+ std::to_string(m_dim) + " with index "
 										+ std::to_string(j));
 				//######################################################################
 			}
-			if(_ugrid.size() > 0 && _ugrid[0].size() > 0)
+			if(m_ugrid.size() > 0 && m_ugrid[0].size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index (0,0)");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index (0,0)");
 				//######################################################################
-				return _ugrid[0][0];
+				return m_ugrid[0][0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Terminating program");
+				m_log->INFO("UGrid " + m_name + ": Terminating program");
 				//######################################################################
 				exit(0);
 			}
 		}
-    return _ugrid[i][j];
+    return m_ugrid[i][j];
   }
 	template<typename T>
   std::vector<T>& UGrid<T>::operator()(const uint64_t i)
   {
-		if (i >= _N )
+		if (i >= m_N )
 		{
 			//########################################################################
-			_log->ERROR("UGrid " + _name
-									+ ": Attempted to access _ugrid array of size "
-									+ std::to_string(_N) + " with index "
+			m_log->ERROR("UGrid " + m_name
+									+ ": Attempted to access m_ugrid array of size "
+									+ std::to_string(m_N) + " with index "
 									+ std::to_string(i));
 			//########################################################################
-			if(_ugrid.size() > 0)
+			if(m_ugrid.size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index 0");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index 0");
 				//######################################################################
-				return _ugrid[0];
+				return m_ugrid[0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Terminating program");
+				m_log->INFO("UGrid " + m_name + ": Terminating program");
 				//######################################################################
 				exit(0);
 			}
 		}
-		_searchFlag = -1;
-    return _ugrid[i];
+		m_searchFlag = -1;
+    return m_ugrid[i];
   }
   template<typename T>
   const std::vector<T>& UGrid<T>::operator()(const uint64_t i) const
   {
-		if (i >= _N )
+		if (i >= m_N )
 		{
 			//########################################################################
-			_log->ERROR("UGrid " + _name
-									+ ": Attempted to access _ugrid array of size "
-									+ std::to_string(_N) + " with index "
+			m_log->ERROR("UGrid " + m_name
+									+ ": Attempted to access m_ugrid array of size "
+									+ std::to_string(m_N) + " with index "
 									+ std::to_string(i));
 			//########################################################################
-			if(_ugrid.size() > 0)
+			if(m_ugrid.size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index 0");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index 0");
 				//######################################################################
-				return _ugrid[0];
+				return m_ugrid[0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Terminating program");
+				m_log->INFO("UGrid " + m_name + ": Terminating program");
 				//######################################################################
 				exit(0);
 			}
 		}
-    return _ugrid[i];
+    return m_ugrid[i];
   }
 	//----------------------------------------------------------------------------
 
@@ -600,56 +600,56 @@ namespace ET
   template<typename T>
   const std::vector<T>& UGrid<T>::getPoint(const uint64_t i) const
   {
-		if (i >= _N )
+		if (i >= m_N )
 		{
 			//########################################################################
-			_log->ERROR("UGrid " + _name
-									+ ": Attempted to access _ugrid array of size "
-									+ std::to_string(_N) + " with index "
+			m_log->ERROR("UGrid " + m_name
+									+ ": Attempted to access m_ugrid array of size "
+									+ std::to_string(m_N) + " with index "
 									+ std::to_string(i));
 			//########################################################################
-			if(_neighbors.size() > 0)
+			if(m_neighbors.size() > 0)
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Returning the element at index 0");
+				m_log->INFO("UGrid " + m_name + ": Returning the element at index 0");
 				//######################################################################
-				return _ugrid[0];
+				return m_ugrid[0];
 			}
 			else
 			{
 				//######################################################################
-				_log->INFO("UGrid " + _name + ": Terminating program");
+				m_log->INFO("UGrid " + m_name + ": Terminating program");
 				//######################################################################
 				exit(0);
 			}
 		}
-    return _ugrid[i];
+    return m_ugrid[i];
   }
   template<typename T>
   std::vector<T> UGrid<T>::projection(uint64_t j)
   {
-		std::vector<T> result(_N);
-		for (uint64_t i = 0; i < _N; i++)
+		std::vector<T> result(m_N);
+		for (uint64_t i = 0; i < m_N; i++)
 		{
-			result[i] = _ugrid[i][j];
+			result[i] = m_ugrid[i][j];
 		}
     return result;
   }
   template<typename T>
   void UGrid<T>::setPoint(uint64_t i, std::vector<T> point)
   {
-		if (i >= _N )
+		if (i >= m_N )
 		{
 			//########################################################################
-			_log->ERROR("UGrid " + _name
-									+ ": Attempted to access _ugrid array of size "
-									+ std::to_string(_N) + " with index "
+			m_log->ERROR("UGrid " + m_name
+									+ ": Attempted to access m_ugrid array of size "
+									+ std::to_string(m_N) + " with index "
 									+ std::to_string(i));
 			//########################################################################
 			return;
 		}
-    _ugrid[i] = point;
-		_searchFlag = -1;
+    m_ugrid[i] = point;
+		m_searchFlag = -1;
   }
 	//----------------------------------------------------------------------------
 
@@ -659,12 +659,12 @@ namespace ET
 	template<typename T>
 	void UGrid<T>::setupTree()
 	{
-    _kdt = kdTree<T>(std::make_shared<std::vector<std::vector<T>>>(_ugrid));
+    m_kdt = kdTree<T>(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
 	}
 	template<typename T>
   void UGrid<T>::queryNeighbors(uint64_t k)
   {
-    return _kdt.queryNeighbors(k);
+    return m_kdt.queryNeighbors(k);
   }
 	//----------------------------------------------------------------------------
 	//	Query the tree for neighbors of some point
@@ -674,7 +674,7 @@ namespace ET
   UGrid<T>::queryNeighbors(const std::vector<T>& point,
 		                       uint64_t k)
   {
-    return _kdt.queryNeighbors(point,k);
+    return m_kdt.queryNeighbors(point,k);
   }
 	//----------------------------------------------------------------------------
 	//	Query the tree for neighbors of some point
@@ -684,7 +684,7 @@ namespace ET
   UGrid<T>::queryDistances(const std::vector<T>& point,
 		                       uint64_t k)
   {
-    return _kdt.queryDistances(point,k);
+    return m_kdt.queryDistances(point,k);
   }
 	//----------------------------------------------------------------------------
 	//	Query the tree for neighbors of some set of points
@@ -694,12 +694,12 @@ namespace ET
   UGrid<T>::queryNeighbors(const std::vector<std::vector<T>>& points,
 		                       uint64_t k)
   {
-    return _kdt.queryNeighbors(points,k);
+    return m_kdt.queryNeighbors(points,k);
   }
 	template<typename T>
   void UGrid<T>::queryRadius(double radius)
   {
-    return _kdt.queryRadius(radius);
+    return m_kdt.queryRadius(radius);
   }
 	//----------------------------------------------------------------------------
 
@@ -710,22 +710,22 @@ namespace ET
 	bool UGrid<T>::checkConsistency()
 	{
 		bool consistency = true;
-		if(_ugrid.size() != _N)
+		if(m_ugrid.size() != m_N)
 		{
 			consistency = false;
 			//########################################################################
-			_log->WARN("UGrid " + _name + ": Attribute _N with value "
-			           + std::to_string(_N) + " does not match array _ugrid"
-								 + " with size " + std::to_string(_ugrid.size()));
+			m_log->WARN("UGrid " + m_name + ": Attribute m_N with value "
+			           + std::to_string(m_N) + " does not match array m_ugrid"
+								 + " with size " + std::to_string(m_ugrid.size()));
 			//########################################################################
 		}
-		if(_ugrid[0].size() != _dim)
+		if(m_ugrid[0].size() != m_dim)
 		{
 			consistency = false;
 			//########################################################################
-			_log->WARN("UGrid " + _name + ": Attribute _dim with value "
-			           + std::to_string(_dim) + " does not match array _ugrid"
-								 + " with dimension " + std::to_string(_ugrid[0].size()));
+			m_log->WARN("UGrid " + m_name + ": Attribute m_dim with value "
+			           + std::to_string(m_dim) + " does not match array m_ugrid"
+								 + " with dimension " + std::to_string(m_ugrid[0].size()));
 			//########################################################################
 		}
 		return consistency;

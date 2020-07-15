@@ -1,5 +1,5 @@
-[22:18:41] [trace] ET:Approximator:default_0: Approximator 'default' created at location 0x55ae92ef8ad0
-[22:18:41] [info] ET:Approximator:default_0: Approximator default: ApproxType set to RBF
-[22:18:41] [info] ET:Approximator:default_0: Approximator default: shape set to 3.050000
-[22:18:41] [info] ET:Approximator:default_0: Approximator default: k set to 50
-41] [trace] ET:Approximator:default: Approximator 'default' destroyed at location 0x55ae92e3ca50
+[07:42:44] [trace] ET:Approximator:default_2: Approximator 'default' created at location 0x56325a0a3010
+[07:42:44] [info] ET:Approximator:default_2: Approximator default: ApproxType set to RBF
+[07:42:44] [info] ET:Approximator:default_2: Approximator default: shape set to 10.000000
+[07:42:44] [info] ET:Approximator:default_2: Approximator default: k set to 24
+[07:45:17] [trace] ET:Approximator:default_2: Approximator 'default' destroyed at location 0x56325a0a3010

@@ -39,10 +39,26 @@ namespace ET
   class RadialBasisFunction
   {
   public:
+    //--------------------------------------------------------------------------
+    //  Constructors
+    //--------------------------------------------------------------------------
     RadialBasisFunction();
     ~RadialBasisFunction();
+    //--------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------
+    //  Getters and setters
+    //--------------------------------------------------------------------------
+    RBFKernelType getType();
+    double getShape();
     std::shared_ptr<RBFParams> getRBFParams();
+    std::shared_ptr<Log> getLogger();
+
+    void setType(RBFKernelType t_type);
+    void setType(std::string t_type);
+    void setShape(double shape);
+    void setLogger(std::shared_ptr<Log> t_log);
+    //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Various functions for constructing RBF Matrices
@@ -50,22 +66,26 @@ namespace ET
     Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                  const std::vector<size_t> neighbors,
                                  size_t index);
-    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    Matrix<T> constructRBFFirstDerivativeMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                  const std::vector<size_t> neighbors,
                                  size_t index, size_t dir);
     Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid);
     Vector<T> constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
                                  std::vector<T> point);
-    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+    Matrix<T> constructRBFFirstDerivativeMatrix(const std::shared_ptr<UGrid<T>> ugrid,
                                   size_t dir);
-    Vector<T> constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
+    Vector<T> constructRBFFirstDerivativeVector(const std::shared_ptr<UGrid<T>> ugrid,
                                   std::vector<T> point,
                                   size_t dir);
+    //--------------------------------------------------------------------------
+
     //--------------------------------------------------------------------------
     //  Various helper functions
     //--------------------------------------------------------------------------
     T xRBFx(const std::vector<T>& p1, const std::vector<T>& p2);
     std::vector<T> xRBFdx(const std::vector<T>& p1, const std::vector<T>& p2);
+
+    const std::string summary();
     //--------------------------------------------------------------------------
     //  Algorithms
     //--------------------------------------------------------------------------
@@ -78,6 +98,8 @@ namespace ET
   private:
     enum RBFKernelType m_type{RBFKernelType::GAUSSIAN};
     struct RBFParams m_params;
+
+    std::shared_ptr<Log> m_log;
   };
   //----------------------------------------------------------------------------
 

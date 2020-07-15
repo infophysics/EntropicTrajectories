@@ -81,6 +81,10 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_vec", &ET::Vector<double>::setVec)
 		.def("set_name", &ET::Vector<double>::setName)
 		.def("dot", &ET::Vector<double>::dot)
+    .def_property("name", &ET::Vector<double>::getName,
+                  &ET::Vector<double>::setName)
+    .def_property("dim", &ET::Vector<double>::getDim,
+                  &ET::Vector<double>::setDim)
 		//	operator overloads
 		.def(py::self == py::self)
 		.def(py::self != py::self)
@@ -226,6 +230,14 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_info", &ET::Matrix<double>::setInfo)
 		.def("set_flag", &ET::Matrix<double>::setFlag)
 		.def("set_rank", &ET::Matrix<double>::setRank)
+    .def_property("name", &ET::Matrix<double>::getName,
+                  &ET::Matrix<double>::setName)
+    .def_property_readonly("m", &ET::Matrix<double>::getNumRows)
+    .def_property_readonly("n", &ET::Matrix<double>::getNumCols)
+    .def_property("flag", &ET::Matrix<double>::getFlag,
+                  &ET::Matrix<double>::setFlag)
+    .def_property("info", &ET::Matrix<double>::getInfo,
+                  &ET::Matrix<double>::setInfo)
     //  operator overloads
 		.def(py::self == py::self)
 		.def(py::self != py::self)
@@ -489,6 +501,12 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_logger", &ET::UGrid<double>::getLogger,
 		     py::return_value_policy::reference)
+    .def_property("name", &ET::UGrid<double>::getName,
+                  &ET::UGrid<double>::setName)
+    .def_property("dim", &ET::UGrid<double>::getDim,
+                  &ET::UGrid<double>::setDim)
+    .def_property("N", &ET::UGrid<double>::getN,
+                  &ET::UGrid<double>::setN)
 		.def("output", [](ET::UGrid<double>& self)
 		{
 			std::string out = self.getLogger()->getOutput();
@@ -1225,11 +1243,15 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------
-		.def("__repr__", [](ET::Approximator<double> &app)
+    .def("__repr__", [](ET::Approximator<double> &field)
 		{
-				return app.summary();
+			std::stringstream s;
+			s << &field;
+			std::string res = "++++++++++++++++++++++++++++++++++++++++++++++++++++";
+			res += "\n<etraj.Approximator ref at " + s.str() + ">\n";
+			return res + field.summary();
 		})
-		;
+    ;
 	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -1239,6 +1261,14 @@ PYBIND11_MODULE(etraj, m) {
              std::shared_ptr<ET::RadialBasisFunction<double>>>
              (m, "RadialBasisFunction")
     .def(py::init<>())
+    .def("get_type", &ET::RadialBasisFunction<double>::getType)
+    .def("get_shape", &ET::RadialBasisFunction<double>::getShape)
+    .def("get_params", &ET::RadialBasisFunction<double>::getRBFParams)
+    .def("get_logger", &ET::RadialBasisFunction<double>::getLogger)
+    .def("set_type", (void (ET::RadialBasisFunction<double>::*)
+        (std::string)) &ET::RadialBasisFunction<double>::setType)
+    .def("set_shape", &ET::RadialBasisFunction<double>::setShape)
+    .def("set_logger", &ET::RadialBasisFunction<double>::setLogger)
     .def("construct_rbf_matrix",
          (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,
@@ -1248,7 +1278,7 @@ PYBIND11_MODULE(etraj, m) {
         (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,
          const std::vector<uint64_t>,size_t,size_t))
-    		 &ET::RadialBasisFunction<double>::constructRBFdMatrix)
+    		 &ET::RadialBasisFunction<double>::constructRBFFirstDerivativeMatrix)
     .def("construct_rbf_matrix",
         (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>))
@@ -1260,11 +1290,30 @@ PYBIND11_MODULE(etraj, m) {
     .def("construct_rbfd_matrix",
        (ET::Matrix<double> (ET::RadialBasisFunction<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,size_t))
-    		 &ET::RadialBasisFunction<double>::constructRBFdMatrix)
+    		 &ET::RadialBasisFunction<double>::constructRBFFirstDerivativeMatrix)
     .def("construct_rbfd_vector",
       (ET::Vector<double> (ET::RadialBasisFunction<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,std::vector<double>))
-    		 &ET::RadialBasisFunction<double>::constructRBFdVector)
+    		 &ET::RadialBasisFunction<double>::constructRBFFirstDerivativeVector)
+    .def("output", [](ET::RadialBasisFunction<double>& self)
+		{
+			std::string out = self.getLogger()->getOutput();
+			py::print(out);
+		})
+		.def("output", [](ET::RadialBasisFunction<double>& self, uint64_t i)
+		{
+			std::string out = self.getLogger()->getOutput(i);
+			py::print(out);
+		})
+    //	print functionality
+		.def("__repr__", [](ET::RadialBasisFunction<double> &field)
+		{
+			std::stringstream s;
+			s << &field;
+			std::string res = "++++++++++++++++++++++++++++++++++++++++++++++++++++";
+			res += "\n<etraj.RadialBasisFunction ref at " + s.str() + ">\n";
+			return res + field.summary();
+		})
     ;
   //----------------------------------------------------------------------------
 
