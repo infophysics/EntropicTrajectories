@@ -223,7 +223,7 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    std::vector<T> derivative(const size_t t_index,
+    Vector<T> derivative(const size_t t_index,
                               const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the UGrid given by index,
@@ -240,15 +240,15 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    std::vector<T> derivative(const size_t std::vector<T>& point,
-                              const size_t t_degree);
+    Vector<T> derivative(const std::vector<T>& point,
+                         const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for an arbitrary point,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    T derivative(const size_t std::vector<T>& point,
+    T derivative(const std::vector<T>& point,
                  const size_t t_degree,
                  const size_t t_direction);
   private:
@@ -276,5 +276,7 @@ namespace ET
      */
     Monomial m_monomial {3,3};
   };
+
+  template class LocalTaylorInterpolator<double>;
 
 }

@@ -310,7 +310,7 @@ namespace ET
   template<typename T>
   void VectorField<T>::setInterpolatorType(std::string type)
   {
-    _approx->setInterpolatorType(type);
+    //_approx->setInterpolatorType(type);
   }
   //----------------------------------------------------------------------------
 
@@ -396,7 +396,7 @@ namespace ET
   std::vector<std::vector<T>>
   VectorField<T>::derivative(uint32_t dir, uint32_t n)
   {
-    return _approx->vectorDerivative(_ugrid, (*this), dir, n);
+    //return _approx->vectorDerivative(_ugrid, (*this), dir, n);
   }
   //----------------------------------------------------------------------------
 }

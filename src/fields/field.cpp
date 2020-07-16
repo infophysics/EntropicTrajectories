@@ -56,7 +56,7 @@ namespace ET
   Field<T>::Field(std::shared_ptr<UGrid<T>> t_ugrid)
   {
     m_log = std::make_shared<Log>();
-    m_ugrid = t_ugrid
+    m_ugrid = t_ugrid;
 		m_log->init("ET:Field:default", ".logs/field_default.txt");
 		m_log->TRACE("Field 'default' created at location "
 		            + getMem(*this));
@@ -90,17 +90,17 @@ namespace ET
   }
 
   template<typename T>
-  std::string Field<T>::getName()
+  std::string Field<T>::getName() const
   {
     return m_name;
   }
   template<typename T>
-  size_t Field<T>::getDim()
+  size_t Field<T>::getDim() const
   {
     return m_dim;
   }
   template<typename T>
-  size_t Field<T>::getN()
+  size_t Field<T>::getN() const
   {
     return m_N;
   }

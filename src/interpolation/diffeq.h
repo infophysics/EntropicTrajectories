@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  DiffEQ.h
+//  diffeq.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -24,17 +24,22 @@
 #include <map>
 #include <memory>
 
+#include "ugrid.h"
+#include "log.h"
+
 //------------------------------------------------------------------------------
 //  Forward declaration of Interpolator, Integrator and ScalarField
 //------------------------------------------------------------------------------
 namespace ET
 {
+  template<typename T> class Field;
   template<typename T> class Interpolator;
-  template<typename T> class ScalarField;
+  //template<typename T> class ScalarField;
   template<typename T> class Integrator;
 }
+#include "field.h"
 #include "interpolator.h"
-#include "scalarfield.h"
+//#include "scalarfield.h"
 #include "integrator.h"
 
 namespace ET
@@ -48,6 +53,8 @@ namespace ET
   public:
     DiffEQ();
     ~DiffEQ();
+    DiffEQ(std::shared_ptr<Log> log);
+    DiffEQ(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
   private:
   };
   //----------------------------------------------------------------------------
@@ -65,11 +72,11 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Setters and getters
     //--------------------------------------------------------------------------
-    void setScalarField(std::shared_ptr<ScalarField<T>> field);
-    void setVectorField(std::shared_ptr<VectorField<T>> field);
-
-    std::shared_ptr<ScalarField<T>> getScalarField();
-    std::shared_ptr<VectorField<T>> getVectorField();
+    // void setScalarField(std::shared_ptr<ScalarField<T>> field);
+    // void setVectorField(std::shared_ptr<VectorField<T>> field);
+    //
+    // std::shared_ptr<ScalarField<T>> getScalarField();
+    // std::shared_ptr<VectorField<T>> getVectorField();
 
     //--------------------------------------------------------------------------
     //  evaluation functions
@@ -79,8 +86,8 @@ namespace ET
                        std::vector<T> k);
     //--------------------------------------------------------------------------
   private:
-    std::shared_ptr<ScalarField<T>> _sfield;
-    std::shared_ptr<VectorField<T>> _vfield;
+    // std::shared_ptr<ScalarField<T>> _sfield;
+    // std::shared_ptr<VectorField<T>> _vfield;
   };
   //----------------------------------------------------------------------------
 
@@ -94,14 +101,14 @@ namespace ET
     SecondOrderODE();
     ~SecondOrderODE();
 
-    //--------------------------------------------------------------------------
-    //  Setters and getters
-    //--------------------------------------------------------------------------
-    void setScalarField(std::shared_ptr<ScalarField<T>> field);
-    void setVectorField(std::shared_ptr<VectorField<T>> field);
-
-    std::shared_ptr<ScalarField<T>> getScalarField();
-    std::shared_ptr<VectorField<T>> getVectorField();
+    // //--------------------------------------------------------------------------
+    // //  Setters and getters
+    // //--------------------------------------------------------------------------
+    // void setScalarField(std::shared_ptr<ScalarField<T>> field);
+    // void setVectorField(std::shared_ptr<VectorField<T>> field);
+    //
+    // std::shared_ptr<ScalarField<T>> getScalarField();
+    // std::shared_ptr<VectorField<T>> getVectorField();
 
     //--------------------------------------------------------------------------
     //  evaluation functions
@@ -114,8 +121,8 @@ namespace ET
                         std::vector<T> k);
     //--------------------------------------------------------------------------
   private:
-    std::shared_ptr<ScalarField<T>> _sfield;
-    std::shared_ptr<VectorField<T>> _vfield;
+    // std::shared_ptr<ScalarField<T>> _sfield;
+    // std::shared_ptr<VectorField<T>> _vfield;
   };
   //----------------------------------------------------------------------------
 

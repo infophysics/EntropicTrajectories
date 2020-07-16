@@ -22,7 +22,7 @@
 #include <string>
 #include "utils.h"
 #include "matrix.h"
-#include "KDTree.h"
+#include "kdtree.h"
 #include "log.h"
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"

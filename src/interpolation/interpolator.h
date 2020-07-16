@@ -36,12 +36,13 @@
 namespace ET
 {
   template<typename T> class Field;
-  template<typename T> class ScalarField;
-  template<typename T> class VectorField;
+  //template<typename T> class ScalarField;
+  //template<typename T> class VectorField;
 }
+
 #include "field.h"
-#include "scalarfield.h"
-#include "vectorfield.h"
+//#include "scalarfield.h"
+//#include "vectorfield.h"
 
 namespace ET
 {
@@ -176,8 +177,8 @@ namespace ET
      *  @return The nth-derivative at the point given
      *  by the index.
      */
-    virtual std::vector<T> derivative(const size_t t_index,
-                                      const size_t t_degree);
+    virtual Vector<T> derivative(const size_t t_index,
+                                 const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the UGrid given by index,
      *  of degree t_degree and in the direction t_direction.
@@ -193,15 +194,15 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-   virtual std::vector<T> derivative(const size_t std::vector<T>& point,
-                                     const size_t t_degree);
+   virtual Vector<T> derivative(const std::vector<T>& point,
+                                const size_t t_degree);
    //! Derivative
    /*! derivative.  Derivative for an arbitrary point,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-   virtual T derivative(const size_t std::vector<T>& point,
+   virtual T derivative(const std::vector<T>& point,
                         const size_t t_degree,
                         const size_t t_direction);
     //! xGELSx

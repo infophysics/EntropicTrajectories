@@ -53,12 +53,12 @@ PYBIND11_MODULE(etraj, m) {
 						 (m, "Vector", py::buffer_protocol())
     .def(py::init<>())
 		.def(py::init<ET::Vector<double>>())
-    .def(py::init<uint32_t>())
-		.def(py::init<std::string, uint32_t>())
+    .def(py::init<size_t>())
+		.def(py::init<std::string, size_t>())
     .def(py::init<std::vector<double>>())
 		.def(py::init<std::string, std::vector<double>>())
-		.def(py::init<uint32_t, const double&>())
-		.def(py::init<std::string, uint32_t, const double&>())
+		.def(py::init<size_t, const double&>())
+		.def(py::init<std::string, size_t, const double&>())
 		.def(py::init([](py::buffer const b)
 		{
     	py::buffer_info info = b.request();
@@ -143,10 +143,10 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//	Instantiations of vectors
 		//--------------------------------------------------------------------------
-		//m.def("zeros", (ET::Vector<double> (*)(uint32_t)) &ET::zeros);
-		//m.def("zeros", (ET::Vector<double> (*)(uint32_t,uint32_t)) &ET::zeros);
-		//m.def("ones", (ET::Vector<double> (*)(uint32_t)) &ET::ones);
-		//m.def("ones", (ET::Vector<double> (*)(uint32_t,uint32_t)) &ET::ones);
+		//m.def("zeros", (ET::Vector<double> (*)(size_t)) &ET::zeros);
+		//m.def("zeros", (ET::Vector<double> (*)(size_t,size_t)) &ET::zeros);
+		//m.def("ones", (ET::Vector<double> (*)(size_t)) &ET::ones);
+		//m.def("ones", (ET::Vector<double> (*)(size_t,size_t)) &ET::ones);
 		//--------------------------------------------------------------------------
 
 		//--------------------------------------------------------------------------
@@ -173,16 +173,16 @@ PYBIND11_MODULE(etraj, m) {
 						(m, "Matrix", py::buffer_protocol())
     .def(py::init<>())
     .def(py::init<ET::Matrix<double>>())
-    .def(py::init<uint32_t>())
-    .def(py::init<std::string, uint32_t>())
-    .def(py::init<uint32_t, uint32_t>())
-    .def(py::init<std::string, uint32_t, uint32_t>())
-    .def(py::init<uint32_t, uint32_t, const double&>())
-    .def(py::init<std::string, uint32_t, uint32_t, const double&>())
-    .def(py::init<uint32_t, std::vector<double>>())
-    .def(py::init<std::string, uint32_t, std::vector<double>>())
-    .def(py::init<uint32_t, uint32_t, std::vector<double>>())
-    .def(py::init<std::string, uint32_t, uint32_t, std::vector<double>>())
+    .def(py::init<size_t>())
+    .def(py::init<std::string, size_t>())
+    .def(py::init<size_t, size_t>())
+    .def(py::init<std::string, size_t, size_t>())
+    .def(py::init<size_t, size_t, const double&>())
+    .def(py::init<std::string, size_t, size_t, const double&>())
+    .def(py::init<size_t, std::vector<double>>())
+    .def(py::init<std::string, size_t, std::vector<double>>())
+    .def(py::init<size_t, size_t, std::vector<double>>())
+    .def(py::init<std::string, size_t, size_t, std::vector<double>>())
 		.def(py::init<std::vector<std::vector<double>>>())
 		.def(py::init<std::string, std::vector<std::vector<double>>>())
 		.def(py::init([](py::buffer const b)
@@ -264,9 +264,9 @@ PYBIND11_MODULE(etraj, m) {
 		//	Matrix array access.  This first method allows the user
 		//	to write x = m[i,j] to get elements.
     .def("__getitem__", [](const ET::Matrix<double> &self,
-													 std::tuple<uint32_t, uint32_t> ij)
+													 std::tuple<size_t, size_t> ij)
 		{
-			uint32_t i, j;
+			size_t i, j;
 			std::tie(i, j) = ij;
 			if (i < 0 || i >= self.getNumRows())
 			{
@@ -287,10 +287,10 @@ PYBIND11_MODULE(etraj, m) {
 		//	now for the setter of the same type.  To set an element to a Matrix
 		//	at index i,j, write - m[i,j] = x.
 		.def("__setitem__", [](ET::Matrix<double> &self,
-													 std::tuple<uint32_t, uint32_t> ij,
+													 std::tuple<size_t, size_t> ij,
 													 const double& val)
 		{
-			uint32_t i, j;
+			size_t i, j;
 			std::tie(i, j) = ij;
 			if (i < 0 || i >= self.getNumRows())
 			{
@@ -373,13 +373,13 @@ PYBIND11_MODULE(etraj, m) {
 	//--------------------------------------------------------------------------
 	//	Instantiations of matrices
 	//--------------------------------------------------------------------------
-	m.def("identity", (ET::Matrix<double> (*)(uint32_t)) &ET::identity_d);
-	//m.def("zeros", (ET::Matrix<double> (*)(uint32_t)) &ET::zeros);
-	//m.def("zeros", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::zeros);
-	//m.def("ones", (ET::Matrix<double> (*)(uint32_t)) &ET::ones);
-	//m.def("ones", (ET::Matrix<double> (*)(uint32_t,uint32_t)) &ET::ones);
-	m.def("permutation_matrix", (ET::Matrix<double> (*)(const uint32_t&,
-	      const std::vector<uint32_t>)) &ET::permutationMatrix_d);
+	m.def("identity", (ET::Matrix<double> (*)(size_t)) &ET::identity_d);
+	//m.def("zeros", (ET::Matrix<double> (*)(size_t)) &ET::zeros);
+	//m.def("zeros", (ET::Matrix<double> (*)(size_t,size_t)) &ET::zeros);
+	//m.def("ones", (ET::Matrix<double> (*)(size_t)) &ET::ones);
+	//m.def("ones", (ET::Matrix<double> (*)(size_t,size_t)) &ET::ones);
+	m.def("permutation_matrix", (ET::Matrix<double> (*)(const size_t&,
+	      const std::vector<size_t>)) &ET::permutationMatrix_d);
 	//--------------------------------------------------------------------------
 	//	Level 2 BLAS functions
 	//--------------------------------------------------------------------------
@@ -445,20 +445,20 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 	py::class_<ET::UGrid<double>, std::shared_ptr<ET::UGrid<double>>>(m, "UGrid")
 		.def(py::init<>())
-		.def(py::init<uint64_t>())
-		.def(py::init<std::string, uint64_t>())
-		.def(py::init<uint64_t, uint64_t>())
-		.def(py::init<std::string, uint64_t, uint64_t>())
+		.def(py::init<size_t>())
+		.def(py::init<std::string, size_t>())
+		.def(py::init<size_t, size_t>())
+		.def(py::init<std::string, size_t, size_t>())
 		.def(py::init<std::vector<double>>(), py::keep_alive<1, 2>())
 		.def(py::init<std::vector<std::vector<double>>>(), py::keep_alive<1, 2>())
 		//--------------------------------------------------------------------------
 		//	Constructors with shared loggers
 		//--------------------------------------------------------------------------
 		.def(py::init<std::shared_ptr<ET::Log>>())
-		.def(py::init<uint64_t, std::shared_ptr<ET::Log>>())
-		.def(py::init<std::string, uint64_t, std::shared_ptr<ET::Log>>())
-		.def(py::init<uint64_t, uint64_t, std::shared_ptr<ET::Log>>())
-		.def(py::init<std::string, uint64_t, uint64_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<size_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string, size_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<size_t, size_t, std::shared_ptr<ET::Log>>())
+		.def(py::init<std::string, size_t, size_t, std::shared_ptr<ET::Log>>())
 		.def(py::init<std::vector<double>, std::shared_ptr<ET::Log>>(),
 		     py::keep_alive<1, 2>())
 		.def(py::init<std::vector<std::vector<double>>,
@@ -477,7 +477,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
 				 (ET::UGrid<double>::*)()) &ET::UGrid<double>::getNeighbors,
 				 py::return_value_policy::reference)
-		.def("get_neighbors", [](ET::UGrid<double>& self, uint64_t i)
+		.def("get_neighbors", [](ET::UGrid<double>& self, size_t i)
 		{
 			if (i < 0 || i >= self.getN())
 			{
@@ -513,7 +513,7 @@ PYBIND11_MODULE(etraj, m) {
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](ET::UGrid<double>& self, uint64_t i)
+		.def("output", [](ET::UGrid<double>& self, size_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
@@ -716,25 +716,25 @@ PYBIND11_MODULE(etraj, m) {
 		//  Query neighbors for points on the grid
 		//--------------------------------------------------------------------------
 		.def("query_neighbors", (void
-		     (ET::UGrid<double>::*)(uint64_t k))
+		     (ET::UGrid<double>::*)(size_t k))
 				 &ET::UGrid<double>::queryNeighbors)
 		.def("query_neighbors", (std::vector<std::vector<size_t>>
  		     (ET::UGrid<double>::*)(const std::vector<std::vector<double>>&,
-					                      uint64_t k))
+					                      size_t k))
  				 &ET::UGrid<double>::queryNeighbors)
 		.def("query_radius", &ET::UGrid<double>::queryRadius)
     //--------------------------------------------------------------------------
 		//  Query neighbors for arbitrary points
 		//--------------------------------------------------------------------------
     .def("query_neighbors", (std::vector<size_t>
-		     (ET::UGrid<double>::*)(const std::vector<double>&, uint64_t))
+		     (ET::UGrid<double>::*)(const std::vector<double>&, size_t))
 				 &ET::UGrid<double>::queryNeighbors)
     .def("query_distances", (std::vector<size_t>
-         (ET::UGrid<double>::*)(const std::vector<double>&, uint64_t))
+         (ET::UGrid<double>::*)(const std::vector<double>&, size_t))
          &ET::UGrid<double>::queryDistances)
     .def("query_neighbors", (std::vector<std::vector<size_t>>
          (ET::UGrid<double>::*)(const std::vector<std::vector<double>>&,
-          uint64_t))
+          size_t))
     		 &ET::UGrid<double>::queryNeighbors)
 		//--------------------------------------------------------------------------
 		;
@@ -750,22 +750,22 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		.def(py::init<>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
-		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
-			            std::vector<double>>())
+		//.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>>())
+		//.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>>())
+		//.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+		//	            std::vector<double>>())
 		//--------------------------------------------------------------------------
 		//	Constructors with shared loggers
 		//--------------------------------------------------------------------------
 		.def(py::init<std::shared_ptr<ET::Log>>())
 		.def(py::init<std::shared_ptr<ET::UGrid<double>>,
 			            std::shared_ptr<ET::Log>>())
-		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
-			            std::shared_ptr<ET::Log>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>,
-			            std::shared_ptr<ET::Log>>())
-		.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
-			            std::vector<double>,std::shared_ptr<ET::Log>>())
+		//.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+		//	            std::shared_ptr<ET::Log>>())
+		//.def(py::init<std::shared_ptr<ET::UGrid<double>>,std::vector<double>,
+		//	            std::shared_ptr<ET::Log>>())
+		//.def(py::init<std::string,std::shared_ptr<ET::UGrid<double>>,
+		//	            std::vector<double>,std::shared_ptr<ET::Log>>())
 		//--------------------------------------------------------------------------
 		//	Getters and Setters
 		//--------------------------------------------------------------------------
@@ -781,26 +781,26 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 	  .def("get_dim", &ET::ScalarField<double>::getDim,
 		     py::return_value_policy::reference)
-		.def("get_Interpolator", &ET::ScalarField<double>::getInterpolator,
+		.def("get_interpolator", &ET::ScalarField<double>::getInterpolator,
 		     py::return_value_policy::reference)
 		.def("get_integrator", &ET::ScalarField<double>::getIntegrator,
 	       py::return_value_policy::reference)
-		.def("get_logger", &ET::ScalarField<double>::getLogger,
- 		     py::return_value_policy::reference)
+		// .def("get_logger", &ET::ScalarField<double>::getLogger,
+ 		//      py::return_value_policy::reference)
 		.def("set_ugrid", &ET::ScalarField<double>::setUGrid)
 		.def("set_field", &ET::ScalarField<double>::setField)
 		.def("set_name", &ET::ScalarField<double>::setName)
-		.def("set_approx_type", &ET::ScalarField<double>::setInterpolatorType)
-		.def("output", [](ET::ScalarField<double>& self)
-		{
-			std::string out = self.getLogger()->getOutput();
-			py::print(out);
-		})
-		.def("output", [](ET::ScalarField<double>& self, uint64_t i)
-		{
-			std::string out = self.getLogger()->getOutput(i);
-			py::print(out);
-		})
+		//.def("set_approx_type", &ET::ScalarField<double>::setInterpolatorType)
+		// .def("output", [](ET::ScalarField<double>& self)
+		// {
+		// 	std::string out = self.getLogger()->getOutput();
+		// 	py::print(out);
+		// })
+		// .def("output", [](ET::ScalarField<double>& self, size_t i)
+		// {
+		// 	std::string out = self.getLogger()->getOutput(i);
+		// 	py::print(out);
+		// })
 		//--------------------------------------------------------------------------
 		//  Direct exposure
 		//--------------------------------------------------------------------------
@@ -842,35 +842,35 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 		//  Derivatives of the field
 		//--------------------------------------------------------------------------
-		.def("gradient", &ET::ScalarField<double>::gradient,
-				 py::return_value_policy::reference)
+		// .def("gradient", &ET::ScalarField<double>::gradient,
+		// 		 py::return_value_policy::reference)
     //--------------------------------------------------------------------------
  		//  Derivatives along the entire grid
  		//--------------------------------------------------------------------------
 		.def("derivative",
 		     (std::vector<std::vector<double>> (ET::ScalarField<double>::*)
-			    (uint32_t)) &ET::ScalarField<double>::derivative,
+			    (size_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
 	 	.def("derivative",
 		     (std::vector<double> (ET::ScalarField<double>::*)
-			    (uint32_t, uint32_t)) &ET::ScalarField<double>::derivative,
+			    (size_t, size_t)) &ET::ScalarField<double>::derivative,
 	       py::return_value_policy::reference)
     //--------------------------------------------------------------------------
  		//  Derivatives at points on the grid
  		//--------------------------------------------------------------------------
 	  .def("derivative_point",
 		     (std::vector<double> (ET::ScalarField<double>::*)
-			    (uint64_t, uint32_t))
+			    (size_t, size_t))
           &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
 	  .def("derivative_point",
 		     (double (ET::ScalarField<double>::*)
-			    (uint64_t, uint32_t, uint32_t))
+			    (size_t, size_t, size_t))
 				 &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
     .def("derivative_point",
 		     (double (ET::ScalarField<double>::*)
-			    (uint64_t, std::vector<uint32_t>))
+			    (size_t, std::vector<size_t>))
 				 &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
     //--------------------------------------------------------------------------
@@ -878,17 +878,17 @@ PYBIND11_MODULE(etraj, m) {
  		//--------------------------------------------------------------------------
     .def("derivative_point",
 		     (std::vector<double> (ET::ScalarField<double>::*)
-			    (std::vector<double>, uint32_t))
+			    (std::vector<double>, size_t))
           &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
 	  .def("derivative_point",
 		     (double (ET::ScalarField<double>::*)
-			    (std::vector<double>, uint32_t, uint32_t))
+			    (std::vector<double>, size_t, size_t))
 				 &ET::ScalarField<double>::derivativePoint,
 	       py::return_value_policy::reference)
      .def("derivative_point",
  		     (double (ET::ScalarField<double>::*)
- 			    (std::vector<double>, std::vector<uint32_t>))
+ 			    (std::vector<double>, std::vector<size_t>))
  				 &ET::ScalarField<double>::derivativePoint,
  	       py::return_value_policy::reference)
 		//--------------------------------------------------------------------------
@@ -904,39 +904,39 @@ PYBIND11_MODULE(etraj, m) {
 		;
 	//----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//	Scalarfield examples
-	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	//	Wave EQ in 1D
-	//----------------------------------------------------------------------------
-	py::class_<ET::WaveEQ1D<double>,
-	           ET::ScalarField<double>,
-						 std::shared_ptr<ET::WaveEQ1D<double>>>(m,"WaveEQ1D")
-		.def(py::init<>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double,double,double>())
-		.def("get_A", &ET::WaveEQ1D<double>::getA)
-		.def("set_A", &ET::WaveEQ1D<double>::setA)
-		.def("get_k", &ET::WaveEQ1D<double>::getk)
-		.def("set_k", &ET::WaveEQ1D<double>::setk)
-		.def("get_w", &ET::WaveEQ1D<double>::getw)
-		.def("set_w", &ET::WaveEQ1D<double>::setw)
-		;
-	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	//	Klein-Gordon field in 1D
-	//----------------------------------------------------------------------------
-	py::class_<ET::KleinGordon1D<double>,
-	           ET::ScalarField<double>,
-						 std::shared_ptr<ET::KleinGordon1D<double>>>(m,"KleinGordon1D")
-		.def(py::init<>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
-		.def(py::init<std::shared_ptr<ET::UGrid<double>>,double>())
-		.def("get_mass", &ET::KleinGordon1D<double>::getMass)
-		.def("set_mass", &ET::KleinGordon1D<double>::setMass)
-		;
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //	Scalarfield examples
+	// //----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //	Wave EQ in 1D
+	// //----------------------------------------------------------------------------
+	// py::class_<ET::WaveEQ1D<double>,
+	//            ET::ScalarField<double>,
+	// 					 std::shared_ptr<ET::WaveEQ1D<double>>>(m,"WaveEQ1D")
+	// 	.def(py::init<>())
+	// 	.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
+	// 	.def(py::init<std::shared_ptr<ET::UGrid<double>>,double,double,double>())
+	// 	.def("get_A", &ET::WaveEQ1D<double>::getA)
+	// 	.def("set_A", &ET::WaveEQ1D<double>::setA)
+	// 	.def("get_k", &ET::WaveEQ1D<double>::getk)
+	// 	.def("set_k", &ET::WaveEQ1D<double>::setk)
+	// 	.def("get_w", &ET::WaveEQ1D<double>::getw)
+	// 	.def("set_w", &ET::WaveEQ1D<double>::setw)
+	// 	;
+	// //----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //	Klein-Gordon field in 1D
+	// //----------------------------------------------------------------------------
+	// py::class_<ET::KleinGordon1D<double>,
+	//            ET::ScalarField<double>,
+	// 					 std::shared_ptr<ET::KleinGordon1D<double>>>(m,"KleinGordon1D")
+	// 	.def(py::init<>())
+	// 	.def(py::init<std::shared_ptr<ET::UGrid<double>>>())
+	// 	.def(py::init<std::shared_ptr<ET::UGrid<double>>,double>())
+	// 	.def("get_mass", &ET::KleinGordon1D<double>::getMass)
+	// 	.def("set_mass", &ET::KleinGordon1D<double>::setMass)
+	// 	;
+	// //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Interpolator class
@@ -947,21 +947,21 @@ PYBIND11_MODULE(etraj, m) {
 		//	Constructors
 		//--------------------------------------------------------------------------
 		.def(py::init<>())
-		.def(py::init<int>())
-		.def(py::init<std::string>())
+		//.def(py::init<int>())
+		//.def(py::init<std::string>())
 		//--------------------------------------------------------------------------
 		//	Constructors with shared loggers
 		//--------------------------------------------------------------------------
 		.def(py::init<std::shared_ptr<ET::Log>>())
-		.def(py::init<int,std::shared_ptr<ET::Log>>())
-		.def(py::init<std::string,std::shared_ptr<ET::Log>>())
+		//.def(py::init<int,std::shared_ptr<ET::Log>>())
+		//.def(py::init<std::string,std::shared_ptr<ET::Log>>())
 		//--------------------------------------------------------------------------
 		//	Getters and setters
 		//--------------------------------------------------------------------------
-		.def("get_approx_type", &ET::Interpolator<double>::getInterpolatorType,
-		     py::return_value_policy::reference)
-		.def("get_approx_params", &ET::Interpolator<double>::getInterpolatorParams,
-		     py::return_value_policy::reference)
+		// .def("get_approx_type", &ET::Interpolator<double>::getInterpolatorType,
+		//      py::return_value_policy::reference)
+		// .def("get_approx_params", &ET::Interpolator<double>::getInterpolatorParams,
+		//      py::return_value_policy::reference)
 		.def("get_lsdriver", &ET::Interpolator<double>::getLSDriver,
 		     py::return_value_policy::reference)
 		.def("get_flag", &ET::Interpolator<double>::getFlag,
@@ -970,34 +970,34 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_logger", &ET::Interpolator<double>::getLogger,
   	     py::return_value_policy::reference)
-		.def("set_approx_type", &ET::Interpolator<double>::setInterpolatorType)
-		.def("set_approx_params", &ET::Interpolator<double>::setInterpolatorParams)
+		// .def("set_approx_type", &ET::Interpolator<double>::setInterpolatorType)
+		// .def("set_approx_params", &ET::Interpolator<double>::setInterpolatorParams)
 		.def("set_lsdriver", &ET::Interpolator<double>::setLSDriver)
-		.def("set_k", [](ET::Interpolator<double>& self, int k)
-		{
-			if (k <= 0)
-			{
-				throw py::value_error("Invalid value " + std::to_string(k)
-				                      + " passed to Interpolator::set_k");
-			}
-			else
-			{
-				return self.set_k(k);
-			}
-		})
-		.def("set_n", [](ET::Interpolator<double>& self, int n)
-		{
-			if (n <= 0)
-			{
-				throw py::value_error("Invalid value " + std::to_string(n)
-				                      + " passed to Interpolator::set_n");
-			}
-			else
-			{
-				return self.set_n(n);
-			}
-		})
-    .def("set_shape", &ET::Interpolator<double>::set_shape)
+		// .def("set_k", [](ET::Interpolator<double>& self, int k)
+		// {
+		// 	if (k <= 0)
+		// 	{
+		// 		throw py::value_error("Invalid value " + std::to_string(k)
+		// 		                      + " passed to Interpolator::set_k");
+		// 	}
+		// 	else
+		// 	{
+		// 		return self.set_k(k);
+		// 	}
+		// })
+		// .def("set_n", [](ET::Interpolator<double>& self, int n)
+		// {
+		// 	if (n <= 0)
+		// 	{
+		// 		throw py::value_error("Invalid value " + std::to_string(n)
+		// 		                      + " passed to Interpolator::set_n");
+		// 	}
+		// 	else
+		// 	{
+		// 		return self.set_n(n);
+		// 	}
+		// })
+    // .def("set_shape", &ET::Interpolator<double>::set_shape)
 		.def("set_flag", &ET::Interpolator<double>::setFlag)
 		.def("set_info", &ET::Interpolator<double>::setInfo)
 		.def("output", [](ET::Interpolator<double>& self)
@@ -1005,239 +1005,239 @@ PYBIND11_MODULE(etraj, m) {
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](ET::Interpolator<double>& self, uint64_t i)
+		.def("output", [](ET::Interpolator<double>& self, size_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
 		})
-		//--------------------------------------------------------------------------
-		//	scalar field methods
-		//--------------------------------------------------------------------------
-		.def("scalar_gradient",
-		     (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
-				  (const std::shared_ptr<ET::UGrid<double>>,
-				   const std::shared_ptr<ET::ScalarField<double>>))
-				 &ET::Interpolator<double>::scalarGradient,
-	       py::return_value_policy::reference)
-	  .def("scalar_gradient",
-		     (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
-				  (const std::shared_ptr<ET::UGrid<double>>,
-					 const ET::ScalarField<double>&))
-				 &ET::Interpolator<double>::scalarGradient,
-	       py::return_value_policy::reference)
-		 .def("scalar_gradient_ls",
- 		     (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
- 				  (const std::shared_ptr<ET::UGrid<double>>,
- 				   const std::shared_ptr<ET::ScalarField<double>>))
- 				 &ET::Interpolator<double>::scalarGradientLS,
- 	       py::return_value_policy::reference)
- 	  .def("scalar_gradient_ls",
- 		     (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
- 				  (const std::shared_ptr<ET::UGrid<double>>,
- 					 const ET::ScalarField<double>&))
- 				 &ET::Interpolator<double>::scalarGradientLS,
- 	       py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+		// //	scalar field methods
+		// //--------------------------------------------------------------------------
+		// .def("scalar_gradient",
+		//      (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+		// 		   const std::shared_ptr<ET::ScalarField<double>>))
+		// 		 &ET::Interpolator<double>::scalarGradient,
+	  //      py::return_value_policy::reference)
+	  // .def("scalar_gradient",
+		//      (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const ET::ScalarField<double>&))
+		// 		 &ET::Interpolator<double>::scalarGradient,
+	  //      py::return_value_policy::reference)
+		//  .def("scalar_gradient_ls",
+ 		//      (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+ 		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+ 		// 		   const std::shared_ptr<ET::ScalarField<double>>))
+ 		// 		 &ET::Interpolator<double>::scalarGradientLS,
+ 	  //      py::return_value_policy::reference)
+ 	  // .def("scalar_gradient_ls",
+ 		//      (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+ 		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const ET::ScalarField<double>&))
+ 		// 		 &ET::Interpolator<double>::scalarGradientLS,
+ 	  //      py::return_value_policy::reference)
 	  //--------------------------------------------------------------------------
 		//  Scalar derivative (order n)
 		//--------------------------------------------------------------------------
-	  .def("scalar_derivative",
-				 (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-		 			 const std::shared_ptr<ET::ScalarField<double>>,
-					 uint32_t))
-		 		 &ET::Interpolator<double>::scalarDerivative,
-	       py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
-	 	//  Scalar derivative (direction dir, order n)
-	 	//--------------------------------------------------------------------------
-		.def("scalar_derivative",
-				 (std::vector<double> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 uint32_t, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivative,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (direction dir, order n)
- 	 	//--------------------------------------------------------------------------
- 		.def("scalar_derivative",
- 				 (std::vector<double> (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const std::shared_ptr<ET::ScalarField<double>>,
- 					 std::vector<uint32_t>))
- 				 &ET::Interpolator<double>::scalarDerivative,
- 				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (index i, order n)
- 	 	//--------------------------------------------------------------------------
-		.def("scalar_derivative_point",
-				 (std::vector<double> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 uint64_t, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-	 	//  Scalar derivative (point p, order n)
-	 	//--------------------------------------------------------------------------
-		.def("scalar_derivative_point",
-				 (std::vector<double> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 std::vector<double>, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (index i, direction dir, order n)
- 	 	//--------------------------------------------------------------------------
-	  .def("scalar_derivative_point",
-	 			 (double (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 uint64_t, uint32_t, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-	 	//  Scalar derivative (point p, direction dir, order n)
-	 	//--------------------------------------------------------------------------
-	  .def("scalar_derivative_point",
-	 			 (double (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 std::vector<double>, uint32_t, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
-  	//  Scalar derivative (index i, direction dir, order n)
-  	//--------------------------------------------------------------------------
- 	  .def("scalar_derivative_point",
- 	 			 (double (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const std::shared_ptr<ET::ScalarField<double>>,
- 					 uint64_t, std::vector<uint32_t>))
- 				 &ET::Interpolator<double>::scalarDerivativePoint,
- 				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-   	//  Scalar derivative (point p, direction dir, order n)
-   	//--------------------------------------------------------------------------
-	  .def("scalar_derivative_point",
-	 			 (double (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const std::shared_ptr<ET::ScalarField<double>>,
-					 std::vector<double>, std::vector<uint32_t>))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
-		//  Passing Scalarfield by reference
-		//--------------------------------------------------------------------------
-		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (order n)
- 	 	//--------------------------------------------------------------------------
-		.def("scalar_derivative",
- 				 (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 		 			 const ET::ScalarField<double>&,
- 					 uint32_t))
- 		 		 &ET::Interpolator<double>::scalarDerivative,
- 	       py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
- 	 	//  Scalar derivative (direction dir, order n)
- 	 	//--------------------------------------------------------------------------
- 	  .def("scalar_derivative",
- 				 (std::vector<double> (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const ET::ScalarField<double>&,
- 					 uint32_t, uint32_t))
- 				 &ET::Interpolator<double>::scalarDerivative,
- 				 py::return_value_policy::reference)
-	  //--------------------------------------------------------------------------
-	 	//  Scalar derivative (direction dir, order n)
-	 	//--------------------------------------------------------------------------
-	  .def("scalar_derivative",
-				 (std::vector<double> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const ET::ScalarField<double>&,
-					 std::vector<uint32_t>))
-				 &ET::Interpolator<double>::scalarDerivative,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
-		//  Scalar derivative (index i, order n)
-		//--------------------------------------------------------------------------
- 		.def("scalar_derivative_point",
- 				 (std::vector<double> (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const ET::ScalarField<double>&,
- 					 uint64_t, uint32_t))
- 				 &ET::Interpolator<double>::scalarDerivativePoint,
- 				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-		//  Scalar derivative (point p, order n)
-		//--------------------------------------------------------------------------
-		.def("scalar_derivative_point",
-				 (std::vector<double> (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const ET::ScalarField<double>&,
-					 std::vector<double>, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
-		//  Scalar derivative (index i, direction dir, order n)
-		//--------------------------------------------------------------------------
-	  .def("scalar_derivative_point",
-	 			 (double (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const ET::ScalarField<double>&,
-					 uint64_t, uint32_t, uint32_t))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
- 		//  Scalar derivative (point p, direction dir, order n)
- 		//--------------------------------------------------------------------------
- 	  .def("scalar_derivative_point",
- 	 			 (double (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const ET::ScalarField<double>&,
- 					 std::vector<double>, uint32_t, uint32_t))
- 				 &ET::Interpolator<double>::scalarDerivativePoint,
- 				 py::return_value_policy::reference)
-		//--------------------------------------------------------------------------
- 		//  Scalar derivative (index i, direction dir, order n)
- 		//--------------------------------------------------------------------------
- 	  .def("scalar_derivative_point",
- 	 			 (double (ET::Interpolator<double>::*)
- 				 	(const std::shared_ptr<ET::UGrid<double>>,
- 					 const ET::ScalarField<double>&,
- 					 uint64_t, std::vector<uint32_t>))
- 				 &ET::Interpolator<double>::scalarDerivativePoint,
- 				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-		//  Scalar derivative (point p, direction dir, order n)
-		//--------------------------------------------------------------------------
-	  .def("scalar_derivative_point",
-	 			 (double (ET::Interpolator<double>::*)
-				 	(const std::shared_ptr<ET::UGrid<double>>,
-					 const ET::ScalarField<double>&,
-					 std::vector<double>, std::vector<uint32_t>))
-				 &ET::Interpolator<double>::scalarDerivativePoint,
-				 py::return_value_policy::reference)
-    //--------------------------------------------------------------------------
-    //  Various matrices
-    //--------------------------------------------------------------------------
-		.def("construct_taylor_matrix",
-		     (ET::Matrix<double> (ET::Interpolator<double>::*)
-				  (const std::shared_ptr<ET::UGrid<double>>,
-           const std::vector<uint64_t>,uint64_t,uint64_t))
-				 &ET::Interpolator<double>::constructTaylorMatrix)
-    .def("construct_taylor_matrix",
-         (ET::Matrix<double> (ET::Interpolator<double>::*)
-    		  (const std::shared_ptr<ET::UGrid<double>>,
-          const std::vector<uint64_t>,std::vector<double>,uint64_t))
-    		 &ET::Interpolator<double>::constructTaylorMatrix)
-		.def("construct_taylor_matrix",
-		     (ET::Matrix<double> (ET::Interpolator<double>::*)
-				  (const std::shared_ptr<ET::UGrid<double>>,
-           const std::vector<uint64_t>,uint64_t,ET::Monomial&))
-				 &ET::Interpolator<double>::constructTaylorMatrix)
+	  // .def("scalar_derivative",
+		// 		 (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		//  			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 size_t))
+		//  		 &ET::Interpolator<double>::scalarDerivative,
+	  //      py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+	 	// //  Scalar derivative (direction dir, order n)
+	 	// //--------------------------------------------------------------------------
+		// .def("scalar_derivative",
+		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 size_t, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivative,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+ 	 	// //  Scalar derivative (direction dir, order n)
+ 	 	// //--------------------------------------------------------------------------
+ 		// .def("scalar_derivative",
+ 		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+ 		// 			 std::vector<size_t>))
+ 		// 		 &ET::Interpolator<double>::scalarDerivative,
+ 		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+ 	 	// //  Scalar derivative (index i, order n)
+ 	 	// //--------------------------------------------------------------------------
+		// .def("scalar_derivative_point",
+		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 size_t, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+	 	// //  Scalar derivative (point p, order n)
+	 	// //--------------------------------------------------------------------------
+		// .def("scalar_derivative_point",
+		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 std::vector<double>, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+ 	 	// //  Scalar derivative (index i, direction dir, order n)
+ 	 	// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative_point",
+	 	// 		 (double (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 size_t, size_t, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+	 	// //  Scalar derivative (point p, direction dir, order n)
+	 	// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative_point",
+	 	// 		 (double (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 std::vector<double>, size_t, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+  	// //  Scalar derivative (index i, direction dir, order n)
+  	// //--------------------------------------------------------------------------
+ 	  // .def("scalar_derivative_point",
+ 	 	// 		 (double (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+ 		// 			 size_t, std::vector<size_t>))
+ 		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+ 		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+   	// //  Scalar derivative (point p, direction dir, order n)
+   	// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative_point",
+	 	// 		 (double (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const std::shared_ptr<ET::ScalarField<double>>,
+		// 			 std::vector<double>, std::vector<size_t>))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+		// //  Passing Scalarfield by reference
+		// //--------------------------------------------------------------------------
+		// //--------------------------------------------------------------------------
+ 	 	// //  Scalar derivative (order n)
+ 	 	// //--------------------------------------------------------------------------
+		// .def("scalar_derivative",
+ 		// 		 (std::vector<std::vector<double>> (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		//  			 const ET::ScalarField<double>&,
+ 		// 			 size_t))
+ 		//  		 &ET::Interpolator<double>::scalarDerivative,
+ 	  //      py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+ 	 	// //  Scalar derivative (direction dir, order n)
+ 	 	// //--------------------------------------------------------------------------
+ 	  // .def("scalar_derivative",
+ 		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const ET::ScalarField<double>&,
+ 		// 			 size_t, size_t))
+ 		// 		 &ET::Interpolator<double>::scalarDerivative,
+ 		// 		 py::return_value_policy::reference)
+	  // //--------------------------------------------------------------------------
+	 	// //  Scalar derivative (direction dir, order n)
+	 	// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative",
+		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const ET::ScalarField<double>&,
+		// 			 std::vector<size_t>))
+		// 		 &ET::Interpolator<double>::scalarDerivative,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+		// //  Scalar derivative (index i, order n)
+		// //--------------------------------------------------------------------------
+ 		// .def("scalar_derivative_point",
+ 		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const ET::ScalarField<double>&,
+ 		// 			 size_t, size_t))
+ 		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+ 		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+		// //  Scalar derivative (point p, order n)
+		// //--------------------------------------------------------------------------
+		// .def("scalar_derivative_point",
+		// 		 (std::vector<double> (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const ET::ScalarField<double>&,
+		// 			 std::vector<double>, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+		// //  Scalar derivative (index i, direction dir, order n)
+		// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative_point",
+	 	// 		 (double (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const ET::ScalarField<double>&,
+		// 			 size_t, size_t, size_t))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+ 		// //  Scalar derivative (point p, direction dir, order n)
+ 		// //--------------------------------------------------------------------------
+ 	  // .def("scalar_derivative_point",
+ 	 	// 		 (double (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const ET::ScalarField<double>&,
+ 		// 			 std::vector<double>, size_t, size_t))
+ 		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+ 		// 		 py::return_value_policy::reference)
+		// //--------------------------------------------------------------------------
+ 		// //  Scalar derivative (index i, direction dir, order n)
+ 		// //--------------------------------------------------------------------------
+ 	  // .def("scalar_derivative_point",
+ 	 	// 		 (double (ET::Interpolator<double>::*)
+ 		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+ 		// 			 const ET::ScalarField<double>&,
+ 		// 			 size_t, std::vector<size_t>))
+ 		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+ 		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+		// //  Scalar derivative (point p, direction dir, order n)
+		// //--------------------------------------------------------------------------
+	  // .def("scalar_derivative_point",
+	 	// 		 (double (ET::Interpolator<double>::*)
+		// 		 	(const std::shared_ptr<ET::UGrid<double>>,
+		// 			 const ET::ScalarField<double>&,
+		// 			 std::vector<double>, std::vector<size_t>))
+		// 		 &ET::Interpolator<double>::scalarDerivativePoint,
+		// 		 py::return_value_policy::reference)
+    // //--------------------------------------------------------------------------
+    // //  Various matrices
+    // //--------------------------------------------------------------------------
+		// .def("construct_taylor_matrix",
+		//      (ET::Matrix<double> (ET::Interpolator<double>::*)
+		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+    //        const std::vector<size_t>,size_t,size_t))
+		// 		 &ET::Interpolator<double>::constructTaylorMatrix)
+    // .def("construct_taylor_matrix",
+    //      (ET::Matrix<double> (ET::Interpolator<double>::*)
+    // 		  (const std::shared_ptr<ET::UGrid<double>>,
+    //       const std::vector<size_t>,std::vector<double>,size_t))
+    // 		 &ET::Interpolator<double>::constructTaylorMatrix)
+		// .def("construct_taylor_matrix",
+		//      (ET::Matrix<double> (ET::Interpolator<double>::*)
+		// 		  (const std::shared_ptr<ET::UGrid<double>>,
+    //        const std::vector<size_t>,size_t,ET::Monomial&))
+		// 		 &ET::Interpolator<double>::constructTaylorMatrix)
 		//--------------------------------------------------------------------------
 		//	print functionality
 		//--------------------------------------------------------------------------
@@ -1269,12 +1269,12 @@ PYBIND11_MODULE(etraj, m) {
     .def("construct_rbf_matrix",
          (ET::Matrix<double> (ET::RadialBasisInterpolator<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,
-          const std::vector<uint64_t>,uint64_t))
+          const std::vector<size_t>,size_t))
     		 &ET::RadialBasisInterpolator<double>::constructRBFMatrix)
     .def("construct_rbfd_matrix",
         (ET::Matrix<double> (ET::RadialBasisInterpolator<double>::*)
     		  (const std::shared_ptr<ET::UGrid<double>>,
-         const std::vector<uint64_t>,size_t,size_t))
+         const std::vector<size_t>,size_t,size_t))
     		 &ET::RadialBasisInterpolator<double>::constructRBFFirstDerivativeMatrix)
     .def("construct_rbf_matrix",
         (ET::Matrix<double> (ET::RadialBasisInterpolator<double>::*)
@@ -1297,7 +1297,7 @@ PYBIND11_MODULE(etraj, m) {
 			std::string out = self.getLogger()->getOutput();
 			py::print(out);
 		})
-		.def("output", [](ET::RadialBasisInterpolator<double>& self, uint64_t i)
+		.def("output", [](ET::RadialBasisInterpolator<double>& self, size_t i)
 		{
 			std::string out = self.getLogger()->getOutput(i);
 			py::print(out);
@@ -1314,34 +1314,34 @@ PYBIND11_MODULE(etraj, m) {
     ;
   //----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//  Integrator class
-	//----------------------------------------------------------------------------
-	py::class_<ET::Integrator<double>,
-	           std::shared_ptr<ET::Integrator<double>>>(m, "Integrator")
-		.def(py::init<>())
-		.def("scalar_RK4_step", &ET::Integrator<double>::scalarRK4Step)
-		;
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //  Integrator class
+	// //----------------------------------------------------------------------------
+	// py::class_<ET::Integrator<double>,
+	//            std::shared_ptr<ET::Integrator<double>>>(m, "Integrator")
+	// 	.def(py::init<>())
+	// 	.def("scalar_RK4_step", &ET::Integrator<double>::scalarRK4Step)
+	// 	;
+	// //----------------------------------------------------------------------------
 
 
-	//----------------------------------------------------------------------------
-	//  Appproximator enum
-	//----------------------------------------------------------------------------
-	py::class_<ET::VectorField<double>,
-	           std::shared_ptr<ET::VectorField<double>>>(m, "VectorField")
-	  .def(py::init<>())
-		;
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Appproximator enum
-	//----------------------------------------------------------------------------
-	py::enum_<ET::InterpolatorType>(m, "InterpolatorType")
-		.value("LS", ET::InterpolatorType::LS)
-		.value("RBF", ET::InterpolatorType::RBF)
-		;
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //  Appproximator enum
+	// //----------------------------------------------------------------------------
+	// py::class_<ET::VectorField<double>,
+	//            std::shared_ptr<ET::VectorField<double>>>(m, "VectorField")
+	//   .def(py::init<>())
+	// 	;
+	// //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  Appproximator enum
+	// //----------------------------------------------------------------------------
+	// py::enum_<ET::InterpolatorType>(m, "InterpolatorType")
+	// 	.value("LS", ET::InterpolatorType::LS)
+	// 	.value("RBF", ET::InterpolatorType::RBF)
+	// 	;
+	// //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	LSDriver enum
@@ -1354,32 +1354,32 @@ PYBIND11_MODULE(etraj, m) {
 		;
 	//----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//	Interpolator Parameters Struct
-	//----------------------------------------------------------------------------
-	py::class_<ET::InterpolatorParams>(m, "InterpolatorParams")
-		.def(py::init<>())
-		.def_readwrite("k", &ET::InterpolatorParams::k)
-		.def_readwrite("n", &ET::InterpolatorParams::n)
-		;
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //	Interpolator Parameters Struct
+	// //----------------------------------------------------------------------------
+	// py::class_<ET::InterpolatorParams>(m, "InterpolatorParams")
+	// 	.def(py::init<>())
+	// 	.def_readwrite("k", &ET::InterpolatorParams::k)
+	// 	.def_readwrite("n", &ET::InterpolatorParams::n)
+	// 	;
+	// //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Monomial class
 	//----------------------------------------------------------------------------
 	py::class_<ET::Monomial, std::shared_ptr<ET::Monomial>>(m, "Monomial")
 		.def(py::init<>())
-		.def(py::init<uint32_t>())
-		.def(py::init<uint32_t,uint32_t>())
+		.def(py::init<size_t>())
+		.def(py::init<size_t,size_t>())
 		.def("get_dim", &ET::Monomial::getDim,
 		     py::return_value_policy::reference)
 		.def("get_deg", &ET::Monomial::getDeg,
 		     py::return_value_policy::reference)
-		.def("get_mono", (std::vector<std::vector<uint32_t>>
+		.def("get_mono", (std::vector<std::vector<size_t>>
 			   (ET::Monomial::*)()) &ET::Monomial::getMono,
 				 py::return_value_policy::reference)
-		.def("get_mono", (std::vector<std::vector<uint32_t>>
-				 (ET::Monomial::*)(uint32_t)) &ET::Monomial::getMono,
+		.def("get_mono", (std::vector<std::vector<size_t>>
+				 (ET::Monomial::*)(size_t)) &ET::Monomial::getMono,
 				 py::return_value_policy::reference)
 		.def("get_mono_factors", &ET::Monomial::getMonoFactors,
 		     py::return_value_policy::reference)
@@ -1391,7 +1391,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("set_deg", &ET::Monomial::setDeg)
 		.def("generate_monomial", (void (ET::Monomial::*)())
 		     &ET::Monomial::generateMonomial)
-		.def("generate_monomial", (void (ET::Monomial::*)(uint32_t))
+		.def("generate_monomial", (void (ET::Monomial::*)(size_t))
 		 		 &ET::Monomial::generateMonomial)
 		.def("taylor_monomial_expansion", (std::vector<double>
 			   (ET::Monomial::*)(const std::vector<double>&,
@@ -1399,7 +1399,7 @@ PYBIND11_MODULE(etraj, m) {
 			   &ET::Monomial::taylorMonomialExpansion)
 		.def("taylor_monomial_expansion", (std::vector<double>
 	 		   (ET::Monomial::*)(const std::vector<double>&,
-					                 const std::vector<double>&,uint32_t))
+					                 const std::vector<double>&,size_t))
 	 		   &ET::Monomial::taylorMonomialExpansion)
 	  //	print functionality
 		.def("__repr__", [](ET::Monomial &mon)
@@ -1409,70 +1409,70 @@ PYBIND11_MODULE(etraj, m) {
 		;
 	//----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-	//	diffEQ Base class
-	//----------------------------------------------------------------------------
-  py::class_<ET::diffEQ<double>,
-             std::shared_ptr<ET::diffEQ<double>>>(m, "diffEQ")
-    .def(py::init<>())
-    ;
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	firstOrderODE Base class
-	//----------------------------------------------------------------------------
-  py::class_<ET::firstOrderODE<double>, ET::diffEQ<double>,
-             std::shared_ptr<ET::firstOrderODE<double>>>(m, "firstOrderODE")
-    .def(py::init<>())
-    .def("set_scalarfield", &ET::firstOrderODE<double>::setScalarField)
-    .def("set_vectorfield", &ET::firstOrderODE<double>::setVectorField)
-    .def("get_scalarfield", &ET::firstOrderODE<double>::getScalarField)
-    .def("get_vectorfield", &ET::firstOrderODE<double>::getVectorField)
-    //.def("dt", &ET::firstOrderODE<double>::dt)
-    ;
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	secondOrderODE Base class
-	//----------------------------------------------------------------------------
-  py::class_<ET::secondOrderODE<double>, ET::diffEQ<double>,
-             std::shared_ptr<ET::secondOrderODE<double>>>(m, "secondOrderODE")
-    .def(py::init<>())
-    .def("set_scalarfield", &ET::secondOrderODE<double>::setScalarField)
-    .def("set_vectorfield", &ET::secondOrderODE<double>::setVectorField)
-    .def("get_scalarfield", &ET::secondOrderODE<double>::getScalarField)
-    .def("get_vectorfield", &ET::secondOrderODE<double>::getVectorField)
-    //.def("dt", &ET::secondOrderODE<double>::dt)
-    //.def("dt", &ET::secondOrderODE<double>::d2t)
-    ;
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-	//	firstOrderODE Examples
-	//----------------------------------------------------------------------------
-  //----------------------------------------------------------------------------
-	//	heat equation
-	//----------------------------------------------------------------------------
-  py::class_<ET::heatEquation<double>, ET::firstOrderODE<double>,
-             std::shared_ptr<ET::heatEquation<double>>>(m, "heatEquation")
-    .def(py::init<>())
-    .def("set_alpha", &ET::heatEquation<double>::setAlpha)
-    .def("get_alpha", &ET::heatEquation<double>::getAlpha)
-    .def("dt", (double (ET::heatEquation<double>::*)
-         (std::vector<double>,double,double))
-         &ET::heatEquation<double>::dt)
-    .def("dt", (std::vector<double> (ET::heatEquation<double>::*)
-        (std::vector<std::vector<double>>,double,std::vector<double>))
-        &ET::heatEquation<double>::dt)
-    ;
-  //----------------------------------------------------------------------------
+  // //----------------------------------------------------------------------------
+	// //	DiffEQ Base class
+	// //----------------------------------------------------------------------------
+  // py::class_<ET::DiffEQ<double>,
+  //            std::shared_ptr<ET::DiffEQ<double>>>(m, "DiffEQ")
+  //   .def(py::init<>())
+  //   ;
+  // //----------------------------------------------------------------------------
+  //
+  // //----------------------------------------------------------------------------
+	// //	FirstOrderODE Base class
+	// //----------------------------------------------------------------------------
+  // py::class_<ET::FirstOrderODE<double>, ET::DiffEQ<double>,
+  //            std::shared_ptr<ET::FirstOrderODE<double>>>(m, "FirstOrderODE")
+  //   .def(py::init<>())
+  //   .def("set_scalarfield", &ET::FirstOrderODE<double>::setScalarField)
+  //   .def("set_vectorfield", &ET::FirstOrderODE<double>::setVectorField)
+  //   .def("get_scalarfield", &ET::FirstOrderODE<double>::getScalarField)
+  //   .def("get_vectorfield", &ET::FirstOrderODE<double>::getVectorField)
+  //   //.def("dt", &ET::FirstOrderODE<double>::dt)
+  //   ;
+  // //----------------------------------------------------------------------------
+  //
+  // //----------------------------------------------------------------------------
+	// //	SecondOrderODE Base class
+	// //----------------------------------------------------------------------------
+  // py::class_<ET::SecondOrderODE<double>, ET::DiffEQ<double>,
+  //            std::shared_ptr<ET::SecondOrderODE<double>>>(m, "SecondOrderODE")
+  //   .def(py::init<>())
+  //   .def("set_scalarfield", &ET::SecondOrderODE<double>::setScalarField)
+  //   .def("set_vectorfield", &ET::SecondOrderODE<double>::setVectorField)
+  //   .def("get_scalarfield", &ET::SecondOrderODE<double>::getScalarField)
+  //   .def("get_vectorfield", &ET::SecondOrderODE<double>::getVectorField)
+  //   //.def("dt", &ET::SecondOrderODE<double>::dt)
+  //   //.def("dt", &ET::SecondOrderODE<double>::d2t)
+  //   ;
+  // //----------------------------------------------------------------------------
+  //
+  // //----------------------------------------------------------------------------
+	// //	FirstOrderODE Examples
+	// //----------------------------------------------------------------------------
+  // //----------------------------------------------------------------------------
+	// //	heat equation
+	// //----------------------------------------------------------------------------
+  // py::class_<ET::HeatEquation<double>, ET::FirstOrderODE<double>,
+  //            std::shared_ptr<ET::HeatEquation<double>>>(m, "HeatEquation")
+  //   .def(py::init<>())
+  //   .def("set_alpha", &ET::HeatEquation<double>::setAlpha)
+  //   .def("get_alpha", &ET::HeatEquation<double>::getAlpha)
+  //   .def("dt", (double (ET::HeatEquation<double>::*)
+  //        (std::vector<double>,double,double))
+  //        &ET::HeatEquation<double>::dt)
+  //   .def("dt", (std::vector<double> (ET::HeatEquation<double>::*)
+  //       (std::vector<std::vector<double>>,double,std::vector<double>))
+  //       &ET::HeatEquation<double>::dt)
+  //   ;
+  // //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Logger class
 	//----------------------------------------------------------------------------
 	py::class_<ET::Log, std::shared_ptr<ET::Log>>(m, "Log")
 		.def(py::init<>())
-		.def("get_output", (std::string (ET::Log::*)(uint64_t)) &ET::Log::getOutput)
+		.def("get_output", (std::string (ET::Log::*)(size_t)) &ET::Log::getOutput)
 		.def("get_output", (std::string (ET::Log::*)()) &ET::Log::getOutput)
 		;
 	//----------------------------------------------------------------------------
@@ -1495,8 +1495,8 @@ PYBIND11_MODULE(etraj, m) {
   //----------------------------------------------------------------------------
 	//	KDTree class
 	//----------------------------------------------------------------------------
-  py::class_<ET::kdTree<double>,
-             std::shared_ptr<ET::kdTree<double>>>(m, "kdTree")
+  py::class_<ET::KDTree<double>,
+             std::shared_ptr<ET::KDTree<double>>>(m, "KDTree")
     .def(py::init<>())
     ;
   //----------------------------------------------------------------------------

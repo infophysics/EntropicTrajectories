@@ -24,20 +24,23 @@
 
 #include "ugrid.h"
 #include "log.h"
-#include "field.h"
 
 //------------------------------------------------------------------------------
 //  Forward declaration of Interpolator, Integrator and DiffEQ
 //------------------------------------------------------------------------------
 namespace ET
 {
+  //template<typename T> class Field;
   template<typename T> class Interpolator;
   template<typename T> class DiffEQ;
   template<typename T> class Integrator;
 }
+
+#include "field.h"
 #include "interpolator.h"
-#include "DiffEQ.h"
+#include "diffeq.h"
 #include "integrator.h"
+
 namespace ET
 {
   //----------------------------------------------------------------------------
@@ -196,7 +199,16 @@ namespace ET
      *  @return A vector of field values.
      */
     Vector<T> constructLocalFieldValues(size_t t_index);
-    
+    //! Construct local field values
+    /*! Function for generating vectors and matrices
+     *  of local field values to use for interpolation.
+     *  @param t_point The point to construct around.
+     *  @param t_k The number of neighbors to use.
+     *  @return Either vectors or matrices.
+     */
+    Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
+                                        size_t t_k);
+
     T laplacian(size_t index);
     //--------------------------------------------------------------------------
     //  Derivatives along the entire grid

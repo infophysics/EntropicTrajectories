@@ -337,12 +337,22 @@ namespace ET
   LocalTaylorInterpolator<T>::derivative(const size_t t_index,
                                          const size_t t_degree)
   {
+    Vector<T> result(m_ugrid->getDim());
     //  Construct the LTI Matrix for the point at index.
     Matrix<T> LTI = constructLocalTaylorMatrix(t_index, t_degree);
     //  Construct the field object
     auto f = m_field->constructLocalFieldValues(t_index);
     //  Solve the system
     auto s = xGELSx(LTI,f);
+    //  Grab each value corresponding to the derivative
+    for (size_t j = 0; j < m_ugrid->getDim(); j++)
+		{
+			std::vector<size_t> deriv(m_ugrid->getDim(),0);
+			deriv[j] = t_degree;
+			size_t l = m_monomial.getTaylorIndex(deriv);
+			result(j) = coefficients(l);
+		}
+    return result;
   }
 
   template<typename T>
@@ -350,19 +360,36 @@ namespace ET
                                            const size_t t_degree,
                                            const size_t t_direction)
   {
+    return derivative(t_index,t_degree)[t_direction];
   }
 
- template<typename T>
- std::vector<T>
- LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
-                                        const size_t t_degree)
+  template<typename T>
+  Vector<T>
+  LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
+                                         const size_t t_degree)
   {
+    Vector<T> result(m_ugrid->getDim());
+    //  Construct the LTI Matrix for the point at index.
+    Matrix<T> LTI = constructLocalTaylorMatrix(t_point, t_degree);
+    //  Construct the field object
+    auto f = m_field->constructLocalFieldValues(t_index);
+    //  Solve the system
+    auto s = xGELSx(LTI,f);
+    //  Grab each value corresponding to the derivative
+    for (size_t j = 0; j < m_ugrid->getDim(); j++)
+		{
+			std::vector<size_t> deriv(m_ugrid->getDim(),0);
+			deriv[j] = t_degree;
+			size_t l = m_monomial.getTaylorIndex(deriv);
+			result(j) = coefficients(l);
+		}
+    return result;
   }
 
- template<typename T>
- T LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
-                                          const size_t t_degree,
-                                          const size_t t_direction)
+  template<typename T>
+  T LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
+                                           const size_t t_degree,
+                                           const size_t t_direction)
   {
   }
 

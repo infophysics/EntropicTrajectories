@@ -30,12 +30,15 @@
 //------------------------------------------------------------------------------
 namespace ET
 {
+  //template<typename T> class ScalarField;
   template<typename T> class Interpolator;
   template<typename T> class DiffEQ;
   template<typename T> class Integrator;
 }
+
+//#include "scalarfield.h"
 #include "interpolator.h"
-#include "DiffEQ.h"
+#include "diffeq.h"
 #include "integrator.h"
 
 namespace ET
@@ -77,17 +80,17 @@ namespace ET
     /*! get name.  Get the name of the field.
      *  @return  m_name The name of the field.
      */
-    std::string getName();
+    std::string getName() const;
     //! Get Dim
     /*! get dimension.  Get the dimension of the field.
      *  @return  m_dim The dimension of the field.
      */
-    size_t getDim();
+    size_t getDim() const;
     //! Get N
     /*! get number of elements.  Get the number of elements of the field.
      *  @return  m_N The number of elements of the field.
      */
-    size_t getN();
+    size_t getN() const;
     /*! Get Log.  Get the shared instance of the Log.
      *  @return A shared pointer to the Log.
      */
@@ -167,7 +170,16 @@ namespace ET
      *  @param t_index The index of the point to construct around.
      *  @return Either vectors or matrices.
      */
-    virtual auto constructLocalFieldValues(size_t t_index);
+    virtual Vector<T> constructLocalFieldValues(size_t t_index);
+    //! Construct local field values
+    /*! Function for generating vectors and matrices
+     *  of local field values to use for interpolation.
+     *  @param t_point The point to construct around.
+     *  @param t_k The number of neighbors to use.
+     *  @return Either vectors or matrices.
+     */
+    virtual Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
+                                           size_t t_k);
 
   protected:
     /*! Name.  The name of the Interpolator. */
@@ -183,7 +195,7 @@ namespace ET
     /*! Interpolator.  A shared instance of an Interpolator. */
     std::shared_ptr<Interpolator<T>> m_interpolator;
     /*! DiffEQ.  A shared instance of a DiffEQ. */
-    std::shared_ptr<DiffEQ<T>> m_DiffEQ;
+    std::shared_ptr<DiffEQ<T>> m_diffeq;
     /*! Integrator.  A shared instance of an Integrator. */
     std::shared_ptr<Integrator<T>> m_integrator;
     /*! Flag.  An in that denotes the type of message stored in info.*/
@@ -191,5 +203,7 @@ namespace ET
     /*! Info.  A container for storing important information.*/
     std::string m_info;
   };
+
+  template class Field<double>;
 
 }

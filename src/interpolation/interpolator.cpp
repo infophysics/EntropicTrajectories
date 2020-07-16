@@ -73,10 +73,10 @@ namespace ET
   : m_name("default"), m_ugrid(t_ugrid)
   {
     m_lsdriver = LSDriver::xGELS;
-		m_log = log;
+		m_log = std::make_shared<Log>();
+    m_log->init("ET:Interpolator:default", ".logs/interpolator_default.txt");
 		m_log->TRACE("Interpolator 'default' created at location "
 		            + getMem(*this));
-		m_log->INFO("Logger passed to Interpolator 'default'");
   }
 	//----------------------------------------------------------------------------
 	//	Constructor with shared logger
@@ -227,7 +227,7 @@ namespace ET
     return y;
 	}
   template<typename T>
-	Matrix<T> Interpolator<T>::xMLSx(Matrix<T> A, Matrix<T> X)
+	Matrix<T> Interpolator<T>::xMLSx(Matrix<T> t_A, Matrix<T> t_X)
 	{
     //  Construct the transpose of A
     Matrix<T> A_T = t_A.transpose();
@@ -1591,298 +1591,298 @@ namespace ET
 	// }
 	// //----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//  Helper functions
-	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	template<typename T>
-	std::vector<Vector<T>>
-	Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
-																	 	 const std::shared_ptr<ScalarField<T>> field,
-																	 	 uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLS(ugrid,field,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLS(ugrid,field,n);
-		}
-		else
-		{
-			return scalarDerivativeLS(ugrid,field,n);
-		}
-	}
-	//----------------------------------------------------------------------------
-	template<typename T>
-	std::vector<Vector<T>>
-	Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
-																	 	 const ScalarField<T>& field,
-																	 	 uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLS(ugrid,field,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLS(ugrid,field,n);
-		}
-		else
-		{
-			return scalarDerivativeLS(ugrid,field,n);
-		}
-	}
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
-																	 const std::shared_ptr<ScalarField<T>> field,
-																	 uint64_t index, uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLSPoint(ugrid,field,index,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
-		}
-		else
-		{
-			return scalarDerivativeLSPoint(ugrid,field,index,n);
-		}
-	}
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
-																	 const ScalarField<T>& field,
-											             uint64_t index, uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLSPoint(ugrid,field,index,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
-		}
-		else
-		{
-			return scalarDerivativeLSPoint(ugrid,field,index,n);
-		}
-	}
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
-																	 const std::shared_ptr<ScalarField<T>> field,
-																	 std::vector<T> point, uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLSPoint(ugrid,field,point,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
-		}
-		else
-		{
-			return scalarDerivativeLSPoint(ugrid,field,point,n);
-		}
-	}
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Vector<T>
-	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
-																	 const ScalarField<T>& field,
-																	 std::vector<T> point, uint32_t n)
-	{
-		if (_type == InterpolatorType::MLS)
-		{
-			return scalarDerivativeMLSPoint(ugrid,field,point,n);
-		}
-		else if (_type == InterpolatorType::WMLS)
-		{
-			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
-		}
-		else
-		{
-			return scalarDerivativeLSPoint(ugrid,field,point,n);
-		}
-	}
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //  Helper functions
+	// //----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// std::vector<Vector<T>>
+	// Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 	 const std::shared_ptr<ScalarField<T>> field,
+	// 																 	 uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLS(ugrid,field,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLS(ugrid,field,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLS(ugrid,field,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// std::vector<Vector<T>>
+	// Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 	 const ScalarField<T>& field,
+	// 																 	 uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLS(ugrid,field,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLS(ugrid,field,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLS(ugrid,field,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Vector<T>
+	// Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 const std::shared_ptr<ScalarField<T>> field,
+	// 																 uint64_t index, uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLSPoint(ugrid,field,index,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLSPoint(ugrid,field,index,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLSPoint(ugrid,field,index,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Vector<T>
+	// Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 const ScalarField<T>& field,
+	// 										             uint64_t index, uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLSPoint(ugrid,field,index,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLSPoint(ugrid,field,index,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLSPoint(ugrid,field,index,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Vector<T>
+	// Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 const std::shared_ptr<ScalarField<T>> field,
+	// 																 std::vector<T> point, uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLSPoint(ugrid,field,point,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLSPoint(ugrid,field,point,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLSPoint(ugrid,field,point,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Vector<T>
+	// Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	// 																 const ScalarField<T>& field,
+	// 																 std::vector<T> point, uint32_t n)
+	// {
+	// 	if (_type == InterpolatorType::MLS)
+	// 	{
+	// 		return scalarDerivativeMLSPoint(ugrid,field,point,n);
+	// 	}
+	// 	else if (_type == InterpolatorType::WMLS)
+	// 	{
+	// 		return scalarDerivativeWMLSPoint(ugrid,field,point,n);
+	// 	}
+	// 	else
+	// 	{
+	// 		return scalarDerivativeLSPoint(ugrid,field,point,n);
+	// 	}
+	// }
+	// //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //	Derivatives of vector fields
+	// //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// std::vector<std::vector<T>>
+	// Interpolator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	// 								                  const VectorField<T>& field,
+	// 								                  uint32_t dir, uint32_t n)
+	// {
+	// 	std::vector<std::vector<T>> result(field.getN());
+	// 	Monomial mono(ugrid->getDim(),n);
+	// 	ugrid->queryNeighbors(_params.k);
+	// 	for (uint64_t p = 0; p < field.getN(); p++)
+	// 	{
+	// 		std::vector<uint64_t> neighbors = ugrid->getNeighbors(p);
+	// 		Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,p,mono);
+	// 		std::vector<T> field_neighbors_x(_params.k);
+	// 		std::vector<T> field_neighbors_y(_params.k);
+	// 		std::vector<T> field_neighbors_z(_params.k);
+	// 		for (uint32_t i = 0; i < _params.k; i++)
+	// 		{
+	// 			field_neighbors_x[i] = field(neighbors[i],0);
+	// 			field_neighbors_y[i] = field(neighbors[i],1);
+	// 			field_neighbors_z[i] = field(neighbors[i],2);
+	// 		}
+	// 		Vector<T> field_vals_x(field_neighbors_x);
+	// 		Vector<T> answer_x = xGELSx(B,field_vals_x);
+	// 		if (B.getFlag() == -1)
+	// 		{
+	// 			m_log->ERROR(B.getInfo());
+	// 		}
+	// 		Vector<T> field_vals_y(field_neighbors_y);
+	// 		Vector<T> answer_y = xGELSx(B,field_vals_y);
+	// 		if (B.getFlag() == -1)
+	// 		{
+	// 			m_log->ERROR(B.getInfo());
+	// 		}
+	// 		Vector<T> field_vals_z(field_neighbors_z);
+	// 		Vector<T> answer_z = xGELSx(B,field_vals_z);
+	// 		if (B.getFlag() == -1)
+	// 		{
+	// 			m_log->ERROR(B.getInfo());
+	// 		}
+	// 		//	Get the index of the monomial expansion corresponding to
+	// 		//	the nth-derivative in the 'dir'-direction
+	// 		std::vector<uint32_t> deriv(field.getDim(),0);
+	// 		deriv[dir] = n;
+	// 		uint32_t index = mono.getTaylorIndex(deriv);
+	// 		result[p][0] = answer_x(index);
+	// 		result[p][1] = answer_y(index);
+	// 		result[p][2] = answer_z(index);
+	// 	}
+	// 	return result;
+	// }
+	// //----------------------------------------------------------------------------
+  //
+  // //----------------------------------------------------------------------------
+  // //  Construct the Taylor expansion matrix
+  // //----------------------------------------------------------------------------
+  // template<typename T>
+  // Matrix<T>
+	// Interpolator<T>::constructTaylorMatrix(				 const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
+  // {
+  //   Monomial mono(ugrid->getDim(),order);
+  //   std::vector<std::vector<double>> B;
+  //   for (auto i = 0; i < neighbors.size(); i++)
+  //   {
+  //     auto id = neighbors[i];
+  //     std::vector<double>
+	// 		temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
+  //                                         ugrid->getPoint(id));
+  //     B.push_back(temp);
+  //   }
+  //   return Matrix<T>("B",B);
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+  // //  Construct the Taylor expansion matrix about a point
+  // //------------------------------------				 ----------------------------------------
+  // template<typename T>
+  // Matrix<T>
+	// Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::vector<uint64_t> neighbors, std::vector<T> point, uint64_t order)
+  // {
+  //   Monomial mono(ugrid->getDim(),order);
+  //   std::vector<std::vector<double>> B;
+  //   for (uint64_t i = 0; i < neighbors.size(); i++)
+  //   {
+  //     uint64_t id = neighbors[i];
+  //     std::vector<double>
+	// 		temp = mono.taylorMonomialExpansion(point,
+  //                                         ugrid->getPoint(id));
+  //     B.push_back(temp);
+  //   }
+  //   return Matrix<T>("B",B);
+  // }
+  // //----------------------------------------------------------------------------
+  //
+  // //----------------------------------------------------------------------------
+  // //  Construct the Taylor expansion matrix
+  // //  with mono
+  // //----------------------------------------------------------------------------
+  // template<typename T>
+  // Matrix<T>
+	// Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::vector<uint64_t> neighbors, uint64_t index, Monomial& mono)
+  // {
+  //   std::vector<std::vector<double>> B;
+  //   for (uint64_t i = 0; i < neighbors.size(); i++)
+  //   {
+  //     uint64_t id = neighbors[i];
+  //     std::vector<double>
+	// 		temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
+  //                                         ugrid->getPoint(id));
+  //     B.push_back(temp);
+  //   }
+  //   return Matrix<T>("B",B);
+  // }
+  // //----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Derivatives of vector fields
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//
-	//----------------------------------------------------------------------------
-	template<typename T>
-	std::vector<std::vector<T>>
-	Interpolator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
-									                  const VectorField<T>& field,
-									                  uint32_t dir, uint32_t n)
-	{
-		std::vector<std::vector<T>> result(field.getN());
-		Monomial mono(ugrid->getDim(),n);
-		ugrid->queryNeighbors(_params.k);
-		for (uint64_t p = 0; p < field.getN(); p++)
-		{
-			std::vector<uint64_t> neighbors = ugrid->getNeighbors(p);
-			Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,p,mono);
-			std::vector<T> field_neighbors_x(_params.k);
-			std::vector<T> field_neighbors_y(_params.k);
-			std::vector<T> field_neighbors_z(_params.k);
-			for (uint32_t i = 0; i < _params.k; i++)
-			{
-				field_neighbors_x[i] = field(neighbors[i],0);
-				field_neighbors_y[i] = field(neighbors[i],1);
-				field_neighbors_z[i] = field(neighbors[i],2);
-			}
-			Vector<T> field_vals_x(field_neighbors_x);
-			Vector<T> answer_x = xGELSx(B,field_vals_x);
-			if (B.getFlag() == -1)
-			{
-				m_log->ERROR(B.getInfo());
-			}
-			Vector<T> field_vals_y(field_neighbors_y);
-			Vector<T> answer_y = xGELSx(B,field_vals_y);
-			if (B.getFlag() == -1)
-			{
-				m_log->ERROR(B.getInfo());
-			}
-			Vector<T> field_vals_z(field_neighbors_z);
-			Vector<T> answer_z = xGELSx(B,field_vals_z);
-			if (B.getFlag() == -1)
-			{
-				m_log->ERROR(B.getInfo());
-			}
-			//	Get the index of the monomial expansion corresponding to
-			//	the nth-derivative in the 'dir'-direction
-			std::vector<uint32_t> deriv(field.getDim(),0);
-			deriv[dir] = n;
-			uint32_t index = mono.getTaylorIndex(deriv);
-			result[p][0] = answer_x(index);
-			result[p][1] = answer_y(index);
-			result[p][2] = answer_z(index);
-		}
-		return result;
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Construct the Taylor expansion matrix
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Matrix<T>
-	Interpolator<T>::constructTaylorMatrix(				 const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
-  {
-    Monomial mono(ugrid->getDim(),order);
-    std::vector<std::vector<double>> B;
-    for (auto i = 0; i < neighbors.size(); i++)
-    {
-      auto id = neighbors[i];
-      std::vector<double>
-			temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
-                                          ugrid->getPoint(id));
-      B.push_back(temp);
-    }
-    return Matrix<T>("B",B);
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-  //  Construct the Taylor expansion matrix about a point
-  //------------------------------------				 ----------------------------------------
-  template<typename T>
-  Matrix<T>
-	Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, std::vector<T> point, uint64_t order)
-  {
-    Monomial mono(ugrid->getDim(),order);
-    std::vector<std::vector<double>> B;
-    for (uint64_t i = 0; i < neighbors.size(); i++)
-    {
-      uint64_t id = neighbors[i];
-      std::vector<double>
-			temp = mono.taylorMonomialExpansion(point,
-                                          ugrid->getPoint(id));
-      B.push_back(temp);
-    }
-    return Matrix<T>("B",B);
-  }
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Construct the Taylor expansion matrix
-  //  with mono
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Matrix<T>
-	Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index, Monomial& mono)
-  {
-    std::vector<std::vector<double>> B;
-    for (uint64_t i = 0; i < neighbors.size(); i++)
-    {
-      uint64_t id = neighbors[i];
-      std::vector<double>
-			temp = mono.taylorMonomialExpansion(ugrid->getPoint(index),
-                                          ugrid->getPoint(id));
-      B.push_back(temp);
-    }
-    return Matrix<T>("B",B);
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Construct weight matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, uint64_t index)
-	{
-	  //	For a simple gaussian weight, find the distances from index
-		//	to each point in neighbors.
-		std::vector<double> distances = ugrid->getDistances()[index];
-		Matrix<T> W(neighbors.size());
-		for (uint32_t i = 0; i < neighbors.size(); i++)
-		{
-			W(i,i) = exp(-.5*distances[i]);
-		}
-		return W;
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Construct weight matrix
-	//----------------------------------------------------------------------------
-	template<typename T>
-	Matrix<T>
-	Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::vector<uint64_t> neighbors, std::vector<T> point)
-	{
-	  //	For a simple gaussian weight, find the distances from point
-		//	to each point in neighbors.
-		std::vector<double> distances = ugrid->queryDistances(point,_params.k);
-		Matrix<T> W(neighbors.size());
-		for (uint32_t i = 0; i < neighbors.size(); i++)
-		{
-			W(i,i) = exp(-.5*distances[i]);
-		}
-		return W;
-	}
-	//----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //	Construct weight matrix
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Matrix<T>
+	// Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::vector<uint64_t> neighbors, uint64_t index)
+	// {
+	//   //	For a simple gaussian weight, find the distances from index
+	// 	//	to each point in neighbors.
+	// 	std::vector<double> distances = ugrid->getDistances()[index];
+	// 	Matrix<T> W(neighbors.size());
+	// 	for (uint32_t i = 0; i < neighbors.size(); i++)
+	// 	{
+	// 		W(i,i) = exp(-.5*distances[i]);
+	// 	}
+	// 	return W;
+	// }
+	// //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //	Construct weight matrix
+	// //----------------------------------------------------------------------------
+	// template<typename T>
+	// Matrix<T>
+	// Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::vector<uint64_t> neighbors, std::vector<T> point)
+	// {
+	//   //	For a simple gaussian weight, find the distances from point
+	// 	//	to each point in neighbors.
+	// 	std::vector<double> distances = ugrid->queryDistances(point,_params.k);
+	// 	Matrix<T> W(neighbors.size());
+	// 	for (uint32_t i = 0; i < neighbors.size(); i++)
+	// 	{
+	// 		W(i,i) = exp(-.5*distances[i]);
+	// 	}
+	// 	return W;
+	// }
+	// //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Various functions
@@ -1894,14 +1894,9 @@ namespace ET
 		sum += "\n<ET::Interpolator<double";
 		sum += "> object at " + getMem(this) + ">";
 		sum += "\n---------------------------------------------------";
-    sum += "\n       name:  '" + mm_name + "'";
-    sum += "\n       type:  '" + InterpolatorTypeNameMap[_type] + "'";
+    sum += "\n       name:  '" + m_name + "'";
     sum += "\n   LSDriver:  '" + LSDriverNameMap[m_lsdriver] + "'";
-		sum += "\n          k:   " + std::to_string(_params.k);
-    sum += "\n          n:   " + std::to_string(_params.n);
 		sum += "\n---------------------------------------------------";
-    //sum += "\n   RBF at: " + getMem(*getRadialBasisInterpolator()) + ",";
-		//sum += "\n   ref at: " + getMem(m_rbf);
 		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
 		sum += "\n   ref at: " + getMem(m_log);
 		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";

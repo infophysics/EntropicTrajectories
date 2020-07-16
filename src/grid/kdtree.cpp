@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  KDTree.h
+//  kdtree.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -18,7 +18,7 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "KDTree.h"
+#include "kdtree.h"
 
 namespace ET
 {

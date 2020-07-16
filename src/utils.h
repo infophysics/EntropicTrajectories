@@ -89,7 +89,7 @@ namespace ET
   //  notation with a certain number of decimal places
   //----------------------------------------------------------------------------
   template<typename T>
-  std::string scientific_not(T x, uint32_t dec);
+  std::string scientific_not(T x, size_t dec);
   //  specialization declaration
 
   //----------------------------------------------------------------------------
@@ -107,38 +107,38 @@ namespace ET
   public:
     Monomial();
     ~Monomial();
-    Monomial(uint32_t dim);
-    Monomial(uint32_t dim, uint32_t deg);
+    Monomial(size_t dim);
+    Monomial(size_t dim, size_t deg);
 
     //  Getters
-    uint32_t getDim();
-    uint32_t getDeg();
-    std::vector<std::vector<uint32_t>> getMono();
-    std::vector<std::vector<uint32_t>> getMono(uint32_t deg);
+    size_t getDim();
+    size_t getDeg();
+    std::vector<std::vector<size_t>> getMono();
+    std::vector<std::vector<size_t>> getMono(size_t deg);
     std::vector<std::vector<std::string>> getMonoFactors();
-    uint32_t getMultisetCoefficient(uint32_t deg);
-    uint32_t getTaylorIndex(std::vector<uint32_t> term);
+    size_t getMultisetCoefficient(size_t deg);
+    size_t getTaylorIndex(std::vector<size_t> term);
     //  Setters
-    void setDim(uint32_t dim);
-    void setDeg(uint32_t deg);
+    void setDim(size_t dim);
+    void setDeg(size_t deg);
     void generateMonomial();
-    void generateMonomial(uint32_t deg);
+    void generateMonomial(size_t deg);
 
     //  Various functions
     std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
                                                 const std::vector<double>& x2);
     std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
                                                 const std::vector<double>& x2,
-                                                uint32_t deg);
+                                                size_t deg);
     const std::string summary();
 
   private:
-    uint32_t _dim;
-    uint32_t _deg;
+    size_t _dim;
+    size_t _deg;
     size_t m_numElements;
-    std::vector<std::vector<uint32_t>> _mono;
+    std::vector<std::vector<size_t>> _mono;
     std::vector<std::vector<std::string>> _monoFactors;
-    std::vector<uint32_t> _multisetCoeffs;
+    std::vector<size_t> _multisetCoeffs;
     //  conatiner for message status
     int _flag;
     //  container for messages
@@ -149,7 +149,7 @@ namespace ET
   //  Method for generating a set of taylor polynomials for
   //  a delta p = (x - p).
   //----------------------------------------------------------------------------
-  std::vector<double> taylorPolynomial(double p, double x, uint32_t n);
+  std::vector<double> taylorPolynomial(double p, double x, size_t n);
 
   //----------------------------------------------------------------------------
   //  Checks that the number of elements in each rows of an

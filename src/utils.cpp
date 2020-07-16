@@ -25,7 +25,7 @@ namespace ET
   //  Function for turning a number into scientific notation
   //----------------------------------------------------------------------------
   template<typename T>
-  std::string scientific_not(T x, uint32_t dec)
+  std::string scientific_not(T x, size_t dec)
   {
     T y;
     int exp = int(floor(log10(abs(x))));
@@ -67,10 +67,10 @@ namespace ET
                                                        std::vector<double> b)
     {
         std::vector<std::vector<double> > cart(a.size());
-        for (uint32_t i = 0; i < a.size(); i++)
+        for (size_t i = 0; i < a.size(); i++)
         {
             cart[i].resize(b.size());
-            for (uint32_t j = 0; j < b.size(); j++)
+            for (size_t j = 0; j < b.size(); j++)
             {
                 cart[i][j] = a[i]*b[j];
             }
@@ -93,10 +93,10 @@ namespace ET
   {
     //std::cout << "\nMonomial destroyed.";
   }
-  Monomial::Monomial(uint32_t dim) : _dim(dim)
+  Monomial::Monomial(size_t dim) : _dim(dim)
   {
   }
-  Monomial::Monomial(uint32_t dim, uint32_t deg) : _dim(dim), _deg(deg)
+  Monomial::Monomial(size_t dim, size_t deg) : _dim(dim), _deg(deg)
   {
     generateMonomial();
   }
@@ -105,19 +105,19 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
-  uint32_t Monomial::getDim()
+  size_t Monomial::getDim()
   {
     return _dim;
   }
-  uint32_t Monomial::getDeg()
+  size_t Monomial::getDeg()
   {
     return _deg;
   }
-  std::vector<std::vector<uint32_t>> Monomial::getMono()
+  std::vector<std::vector<size_t>> Monomial::getMono()
   {
     return _mono;
   }
-  std::vector<std::vector<uint32_t>> Monomial::getMono(uint32_t deg)
+  std::vector<std::vector<size_t>> Monomial::getMono(size_t deg)
   {
     generateMonomial(_deg);
     return _mono;
@@ -126,14 +126,14 @@ namespace ET
   {
     return _monoFactors;
   }
-  uint32_t Monomial::getMultisetCoefficient(uint32_t deg)
+  size_t Monomial::getMultisetCoefficient(size_t deg)
   {
     //  use the i4_choose function from monomial.hpp
     //  the degree of the kth-monomial for a space of
     //  dimension d is the binomial coefficent (k + d - 1 // k)
     return i4_choose(deg + _dim - 1,deg);
   }
-  uint32_t Monomial::getTaylorIndex(std::vector<uint32_t> term)
+  size_t Monomial::getTaylorIndex(std::vector<size_t> term)
   {
     if (term.size() != _dim)
     {
@@ -143,7 +143,7 @@ namespace ET
     }
     std::vector<int> x(_dim);
     std::vector<int> y(_dim);
-    for (uint32_t i = 0; i < _dim; i++)
+    for (size_t i = 0; i < _dim; i++)
     {
       x[i] = 0;
       y[i] = term[i];
@@ -156,23 +156,23 @@ namespace ET
     }
     return index;
   }
-  void Monomial::setDim(uint32_t dim)
+  void Monomial::setDim(size_t dim)
   {
     _dim = dim;
   }
-  void Monomial::setDeg(uint32_t deg)
+  void Monomial::setDeg(size_t deg)
   {
     _deg = deg;
   }
   void Monomial::generateMonomial()
   {
     int x[_dim];
-    for (uint32_t i = 0; i < _dim; i++)
+    for (size_t i = 0; i < _dim; i++)
     {
       x[i] = 0;
     }
-    std::vector<std::vector<uint32_t>> mono;
-    std::vector<uint32_t> temp(x, x + _dim);
+    std::vector<std::vector<size_t>> mono;
+    std::vector<size_t> temp(x, x + _dim);
     mono.push_back(temp);
     int i = 1;
     for ( ; ; )
@@ -182,13 +182,13 @@ namespace ET
         break;
       }
       mono_between_next_grlex(_dim, 0, _deg, x);
-      std::vector<uint32_t> temp(x, x + _dim);
+      std::vector<size_t> temp(x, x + _dim);
       mono.push_back(temp);
       i = i + 1;
     }
     _mono = mono;
   }
-  void Monomial::generateMonomial(uint32_t deg)
+  void Monomial::generateMonomial(size_t deg)
   {
     _deg = deg;
     generateMonomial();
@@ -207,18 +207,18 @@ namespace ET
       std::cout << " the dimension of the monomial!" << std::endl;
       return taylorExp;
     }
-    for (uint32_t i = 0; i < x1.size(); i++)
+    for (size_t i = 0; i < x1.size(); i++)
     {
       taylorExp[i] = pow((x2[i]-x1[i]),1);
     }
     std::vector<double> taylor(_mono.size(),1.0);
-    for (uint32_t i = 0; i < _mono.size(); i++)
+    for (size_t i = 0; i < _mono.size(); i++)
     {
-      for (uint32_t j = 0; j < x1.size(); j++)
+      for (size_t j = 0; j < x1.size(); j++)
       {
         if (_mono[i][j] > 0)
         {
-          for (uint32_t k = 0; k < _mono[i][j]; k++)
+          for (size_t k = 0; k < _mono[i][j]; k++)
           {
             taylor[i] *= taylorExp[j];
           }
@@ -233,7 +233,7 @@ namespace ET
   //----------------------------------------------------------------------------
   std::vector<double> Monomial::taylorMonomialExpansion(const std::vector<double>& x1,
                                                         const std::vector<double>& x2,
-                                                        uint32_t deg)
+                                                        size_t deg)
   {
     generateMonomial(deg);
     return taylorMonomialExpansion(x1,x2);
@@ -243,7 +243,7 @@ namespace ET
   {
     std::string s;
     s += "\n----";
-    for (uint32_t i = 0; i < _dim; i++)
+    for (size_t i = 0; i < _dim; i++)
     {
       s += "-----";
     }
@@ -252,7 +252,7 @@ namespace ET
     s += "\n     (n,d) = (" + std::to_string(_deg) + ",";
     s += std::to_string(_dim) + ")";
     s += "\n----";
-    for (uint32_t i = 0; i < _dim; i++)
+    for (size_t i = 0; i < _dim; i++)
     {
       s += "-----";
     }
@@ -260,25 +260,25 @@ namespace ET
     s += "\nid.  ";
     if(_dim < 10)
     {
-      for (uint32_t i = 0; i < _dim; i++)
+      for (size_t i = 0; i < _dim; i++)
       {
         s += "x_" + std::to_string(i) + "  ";
       }
       s += "deg";
       s += "\n   +";
-      for (uint32_t i = 0; i < _dim; i++)
+      for (size_t i = 0; i < _dim; i++)
       {
         s += "-----";
       }
       s += "----+";
-      uint32_t currentOrder = 0;
-      for (uint32_t i = 0; i < _mono.size(); i++)
+      size_t currentOrder = 0;
+      for (size_t i = 0; i < _mono.size(); i++)
       {
-        uint32_t order = std::accumulate(_mono[i].begin(),_mono[i].end(),0);
+        size_t order = std::accumulate(_mono[i].begin(),_mono[i].end(),0);
         if (currentOrder < order)
         {
           s += "\n   +";
-          for (uint32_t i = 0; i < _dim; i++)
+          for (size_t i = 0; i < _dim; i++)
           {
             s += "-----";
           }
@@ -293,14 +293,14 @@ namespace ET
         {
           s += "\n" + std::to_string(i) + " |";
         }
-        for (uint32_t j = 0; j < _dim; j++)
+        for (size_t j = 0; j < _dim; j++)
         {
           s += "  " + std::to_string(_mono[i][j]) + "  ";
         }
         s += "  " + std::to_string(order) + " |";
       }
       s += "\n----";
-      for (uint32_t i = 0; i < _dim; i++)
+      for (size_t i = 0; i < _dim; i++)
       {
         s += "-----";
       }
@@ -313,10 +313,10 @@ namespace ET
   //--------------------------------------------------------------------------
   //  Generates a Taylor polynomial
   //--------------------------------------------------------------------------
-  std::vector<double> taylorPolynomial(double p, double x, uint32_t n)
+  std::vector<double> taylorPolynomial(double p, double x, size_t n)
   {
       std::vector<double> taylor(n);
-      for (uint32_t i = 1; i < n+1; i++)
+      for (size_t i = 1; i < n+1; i++)
       {
           taylor[i-1] = pow((x-p),i);
       }
@@ -456,5 +456,5 @@ namespace ET
   }
   //--------------------------------------------------------------------------
 
-  template std::string scientific_not<double> (double, uint32_t);
+  template std::string scientific_not<double> (double, size_t);
 }

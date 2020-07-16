@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  DiffEQ.cpp
+//  diffeq.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -16,7 +16,7 @@
 //  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
-#include "DiffEQ.h"
+#include "diffeq.h"
 
 namespace ET
 {
@@ -29,6 +29,14 @@ namespace ET
   }
   template<typename T>
   DiffEQ<T>::~DiffEQ()
+  {
+  }
+  template<typename T>
+  DiffEQ<T>::DiffEQ(std::shared_ptr<Log> log)
+  {
+  }
+  template<typename T>
+  DiffEQ<T>::DiffEQ(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log)
   {
   }
   //----------------------------------------------------------------------------
