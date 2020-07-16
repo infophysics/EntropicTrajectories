@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# we'll need Matrix, UGrid, and Approximator
-from etraj.etraj import Vector, Matrix, UGrid, Approximator, ScalarField, Monomial
+# we'll need Matrix, UGrid, and Interpolator
+from etraj.etraj import Vector, Matrix, UGrid, Interpolator, ScalarField, Monomial
 import etraj.etraj as et
 import time
 
@@ -29,8 +29,8 @@ f_neighbors = [f[i] for i in neighbors]
 
 # let's use those neighbors to approximate the derivative
 # of f(x) at x_rand.
-print("Creating approximator", flush=True)
-app = Approximator()
+print("Creating Interpolator", flush=True)
+app = Interpolator()
 # construct the B matrix for first order in the Taylor expansion
 print("Creating Taylor matrix", flush=True)
 b_matrix = app.construct_taylor_matrix(g,neighbors,i_rand,3)

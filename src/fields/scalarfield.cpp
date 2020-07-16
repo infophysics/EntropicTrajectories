@@ -39,7 +39,7 @@ namespace ET
 		            + getMem(*this));
 		//##########################################################################
 		_ugrid = std::make_shared<UGrid<T>>(_log);
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
   }
 	//----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ namespace ET
 		_log->TRACE("Scalar Field 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
   }
 	//----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace ET
 		_log->TRACE("Scalar Field '" + _name + "' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
   }
 	//----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ namespace ET
 		_log->TRACE("Scalar Field 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
   }
 	//----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ namespace ET
 		_log->TRACE("Scalar Field '" + _name + "' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
   }
   //----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Scalar Field 'default'");
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
 	}
 	//----------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Scalar Field 'default'");
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
 	}
 	//----------------------------------------------------------------------------
@@ -200,7 +200,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Scalar Field '" + _name + "'");
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
 	}
 	//----------------------------------------------------------------------------
@@ -221,7 +221,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Scalar Field 'default'");
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
 	}
 	//----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ namespace ET
 								+ getMem(*this));
 		_log->INFO("Logger passed to Scalar Field '" + _name + "'");
 		//##########################################################################
-		_approx = std::make_shared<Approximator<T>>(_log);
+		_approx = std::make_shared<Interpolator<T>>(_log);
 		_integrator = std::make_shared<Integrator<T>>(_log);
 	}
 	//----------------------------------------------------------------------------
@@ -281,7 +281,7 @@ namespace ET
     return _dim;
   }
   template<typename T>
-  std::shared_ptr<Approximator<T>> ScalarField<T>::getApproximator() const
+  std::shared_ptr<Interpolator<T>> ScalarField<T>::getInterpolator() const
   {
     return _approx;
   }
@@ -326,9 +326,9 @@ namespace ET
     _name = name;
   }
   template<typename T>
-  void ScalarField<T>::setApproxType(std::string type)
+  void ScalarField<T>::setInterpolatorType(std::string type)
   {
-    _approx->setApproxType(type);
+    _approx->setInterpolatorType(type);
   }
   //----------------------------------------------------------------------------
 
@@ -875,7 +875,7 @@ namespace ET
 		grid_ref.resize(grid_colon_loc,' ');
 		sum += "\n" + grid_ref;
 		sum += "ref at: " + getMem(_ugrid);
-		sum += "\nApproximator at: " + getMem(*getApproximator()) + ",";
+		sum += "\nInterpolator at: " + getMem(*getInterpolator()) + ",";
 		sum += "\n         ref at: " + getMem(_approx);
 		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
 		sum += "\n   ref at: " + getMem(_log);

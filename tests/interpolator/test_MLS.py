@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from etraj.etraj import Matrix, Grid, Approximator, ScalarField
+from etraj.etraj import Matrix, Grid, Interpolator, ScalarField
 import etraj.etraj as et
 from scipy import linalg
 from scipy.linalg import svdvals
@@ -17,8 +17,8 @@ g.set_grid(x)
 f = np.cos(x)
 f_field = ScalarField(g,f)
 
-# get the approximator
-app = f_field.get_approximator()
+# get the Interpolator
+app = f_field.get_Interpolator()
 
 # find nearest neighbors of the point p,
 p = 4
@@ -76,8 +76,8 @@ g.set_grid(data)
 f = np.cos(x)
 f_field = ScalarField(g,f)
 
-# get the approximator
-app = f_field.get_approximator()
+# get the Interpolator
+app = f_field.get_Interpolator()
 
 # find nearest neighbors of the point p,
 p = 4

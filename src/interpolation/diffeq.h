@@ -25,15 +25,15 @@
 #include <memory>
 
 //------------------------------------------------------------------------------
-//  Forward declaration of Approximator, Integrator and ScalarField
+//  Forward declaration of Interpolator, Integrator and ScalarField
 //------------------------------------------------------------------------------
 namespace ET
 {
-  template<typename T> class Approximator;
+  template<typename T> class Interpolator;
   template<typename T> class ScalarField;
   template<typename T> class Integrator;
 }
-#include "approximator.h"
+#include "interpolator.h"
 #include "scalarfield.h"
 #include "integrator.h"
 

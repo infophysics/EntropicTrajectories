@@ -1,10 +1,9 @@
 //------------------------------------------------------------------------------
-//  dynamicalsystem.cpp
+//  field.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
 //  [ncarrara@albany.edu]
-
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -17,31 +16,10 @@
 //  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
-#include "dynamicalsystem.h"
+#include "field.h"
 
 
 namespace ET
 {
-  template<typename T>
-  DynamicalSystem<T>::DynamicalSystem() : _name("default")
-  {
-    _log = std::make_shared<Log>();
-    _log->init("ET:DS:" + _name,".logs/system_default.txt");
-    _log->TRACE("Dynamical System created at location " + getMem(*this));
-  }
-  template<typename T>
-  DynamicalSystem<T>::~DynamicalSystem()
-  {
-    _log->TRACE("Dynamical System destroyed at location " + getMem(*this));
-  }
-
-  template<typename T>
-  DynamicalSystem<T>::DynamicalSystem(std::string name) : _name(name)
-  {
-    _log = std::make_shared<Log>();
-    _log->init("ET:DS:" + _name,".logs/system_" + _name + ".txt");
-    _log->TRACE("Dynamical System created at location " + getMem(*this));
-  }
-
 
 }

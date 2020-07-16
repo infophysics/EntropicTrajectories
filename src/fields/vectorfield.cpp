@@ -64,7 +64,7 @@ namespace ET
   {
     _N = _ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:default", ".logs/vectorfield_default.txt");
@@ -84,7 +84,7 @@ namespace ET
   {
     _N = _ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:" + _name, ".logs/vectorfield_default.txt");
@@ -104,7 +104,7 @@ namespace ET
   {
     _N = ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:default", ".logs/vectorfield_default.txt");
@@ -125,7 +125,7 @@ namespace ET
   {
     _N = ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:" + _name, ".logs/vectorfield_default.txt");
@@ -165,7 +165,7 @@ namespace ET
   {
     _N = _ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field 'default' created at location "
@@ -186,7 +186,7 @@ namespace ET
   {
     _N = _ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field '" + _name + "' created at location "
@@ -207,7 +207,7 @@ namespace ET
   {
     _N = ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field 'default' created at location "
@@ -229,7 +229,7 @@ namespace ET
   {
     _N = ugrid->getN();
     _dim = _ugrid->getDim();
-    _approx = std::make_shared<Approximator<T>>();
+    _approx = std::make_shared<Interpolator<T>>();
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field '" + _name + "' created at location "
@@ -273,7 +273,7 @@ namespace ET
     return _dim;
   }
   template<typename T>
-  std::shared_ptr<Approximator<T>> VectorField<T>::getApproximator() const
+  std::shared_ptr<Interpolator<T>> VectorField<T>::getInterpolator() const
   {
     return _approx;
   }
@@ -308,9 +308,9 @@ namespace ET
     _name = name;
   }
   template<typename T>
-  void VectorField<T>::setApproxType(std::string type)
+  void VectorField<T>::setInterpolatorType(std::string type)
   {
-    _approx->setApproxType(type);
+    _approx->setInterpolatorType(type);
   }
   //----------------------------------------------------------------------------
 

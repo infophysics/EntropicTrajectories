@@ -117,6 +117,17 @@ namespace ET
         @return The name of the Vector.
     */
     std::string getName() const;
+    //! Get flag
+    /*! get flag.
+     *  @return An int that classifies the type of information stored in
+     *  info.
+     */
+    int getFlag() const;
+    //! Get info
+    /*! get info.
+     *  @return The std::string info that contains relevant information.
+     */
+    std::string getInfo() const;
     //  Setters
     //! Set dimension
     /*! set dimension.  Sets the dimension \f$n\f$ of the the vector space

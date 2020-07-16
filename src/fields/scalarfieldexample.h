@@ -33,7 +33,7 @@ namespace ET
   class WaveEQ1D : public ScalarField<T>
   {
   public:
-    WaveEQ1D();
+    WaveEQ1D(); 
     WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid);
     WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid, T A, T k, T w);
     //  Getters

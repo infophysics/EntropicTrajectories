@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import cKDTree
-from etraj.etraj import Vector, Matrix, UGrid, Approximator, ScalarField, Monomial
+from etraj.etraj import Vector, Matrix, UGrid, Interpolator, ScalarField, Monomial
 import etraj.etraj as et
 import time
 import sys

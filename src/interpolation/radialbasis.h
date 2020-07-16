@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  rbf.h
+//  radialbasis.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -29,21 +29,39 @@
 #include "utils.h"
 #include "matrix.h"
 
+#include "interpolator.h"
+
 namespace ET
 {
-  //----------------------------------------------------------------------------
-  //  Class for radial basis functions and algorithms
-  //  such as the RBF-FD algorithm
-  //----------------------------------------------------------------------------
+  //! RBFKernelType enum
+  /*! Enum for the different RBF Kernel choices.  These include,
+   *  GAUSSIAN, MULTIQUADRIC, INVERSE_MULTIQUADRIC and INVERSE_QUADRATIC.
+   */
+  enum class RBFKernelType
+  {
+    /*! Enum value ET::RBFKernelType::GAUSSIAN*/
+    GAUSSIAN,
+    /*! Enum value ET::RBFKernelType::MULTIQUADRIC*/
+    MULTIQUADRIC,
+    /*! Enum value ET::RBFKernelType::IVERSE_MULTIQUADRIC*/
+    INVERSE_MULTIQUADRIC,
+    /*! Enum value ET::RBFKernelType::INVERSE_QUADRATIC*/
+    INVERSE_QUADRATIC
+  };
+
+  //! \class RadialBasisInterpolator Class
+  /*! A derived class of Interpolator<T> which uses radial basis functions
+   *  for interpolation.
+   */
   template<typename T>
-  class RadialBasisFunction
+  class RadialBasisInterpolator : public Interpolator<T>
   {
   public:
     //--------------------------------------------------------------------------
     //  Constructors
     //--------------------------------------------------------------------------
-    RadialBasisFunction();
-    ~RadialBasisFunction();
+    RadialBasisInterpolator();
+    ~RadialBasisInterpolator();
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -51,7 +69,6 @@ namespace ET
     //--------------------------------------------------------------------------
     RBFKernelType getType();
     double getShape();
-    std::shared_ptr<RBFParams> getRBFParams();
     std::shared_ptr<Log> getLogger();
 
     void setType(RBFKernelType t_type);
@@ -96,9 +113,16 @@ namespace ET
     void RBF_FD();
 
   private:
-    enum RBFKernelType m_type{RBFKernelType::GAUSSIAN};
-    struct RBFParams m_params;
-
+    /*! RBFKernelType. The type of RBF Kernel to use in interpolation.
+        Defaulted to ET::RBFKernelType::GAUSSIAN.
+     */
+    enum RBFKernelType m_type {RBFKernelType::GAUSSIAN};
+    /*! Shape.  Shape parameter for radial basis kernels.
+        Defaulted to 3.05048.
+     */
+    double m_shape {3.05048};
+    /*! Shared logger instance.
+     */
     std::shared_ptr<Log> m_log;
   };
   //----------------------------------------------------------------------------
@@ -206,5 +230,6 @@ namespace ET
                                          const std::vector<double>& p2,
                                          double shape=3.05048);
   //----------------------------------------------------------------------------
-  template class RadialBasisFunction<double>;
+
+  template class RadialBasisInterpolator<double>;
 }

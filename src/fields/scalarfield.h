@@ -24,17 +24,18 @@
 
 #include "ugrid.h"
 #include "log.h"
+#include "field.h"
 
 //------------------------------------------------------------------------------
-//  Forward declaration of Approximator, Integrator and diffEQ
+//  Forward declaration of Interpolator, Integrator and diffEQ
 //------------------------------------------------------------------------------
 namespace ET
 {
-  template<typename T> class Approximator;
+  template<typename T> class Interpolator;
   template<typename T> class diffEQ;
   template<typename T> class Integrator;
 }
-#include "approximator.h"
+#include "interpolator.h"
 #include "diffeq.h"
 #include "integrator.h"
 namespace ET
@@ -43,7 +44,7 @@ namespace ET
   //  Scalar fields class.
   //----------------------------------------------------------------------------
   template<typename T>
-  class ScalarField: public std::enable_shared_from_this<ScalarField<T>>
+  class ScalarField: public Field<T>
   {
   public:
     //--------------------------------------------------------------------------
@@ -79,11 +80,19 @@ namespace ET
     uint64_t getN() const;
     uint32_t getDim() const;
     std::shared_ptr<UGrid<T>> getUGrid() const;
-    std::shared_ptr<Approximator<T>> getApproximator() const;
+    std::shared_ptr<Interpolator<T>> getInterpolator() const;
     std::shared_ptr<diffEQ<T>> getDiffEQ() const;
     std::shared_ptr<Integrator<T>> getIntegrator() const;
     std::shared_ptr<Log> getLogger();
-    int getFlag() const;
+    int getFlag() constnamespace ET
+{
+  template<typename T> class Interpolator;
+  template<typename T> class diffEQ;
+  template<typename T> class Integrator;
+}
+#include "interpolator.h"
+#include "diffeq.h"
+#include "integrator.h";
     std::string getInfo() const;
     //--------------------------------------------------------------------------
 
@@ -93,7 +102,7 @@ namespace ET
     void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
     void setField(std::vector<T> field);
     void setName(std::string name);
-    void setApproxType(std::string type);
+    void setInterpolatorType(std::string type);
     void setFlag(int flag);
     void setInfo(std::string info);
     //--------------------------------------------------------------------------
@@ -153,21 +162,8 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    //--------------------------------------------------------------------------
-    //  Basic attributes
-    //--------------------------------------------------------------------------
-    std::string _name;
-    uint32_t _dim;
-    uint64_t _N;
+
     std::vector<T> _field;
-    //--------------------------------------------------------------------------
-    //  Shared objects
-    //--------------------------------------------------------------------------
-    std::shared_ptr<UGrid<T>> _ugrid;
-    std::shared_ptr<Approximator<T>> _approx;
-    std::shared_ptr<diffEQ<T>> _diffeq;
-    std::shared_ptr<Integrator<T>> _integrator;
-    std::shared_ptr<Log> _log;
     //--------------------------------------------------------------------------
     //  Objects for differential equation solver
     //--------------------------------------------------------------------------

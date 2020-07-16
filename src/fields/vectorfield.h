@@ -26,13 +26,13 @@
 #include "log.h"
 
 //------------------------------------------------------------------------------
-//  Forward declaration of Approximator
+//  Forward declaration of Interpolator
 //------------------------------------------------------------------------------
 namespace ET
 {
-  template<typename T> class Approximator;
+  template<typename T> class Interpolator;
 }
-#include "approximator.h"
+#include "interpolator.h"
 namespace ET
 {
   //----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace ET
     std::string getName() const;
     uint64_t getN() const;
     uint32_t getDim() const;
-    std::shared_ptr<Approximator<T>> getApproximator() const;
+    std::shared_ptr<Interpolator<T>> getInterpolator() const;
     int getFlag() const;
     std::string getInfo() const;
     std::shared_ptr<Log> getLogger();
@@ -88,7 +88,7 @@ namespace ET
     void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
     void setField(std::vector<std::vector<T>> field);
     void setName(std::string name);
-    void setApproxType(std::string type);
+    void setInterpolatorType(std::string type);
     void setFlag(int flag);
     void setInfo(std::string info);
     //--------------------------------------------------------------------------
@@ -131,7 +131,7 @@ namespace ET
     //  Shared objects
     //--------------------------------------------------------------------------
     std::shared_ptr<UGrid<T>> _ugrid;
-    std::shared_ptr<Approximator<T>> _approx;
+    std::shared_ptr<Interpolator<T>> _approx;
     std::shared_ptr<Log> _log;
 
     int _flag;

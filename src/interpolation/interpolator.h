@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-//  approximator.h
+//  Interpolator.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
+
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -30,172 +30,287 @@
 #include "utils.h"
 #include "matrix.h"
 
-#include "rbf.h"
-
 //------------------------------------------------------------------------------
 //  Forward declaration of ScalarField
 //------------------------------------------------------------------------------
 namespace ET
 {
+  template<typename T> class Field;
   template<typename T> class ScalarField;
   template<typename T> class VectorField;
 }
+#include "field.h"
 #include "scalarfield.h"
 #include "vectorfield.h"
+
 namespace ET
 {
-  //----------------------------------------------------------------------------
-  //  Approximator class.
-  //----------------------------------------------------------------------------
+  //! LSDriver enum
+  /*! Enum for determining the type of least squares driver to use.
+   *
+   */
+  enum class LSDriver
+  {
+    /*! Enum value: ET::LSDriver::xGELS.*/
+    xGELS,
+    /*! Enum value: ET::LSDriver::xGELSY.
+     *  This uses a complete orthogonal transformation.
+     */
+    xGELSY,
+    /*! Enum value: ET::LSDriver::xGELSD.
+     *  This uses the SVD algorithm with divide and conquer.
+     */
+    xGELSD,
+    /*! Enum value: ET::LSDriver::xGELSS.
+     *  This uses standard SVD to solve the system.
+     */
+    xGELSS,
+  };
+
+  //! \class Interpolator Class
+  /*! A Base class for interpolating on unstructured grids.
+   *  Each instance has an associated shared pointer to a UGrid which
+   *  gets passed to each derived class.
+   */
   template<typename T>
-  class Approximator
+  class Interpolator
   {
   public:
-    //--------------------------------------------------------------------------
-    //  Constructors
-    //--------------------------------------------------------------------------
-    Approximator();
-    ~Approximator();
-    Approximator(int type);
-    Approximator(std::string type);
-    //--------------------------------------------------------------------------
-    //  Constructors with shared loggers
-    //--------------------------------------------------------------------------
-    Approximator(std::shared_ptr<Log> log);
-    Approximator(int type, std::shared_ptr<Log> log);
-    Approximator(std::string type, std::shared_ptr<Log> log);
-    //--------------------------------------------------------------------------
-    //  Getters
-    //--------------------------------------------------------------------------
-    ApproxType getApproxType() const;
-    ApproxParams getApproxParams() const;
-    LSDriver getLSDriver() const;
-    int getFlag() const;
-    std::string getInfo() const;
-    std::shared_ptr<RadialBasisFunction<T>> getRadialBasisFunction();
-    std::shared_ptr<Log> getLogger();
-    //--------------------------------------------------------------------------
+    //! Defualt Constructor
+    /*! Default constructor for Interpolator.
+     */
+    Interpolator();
+    //! Destructor
+    /*! Destructor for Interpolator.
+     */
+    ~Interpolator();
+    //! Constructor
+    /*! constructor for Interpolator that takes a UGrid
+     */
+    Interpolator(std::shared_ptr<UGrid<T>> t_ugrid);
+    //! Constructor
+    /*! constructor for Interpolator that takes a Logger
+     */
+    Interpolator(std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Interpolator that takes a UGrid and a logger
+     */
+    Interpolator(std::shared_ptr<UGrid<T>> t_ugrid,
+                 std::shared_ptr<Log> t_log);
 
-    //--------------------------------------------------------------------------
-    //  Setters
-    //--------------------------------------------------------------------------
-    void setApproxType(std::string type);
-    void setApproxParams(ApproxParams params);
+    /*! Get name.  Get the name of the Interpolator.
+     *  @return The name of the Interpolator.
+     */
+    std::string getName() const;
+    /*! Get UGrid.  Get the shared instance of the UGrid.
+     *  @return A shared pointer to the UGrid.
+     */
+    std::shared_ptr<UGrid<T>> getUGrid() const;
+    /*! Get Field.  Get the shared instance of the Field.
+     *  @return A shared pointer to the Field.
+     */
+    std::shared_ptr<Field<T>> getField() const;
+    /*! Get log.  Get the shared instance of the logger.
+     *  @return A shared pointer to the logger
+     */
+    std::shared_ptr<Log> getLogger() const;
+    //! Get flag
+    /*! get flag.
+     *  @return An int that classifies the type of information stored in
+     *  info.
+     */
+    int getFlag() const;
+    //! Get info
+    /*! get info.
+     *  @return The std::string info that contains relevant information.
+     */
+    std::string getInfo() const;
+    //! Get LSDriver
+    /*! get least squares driver.
+     *  @return The LSDriver enum that is currently set to be used.
+     */
+    LSDriver getLSDriver() const;
+    //! Set name
+    /*! set name.  Sets the name of the Vector.
+        @param t_name a std::string for the name of the Vector.
+    */
+    void setName(std::string t_name);
+    //! Set UGrid
+    /*! set UGrid.  Sets the shared pointer for the associated UGrid.
+     *  @param t_ugrid A shared pointer for a UGrid instance.
+     */
+    void setUGrid(std::shared_ptr<UGrid<T>> t_ugrid);
+    //! Set Field
+    /*! set Field.  Sets the shared pointer for the associated Field.
+     *  @param t_field A shared pointer for a Field instance.
+     */
+    void setField(std::shared_ptr<Field<T>> t_field);
+    //! Set Logger
+    /*! set Logger.  Sets the shared pointer for the associated logger.
+     *  @param t_log A shared pointer for a Log instance.
+     */
+    void setLogger(std::shared_ptr<Log> t_log);
+    //! Set flag
+    /*! set flag.  Sets the flag pertaining to info.
+        @param t_flag an int that classifies the type of information stored
+        in m_info.
+    */
+    void setFlag(int t_flag);
+    //! Set info
+    /*! set info.  Sets useful information pertaining to Vector.
+        @param t_info an std::string containing useful messages.
+    */
+    void setInfo(std::string t_info);
+    //! Set LSDriver
+    /*! set least squares driver.  Sets the type of the least squares
+     *  method to use.
+     *  @param t_type A string denoting the type of LS driver to use.
+     */
     void setLSDriver(std::string type);
-    //  Set parameters
-    void set_k(uint64_t k);
-    void set_n(uint64_t n);
-    void set_shape(double shape);
-    void setFlag(int flag);
-    void setInfo(std::string info);
-    //--------------------------------------------------------------------------
+
+    //  Derivative functions that must be overloaded in derived classes.
+
+    //! Derivative
+    /*! derivative.  Derivative for a point in the UGrid given by index,
+     *  of degree t_degree.
+     *  @return The nth-derivative at the point given
+     *  by the index.
+     */
+    virtual std::vector<T> derivative(const size_t t_index,
+                                      const size_t t_degree);
+    //! Derivative
+    /*! derivative.  Derivative for a point in the UGrid given by index,
+     *  of degree t_degree and in the direction t_direction.
+     *  @return The nth-derivative in the lth-direction at the point given
+     *  by the index.
+     */
+    virtual T derivative(const size_t t_index,
+                         const size_t t_degree,
+                         const size_t t_direction);
+   //! Derivative
+   /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+   virtual std::vector<T> derivative(const size_t std::vector<T>& point,
+                                     const size_t t_degree);
+   //! Derivative
+   /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+   virtual T derivative(const size_t std::vector<T>& point,
+                        const size_t t_degree,
+                        const size_t t_direction);
 
     //--------------------------------------------------------------------------
     //  Gradient functions
     //--------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------
-    //  Scalar fields
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //  scalarGradientPoint - approximate the gradient at a point
-    //  Arguments:  ugrid   - UGrid<T> pointer
-    //              field   - ScalarField<T> pointer
-    //              index   - index of the point
-    //
-    //  Returns:    std::vector<T> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<T>
-    scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                        const std::shared_ptr<ScalarField<T>> field,
-                        uint64_t index);
-    //--------------------------------------------------------------------------
-    //  scalarGradientLSPoint - approximate the gradient at a point
-    //                           using the vanilla LS method
-    //  Arguments:  ugrid      - UGrid<T> pointer
-    //              field      - ScalarField<T> pointer
-    //              index      - index of the point
-    //
-    //  Returns:    std::vector<T> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<T>
-    scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                           const std::shared_ptr<ScalarField<T>> field,
-                           uint64_t index);
-    //--------------------------------------------------------------------------
-    //  scalarGradient      - approximate the gradient for an entire field
-    //  Arguments:  ugrid   - UGrid<T> pointer
-    //              field   - ScalarField<T> pointer
-    //
-    //  Returns:    std::vector<std::vector<T>> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<T>>
-    scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                   const std::shared_ptr<ScalarField<T>> field);
-    //--------------------------------------------------------------------------
-    //  scalarGradientLS      - approximate the gradient for an entire field
-    //                           using the vanilla LS method
-    //  Arguments:  ugrid      - UGrid<T> pointer
-    //              field      - ScalarField<T> pointer
-    //
-    //  Returns:    std::vector<std::vector<T>> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<T>>
-    scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
-                      const std::shared_ptr<ScalarField<T>> field);
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //  Passing field as a const refernce
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-    //  scalarGradientPoint - approximate the gradient at a point
-    //  Arguments:  ugrid   - UGrid<T> pointer
-    //              field   - const ScalarField<T>& reference
-    //              index   - index of the point
-    //
-    //  Returns:    std::vector<T> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<T>
-    scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                        const ScalarField<T>& field,
-                        uint64_t index);
-    //--------------------------------------------------------------------------
-    //  scalarGradientLSPoint - approximate the gradient at a point
-    //                           using the vanilla LS method
-    //  Arguments:  ugrid      - UGrid<T> pointer
-    //              field      - const ScalarField<T>& reference
-    //              index      - index of the point
-    //
-    //  Returns:    std::vector<T> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<T>
-    scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-                           const ScalarField<T>& field,
-                           uint64_t index);
-    //--------------------------------------------------------------------------
-    //  scalarGradient      - approximate the gradient for an entire field
-    //  Arguments:  ugrid   - UGrid<T> pointer
-    //              field   - const ScalarField<T>& reference
-    //              index   - index of the point
-    //
-    //  Returns:    std::vector<std::vector<T>> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<T>>
-    scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                   const ScalarField<T>& field);
-    //--------------------------------------------------------------------------
-    //  scalarGradientLS      - approximate the gradient for an entire field
-    //                           using the vanilla LS method
-    //  Arguments:  ugrid      - UGrid<T> pointer
-    //              field      - const ScalarField<T>& reference
-    //              index      - index of the point
-    //
-    //  Returns:    std::vector<std::vector<T>> of the gradient.
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<T>>
-    scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
-                      const ScalarField<T>& field);
-    //--------------------------------------------------------------------------
+    // //--------------------------------------------------------------------------
+    // //  Scalar fields
+    // //--------------------------------------------------------------------------
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientPoint - approximate the gradient at a point
+    // //  Arguments:  ugrid   - UGrid<T> pointer
+    // //              field   - ScalarField<T> pointer
+    // //              index   - index of the point
+    // //
+    // //  Returns:    std::vector<T> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<T>
+    // scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    //                     const std::shared_ptr<ScalarField<T>> field,
+    //                     uint64_t index);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientLSPoint - approximate the gradient at a point
+    // //                           using the vanilla LS method
+    // //  Arguments:  ugrid      - UGrid<T> pointer
+    // //              field      - ScalarField<T> pointer
+    // //              index      - index of the point
+    // //
+    // //  Returns:    std::vector<T> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<T>
+    // scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    //                        const std::shared_ptr<ScalarField<T>> field,
+    //                        uint64_t index);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradient      - approximate the gradient for an entire field
+    // //  Arguments:  ugrid   - UGrid<T> pointer
+    // //              field   - ScalarField<T> pointer
+    // //
+    // //  Returns:    std::vector<std::vector<T>> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<std::vector<T>>
+    // scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+    //                const std::shared_ptr<ScalarField<T>> field);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientLS      - approximate the gradient for an entire field
+    // //                           using the vanilla LS method
+    // //  Arguments:  ugrid      - UGrid<T> pointer
+    // //              field      - ScalarField<T> pointer
+    // //
+    // //  Returns:    std::vector<std::vector<T>> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<std::vector<T>>
+    // scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
+    //                   const std::shared_ptr<ScalarField<T>> field);
+    // //--------------------------------------------------------------------------
+    // //--------------------------------------------------------------------------
+    // //  Passing field as a const refernce
+    // //--------------------------------------------------------------------------
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientPoint - approximate the gradient at a point
+    // //  Arguments:  ugrid   - UGrid<T> pointer
+    // //              field   - const ScalarField<T>& reference
+    // //              index   - index of the point
+    // //
+    // //  Returns:    std::vector<T> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<T>
+    // scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    //                     const ScalarField<T>& field,
+    //                     uint64_t index);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientLSPoint - approximate the gradient at a point
+    // //                           using the vanilla LS method
+    // //  Arguments:  ugrid      - UGrid<T> pointer
+    // //              field      - const ScalarField<T>& reference
+    // //              index      - index of the point
+    // //
+    // //  Returns:    std::vector<T> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<T>
+    // scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+    //                        const ScalarField<T>& field,
+    //                        uint64_t index);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradient      - approximate the gradient for an entire field
+    // //  Arguments:  ugrid   - UGrid<T> pointer
+    // //              field   - const ScalarField<T>& reference
+    // //              index   - index of the point
+    // //
+    // //  Returns:    std::vector<std::vector<T>> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<std::vector<T>>
+    // scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+    //                const ScalarField<T>& field);
+    // //--------------------------------------------------------------------------
+    // //  scalarGradientLS      - approximate the gradient for an entire field
+    // //                           using the vanilla LS method
+    // //  Arguments:  ugrid      - UGrid<T> pointer
+    // //              field      - const ScalarField<T>& reference
+    // //              index      - index of the point
+    // //
+    // //  Returns:    std::vector<std::vector<T>> of the gradient.
+    // //--------------------------------------------------------------------------
+    // std::vector<std::vector<T>>
+    // scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
+    //                   const ScalarField<T>& field);
+    // //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     //  nth-derivatives of scalar field
     //--------------------------------------------------------------------------
@@ -783,67 +898,29 @@ namespace ET
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
-    //  LS, MLS, WMLS and RBF functions
-    //--------------------------------------------------------------------------
-    Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                    const std::vector<uint64_t> neighbors,
-                                    uint64_t index,
-                                    uint64_t order);
-    Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                    const std::vector<uint64_t> neighbors,
-                                    std::vector<T> point,
-                                    uint64_t order);
-    Matrix<T> constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                    const std::vector<uint64_t> neighbors,
-                                    uint64_t index,
-                                    Monomial& mono);
-    Matrix<T> constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                    const std::vector<uint64_t> neighbors,
-                                    uint64_t index);
-    Matrix<T> constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                    const std::vector<uint64_t> neighbors,
-                                    std::vector<T> point);
-    Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                 const std::vector<uint64_t> neighbors,
-                                 uint64_t index);
-    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid,
-                                 const std::vector<uint64_t> neighbors,
-                                 uint64_t index);
-    Matrix<T> constructRBFMatrix(const std::shared_ptr<UGrid<T>> ugrid);
-    Vector<T> constructRBFVector(const std::shared_ptr<UGrid<T>> ugrid,
-                                 std::vector<T> point);
-    Matrix<T> constructRBFdMatrix(const std::shared_ptr<UGrid<T>> ugrid);
-    Vector<T> constructRBFdVector(const std::shared_ptr<UGrid<T>> ugrid,
-                                  std::vector<T> point);
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
     //  various functions
     //--------------------------------------------------------------------------
     const std::string summary();
     //--------------------------------------------------------------------------
 
-  private:
-    //--------------------------------------------------------------------------
-    //  Basic attributes
-    //--------------------------------------------------------------------------
-    std::string _name;
-    enum ApproxType _type;
-    struct ApproxParams _params;
-    enum LSDriver _lsdriver;
-    enum RBFKernelType _rbftype;
-    //--------------------------------------------------------------------------
-    //  Shared objects
-    //--------------------------------------------------------------------------
-    std::shared_ptr<RadialBasisFunction<T>> m_rbf;
-    std::shared_ptr<Log> _log;
-
-    //  conatiner for message status
-    int _flag;
-    //  container for messages
-    std::string _info;
+  protected:
+    /*! Name.  The name of the Interpolator. */
+    std::string m_name;
+    /*! Logger.  A shared instance of a Logger.*/
+    std::shared_ptr<Log> m_log;
+    /*! UGrid.  A shared instance of a UGrid.*/
+    std::shared_ptr<UGrid<T>> m_ugrid;
+    /*! Field.  A shared instance of a Field.*/
+    std::shared_ptr<Field<T>> m_field;
+    /*! LSDriver.  An enum that denotes the type of least squares
+     *  method to use.
+     */
+    enum LSDriver m_lsdriver;
+    /*! Flag.  An in that denotes the type of message stored in info.*/
+    int m_flag;
+    /*! Info.  A container for storing important information.*/
+    std::string m_info;
   };
 
-
-  template class Approximator<double>;
+  template class Interpolator<double>;
 }

@@ -1,10 +1,9 @@
 //------------------------------------------------------------------------------
-//  approximator.cpp
+//  Interpolator.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -17,30 +16,11 @@
 //  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
-#include "approximator.h"
+#include "interpolator.h"
 
 
 namespace ET
 {
-  //----------------------------------------------------------------------------
-  //  Enum maps
-  //----------------------------------------------------------------------------
-  //  map for a string to enum of approximator type
-  std::map<std::string, ApproxType> ApproxTypeMap =
-  {
-    { "LS", ApproxType::LS },
-    { "MLS", ApproxType::MLS },
-    { "WMLS", ApproxType::WMLS},
-    { "RBF", ApproxType::RBF }
-  };
-  //  map for a int to enum of approximator type
-  std::map<int, ApproxType> ApproxTypeMapInt =
-  {
-    { 0, ApproxType::LS },
-    { 1, ApproxType::MLS },
-    { 2, ApproxType::WMLS},
-    { 3, ApproxType::RBF }
-  };
   //  map for a string to enum of LSDriver type
   std::map<std::string, LSDriver> LSDriverMap =
   {
@@ -56,13 +36,6 @@ namespace ET
     { 1, LSDriver::xGELSY },
     { 2, LSDriver::xGELSD },
     { 3, LSDriver::xGELSS }
-  };
-  std::map<ApproxType, std::string> ApproxTypeNameMap =
-  {
-    { ApproxType::LS, "Vanilla least squares" },
-    { ApproxType::MLS, "Moving least squares" },
-    { ApproxType::WMLS, "Weighted moving least squares"},
-    { ApproxType::RBF, "Radial basis functions" }
   };
   //  map for a string to enum of LSDriver type
   std::map<LSDriver, std::string> LSDriverNameMap =
@@ -82,227 +55,138 @@ namespace ET
   //    sets name = "default"
   //----------------------------------------------------------------------------
 	template<typename T>
-  Approximator<T>::Approximator() : _name("default")
+  Interpolator<T>::Interpolator() : m_name("default")
   {
-    _type = ApproxType::LS;
-    _lsdriver = LSDriver::xGELS;
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log = std::make_shared<Log>();
-		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
-		_log->TRACE("Approximator 'default' created at location "
+    m_lsdriver = LSDriver::xGELS;
+    m_ugrid = std::make_shared<UGrid<T>>();
+		m_log = std::make_shared<Log>();
+		m_log->init("ET:Interpolator:default", ".logs/approx_default.txt");
+		m_log->TRACE("Interpolator 'default' created at location "
 		            + getMem(*this));
   }
 	//----------------------------------------------------------------------------
-  //  Default destructor
+  //  Destructor
   //----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::~Approximator()
+  Interpolator<T>::~Interpolator()
   {
-		_log->TRACE("Approximator '" + _name
+		m_log->TRACE("Interpolator '" + m_name
 								+ "' destroyed at location " + getMem(*this));
 	}
-	//----------------------------------------------------------------------------
-  //  Various constructors taking in arguments
   //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with approximator type
+	//	Constructor with shared UGrid
 	//----------------------------------------------------------------------------
   template<typename T>
-  Approximator<T>::Approximator(int type)
-  : _type(ApproxTypeMapInt[type]), _name("default")
+  Interpolator<T>::Interpolator(std::shared_ptr<UGrid<T>> t_ugrid)
+  : m_name("default"), m_ugrid(t_ugrid)
   {
-		_log = std::make_shared<Log>();
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
-		_log->TRACE("Approximator 'default' created at location "
-								+ getMem(*this));
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-  //  Constructor taking in approximator type as a string
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Approximator<T>::Approximator(std::string type) : _name("default")
-  {
-    _type = ApproxTypeMap[type];
-		_log = std::make_shared<Log>();
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log->init("ET:Approximator:default", ".logs/approx_default.txt");
-		_log->TRACE("Approximator 'default' created at location "
+    m_lsdriver = LSDriver::xGELS;
+		m_log = log;
+		m_log->TRACE("Interpolator 'default' created at location "
 		            + getMem(*this));
+		m_log->INFO("Logger passed to Interpolator 'default'");
   }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Various constructors taking in shared logger
-	//----------------------------------------------------------------------------
-
 	//----------------------------------------------------------------------------
 	//	Constructor with shared logger
 	//----------------------------------------------------------------------------
 	template<typename T>
-  Approximator<T>::Approximator(std::shared_ptr<Log> log) : _name("default")
+  Interpolator<T>::Interpolator(std::shared_ptr<Log> t_log)
+  : m_name("default")
   {
-    _type = ApproxType::LS;
-    _lsdriver = LSDriver::xGELS;
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log = log;
-		_log->TRACE("Approximator 'default' created at location "
+    m_lsdriver = LSDriver::xGELS;
+    m_ugrid = std::make_shared<UGrid<T>>();
+		m_log = t_log;
+		m_log->TRACE("Interpolator 'default' created at location "
 		            + getMem(*this));
-		_log->INFO("Logger passed to Approximator 'default'");
-  }
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with approximator type
-	//----------------------------------------------------------------------------
-  template<typename T>
-  Approximator<T>::Approximator(int type, std::shared_ptr<Log> log)
-	: _type(ApproxTypeMapInt[type]), _name("default")
-  {
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log = log;
-		_log->TRACE("Approximator 'default' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Approximator 'default'");
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-  //  Constructor taking in approximator type as a string
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Approximator<T>::Approximator(std::string type, std::shared_ptr<Log> log)
-	: _name("default")
-  {
-    _type = ApproxTypeMap[type];
-    m_rbf = std::make_shared<RadialBasisFunction<T>>();
-		_log = log;
-		_log->TRACE("Approximator 'default' created at location "
-		            + getMem(*this));
-		_log->INFO("Logger passed to Approximator 'default'");
+		m_log->INFO("Logger passed to Interpolator 'default'");
   }
   //----------------------------------------------------------------------------
+	//	Constructor with shared UGrid and logger
+	//----------------------------------------------------------------------------
+  template<typename T>
+  Interpolator<T>::Interpolator(std::shared_ptr<UGrid<T>> t_ugrid,
+                                std::shared_ptr<Log> t_log)
+  : m_name("default"), m_ugrid(t_ugrid)
+  {
+    m_lsdriver = LSDriver::xGELS;
+    m_log = t_log;
+    m_log->TRACE("Interpolator 'default' created at location "
+                + getMem(*this));
+    m_log->INFO("Logger passed to Interpolator 'default'");
+  }
+	//----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  ApproxType Approximator<T>::getApproxType() const
+  std::string Interpolator<T>::getName() const
   {
-    return _type;
+    return m_name;
   }
   template<typename T>
-  ApproxParams Approximator<T>::getApproxParams() const
+  std::shared_ptr<UGrid<T>> Interpolator<T>::getUGrid() const
   {
-    return _params;
+    return m_ugrid;
   }
   template<typename T>
-  LSDriver Approximator<T>::getLSDriver() const
-  {
-    return _lsdriver;
-  }
-  template<typename T>
-  int Approximator<T>::getFlag() const
-  {
-    return _flag;
-  }
-  template<typename T>
-  std::string Approximator<T>::getInfo() const
-  {
-    return _info;
-  }
-  template<typename T>
-  std::shared_ptr<RadialBasisFunction<T>> Approximator<T>::getRadialBasisFunction()
-  {
-    return m_rbf;
-  }
-	template<typename T>
-	std::shared_ptr<Log> Approximator<T>::getLogger()
+	std::shared_ptr<Log> Interpolator<T>::getLogger() const
 	{
-		return _log;
+		return m_log;
 	}
-  //----------------------------------------------------------------------------
-  //  Set approximator type
-  //----------------------------------------------------------------------------
   template<typename T>
-  void Approximator<T>::setApproxType(std::string type)
+  LSDriver Interpolator<T>::getLSDriver() const
   {
-    auto res = ApproxTypeMap.find(type);
-		if (res == ApproxTypeMap.end()) {
-			_log->ERROR("Approximator " + _name + ": Attempted to set ApproxType "
-		              + "to " + type + " which is not a valid type");
-			return;
-		}
-		else {
-			_type = ApproxTypeMap[type];
-			_log->INFO("Approximator " + _name + ": ApproxType set to " + type);
-		}
+    return m_lsdriver;
   }
-  //----------------------------------------------------------------------------
-  //  Set approximator parameters
-  //----------------------------------------------------------------------------
   template<typename T>
-  void Approximator<T>::setApproxParams(ApproxParams params)
+  int Interpolator<T>::getFlag() const
   {
-    _params = params;
-		_log->INFO("Approximator " + _name + ": ApproxParams set");
+    return m_flag;
   }
-  //----------------------------------------------------------------------------
-  //  Set least squares drivers
-  //----------------------------------------------------------------------------
   template<typename T>
-  void Approximator<T>::setLSDriver(std::string type)
+  std::string Interpolator<T>::getInfo() const
   {
-		auto res = LSDriverMap.find(type);
+    return m_info;
+  }
+  template<typename T>
+  void Interpolator<T>::setName(std::string t_name)
+  {
+    m_name = t_name;
+  }
+
+  template<typename T>
+  void Interpolator<T>::setUGrid(std::shared_ptr<UGrid<T>> t_ugrid)
+  {
+    m_ugrid = t_ugrid;
+  }
+  template<typename T>
+  void Interpolator<T>::setLogger(std::shared_ptr<Log> t_log)
+  {
+    m_log = t_log;
+  }
+  template<typename T>
+  void Interpolator<T>::setLSDriver(std::string t_type)
+  {
+		auto res = LSDriverMap.find(t_type);
 		if (res == LSDriverMap.end()) {
-			_log->ERROR("Approximator " + _name + ": Attempted to set LSDriver "
-		              + "to " + type + " which is not a valid type");
+			m_log->ERROR("Interpolator " + m_name + ": Attempted to set LSDriver "
+		              + "to " + t_type + " which is not a valid type");
 		}
 		else {
-			_lsdriver = LSDriverMap[type];
-			_log->INFO("Approximator " + _name + ": LSDriver set to " + type);
+			m_lsdriver = LSDriverMap[t_type];
+			m_log->INFO("Interpolator " + m_name + ": LSDriver set to " + t_type);
 		}
 	}
-  //----------------------------------------------------------------------------
-  //  Set the number of neareApproxTypest neighbors to use
-  //----------------------------------------------------------------------------
   template<typename T>
-  void Approximator<T>::set_k(uint64_t k)
+  void Interpolator<T>::setFlag(int t_flag)
   {
-    _params.k = k;
-		_log->INFO("Approximator " + _name + ": k set to " + std::to_string(k));
-  }
-  //----------------------------------------------------------------------------
-  //  Set the number of terms to use in Taylor expansions
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Approximator<T>::set_n(uint64_t n)
-  {
-    _params.n = n;
-		_log->INFO("Approximator " + _name + ": n set to " + std::to_string(n));
-  }
-  //----------------------------------------------------------------------------
-  //  Set the shape parameter for RBF interpolants
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Approximator<T>::set_shape(double shape)
-  {
-    m_rbf->setShape(shape);
-		_log->INFO("Approximator " + _name + ": shape set to "
-               + std::to_string(shape));
+    m_flag = t_flag;
   }
   template<typename T>
-  void Approximator<T>::setFlag(int flag)
+  void Interpolator<T>::setInfo(std::string t_info)
   {
-    _flag = flag;
-  }
-  template<typename T>
-  void Approximator<T>::setInfo(std::string info)
-  {
-    _info = info;
+    m_info = t_info;
   }
   //----------------------------------------------------------------------------
 
@@ -310,256 +194,256 @@ namespace ET
 	//  Gradient functions
 	//----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//  Scalar fields
-	//----------------------------------------------------------------------------
-	//----------------------------------------------------------------------------
-	//  scalarGradientPoint - approximate the gradient at a point
-	//  Arguments:  ugrid   - UGrid<T> pointer
-	//              field   - ScalarField<T> pointer
-	//              index   - index of the point
-	//
-	//  Returns:    std::vector<T> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<T>
-	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::shared_ptr<ScalarField<T>> field, uint64_t index)
-  {
-    if (_type == ApproxType::LS) {
-      return scalarGradientLSPoint(ugrid, field, index);
-    }
-    else {
-      return scalarGradientLSPoint(ugrid, field, index);
-    }
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradientLSPoint - approximate the gradient at a point
-	//                           using the vanilla LS method
-	//  Arguments:  ugrid      - UGrid<T> pointer
-	//              field      - ScalarField<T> pointer
-	//              index      - index of the point
-	//
-	//  Returns:    std::vector<T> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<T>
-	Approximator<T>::scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-    const std::shared_ptr<ScalarField<T>> field, uint64_t index)
-  {
-    std::vector<T> result(field->getDim());
-		Monomial mono(ugrid->getDim(),_params.n);
-    //  First, find the nearest neighbors associated to the point specified by
-    //  index.
-    ugrid->queryNeighbors(_params.k);
-    std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
-    //  Construct the matrix associated with the ugrid spacing
-    Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
-    //  Construct the vector of field values associated to each point
-    std::vector<T> field_neighbors(_params.k);
-    for (uint32_t i = 0; i < _params.k; i++) {
-      field_neighbors[i] = (*field)(neighbors[i]);
-    }
-    Vector<T> field_vals(field_neighbors);
-    Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1) {
-			_log->ERROR(B.getInfo());
-		}
-    return answer.getVec();
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradient      - approximate the gradient for an entire field
-	//  Arguments:  ugrid   - UGrid<T> pointer
-	//              field   - ScalarField<T> pointer
-	//
-	//  Returns:    std::vector<std::vector<T>> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<std::vector<T>>
-	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                                  const std::shared_ptr<ScalarField<T>> field)
-  {
-    if (_type == ApproxType::LS) {
-      return scalarGradientLS(ugrid, field);
-    }
-    else {
-      return scalarGradientLS(ugrid, field);
-    }
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradientLS      - approximate the gradient for an entire field
-	//                           using the vanilla LS method
-	//  Arguments:  ugrid      - UGrid<T> pointer
-	//              field      - ScalarField<T> pointer
-	//
-	//  Returns:    std::vector<std::vector<T>> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<std::vector<T>>
-	Approximator<T>::scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
-    													const std::shared_ptr<ScalarField<T>> field)
-  {
-    std::vector<std::vector<T>> result(field->getN());
-    Monomial mono(ugrid->getDim(),_params.n);
-		ugrid->queryNeighbors(_params.k);
-    for (uint64_t i = 0; i < field->getN(); i++) {
-      std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
-      Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
-      std::vector<T> field_neighbors(_params.k);
-
-      for (uint32_t i = 0; i < _params.k; i++) {
-        field_neighbors[i] = (*field)(neighbors[i]);
-      }
-      Vector<T> field_vals(field_neighbors);
-      Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1) {
-				_log->ERROR(B.getInfo());
-			}
-      //  Trim result to the first field->getDim() elements
-			std::vector<T> v = answer.getVec();
-      std::vector<T> u = {v.begin()+1,v.begin()+field->getDim()+1};
-      result[i] = u;
-    }
-		return result;
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-  //  Passing field as a const reference
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradientPoint - approximate the gradient at a point
-	//  Arguments:  ugrid   - UGrid<T> pointer
-	//              field   - const ScalarField<T>& reference
-	//              index   - index of the point
-	//
-	//  Returns:    std::vector<T> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<T>
-	Approximator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
-    const ScalarField<T>& field, uint64_t index)
-  {
-    if (_type == ApproxType::LS)
-    {
-      return scalarGradientLSPoint(ugrid, field, index);
-    }
-    else
-    {
-      return scalarGradientLSPoint(ugrid, field, index);
-    }
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradientLSPoint - approximate the gradient at a point
-	//                           using the vanilla LS method
-	//  Arguments:  ugrid      - UGrid<T> pointer
-	//              field      - const ScalarField<T>& reference
-	//              index      - index of the point
-	//
-	//  Returns:    std::vector<T> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<T>
-	Approximator<T>::scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
-    const ScalarField<T>& field, uint64_t index)
-  {
-    std::vector<T> result(field.getDim());
-		Monomial mono(ugrid->getDim(),_params.n);
-    //  First, find the nearest neighbors associated to the point specified by
-    //  index.
-    ugrid->queryNeighbors(_params.k);
-    std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
-    //  Construct the matrix associated with the ugrid spacing
-    Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
-    //  Construct the vector of field values associated to each point
-    std::vector<T> field_neighbors(_params.k);
-    for (uint32_t i = 0; i < _params.k; i++)
-    {
-      field_neighbors[i] = field(neighbors[i]);
-    }
-    Vector<T> field_vals(field_neighbors);
-    Vector<T> answer = xGELSx(B,field_vals);
-		if (B.getFlag() == -1)
-		{
-			_log->ERROR(B.getInfo());
-		}
-    return answer.getVec();
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradient      - approximate the gradient for an entire field
-	//  Arguments:  ugrid   - UGrid<T> pointer
-	//              field   - const ScalarField<T>& reference
-	//              index   - index of the point
-	//
-	//  Returns:    std::vector<std::vector<T>> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<std::vector<T>>
-	Approximator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
-                                  const ScalarField<T>& field)
-  {
-    if (_type == ApproxType::LS)
-    {
-      return scalarGradientLS(ugrid, field);
-    }
-    else
-    {
-      return scalarGradientLS(ugrid, field);
-    }
-  }
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  scalarGradientLS      - approximate the gradient for an entire field
-	//                           using the vanilla LS method
-	//  Arguments:  ugrid      - UGrid<T> pointer
-	//              field      - const ScalarField<T>& reference
-	//              index      - index of the point
-	//
-	//  Returns:    std::vector<std::vector<T>> of the gradient.
-	//----------------------------------------------------------------------------
-  template<typename T>
-  std::vector<std::vector<T>>
-	Approximator<T>::scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
-    													const ScalarField<T>& field)
-  {
-    std::vector<std::vector<T>> result(field.getN());
-    Monomial mono(ugrid->getDim(),_params.n);
-		ugrid->queryNeighbors(_params.k);
-    for (uint64_t i = 0; i < field.getN(); i++)
-    {
-      std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
-      Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
-      std::vector<T> field_neighbors(_params.k);
-      for (uint32_t i = 0; i < _params.k; i++)
-      {
-        field_neighbors[i] = field(neighbors[i]);
-      }
-      Vector<T> field_vals(field_neighbors);
-      Vector<T> answer = xGELSx(B,field_vals);
-			if (B.getFlag() == -1)
-			{
-				_log->ERROR(B.getInfo());
-			}
-      //  Trim result to the first field->getDim() elements
-			std::vector<T> v = answer.getVec();
-      std::vector<T> u = {v.begin()+1,v.begin()+field.getDim()+1};
-      result[i] = u;
-    }
-		return result;
-  }
-  //----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //  Scalar fields
+	// //----------------------------------------------------------------------------
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientPoint - approximate the gradient at a point
+	// //  Arguments:  ugrid   - UGrid<T> pointer
+	// //              field   - ScalarField<T> pointer
+	// //              index   - index of the point
+	// //
+	// //  Returns:    std::vector<T> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<T>
+	// Interpolator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::shared_ptr<ScalarField<T>> field, uint64_t index)
+  // {
+  //   if (_type == InterpolatorType::LS) {
+  //     return scalarGradientLSPoint(ugrid, field, index);
+  //   }
+  //   else {
+  //     return scalarGradientLSPoint(ugrid, field, index);
+  //   }
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientLSPoint - approximate the gradient at a point
+	// //                           using the vanilla LS method
+	// //  Arguments:  ugrid      - UGrid<T> pointer
+	// //              field      - ScalarField<T> pointer
+	// //              index      - index of the point
+	// //
+	// //  Returns:    std::vector<T> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<T>
+	// Interpolator<T>::scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const std::shared_ptr<ScalarField<T>> field, uint64_t index)
+  // {
+  //   std::vector<T> result(field->getDim());
+	// 	Monomial mono(ugrid->getDim(),_params.n);
+  //   //  First, find the nearest neighbors associated to the point specified by
+  //   //  index.
+  //   ugrid->queryNeighbors(_params.k);
+  //   std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
+  //   //  Construct the matrix associated with the ugrid spacing
+  //   Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+  //   //  Construct the vector of field values associated to each point
+  //   std::vector<T> field_neighbors(_params.k);
+  //   for (uint32_t i = 0; i < _params.k; i++) {
+  //     field_neighbors[i] = (*field)(neighbors[i]);
+  //   }
+  //   Vector<T> field_vals(field_neighbors);
+  //   Vector<T> answer = xGELSx(B,field_vals);
+	// 	if (B.getFlag() == -1) {
+	// 		m_log->ERROR(B.getInfo());
+	// 	}
+  //   return answer.getVec();
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradient      - approximate the gradient for an entire field
+	// //  Arguments:  ugrid   - UGrid<T> pointer
+	// //              field   - ScalarField<T> pointer
+	// //
+	// //  Returns:    std::vector<std::vector<T>> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<std::vector<T>>
+	// Interpolator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+  //                                 const std::shared_ptr<ScalarField<T>> field)
+  // {
+  //   if (_type == InterpolatorType::LS) {
+  //     return scalarGradientLS(ugrid, field);
+  //   }
+  //   else {
+  //     return scalarGradientLS(ugrid, field);
+  //   }
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientLS      - approximate the gradient for an entire field
+	// //                           using the vanilla LS method
+	// //  Arguments:  ugrid      - UGrid<T> pointer
+	// //              field      - ScalarField<T> pointer
+	// //
+	// //  Returns:    std::vector<std::vector<T>> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<std::vector<T>>
+	// Interpolator<T>::scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
+  //   													const std::shared_ptr<ScalarField<T>> field)
+  // {
+  //   std::vector<std::vector<T>> result(field->getN());
+  //   Monomial mono(ugrid->getDim(),_params.n);
+	// 	ugrid->queryNeighbors(_params.k);
+  //   for (uint64_t i = 0; i < field->getN(); i++) {
+  //     std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+  //     Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+  //     std::vector<T> field_neighbors(_params.k);
+  //
+  //     for (uint32_t i = 0; i < _params.k; i++) {
+  //       field_neighbors[i] = (*field)(neighbors[i]);
+  //     }
+  //     Vector<T> field_vals(field_neighbors);
+  //     Vector<T> answer = xGELSx(B,field_vals);
+	// 		if (B.getFlag() == -1) {
+	// 			m_log->ERROR(B.getInfo());
+	// 		}
+  //     //  Trim result to the first field->getDim() elements
+	// 		std::vector<T> v = answer.getVec();
+  //     std::vector<T> u = {v.begin()+1,v.begin()+field->getDim()+1};
+  //     result[i] = u;
+  //   }
+	// 	return result;
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+  // //  Passing field as a const reference
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientPoint - approximate the gradient at a point
+	// //  Arguments:  ugrid   - UGrid<T> pointer
+	// //              field   - const ScalarField<T>& reference
+	// //              index   - index of the point
+	// //
+	// //  Returns:    std::vector<T> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<T>
+	// Interpolator<T>::scalarGradientPoint(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const ScalarField<T>& field, uint64_t index)
+  // {
+  //   if (_type == InterpolatorType::LS)
+  //   {
+  //     return scalarGradientLSPoint(ugrid, field, index);
+  //   }
+  //   else
+  //   {
+  //     return scalarGradientLSPoint(ugrid, field, index);
+  //   }
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientLSPoint - approximate the gradient at a point
+	// //                           using the vanilla LS method
+	// //  Arguments:  ugrid      - UGrid<T> pointer
+	// //              field      - const ScalarField<T>& reference
+	// //              index      - index of the point
+	// //
+	// //  Returns:    std::vector<T> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<T>
+	// Interpolator<T>::scalarGradientLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+  //   const ScalarField<T>& field, uint64_t index)
+  // {
+  //   std::vector<T> result(field.getDim());
+	// 	Monomial mono(ugrid->getDim(),_params.n);
+  //   //  First, find the nearest neighbors associated to the point specified by
+  //   //  index.
+  //   ugrid->queryNeighbors(_params.k);
+  //   std::vector<uint64_t> neighbors = ugrid->getNeighbors(index);
+  //   //  Construct the matrix associated with the ugrid spacing
+  //   Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,index,mono);
+  //   //  Construct the vector of field values associated to each point
+  //   std::vector<T> field_neighbors(_params.k);
+  //   for (uint32_t i = 0; i < _params.k; i++)
+  //   {
+  //     field_neighbors[i] = field(neighbors[i]);
+  //   }
+  //   Vector<T> field_vals(field_neighbors);
+  //   Vector<T> answer = xGELSx(B,field_vals);
+	// 	if (B.getFlag() == -1)
+	// 	{
+	// 		m_log->ERROR(B.getInfo());
+	// 	}
+  //   return answer.getVec();
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradient      - approximate the gradient for an entire field
+	// //  Arguments:  ugrid   - UGrid<T> pointer
+	// //              field   - const ScalarField<T>& reference
+	// //              index   - index of the point
+	// //
+	// //  Returns:    std::vector<std::vector<T>> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<std::vector<T>>
+	// Interpolator<T>::scalarGradient(const std::shared_ptr<UGrid<T>> ugrid,
+  //                                 const ScalarField<T>& field)
+  // {
+  //   if (_type == InterpolatorType::LS)
+  //   {
+  //     return scalarGradientLS(ugrid, field);
+  //   }
+  //   else
+  //   {
+  //     return scalarGradientLS(ugrid, field);
+  //   }
+  // }
+  // //----------------------------------------------------------------------------
+  //
+	// //----------------------------------------------------------------------------
+	// //  scalarGradientLS      - approximate the gradient for an entire field
+	// //                           using the vanilla LS method
+	// //  Arguments:  ugrid      - UGrid<T> pointer
+	// //              field      - const ScalarField<T>& reference
+	// //              index      - index of the point
+	// //
+	// //  Returns:    std::vector<std::vector<T>> of the gradient.
+	// //----------------------------------------------------------------------------
+  // template<typename T>
+  // std::vector<std::vector<T>>
+	// Interpolator<T>::scalarGradientLS(const std::shared_ptr<UGrid<T>> ugrid,
+  //   													const ScalarField<T>& field)
+  // {
+  //   std::vector<std::vector<T>> result(field.getN());
+  //   Monomial mono(ugrid->getDim(),_params.n);
+	// 	ugrid->queryNeighbors(_params.k);
+  //   for (uint64_t i = 0; i < field.getN(); i++)
+  //   {
+  //     std::vector<uint64_t> neighbors = ugrid->getNeighbors(i);
+  //     Matrix<T> B = constructTaylorMatrix(ugrid,neighbors,i,mono);
+  //     std::vector<T> field_neighbors(_params.k);
+  //     for (uint32_t i = 0; i < _params.k; i++)
+  //     {
+  //       field_neighbors[i] = field(neighbors[i]);
+  //     }
+  //     Vector<T> field_vals(field_neighbors);
+  //     Vector<T> answer = xGELSx(B,field_vals);
+	// 		if (B.getFlag() == -1)
+	// 		{
+	// 			m_log->ERROR(B.getInfo());
+	// 		}
+  //     //  Trim result to the first field->getDim() elements
+	// 		std::vector<T> v = answer.getVec();
+  //     std::vector<T> u = {v.begin()+1,v.begin()+field.getDim()+1};
+  //     result[i] = u;
+  //   }
+	// 	return result;
+  // }
+  // //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//  nth-derivatives of scalar field
@@ -575,7 +459,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const std::shared_ptr<ScalarField<T>> field,
 														        uint32_t n)
 	{
@@ -602,7 +486,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const std::shared_ptr<ScalarField<T>> field,
 														        uint32_t dir, uint32_t n)
 	{
@@ -631,7 +515,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const std::shared_ptr<ScalarField<T>> field,
 														        std::vector<uint32_t> deriv)
 	{
@@ -660,7 +544,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, uint32_t n)
 	{
@@ -692,7 +576,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		std::vector<T> point, uint32_t n)
 	{
@@ -724,7 +608,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, uint32_t dir, uint32_t n)
 	{
@@ -750,7 +634,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		std::vector<T> point, uint32_t dir,
                                     uint32_t n)
@@ -776,7 +660,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		uint64_t index, std::vector<uint32_t> deriv)
 	{
@@ -800,7 +684,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		const std::shared_ptr<ScalarField<T>> field,
 																		std::vector<T> point,
                                     std::vector<uint32_t> deriv)
@@ -828,7 +712,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        uint32_t n)
 	{
@@ -855,7 +739,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        uint32_t dir, uint32_t n)
 	{
@@ -884,7 +768,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        std::vector<uint32_t> deriv)
 	{
@@ -913,7 +797,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        uint64_t index, uint32_t n)
 	{
@@ -945,7 +829,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<T>
-	Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 													        	const ScalarField<T>& field,
 														        std::vector<T> point, uint32_t n)
 	{
@@ -977,7 +861,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  uint64_t index, uint32_t dir, uint32_t n)
 	{
@@ -1003,7 +887,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  std::vector<T> point, uint32_t dir,
                                       uint32_t n)
@@ -1029,7 +913,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  uint64_t index,
 																			std::vector<uint32_t> deriv)
@@ -1054,7 +938,7 @@ namespace ET
 	//  Returns:    T          - the gradient in direction dir and order n.
 	//----------------------------------------------------------------------------
 	template<typename T>
-	T Approximator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	T Interpolator<T>::scalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																		  const ScalarField<T>& field,
 																		  std::vector<T> point,
 																			std::vector<uint32_t> deriv)
@@ -1086,7 +970,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1109,7 +993,7 @@ namespace ET
 		Vector<T> coefficients = xGELSx(B,field_neighbors);
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
+			m_log->ERROR(B.getInfo());
 		}
 		return coefficients;
 	}
@@ -1125,7 +1009,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1146,7 +1030,7 @@ namespace ET
 		Vector<T> coefficients = xGELSx(B,field_neighbors);
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
+			m_log->ERROR(B.getInfo());
 		}
 		return coefficients;
 	}
@@ -1161,7 +1045,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const std::shared_ptr<ScalarField<T>> field,
 											uint32_t n)
 	{
@@ -1186,7 +1070,7 @@ namespace ET
 			Vector<T> coefficients = xGELSx(B,field_neighbors);
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
+				m_log->ERROR(B.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1208,7 +1092,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1231,7 +1115,7 @@ namespace ET
 		Vector<T> coefficients = xGELSx(B,field_neighbors);
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
+			m_log->ERROR(B.getInfo());
 		}
 		return coefficients;
 	}
@@ -1247,7 +1131,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1268,7 +1152,7 @@ namespace ET
 		Vector<T> coefficients = xGELSx(B,field_neighbors);
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
+			m_log->ERROR(B.getInfo());
 		}
 		return coefficients;
 	}
@@ -1283,7 +1167,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const ScalarField<T>& field,
 											uint32_t n)
 	{
@@ -1308,7 +1192,7 @@ namespace ET
 			Vector<T> coefficients = xGELSx(B,field_neighbors);
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
+				m_log->ERROR(B.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1330,7 +1214,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1360,8 +1244,8 @@ namespace ET
 		Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1377,7 +1261,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1405,8 +1289,8 @@ namespace ET
 		Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1421,7 +1305,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const std::shared_ptr<ScalarField<T>> field,
 											uint32_t n)
 	{
@@ -1454,8 +1338,8 @@ namespace ET
 			Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
-				_log->ERROR(B_TB.getInfo());
+				m_log->ERROR(B.getInfo());
+				m_log->ERROR(B_TB.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1477,7 +1361,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1507,8 +1391,8 @@ namespace ET
 		Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1524,7 +1408,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1552,8 +1436,8 @@ namespace ET
 		Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1568,7 +1452,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeMLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const ScalarField<T>& field,
 											uint32_t n)
 	{
@@ -1601,8 +1485,8 @@ namespace ET
 			Vector<T> coefficients = B_TB_inv * B_T * field_neighbors;
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
-				_log->ERROR(B_TB.getInfo());
+				m_log->ERROR(B.getInfo());
+				m_log->ERROR(B_TB.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1624,7 +1508,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1656,8 +1540,8 @@ namespace ET
 		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TWB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TWB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1673,7 +1557,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const std::shared_ptr<ScalarField<T>> field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1703,8 +1587,8 @@ namespace ET
 		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TWB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TWB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1719,7 +1603,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeWMLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const std::shared_ptr<ScalarField<T>> field,
 											uint32_t n)
 	{
@@ -1752,8 +1636,8 @@ namespace ET
 			Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
-				_log->ERROR(B_TWB.getInfo());
+				m_log->ERROR(B.getInfo());
+				m_log->ERROR(B_TWB.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1775,7 +1659,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 uint64_t index,
 													 uint32_t n)
@@ -1806,8 +1690,8 @@ namespace ET
 		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TWB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TWB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1823,7 +1707,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLSPoint(const std::shared_ptr<UGrid<T>> ugrid,
 													 const ScalarField<T>& field,
 													 std::vector<T> point,
 													 uint32_t n)
@@ -1853,8 +1737,8 @@ namespace ET
 		Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 		if (B.getFlag() == -1)
 		{
-			_log->ERROR(B.getInfo());
-			_log->ERROR(B_TWB.getInfo());
+			m_log->ERROR(B.getInfo());
+			m_log->ERROR(B_TWB.getInfo());
 		}
 		return coefficients;
 	}
@@ -1869,7 +1753,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::scalarDerivativeWMLS(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::scalarDerivativeWMLS(const std::shared_ptr<UGrid<T>> ugrid,
 											const ScalarField<T>& field,
 											uint32_t n)
 	{
@@ -1903,8 +1787,8 @@ namespace ET
 			Vector<T> coefficients = B_TWB_inv * B_T * W * field_neighbors;
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
-				_log->ERROR(B_TWB.getInfo());
+				m_log->ERROR(B.getInfo());
+				m_log->ERROR(B_TWB.getInfo());
 			}
 			result[i] = coefficients;
 		}
@@ -1918,15 +1802,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 																	 	 const std::shared_ptr<ScalarField<T>> field,
 																	 	 uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLS(ugrid,field,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLS(ugrid,field,n);
 		}
@@ -1938,15 +1822,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<Vector<T>>
-	Approximator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 																	 	 const ScalarField<T>& field,
 																	 	 uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLS(ugrid,field,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLS(ugrid,field,n);
 		}
@@ -1958,15 +1842,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																	 const std::shared_ptr<ScalarField<T>> field,
 																	 uint64_t index, uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,index,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
 		}
@@ -1978,15 +1862,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																	 const ScalarField<T>& field,
-																	 uint64_t index, uint32_t n)
+											             uint64_t index, uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,index,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,index,n);
 		}
@@ -1998,15 +1882,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																	 const std::shared_ptr<ScalarField<T>> field,
 																	 std::vector<T> point, uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,point,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
 		}
@@ -2018,15 +1902,15 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Vector<T>
-	Approximator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::xScalarDerivativePoint(const std::shared_ptr<UGrid<T>> ugrid,
 																	 const ScalarField<T>& field,
 																	 std::vector<T> point, uint32_t n)
 	{
-		if (_type == ApproxType::MLS)
+		if (_type == InterpolatorType::MLS)
 		{
 			return scalarDerivativeMLSPoint(ugrid,field,point,n);
 		}
-		else if (_type == ApproxType::WMLS)
+		else if (_type == InterpolatorType::WMLS)
 		{
 			return scalarDerivativeWMLSPoint(ugrid,field,point,n);
 		}
@@ -2037,15 +1921,15 @@ namespace ET
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
-	Vector<T> Approximator<T>::xGELSx(Matrix<T> B, Vector<T> u)
+	Vector<T> Interpolator<T>::xGELSx(Matrix<T> B, Vector<T> u)
 	{
-		if (_lsdriver == LSDriver::xGELS) {
+		if (m_lsdriver == LSDriver::xGELS) {
 			return DGELS(B,u);
 		}
-		else if (_lsdriver == LSDriver::xGELSY) {
+		else if (m_lsdriver == LSDriver::xGELSY) {
 			return DGELSY(B,u);
 		}
-		else if (_lsdriver == LSDriver::xGELSD) {
+		else if (m_lsdriver == LSDriver::xGELSD) {
 			return DGELSD(B,u);
 		}
 		else {
@@ -2063,7 +1947,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	std::vector<std::vector<T>>
-	Approximator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::vectorDerivative(const std::shared_ptr<UGrid<T>> ugrid,
 									                  const VectorField<T>& field,
 									                  uint32_t dir, uint32_t n)
 	{
@@ -2087,19 +1971,19 @@ namespace ET
 			Vector<T> answer_x = xGELSx(B,field_vals_x);
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
+				m_log->ERROR(B.getInfo());
 			}
 			Vector<T> field_vals_y(field_neighbors_y);
 			Vector<T> answer_y = xGELSx(B,field_vals_y);
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
+				m_log->ERROR(B.getInfo());
 			}
 			Vector<T> field_vals_z(field_neighbors_z);
 			Vector<T> answer_z = xGELSx(B,field_vals_z);
 			if (B.getFlag() == -1)
 			{
-				_log->ERROR(B.getInfo());
+				m_log->ERROR(B.getInfo());
 			}
 			//	Get the index of the monomial expansion corresponding to
 			//	the nth-derivative in the 'dir'-direction
@@ -2119,7 +2003,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
-	Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::constructTaylorMatrix(				 const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, uint64_t index, uint64_t order)
   {
     Monomial mono(ugrid->getDim(),order);
@@ -2138,10 +2022,10 @@ namespace ET
 
 	//----------------------------------------------------------------------------
   //  Construct the Taylor expansion matrix about a point
-  //----------------------------------------------------------------------------
+  //------------------------------------				 ----------------------------------------
   template<typename T>
   Matrix<T>
-	Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, std::vector<T> point, uint64_t order)
   {
     Monomial mono(ugrid->getDim(),order);
@@ -2164,7 +2048,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
-	Approximator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::constructTaylorMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, uint64_t index, Monomial& mono)
   {
     std::vector<std::vector<double>> B;
@@ -2185,7 +2069,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Matrix<T>
-	Approximator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, uint64_t index)
 	{
 	  //	For a simple gaussian weight, find the distances from index
@@ -2205,7 +2089,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	template<typename T>
 	Matrix<T>
-	Approximator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
+	Interpolator<T>::constructWeightMatrix(const std::shared_ptr<UGrid<T>> ugrid,
     const std::vector<uint64_t> neighbors, std::vector<T> point)
 	{
 	  //	For a simple gaussian weight, find the distances from point
@@ -2224,22 +2108,22 @@ namespace ET
   //  Various functions
   //----------------------------------------------------------------------------
   template<typename T>
-  const std::string Approximator<T>::summary()
+  const std::string Interpolator<T>::summary()
   {
 		std::string sum = "---------------------------------------------------";
-		sum += "\n<ET::Approximator<double";
+		sum += "\n<ET::Interpolator<double";
 		sum += "> object at " + getMem(this) + ">";
 		sum += "\n---------------------------------------------------";
-    sum += "\n       name:  '" + _name + "'";
-    sum += "\n       type:  '" + ApproxTypeNameMap[_type] + "'";
-    sum += "\n   LSDriver:  '" + LSDriverNameMap[_lsdriver] + "'";
+    sum += "\n       name:  '" + mm_name + "'";
+    sum += "\n       type:  '" + InterpolatorTypeNameMap[_type] + "'";
+    sum += "\n   LSDriver:  '" + LSDriverNameMap[m_lsdriver] + "'";
 		sum += "\n          k:   " + std::to_string(_params.k);
     sum += "\n          n:   " + std::to_string(_params.n);
 		sum += "\n---------------------------------------------------";
-    sum += "\n   RBF at: " + getMem(*getRadialBasisFunction()) + ",";
-		sum += "\n   ref at: " + getMem(m_rbf);
+    //sum += "\n   RBF at: " + getMem(*getRadialBasisInterpolator()) + ",";
+		//sum += "\n   ref at: " + getMem(m_rbf);
 		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
-		sum += "\n   ref at: " + getMem(_log);
+		sum += "\n   ref at: " + getMem(m_log);
 		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		return sum;
   }

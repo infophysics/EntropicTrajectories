@@ -2,9 +2,9 @@
 //  params.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
+
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -40,21 +40,9 @@ namespace ET
   };
 
   //----------------------------------------------------------------------------
-  //  Least squares driver routine
+  //  Interpolator type
   //----------------------------------------------------------------------------
-  enum class LSDriver
-  {
-    xGELS,  //  default driver
-    xGELSY, //  complete orthogonal factorization
-    xGELSD, //  SVD with divide and conquer
-    xGELSS, //  SVD
-  };
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Approximator type
-  //----------------------------------------------------------------------------
-  enum class ApproxType
+  enum class InterpolatorType
   {
     LS,
     MLS,
@@ -72,48 +60,6 @@ namespace ET
   };
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  RBF function type
-  //----------------------------------------------------------------------------
-  enum class RBFKernelType
-  {
-    GAUSSIAN,
-    MULTIQUADRIC,
-    INVERSE_QUADRATIC,
-    INVERSE_MULTIQUADRIC
-  };
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  RBF Parameters
-  //----------------------------------------------------------------------------
-  struct RBFParams
-  {
-    //  TODO: implement a set of basic RBF parameters
-    double m_rbfshape = 3.05048;
-
-    RBFParams() {}
-  };
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Struct for approximator parameters
-  //----------------------------------------------------------------------------
-  struct ApproxParams
-  {
-    //  TODO:: implement a set of parameters for each type.
-    //  Basic parameters
-    uint64_t k = 3;             //  number of nearest neighbors
-    uint64_t n = 3;             //  order of polynomial expansion
-    //  type of weight matrix
-    enum WeightFunctionType _weight;
-    //  type of RBF kernel
-    enum RBFKernelType _rbf;
-    //  RBF params
-
-    ApproxParams() {}
-  };
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Integrator type

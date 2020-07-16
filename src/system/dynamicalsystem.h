@@ -2,9 +2,9 @@
 //  dynamicalsystem.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
-//  Copyright (C) [2020] by [N. Carrara, F. Costa, P. Pessoa]
-//  [ncarrara@albany.edu,felipecosta.physics@gmail.com,
-//    pedroh.pessoa100@gmail.com]
+//  Copyright (C) [2020] by [N. Carrara]
+//  [ncarrara@albany.edu]
+
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -31,7 +31,7 @@
 #include "utils.h"
 #include "matrix.h"
 #include "scalarfield.h"
-#include "approximator.h"
+#include "interpolator.h"
 #include "params.h"
 #include "log.h"
 
@@ -48,7 +48,7 @@ namespace ET
   private:
     std::string _name;
     std::shared_ptr<UGrid<T>> _ugrid;
-    std::shared_ptr<Approximator<T>> _approx;
+    std::shared_ptr<Interpolator<T>> _approx;
     std::vector<std::shared_ptr<ScalarField<T>>> _scalarFields;
     std::shared_ptr<Log> _log;
   };
