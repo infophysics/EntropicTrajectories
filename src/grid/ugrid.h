@@ -22,7 +22,7 @@
 #include <string>
 #include "utils.h"
 #include "matrix.h"
-#include "kdtree.h"
+#include "KDTree.h"
 #include "log.h"
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"
@@ -126,20 +126,17 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    //-------------------------------------------UGrid-------------------------------
-    //  Basic attributes
-    //--------------------------------------------------------------------------
-    std::string m_name{""};                    //  Name of the grid
-    size_t m_dim{0};                           //  Dimension of the grid
-    size_t m_N{0};                             //  Number of points t_in the grid
-    std::vector<std::vector<T>> m_ugrid{{{0}}};//  Vector of vectors array
-    std::vector<std::string> m_coords{{""}};   //  Coordinate labels
+    std::string m_name {""};                    //  Name of the grid
+    size_t m_dim {0};                           //  Dimension of the grid
+    size_t m_N {0};                             //  Number of points t_in the grid
+    std::vector<std::vector<T>> m_ugrid {{{0}}};//  Vector of vectors array
+    std::vector<std::string> m_coords {{""}};   //  Coordinate labels
     //--------------------------------------------------------------------------
     //  KDTree
     //--------------------------------------------------------------------------
-    kdTree<T> m_kdt;
+    KDTree<T> m_kdt;
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> m_kdtree;
+                     std::vector<std::vector<T>>,T>> m_KDTree;
     //--------------------------------------------------------------------------
     //  Results from KDTree searches
     //--------------------------------------------------------------------------

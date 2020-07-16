@@ -141,7 +141,7 @@ namespace ET
 		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 		//##########################################################################
-		//  generate kdtree
+		//  generate KDTree
   	setupTree();
 		m_searchFlag = -1;
 	}
@@ -162,7 +162,7 @@ namespace ET
 		m_log->TRACE("Unstructured Grid 'default' created at location "
 		            + getMem(*this));
 	  //##########################################################################
-		//  generate kdtree
+		//  generate KDTree
   	setupTree();
 		m_searchFlag = -1;
 	}
@@ -278,7 +278,7 @@ namespace ET
 								+ getMem(*this));
 		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
-		//  generate kdtree
+		//  generate KDTree
   	setupTree();
 		m_searchFlag = -1;
 	}
@@ -300,7 +300,7 @@ namespace ET
 								+ getMem(*this));
 		m_log->INFO("Logger passed to Unstructured Grid 'default'");
 		//##########################################################################
-		//  generate kdtree
+		//  generate KDTree
   	setupTree();
 		m_searchFlag = -1;
 	}
@@ -430,13 +430,13 @@ namespace ET
 							 + std::to_string(m_N) + " with dimension "
 							 + std::to_string(m_dim));
 		//##########################################################################
-    kdTree<T> kdt(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
+    KDTree<T> kdt(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
     m_kdt = kdt;
-		// //  generate kdtree
+		// //  generate KDTree
   	// KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		// kdt(m_dim, m_ugrid, 16);
     // kdt.index->buildIndex();
-		// m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+		// m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
 		//                             std::vector<std::vector<T>>, T>>(kdt);
 		// m_searchFlag = -1;
   }
@@ -659,7 +659,7 @@ namespace ET
 	template<typename T>
 	void UGrid<T>::setupTree()
 	{
-    m_kdt = kdTree<T>(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
+    m_kdt = KDTree<T>(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
 	}
 	template<typename T>
   void UGrid<T>::queryNeighbors(uint64_t k)

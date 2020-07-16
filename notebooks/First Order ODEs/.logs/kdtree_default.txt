@@ -1,3 +1,3 @@
-[14:18:17] [trace] ET:kdTree:default_8: kdTree 'default' created at location 0x7ffcb85545d0
-[14:18:17] [trace] ET:kdTree:default_8: kdTree 'default' destroyed at location 0x7ffcb85545d0
-[14:18:17] [info] ET:kdTree:default_8: kdTree default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 10 neighbor[14:18:18] [trace] ET:kdTree:default_6: kdTree 'default' destroyed at location 0x5604b0320a80
+[14:18:17] [trace] ET:KDTree:default_8: KDTree 'default' created at location 0x7ffcb85545d0
+[14:18:17] [trace] ET:KDTree:default_8: KDTree 'default' destroyed at location 0x7ffcb85545d0
+[14:18:17] [info] ET:KDTree:default_8: KDTree default: Querying each point in array _grid of size 1000 and dimension 1 for the nearest 10 neighbor[14:18:18] [trace] ET:KDTree:default_6: KDTree 'default' destroyed at location 0x5604b0320a80

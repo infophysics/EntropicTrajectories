@@ -154,6 +154,24 @@ namespace ET
                                          const size_t t_k);
     //! LTI Matrix
     /*! Local Taylor Interpolator Matrix constructor that takes in a
+    *  point from an associated grid and a value for radius.
+    *  @param t_index The index of the point in the associated grid.
+    *  @param t_radius The radius to use for the influence domain.
+    *  @return The LTI Matrix for the point referenced by index.
+    */
+    Matrix<T> constructLocalTaylorMatrix(const size_t t_index,
+                                         const double t_radius);
+    //! LTI Matrix
+    /*! Local Taylor Interpolator Matrix constructor that takes in a
+    *  arbitrary point and a value for radius.
+    *  @param t_point An arbitrary point to build a Taylor Matrix around.
+    *  @param t_radius The radius to use for the influence domain.
+    *  @return The LTI Matrix for the point.
+    */
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+                                         const double t_radius);
+    //! LTI Matrix
+    /*! Local Taylor Interpolator Matrix constructor that takes in a
     *  point from an associated grid and values for k and n.
     *  @param t_index The index of the point in the associated grid.
     *  @param t_k The number of neighbors to use for the influence domain.
@@ -174,8 +192,65 @@ namespace ET
     Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
                                          const size_t t_k,
                                          const size_t t_n);
+    //! LTI Matrix
+    /*! Local Taylor Interpolator Matrix constructor that takes in a
+    *  point from an associated grid and values for radius and n.
+    *  @param t_index The index of the point in the associated grid.
+    *  @param t_radius The radius to use for the influence domain.
+    *  @param t_n The order of the Taylor expansion to be used.
+    *  @return The LTI Matrix for the point referenced by index.
+    */
+    Matrix<T> constructLocalTaylorMatrix(const size_t t_index,
+                                         const double t_radius,
+                                         const size_t t_n);
+    //! LTI Matrix
+    /*! Local Taylor Interpolator Matrix constructor that takes in a
+    *  arbitrary point and values for radius and n.
+    *  @param t_point An arbitrary point to build a Taylor Matrix around.
+    *  @param t_radius The radius to use for the influence domain.
+    *  @param t_n The order of the Taylor expansion to be used.
+    *  @return The LTI Matrix for the point.
+    */
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+                                         const double t_radius,
+                                         const size_t t_n);
 
+    //  Overloaded derivative functions
 
+    //! Derivative
+    /*! derivative.  Derivative for a point in the UGrid given by index,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+    std::vector<T> derivative(const size_t t_index,
+                              const size_t t_degree);
+    //! Derivative
+    /*! derivative.  Derivative for a point in the UGrid given by index,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+    T derivative(const size_t t_index,
+                 const size_t t_degree,
+                 const size_t t_direction);
+    //! Derivative
+    /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+    std::vector<T> derivative(const size_t std::vector<T>& point,
+                              const size_t t_degree);
+    //! Derivative
+    /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+    T derivative(const size_t std::vector<T>& point,
+                 const size_t t_degree,
+                 const size_t t_direction);
   private:
     /*! Name.  Name of the LTI.  Defaulted to empty string.
      */

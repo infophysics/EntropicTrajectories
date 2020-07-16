@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  kdtree.h
+//  KDTree.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -29,12 +29,12 @@
 namespace ET
 {
   template<typename T>
-  class kdTree : public std::enable_shared_from_this<kdTree<T>>
+  class KDTree : public std::enable_shared_from_this<KDTree<T>>
   {
   public:
-    kdTree();
-    ~kdTree();
-    kdTree(std::shared_ptr<std::vector<std::vector<T>>> t_points);
+    KDTree();
+    ~KDTree();
+    KDTree(std::shared_ptr<std::vector<std::vector<T>>> t_points);
 
     //--------------------------------------------------------------------------
     //  Getters
@@ -76,7 +76,7 @@ namespace ET
     size_t m_dim{0};
     std::shared_ptr<std::vector<std::vector<T>>> m_points;
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> m_kdtree;
+                     std::vector<std::vector<T>>,T>> m_KDTree;
     std::shared_ptr<Log> m_log;
     //--------------------------------------------------------------------------
     //  Results from KDTree searches
@@ -91,5 +91,5 @@ namespace ET
     //--------------------------------------------------------------------------
   };
 
-  template class kdTree<double>;
+  template class KDTree<double>;
 }

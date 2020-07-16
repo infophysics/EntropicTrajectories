@@ -28,19 +28,19 @@ namespace ET
   template<typename T>
   WaveEQ1D<T>::WaveEQ1D() : ScalarField<T>(), _A(1), _k(1), _w(1)
   {
-    //getIntegrator()->setF(&diffEQ);
+    //getIntegrator()->setF(&DiffEQ);
   }
   template<typename T>
   WaveEQ1D<T>::WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid)
   : ScalarField<T>("WaveEQ1D",ugrid), _A(1), _k(1), _w(1)
   {
-    //getIntegrator()->setF(&diffEQ);
+    //getIntegrator()->setF(&DiffEQ);
   }
   template<typename T>
   WaveEQ1D<T>::WaveEQ1D(std::shared_ptr<UGrid<T>> ugrid, T A, T k, T w)
   : ScalarField<T>("WaveEQ1D",ugrid), _A(A), _k(k), _w(w)
   {
-    //getIntegrator()->setF(&diffEQ);
+    //getIntegrator()->setF(&DiffEQ);
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------

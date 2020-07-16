@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  diffeq.cpp
+//  DiffEQ.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -16,7 +16,7 @@
 //  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
-#include "diffeq.h"
+#include "DiffEQ.h"
 
 namespace ET
 {
@@ -24,11 +24,11 @@ namespace ET
   //  Base class for differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  diffEQ<T>::diffEQ()
+  DiffEQ<T>::DiffEQ()
   {
   }
   template<typename T>
-  diffEQ<T>::~diffEQ()
+  DiffEQ<T>::~DiffEQ()
   {
   }
   //----------------------------------------------------------------------------
@@ -37,11 +37,11 @@ namespace ET
   //  Base class for first order differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  firstOrderODE<T>::firstOrderODE()
+  FirstOrderODE<T>::FirstOrderODE()
   {
   }
   template<typename T>
-  firstOrderODE<T>::~firstOrderODE()
+  FirstOrderODE<T>::~FirstOrderODE()
   {
   }
   //----------------------------------------------------------------------------
@@ -50,22 +50,22 @@ namespace ET
   //  Setters and getters
   //----------------------------------------------------------------------------
   template<typename T>
-  void firstOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
+  void FirstOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
   {
     _sfield = field;
   }
   template<typename T>
-  void firstOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
+  void FirstOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
   {
     _vfield = field;
   }
   template<typename T>
-  std::shared_ptr<ScalarField<T>> firstOrderODE<T>::getScalarField()
+  std::shared_ptr<ScalarField<T>> FirstOrderODE<T>::getScalarField()
   {
     return _sfield;
   }
   template<typename T>
-  std::shared_ptr<VectorField<T>> firstOrderODE<T>::getVectorField()
+  std::shared_ptr<VectorField<T>> FirstOrderODE<T>::getVectorField()
   {
     return _vfield;
   }
@@ -75,11 +75,11 @@ namespace ET
   //  Base class for second order differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  secondOrderODE<T>::secondOrderODE()
+  SecondOrderODE<T>::SecondOrderODE()
   {
   }
   template<typename T>
-  secondOrderODE<T>::~secondOrderODE()
+  SecondOrderODE<T>::~SecondOrderODE()
   {
   }
   //----------------------------------------------------------------------------
@@ -88,22 +88,22 @@ namespace ET
   //  Setters and getters
   //----------------------------------------------------------------------------
   template<typename T>
-  void secondOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
+  void SecondOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
   {
     _sfield = field;
   }
   template<typename T>
-  void secondOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
+  void SecondOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
   {
     _vfield = field;
   }
   template<typename T>
-  std::shared_ptr<ScalarField<T>> secondOrderODE<T>::getScalarField()
+  std::shared_ptr<ScalarField<T>> SecondOrderODE<T>::getScalarField()
   {
     return _sfield;
   }
   template<typename T>
-  std::shared_ptr<VectorField<T>> secondOrderODE<T>::getVectorField()
+  std::shared_ptr<VectorField<T>> SecondOrderODE<T>::getVectorField()
   {
     return _vfield;
   }
@@ -117,11 +117,11 @@ namespace ET
   //  Heat equation
   //----------------------------------------------------------------------------
   template<typename T>
-  heatEquation<T>::heatEquation()
+  HeatEquation<T>::HeatEquation()
   {
   }
   template<typename T>
-  heatEquation<T>::~heatEquation()
+  HeatEquation<T>::~HeatEquation()
   {
   }
   //----------------------------------------------------------------------------
@@ -130,12 +130,12 @@ namespace ET
   //  Setters and getters
   //----------------------------------------------------------------------------
   template<typename T>
-  void heatEquation<T>::setAlpha(T alpha)
+  void HeatEquation<T>::setAlpha(T alpha)
   {
     _alpha = alpha;
   }
   template<typename T>
-  T heatEquation<T>::getAlpha()
+  T HeatEquation<T>::getAlpha()
   {
     return _alpha;
   }
@@ -145,14 +145,14 @@ namespace ET
   //  Evaluation functions
   //----------------------------------------------------------------------------
   template<typename T>
-  T heatEquation<T>::dt(std::vector<T> point, double t, T k)
+  T HeatEquation<T>::dt(std::vector<T> point, double t, T k)
   {
     std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(point,2);
     return _alpha * std::accumulate(d2f_dx2.begin(),d2f_dx2.end(),0);
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<T> heatEquation<T>::dt(std::vector<std::vector<T>> points,
+  std::vector<T> HeatEquation<T>::dt(std::vector<std::vector<T>> points,
                                      double t, std::vector<T> k)
   {
     std::vector<T> result(this->getScalarField()->getN());

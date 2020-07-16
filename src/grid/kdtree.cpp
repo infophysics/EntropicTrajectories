@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  kdtree.h
+//  KDTree.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -18,33 +18,33 @@
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
 
-#include "kdtree.h"
+#include "KDTree.h"
 
 namespace ET
 {
   template<typename T>
-  kdTree<T>::kdTree() : m_N(0), m_dim(0), m_name("default")
+  KDTree<T>::KDTree() : m_N(0), m_dim(0), m_name("default")
   {
 		m_log = std::make_shared<Log>();
-		m_log->init("ET:kdTree:default", ".logs/kdtree_default.txt");
-		m_log->TRACE("kdTree 'default' created at location "
+		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
+		m_log->TRACE("KDTree 'default' created at location "
 		            + getMem(*this));
 		m_searchFlag = -1;
   }
   template<typename T>
-  kdTree<T>::~kdTree()
+  KDTree<T>::~KDTree()
   {
-		m_log->TRACE("kdTree '" + m_name
+		m_log->TRACE("KDTree '" + m_name
 		            + "' destroyed at location " + getMem(*this));
   }
   template<typename T>
-  kdTree<T>::kdTree(std::shared_ptr<std::vector<std::vector<T>>> t_points)
+  KDTree<T>::KDTree(std::shared_ptr<std::vector<std::vector<T>>> t_points)
   : m_N(t_points->size()), m_dim((*t_points)[0].size()), m_name("default")
   {
     m_points = t_points;
 		m_log = std::make_shared<Log>();
-		m_log->init("ET:kdTree:default", ".logs/kdtree_default.txt");
-		m_log->TRACE("kdTree 'default' created at location "
+		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
+		m_log->TRACE("KDTree 'default' created at location "
 		            + getMem(*this));
   }
 
@@ -52,66 +52,66 @@ namespace ET
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  uint64_t kdTree<T>::getDim()
+  uint64_t KDTree<T>::getDim()
   {
     return m_dim;
   }
   template<typename T>
-  uint64_t kdTree<T>::getN()
+  uint64_t KDTree<T>::getN()
   {
     return m_N;
   }
   template<typename T>
-  std::shared_ptr<std::vector<std::vector<T>>> kdTree<T>::getPoints()
+  std::shared_ptr<std::vector<std::vector<T>>> KDTree<T>::getPoints()
   {
     return m_points;
   }
   template<typename T>
-  std::string kdTree<T>::getName()
+  std::string KDTree<T>::getName()
   {
     return m_name;
   }
   template<typename T>
-  std::vector<std::vector<size_t>> kdTree<T>::getNeighbors()
+  std::vector<std::vector<size_t>> KDTree<T>::getNeighbors()
   {
     return m_neighbors;
   }
   template<typename T>
-  std::vector<std::vector<double>> kdTree<T>::getDistances()
+  std::vector<std::vector<double>> KDTree<T>::getDistances()
   {
     return m_distances;
   }
   template<typename T>
-  std::vector<std::vector<size_t>> kdTree<T>::getNeighborsRadius()
+  std::vector<std::vector<size_t>> KDTree<T>::getNeighborsRadius()
   {
     return m_neighbors_radius;
   }
   template<typename T>
-  std::vector<std::vector<double>> kdTree<T>::getDistancesRadius()
+  std::vector<std::vector<double>> KDTree<T>::getDistancesRadius()
   {
     return m_distances_radius;
   }
   template<typename T>
-  std::vector<size_t> kdTree<T>::getNeighbors(uint64_t t_index)
+  std::vector<size_t> KDTree<T>::getNeighbors(uint64_t t_index)
   {
     if (t_index > m_N) {
-      m_log->ERROR("kdTree " + m_name
+      m_log->ERROR("KDTree " + m_name
                   + ": Attempted to access neighbors array of size "
                   + std::to_string(m_N) + " with index "
                   + std::to_string(t_index));
       if(m_neighbors.size() > 0) {
-        m_log->INFO("kdTree " + m_name + ": Returning the element at index 0");
+        m_log->INFO("KDTree " + m_name + ": Returning the element at index 0");
         return m_neighbors[0];
       }
       else {
-        m_log->INFO("kdTree " + m_name + ": Returning empty neighbors array");
+        m_log->INFO("KDTree " + m_name + ": Returning empty neighbors array");
         return std::vector<size_t>(1,0);
       }
     }
     return m_neighbors[t_index];
   }
   template<typename T>
-  std::shared_ptr<Log> kdTree<T>::getLogger()
+  std::shared_ptr<Log> KDTree<T>::getLogger()
   {
     return m_log;
   }
@@ -119,26 +119,26 @@ namespace ET
   //  KDTree methods
   //----------------------------------------------------------------------------
   template<typename T>
-  void kdTree<T>::setupTree()
+  void KDTree<T>::setupTree()
   {
-    //  generate kdtree
+    //  generate KDTree
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(m_dim, *m_points, 16);
     kdt.index->buildIndex();
-		m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+		m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
                      std::vector<std::vector<T>>,T>>(kdt);
-    m_log->INFO("Initialized kdTree with " + std::to_string(m_N) + " points "
+    m_log->INFO("Initialized KDTree with " + std::to_string(m_N) + " points "
                + "in " + std::to_string(m_dim) + " dimensions");
   }
   template<typename T>
-  void kdTree<T>::queryNeighbors(uint64_t t_k)
+  void KDTree<T>::queryNeighbors(uint64_t t_k)
   {
     //	check if anything has changed since last query
 		if (m_searchFlag == 0 && t_k == m_k) {
 			return;
 		}
 		if (t_k >= m_N) {
-			m_log->ERROR("kdTree " + m_name
+			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(m_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
@@ -147,11 +147,11 @@ namespace ET
     m_neighbors.resize(m_N);
 		m_distances.resize(m_N);
 		m_k = t_k;
-		m_log->INFO("kdTree " + m_name + ": Querying each point in array _grid of"
+		m_log->INFO("KDTree " + m_name + ": Querying each point in array _grid of"
 	             + " size " + std::to_string(m_N) + " and dimension "
 						   + std::to_string(m_dim) + " for the nearest "
 							 + std::to_string(m_k) + " neighbors");
-    //  generate kdtree
+    //  generate KDTree
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(m_dim, *m_points, 16);
     kdt.index->buildIndex();
@@ -170,26 +170,26 @@ namespace ET
 			m_neighbors[i] = std::move(ret_indexes);
 			m_distances[i] = std::move(out_dists_sqr);
     }
-    // m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    // m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
     //                            std::vector<std::vector<T>>, T>>(kdt);
 		m_searchFlag = 0;
   }
   template<typename T>
   std::vector<size_t>
-  kdTree<T>::queryNeighbors(const std::vector<T>& t_point, uint64_t t_k)
+  KDTree<T>::queryNeighbors(const std::vector<T>& t_point, uint64_t t_k)
   {
     if (t_k >= m_N) {
-			m_log->ERROR("kdTree " + m_name
+			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("kdTree " + m_name + ": Setting k to 3");
+      m_log->INFO("KDTree " + m_name + ": Setting k to 3");
       m_k = 3;
 		}
     else {
       m_k = t_k;
     }
-		m_log->INFO("kdTree " + m_name + ": Querying a point in array _grid of"
+		m_log->INFO("KDTree " + m_name + ": Querying a point in array _grid of"
 	             + " size " + std::to_string(m_N) + " and dimension "
 						   + std::to_string(m_dim) + " for the nearest "
 							 + std::to_string(m_k) + " neighbors of a set of points");
@@ -205,20 +205,20 @@ namespace ET
     kdt.index->buildIndex();
 		kdt.index->findNeighbors(resultSet, &t_point[0],
 			                       nanoflann::SearchParams(10));
-    // m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    // m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
     //                           std::vector<std::vector<T>>, T>>(kdt);
 		return ret_indexes;
   }
   template<typename T>
   std::vector<double>
-  kdTree<T>::queryDistances(const std::vector<T>& t_point, uint64_t t_k)
+  KDTree<T>::queryDistances(const std::vector<T>& t_point, uint64_t t_k)
   {
     if (t_k >= m_N) {
-			m_log->ERROR("kdTree " + m_name
+			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("kdTree " + m_name + ": Setting k to 3");
+      m_log->INFO("KDTree " + m_name + ": Setting k to 3");
       m_k = 3;
 		}
     else {
@@ -226,7 +226,7 @@ namespace ET
     }
 		std::vector<size_t> neighbors(t_point.size());
 		std::vector<double> distances(t_point.size());
-		m_log->INFO("kdTree " + m_name + ": Querying each point in array _grid of"
+		m_log->INFO("KDTree " + m_name + ": Querying each point in array _grid of"
 	             + " size " + std::to_string(m_N) + " and dimension "
 						   + std::to_string(m_dim) + " for the nearest "
 							 + std::to_string(m_k) + " neighbors of a set of points");
@@ -251,15 +251,15 @@ namespace ET
   }
   template<typename T>
   std::vector<std::vector<size_t>>
-  kdTree<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
+  KDTree<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
                             uint64_t t_k)
   {
     if (t_k >= m_N) {
-			m_log->ERROR("kdTree " + m_name
+			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("kdTree " + m_name + ": Setting k to 3");
+      m_log->INFO("KDTree " + m_name + ": Setting k to 3");
       m_k = 3;
 		}
     else {
@@ -267,11 +267,11 @@ namespace ET
     }
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
 		std::vector<std::vector<double>> distances(t_points.size());
-		m_log->INFO("kdTree " + m_name + ": Querying each point in array _grid of"
+		m_log->INFO("KDTree " + m_name + ": Querying each point in array _grid of"
 	             + " size " + std::to_string(m_N) + " and dimension "
 						   + std::to_string(m_dim) + " for the nearest "
 							 + std::to_string(m_k) + " neighbors of a set of points");
-    //  generate kdtree
+    //  generate KDTree
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(m_dim, *m_points, 16);
     kdt.index->buildIndex();
@@ -290,12 +290,12 @@ namespace ET
 			neighbors[i] = std::move(ret_indexes);
 			distances[i] = std::move(out_dists_sqr);
     }
-		// m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+		// m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
     //                  std::vector<std::vector<T>>,T>>(kdt);
 		return neighbors;
   }
   template<typename T>
-  void kdTree<T>::queryRadius(double t_radius)
+  void KDTree<T>::queryRadius(double t_radius)
   {
     //	check if anything has changed since last query
 		if (m_searchFlag == 0) {
@@ -306,14 +306,14 @@ namespace ET
 		m_radius = t_radius;
 		//	the algorithm looks for points that satisfy the squared
 		//	distance rather than the square root.
-		m_log->INFO("kdTree " + m_name + ": Querying each point in array _grid of"
+		m_log->INFO("KDTree " + m_name + ": Querying each point in array _grid of"
 	             + " size " + std::to_string(m_N) + " and dimension "
 						   + std::to_string(m_dim) + " for the nearest points within radius"
 							 + std::to_string(m_radius));
     //  Nanoflann uses r^2 rather than r, since it requires one fewer
     //  operations to calculate.
 		t_radius *= t_radius;
-		//  generate kdtree
+		//  generate KDTree
     KDTreeVectorOfVectorsAdaptor<std::vector<std::vector<T>>, T>
 		kdt(m_dim, *m_points, 16);
     kdt.index->buildIndex();
@@ -333,7 +333,7 @@ namespace ET
 			m_distances_radius[i] = std::move(distances);
     }
 		m_searchFlag = 0;
-		// m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+		// m_KDTree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
     //                  std::vector<std::vector<T>>,T>>(kdt);
   }
   //----------------------------------------------------------------------------

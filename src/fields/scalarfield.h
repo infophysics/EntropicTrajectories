@@ -27,16 +27,16 @@
 #include "field.h"
 
 //------------------------------------------------------------------------------
-//  Forward declaration of Interpolator, Integrator and diffEQ
+//  Forward declaration of Interpolator, Integrator and DiffEQ
 //------------------------------------------------------------------------------
 namespace ET
 {
   template<typename T> class Interpolator;
-  template<typename T> class diffEQ;
+  template<typename T> class DiffEQ;
   template<typename T> class Integrator;
 }
 #include "interpolator.h"
-#include "diffeq.h"
+#include "DiffEQ.h"
 #include "integrator.h"
 namespace ET
 {
@@ -47,112 +47,181 @@ namespace ET
   class ScalarField: public Field<T>
   {
   public:
-    //--------------------------------------------------------------------------
-    //  Constructors
-    //--------------------------------------------------------------------------
+    //! Defualt Constructor
+    /*! Default constructor for Field.
+     */
     ScalarField();
+    //! Destructor
+    /*! Destructor for Field.
+     */
     virtual ~ScalarField();
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
-                std::vector<T> field);
-    //--------------------------------------------------------------------------
-    //  Constructors with shared loggers
-    //--------------------------------------------------------------------------
-    ScalarField(std::shared_ptr<Log> log);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
-                std::shared_ptr<Log> log);
-    ScalarField(std::shared_ptr<UGrid<T>> ugrid, std::vector<T> field,
-                std::shared_ptr<Log> log);
-    ScalarField(std::string, std::shared_ptr<UGrid<T>> ugrid,
-                std::vector<T> field, std::shared_ptr<Log> log);
-    //--------------------------------------------------------------------------
+    //! Constructor
+    /*! constructor for Field that takes a Logger
+     */
+    ScalarField(std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a UGrid
+     */
+    ScalarField(std::shared_ptr<UGrid<T>> t_ugrid);
+    //! Constructor
+    /*! constructor for Field that takes a Interpolator
+     */
+    ScalarField(std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Constructor
+    /*! constructor for Field that takes a UGrid and a logger
+     */
+    ScalarField(std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a field
+     */
+    ScalarField(std::vector<T> t_field);
+    //! Constructor
+    /*! constructor for Field that takes a field and aLogger
+     */
+    ScalarField(std::vector<T> t_field, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a field and a UGrid
+     */
+    ScalarField(std::vector<T> t_field, std::shared_ptr<UGrid<T>> t_ugrid);
+    //! Constructor
+    /*! constructor for Field that takes a field and a Interpolator
+     */
+    ScalarField(std::vector<T> t_field,
+                std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Constructor
+    /*! constructor for Field that takes a field, UGrid and a logger
+     */
+    ScalarField(std::vector<T> t_field,
+                std::shared_ptr<UGrid<T>> t_ugrid,
+                std::shared_ptr<Log> t_log);
 
-    //--------------------------------------------------------------------------
-    //  Getters
-    //--------------------------------------------------------------------------
+    //! Get field.
+    /*! get field.  Returns a const copy of the field values vector.
+     *  @return m_field An std::vector<T> of field values.
+     */
     std::vector<T> getField() const;
+    //! Access field.
+    /*! access field.  Returns a pointer to the field values vector.
+     *  @return *m_field A pointer to m_field.
+     */
     std::vector<T>* accessField();
+    //! Data
+    /*! data.  Returns a pointer to the beginning of the values vector.
+     *  @return m_field.data() A pointer to the beginning of m_field.
+     */
     T* data();
-    std::string getName() const;
-    uint64_t getN() const;
-    uint32_t getDim() const;
-    std::shared_ptr<UGrid<T>> getUGrid() const;
-    std::shared_ptr<Interpolator<T>> getInterpolator() const;
-    std::shared_ptr<diffEQ<T>> getDiffEQ() const;
-    std::shared_ptr<Integrator<T>> getIntegrator() const;
-    std::shared_ptr<Log> getLogger();
-    int getFlag() constnamespace ET
-{
-  template<typename T> class Interpolator;
-  template<typename T> class diffEQ;
-  template<typename T> class Integrator;
-}
-#include "interpolator.h"
-#include "diffeq.h"
-#include "integrator.h";
-    std::string getInfo() const;
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //  Setters
-    //--------------------------------------------------------------------------
-    void setUGrid(std::shared_ptr<UGrid<T>> ugrid);
-    void setField(std::vector<T> field);
-    void setName(std::string name);
-    void setInterpolatorType(std::string type);
-    void setFlag(int flag);
-    void setInfo(std::string info);
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
+    //! Set field
+    /*! set field.  Sets the field values vector.
+     *  @param t_field An std::vector<T> of field values.
+     */
+    void setField(std::vector<T> t_field);
     //  Operator overloads
-    //--------------------------------------------------------------------------
-    ScalarField<T> operator+(const ScalarField<T>& scalar) const;
-    ScalarField<T> operator-(const ScalarField<T>& scalar) const;
-    ScalarField<T> operator*(const ScalarField<T>& scalar) const;
-    ScalarField<T> operator/(const ScalarField<T>& scalar) const;
-    ScalarField<T>& operator+=(const ScalarField<T>& scalar);
-    ScalarField<T>& operator-=(const ScalarField<T>& scalar);
-    ScalarField<T>& operator*=(const ScalarField<T>& scalar);
-    ScalarField<T>& operator/=(const ScalarField<T>& scalar);
-    T& operator()(const uint32_t& i);
-    const T& operator()(const uint32_t& i) const;
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //  Methods for calculating derivatives
-    //--------------------------------------------------------------------------
-    Matrix<T> constructTaylorMatrix();
+    //! Plus.
+    /*! plus operator.  Add two scalar fields together
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return A new ScalarField<T> that is the sum of this and t_scalar.
+     */
+    ScalarField<T> operator+(const ScalarField<T>& t_scalar) const;
+    //! Minus.
+    /*! subtraction operator.  Subtract two scalar fields from each other.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return A new ScalarField<T> that is the difference of
+     *  t_scalar from this.
+     */
+    ScalarField<T> operator-(const ScalarField<T>& t_scalar) const;
+    //! Mulitply.
+    /*! multiplication operator.  Multiply two scalar fields together
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return A new ScalarField<T> that is the product of this and t_scalar.
+     */
+    ScalarField<T> operator*(const ScalarField<T>& t_scalar) const;
+    //! Divide.
+    /*! divide operator.  Divide two scalar fields.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return A new ScalarField<T> that is the ratio of this and t_scalar.
+     */
+    ScalarField<T> operator/(const ScalarField<T>& t_scalar) const;
+    //! Plus equals.
+    /*! plus equals operator.  Add sa scalar field to this.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return This field plus t_scalar.
+     */
+    ScalarField<T>& operator+=(const ScalarField<T>& t_scalar);
+    //! Minus equals.
+    /*! minus equals operator.  Subtract a scalar field from this.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return This field minus t_scalar.
+     */
+    ScalarField<T>& operator-=(const ScalarField<T>& t_scalar);
+    //! Mulitply equals.
+    /*! multiply equals operator.  Multiply this scalar field by another.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return This field times t_scalar.
+     */
+    ScalarField<T>& operator*=(const ScalarField<T>& t_scalar);
+    //! Divide equals.
+    /*! divide equals operator.  Divide this scalar field by another.
+     *  @param t_scalar A const ScalarField<T>& reference.
+     *  @return This field divided by t_scalar.
+     */
+    ScalarField<T>& operator/=(const ScalarField<T>& t_scalar);
+    //! Access operator
+    /*! access operator.  Get the value of the scalar field at a point.
+     *  @param t_i The index of the desired point.
+     *  @return The value of the scalar field at t_i.
+     */
+    T& operator()(const size_t& t_i);
+    //! Access operator
+    /*! access operator.  Get the value of the scalar field at a point.
+     *  @param t_i The index of the desired point.
+     *  @return The value of the scalar field at t_i.
+     */
+    const T& operator()(const size_t& t_i) const;
+    //! Gradient
+    /*! Computes the gradient of the entire field.
+     *  @return An std::vector<std::vector<T>> of derivative values
+     *  along each direction of the underlying microstates.
+     */
     std::vector<std::vector<T>> gradient();
+    //! Laplacian
+    /*! Computes the Laplacian of the entire field.
+     *  @return An std::vector<T> of Laplacian values at each
+     *  point of the scalar field.
+     */
     std::vector<T> laplacian();
-    T laplacian(uint64_t index);
+    //! Construct local field values
+    /*! Function for generating a vector
+     *  of local field values to use for interpolation.
+     *  @param t_index The index of the point to construct around.
+     *  @return A vector of field values.
+     */
+    Vector<T> constructLocalFieldValues(size_t t_index);
+    
+    T laplacian(size_t index);
     //--------------------------------------------------------------------------
     //  Derivatives along the entire grid
     //--------------------------------------------------------------------------
-    std::vector<std::vector<T>> derivative(uint32_t n);
-    std::vector<T> derivative(uint32_t dir, uint32_t n);
-    std::vector<T> derivative(std::vector<uint32_t> deriv);
+    std::vector<std::vector<T>> derivative(size_t n);
+    std::vector<T> derivative(size_t dir, size_t n);
+    std::vector<T> derivative(std::vector<size_t> deriv);
     //--------------------------------------------------------------------------
     //  Derivatives at points on the grid
     //--------------------------------------------------------------------------
-    std::vector<T> derivativePoint(uint64_t index, uint32_t n);
-    T derivativePoint(uint64_t index, uint32_t dir, uint32_t n);
-    T derivativePoint(uint64_t index, std::vector<uint32_t> deriv);
+    std::vector<T> derivativePoint(size_t index, size_t n);
+    T derivativePoint(size_t index, size_t dir, size_t n);
+    T derivativePoint(size_t index, std::vector<size_t> deriv);
     //--------------------------------------------------------------------------
     //  Derivatives at arbitrary points
     //--------------------------------------------------------------------------
-    std::vector<T> derivativePoint(std::vector<T> point, uint32_t n);
-    T derivativePoint(std::vector<T> point, uint32_t dir, uint32_t n);
-    T derivativePoint(std::vector<T> point, std::vector<uint32_t> deriv);
+    std::vector<T> derivativePoint(std::vector<T> point, size_t n);
+    T derivativePoint(std::vector<T> point, size_t dir, size_t n);
+    T derivativePoint(std::vector<T> point, std::vector<size_t> deriv);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Methods for calculating integrals
     //--------------------------------------------------------------------------
-    void queryNeighborCache(uint64_t index, uint32_t k);
+    void queryNeighborCache(size_t index, size_t k);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -162,12 +231,12 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-
-    std::vector<T> _field;
+    /*! field.  std::vector<T> of field values associated to ugrid. */
+    std::vector<T> m_field;
     //--------------------------------------------------------------------------
     //  Objects for differential equation solver
     //--------------------------------------------------------------------------
-    uint64_t _point_cache;
+    size_t _point_cache;
     std::vector<size_t> _neighbor_cache;
     std::vector<double> _distance_cache;
 

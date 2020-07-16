@@ -21,316 +21,110 @@
 
 namespace ET
 {
-  //----------------------------------------------------------------------------
-  //  ScalarField constructors
-  //----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Default constructor
-  //    sets name = "default", and _dim, _N = 0
-  //----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField() : _dim(0), _N(0), _name("default")
+  ScalarField<T>::ScalarField()
+  : Field();
   {
-    //##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:ScalarField:default", ".logs/scalarfield_default.txt");
-		_log->TRACE("Scalar Field 'default' created at location "
-		            + getMem(*this));
-		//##########################################################################
-		_ugrid = std::make_shared<UGrid<T>>(_log);
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
+    m_dim = 1;
   }
-	//----------------------------------------------------------------------------
-  //  Default destructor
-  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::~ScalarField()
+  : ~Field()
   {
-		//##########################################################################
-		_log->TRACE("Scalar Field '" + _name
-								+ "' destroyed at location " + getMem(*this));
-		//##########################################################################
+    m_dim = 1;
   }
-	//----------------------------------------------------------------------------
-  //  Various constructors taking in arguments for
-	//		_dim, _name, _N, _ugrid and _log.
-  //----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Constructor with UGrid
-	//----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid)
-	: _ugrid(ugrid), _name("default")
+  ScalarField<T>::ScalarField(std::shared_ptr<Log> t_log)
+  : Field(t_log)
   {
-    _N = _ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:ScalarField:default", ".logs/scalarfield_default.txt");
-		_log->TRACE("Scalar Field 'default' created at location "
-		            + getMem(*this));
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
+    m_dim = 1;
   }
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with name and UGrid
-	//----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid)
-  : _name(name), _ugrid(ugrid)
+  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> t_ugrid)
+  : Field(t_ugrid)
   {
-    _N = _ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:ScalarField:" + _name, ".logs/scalarfield_default.txt");
-		_log->TRACE("Scalar Field '" + _name + "' created at location "
-		            + getMem(*this));
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
+    m_dim = 1;
   }
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with UGrid and field
-	//----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid,
-		                          std::vector<T> field)
-  : _ugrid(ugrid), _field(field), _name("default")
+  ScalarField<T>::ScalarField(std::shared_ptr<Interpolator<T>> t_interpolator)
+  : Field(t_interpolator)
   {
-    _N = ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:ScalarField:default", ".logs/scalarfield_default.txt");
-		_log->TRACE("Scalar Field 'default' created at location "
-		            + getMem(*this));
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
+    m_dim = 1;
   }
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with name, UGrid and field
-	//----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid,
-                              std::vector<T> field)
-  : _name(name), _ugrid(ugrid), _field(field)
+  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> t_ugrid,
+                              std::shared_ptr<Log> t_log)
+  : Field(t_ugrid, t_log)
   {
-    _N = ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = std::make_shared<Log>();
-		_log->init("ET:ScalarField:" + _name, ".logs/scalarfield_default.txt");
-		_log->TRACE("Scalar Field '" + _name + "' created at location "
-		            + getMem(*this));
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
+    m_dim = 1;
   }
-  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field)
+  : Field()
+  {
+    m_field = t_field;
+    m_dim = 1;
+    m_N = m_field.size();
+  }
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<Log> t_log)
+  : Field(t_log)
+  {
+    m_field = t_field;
+    m_dim = 1;
+    m_N = m_field.size();
+  }
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<UGrid<T>> t_ugrid)
+  : Field(t_ugrid)
+  {
+    m_field = t_field;
+    m_dim = 1;
+    m_N = m_field.size();
+  }
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<Interpolator<T>> t_interpolator)
+  : Field(t_interpolator)
+  {
+    m_field = t_field;
+    m_dim = 1;
+    m_N = m_field.size();
+  }
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<UGrid<T>> t_ugrid,
+                              std::shared_ptr<Log> t_log)
+  : Field(t_ugrid, t_log)
+  {
+    m_field = t_field;
+    m_dim = 1;
+    m_N = m_field.size();
+  }
 
-	//----------------------------------------------------------------------------
-	//	Various constructors taking in shared logger
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Constructor with shared logger
-	//----------------------------------------------------------------------------
-	template<typename T>
-	ScalarField<T>::ScalarField(std::shared_ptr<Log> log)
-	: _name("default"), _dim(0), _N(0)
-	{
-		_ugrid = std::make_shared<UGrid<T>>();
-		//##########################################################################
-		_log = log;
-		_log->TRACE("Scalar Field 'default' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Scalar Field 'default'");
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Constructor with UGrid and shared logger
-	//----------------------------------------------------------------------------
-	template<typename T>
-	ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid,
-		                          std::shared_ptr<Log> log)
-	: _ugrid(ugrid), _name("default")
-	{
-		_N = _ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = log;
-		_log->TRACE("Scalar Field 'default' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Scalar Field 'default'");
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with name and UGrid
-	//----------------------------------------------------------------------------
-	template<typename T>
-	ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid,
-	                            std::shared_ptr<Log> log)
-	: _name(name), _ugrid(ugrid)
-	{
-		_N = _ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = log;
-		_log->TRACE("Scalar Field '" + _name + "' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Scalar Field '" + _name + "'");
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with UGrid and field
-	//----------------------------------------------------------------------------
-	template<typename T>
-	ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> ugrid,
-															std::vector<T> field, std::shared_ptr<Log> log)
-	: _ugrid(ugrid), _field(field), _name("default")
-	{
-		_N = ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = log;
-		_log->TRACE("Scalar Field 'default' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Scalar Field 'default'");
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
-	}
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//  Constructor with name, UGrid and field
-	//----------------------------------------------------------------------------
-	template<typename T>
-	ScalarField<T>::ScalarField(std::string name, std::shared_ptr<UGrid<T>> ugrid,
-															std::vector<T> field, std::shared_ptr<Log> log)
-	: _name(name), _ugrid(ugrid), _field(field)
-	{
-		_N = ugrid->getN();
-		_dim = _ugrid->getDim();
-		//##########################################################################
-		_log = log;
-		_log->TRACE("Scalar Field '" + _name + "' created at location "
-								+ getMem(*this));
-		_log->INFO("Logger passed to Scalar Field '" + _name + "'");
-		//##########################################################################
-		_approx = std::make_shared<Interpolator<T>>(_log);
-		_integrator = std::make_shared<Integrator<T>>(_log);
-	}
-	//----------------------------------------------------------------------------
-
-  //----------------------------------------------------------------------------
-  //  Getters and Setters
-  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T> ScalarField<T>::getField() const
   {
-    return _field;
+    return m_field;
   }
   template<typename T>
   std::vector<T>* ScalarField<T>::accessField()
   {
-    return &_field;
+    return &m_field;
   }
   template<typename T>
   T* ScalarField<T>::data()
   {
-    return _field.data();
+    return m_field.data();
   }
   template<typename T>
-  std::string ScalarField<T>::getName() const
+  void ScalarField<T>::setField(std::vector<T> t_field)
   {
-    return _name;
+    m_field = t_field;
+    m_N = m_field.size();
   }
-  template<typename T>
-  uint64_t ScalarField<T>::getN() const
-  {
-    return _N;
-  }
-  template<typename T>
-  uint32_t ScalarField<T>::getDim() const
-  {
-    return _dim;
-  }
-  template<typename T>
-  std::shared_ptr<Interpolator<T>> ScalarField<T>::getInterpolator() const
-  {
-    return _approx;
-  }
-	template<typename T>
-	std::shared_ptr<Integrator<T>> ScalarField<T>::getIntegrator() const
-  {
-    return _integrator;
-  }
-	template<typename T>
-	std::shared_ptr<UGrid<T>> ScalarField<T>::getUGrid() const
-	{
-		return _ugrid;
-	}
-  template<typename T>
-	std::shared_ptr<Log> ScalarField<T>::getLogger()
-	{
-		return _log;
-	}
-	template<typename T>
-  int ScalarField<T>::getFlag() const
-  {
-    return _flag;
-  }
-  template<typename T>
-  std::string ScalarField<T>::getInfo() const
-  {
-    return _info;
-  }
-	template<typename T>
-  void ScalarField<T>::setUGrid(std::shared_ptr<UGrid<T>> ugrid)
-  {
-    _ugrid = ugrid;
-  }
-  template<typename T>
-  void ScalarField<T>::setField(std::vector<T> field)
-  {
-    _field = field;
-  }
-  template<typename T>
-  void ScalarField<T>::setName(std::string name)
-  {
-    _name = name;
-  }
-  template<typename T>
-  void ScalarField<T>::setInterpolatorType(std::string type)
-  {
-    _approx->setInterpolatorType(type);
-  }
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Operator overloads
@@ -721,9 +515,20 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Methods for calculating derivatives
-  //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> ScalarField<T>::constructLocalFieldValues(size_t t_index)
+  {
+    //  Get the nearest neighbors for the index
+    u_grid->queryNeighbors(t_index);
+    std::vector<size_t> neighbors = ugrid->getNeighbors(t_index);
+    //  Create the empty vector
+    Vector<T> f(neighbors.size());
+    for (auto i = 0; i < neighbors.size(); i++) {
+      f(i) = m_field[neighbors[i]];
+    }
+    return f;
+  }
+
   template<typename T>
   std::vector<std::vector<T>> ScalarField<T>::gradient()
   {

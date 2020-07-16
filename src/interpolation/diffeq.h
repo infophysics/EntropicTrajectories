@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  diffeq.h
+//  DiffEQ.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -43,11 +43,11 @@ namespace ET
   //  Base class for differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  class diffEQ
+  class DiffEQ
   {
   public:
-    diffEQ();
-    ~diffEQ();
+    DiffEQ();
+    ~DiffEQ();
   private:
   };
   //----------------------------------------------------------------------------
@@ -56,11 +56,11 @@ namespace ET
   //  Base class for first order differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  class firstOrderODE : public diffEQ<T>
+  class FirstOrderODE : public DiffEQ<T>
   {
   public:
-    firstOrderODE();
-    ~firstOrderODE();
+    FirstOrderODE();
+    ~FirstOrderODE();
 
     //--------------------------------------------------------------------------
     //  Setters and getters
@@ -88,11 +88,11 @@ namespace ET
   //  Base class for second order differential equations
   //----------------------------------------------------------------------------
   template<typename T>
-  class secondOrderODE : public diffEQ<T>
+  class SecondOrderODE : public DiffEQ<T>
   {
   public:
-    secondOrderODE();
-    ~secondOrderODE();
+    SecondOrderODE();
+    ~SecondOrderODE();
 
     //--------------------------------------------------------------------------
     //  Setters and getters
@@ -128,11 +128,11 @@ namespace ET
   //  Heat equation
   //----------------------------------------------------------------------------
   template<typename T>
-  class heatEquation : public firstOrderODE<T>
+  class HeatEquation : public FirstOrderODE<T>
   {
   public:
-    heatEquation();
-    ~heatEquation();
+    HeatEquation();
+    ~HeatEquation();
     //--------------------------------------------------------------------------
     //  Setters and getters
     //--------------------------------------------------------------------------
@@ -151,9 +151,9 @@ namespace ET
   };
   //----------------------------------------------------------------------------
 
-  template class diffEQ<double>;
-  template class firstOrderODE<double>;
-  template class secondOrderODE<double>;
-  template class heatEquation<double>;
+  template class DiffEQ<double>;
+  template class FirstOrderODE<double>;
+  template class SecondOrderODE<double>;
+  template class HeatEquation<double>;
 
 }
