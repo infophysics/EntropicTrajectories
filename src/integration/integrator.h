@@ -28,16 +28,19 @@
 #include "utils.h"
 #include "matrix.h"
 
-//------------------------------------------------------------------------------
-//  Forward declaration of ScalarField
-//------------------------------------------------------------------------------
-namespace ET
-{
-  template<typename T> class ScalarField;
-  template<typename T> class VectorField;
-}
-#include "scalarfield.h"
-#include "vectorfield.h"
+// //------------------------------------------------------------------------------
+// //  Forward declaration of ScalarField
+// //------------------------------------------------------------------------------
+// namespace ET
+// {
+//   template<typename T> class Field;
+//   //template<typename T> class ScalarField;
+//   //template<typename T> class VectorField;
+// }
+// #include "field.h"
+// //#include "scalarfield.h"
+// //#include "vectorfield.h"
+
 namespace ET
 {
   //----------------------------------------------------------------------------
@@ -53,20 +56,21 @@ namespace ET
     Integrator(std::string type);
 
     Integrator(std::shared_ptr<Log> log);
+    Integrator(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
 
-    void setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>));
+    //void setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>));
 
-    //--------------------------------------------------------------------------
-    //  Integration methods
-    //--------------------------------------------------------------------------
-    void scalarIntegrate(const UGrid<T>& ugrid, ScalarField<T>& field);
-    //--------------------------------------------------------------------------
-    void scalarRK4Step(const UGrid<T>& ugrid, ScalarField<T>& field, double dt);
+    // //--------------------------------------------------------------------------
+    // //  Integration methods
+    // //--------------------------------------------------------------------------
+    // void scalarIntegrate(const UGrid<T>& ugrid, ScalarField<T>& field);
+    // //--------------------------------------------------------------------------
+    // void scalarRK4Step(const UGrid<T>& ugrid, ScalarField<T>& field, double dt);
 
   private:
     IntegratorType _type;
     struct IntegratorParams _params;
-    Vector<T>(ScalarField<T>::*_f)(const Vector<T>&,double,Vector<T>);
+    //Vector<T>(ScalarField<T>::*_f)(const Vector<T>&,double,Vector<T>);
     std::shared_ptr<Log> _log;
   };
   //----------------------------------------------------------------------------

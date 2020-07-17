@@ -179,7 +179,7 @@ namespace ET
      *  @return Either vectors or matrices.
      */
     virtual Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
-                                           size_t t_k);
+                                                size_t t_k);
 
   protected:
     /*! Name.  The name of the Interpolator. */

@@ -28,6 +28,7 @@ set(INCLUDE_DIR "include/")
 include_directories(${SOURCE_DIR})
 set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}linalg/matrix.cpp"
+            "${SOURCE_DIR}grid/grid.cpp"
             "${SOURCE_DIR}grid/ugrid.cpp"
             "${SOURCE_DIR}grid/kdtree.cpp"
             "${SOURCE_DIR}utils.cpp"
@@ -38,8 +39,8 @@ set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}fields/vectorfield.cpp"
             "${SOURCE_DIR}interpolation/interpolator.cpp"
             "${SOURCE_DIR}interpolation/radialbasis.cpp"
-            #"${SOURCE_DIR}interpolation/diffeq.cpp"
-            #"${SOURCE_DIR}integration/integrator.cpp"
+            "${SOURCE_DIR}interpolation/diffeq.cpp"
+            "${SOURCE_DIR}integration/integrator.cpp"
             "${SOURCE_DIR}log/log.cpp"
             "${SOURCE_DIR}system/dynamicalsystem.cpp"
             "${INCLUDE_DIR}monomial/monomial.cpp")

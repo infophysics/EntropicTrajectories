@@ -209,26 +209,26 @@ namespace ET
     Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
                                         size_t t_k);
 
-    T laplacian(size_t index);
-    //--------------------------------------------------------------------------
-    //  Derivatives along the entire grid
-    //--------------------------------------------------------------------------
-    std::vector<std::vector<T>> derivative(size_t n);
-    std::vector<T> derivative(size_t dir, size_t n);
-    std::vector<T> derivative(std::vector<size_t> deriv);
-    //--------------------------------------------------------------------------
-    //  Derivatives at points on the grid
-    //--------------------------------------------------------------------------
-    std::vector<T> derivativePoint(size_t index, size_t n);
-    T derivativePoint(size_t index, size_t dir, size_t n);
-    T derivativePoint(size_t index, std::vector<size_t> deriv);
-    //--------------------------------------------------------------------------
-    //  Derivatives at arbitrary points
-    //--------------------------------------------------------------------------
-    std::vector<T> derivativePoint(std::vector<T> point, size_t n);
-    T derivativePoint(std::vector<T> point, size_t dir, size_t n);
-    T derivativePoint(std::vector<T> point, std::vector<size_t> deriv);
-    //--------------------------------------------------------------------------
+    // T laplacian(size_t index);
+    // //--------------------------------------------------------------------------
+    // //  Derivatives along the entire grid
+    // //--------------------------------------------------------------------------
+    // std::vector<std::vector<T>> derivative(size_t n);
+    // std::vector<T> derivative(size_t dir, size_t n);
+    // std::vector<T> derivative(std::vector<size_t> deriv);
+    // //--------------------------------------------------------------------------
+    // //  Derivatives at points on the grid
+    // //--------------------------------------------------------------------------
+    // std::vector<T> derivativePoint(size_t index, size_t n);
+    // T derivativePoint(size_t index, size_t dir, size_t n);
+    // T derivativePoint(size_t index, std::vector<size_t> deriv);
+    // //--------------------------------------------------------------------------
+    // //  Derivatives at arbitrary points
+    // //--------------------------------------------------------------------------
+    // std::vector<T> derivativePoint(std::vector<T> point, size_t n);
+    // T derivativePoint(std::vector<T> point, size_t dir, size_t n);
+    // T derivativePoint(std::vector<T> point, std::vector<size_t> deriv);
+    // //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
     //  Methods for calculating integrals

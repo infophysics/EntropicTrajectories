@@ -20,10 +20,13 @@
 
 #include <vector>
 #include <string>
+
+#include "grid.h"
 #include "utils.h"
 #include "matrix.h"
 #include "kdtree.h"
 #include "log.h"
+
 #include <nanoflann.hpp>
 #include "KDTreeVectorOfVectorsAdaptor.h"
 
@@ -33,28 +36,107 @@ namespace ET
   //  Class for unstructured grids
   //----------------------------------------------------------------------------
   template<typename T>
-  class UGrid
+  class UGrid : public Grid<T>
   {
   public:
-    //--------------------------------------------------------------------------
     //  Constructors
-    //--------------------------------------------------------------------------
+    //! Defualt Constructor
+    /*! Default constructor for Grid.
+     */
     UGrid();
+    //! Destructor
+    /*! Destructor for UGrid.
+     */
     ~UGrid();
+    //! Constructor
+    /*! constructor for UGrid that takes a Logger
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for UGrid that takes a name
+     *  @param t_name An std::string specifying this objects name.
+     */
+    UGrid(std::string t_name);
+    //! Constructor
+    /*! constructor for UGrid that takes a name and a Logger
+     *  @param t_name An std::string specifying this objects name.
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(std::string t_name, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for UGrid that takes a dimension.
+     *  @param t_dim A size_t object which specifies the dimension.
+     */
     UGrid(size_t t_dim);
+    //! Constructor
+    /*! constructor for UGrid that takes a dimension and a logger.
+     *  @param t_dim A size_t object which specifies the dimension.
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(size_t t_dim, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for UGrid that takes a name and a dimension.
+     *  @param t_name An std::string specifying this objects name.
+     *  @param t_dim A size_t object which specifies the dimension.
+     */
     UGrid(std::string t_name, size_t t_dim);
+    //! Constructor
+    /*! constructor for UGrid that takes a name, a dimension and a logger.
+     *  @param t_name An std::string specifying this objects name.
+     *  @param t_dim A size_t object which specifies the dimension.
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(std::string t_name, size_t t_dim, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for UGrid that takes a dimension and a number of elements.
+     *  @param t_dim A size_t object which specifies the dimension.
+     *  @param t_N A size_t object which specifies the number of elements.
+     */
     UGrid(size_t t_dim, size_t t_N);
+    //! Constructor
+    /*! constructor for UGrid that takes a dimension, a number of elements
+     *  and a logger.
+     *  @param t_dim A size_t object which specifies the dimension.
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(size_t t_dim, size_t t_N, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for UGrid that takes a name, a dimension and
+     *  a number of elements.
+     *  @param t_name An std::string specifying this objects name.
+     *  @param t_dim A size_t object which specifies the dimension.
+     */
     UGrid(std::string t_name, size_t t_dim, size_t t_N);
+    //! Constructor
+    /*! constructor for UGrid that takes a name, a dimension,
+     *  a number of elementsand a logger.
+     *  @param t_name An std::string specifying this objects name.
+     *  @param t_dim A size_t object which specifies the dimension.
+     *  @param t_log A shared logger instance.
+     */
+    UGrid(std::string t_name, size_t t_dim, size_t t_N,
+         std::shared_ptr<Log> t_log);
+
+    //   Getters and Setters
+    //! Get UGrid
+    /*! Get the ugrid array.
+     *  @return The ugrid array.
+     */
+    std::vector<std::vector<T>> getUGrid() const;
+
+    //! Set UGrid
+    /*! Sets the UGrid array.
+     *  @param t_ugrid A std::vector<std::vector<T>> of the array.
+     */
+    void setUGrid(std::vector<std::vector<T>> t_ugrid);
+
     UGrid(std::vector<T> t_ugrid);
     UGrid(std::vector<std::vector<T>> t_ugrid);
     //--------------------------------------------------------------------------
     //  Constructors with shared loggers
     //--------------------------------------------------------------------------
-    UGrid(std::shared_ptr<Log> t_log);
-    UGrid(size_t t_dim, std::shared_ptr<Log> t_log);
-    UGrid(std::string t_name, size_t t_dim, std::shared_ptr<Log> t_log);
-    UGrid(size_t t_dim, size_t t_N, std::shared_ptr<Log> t_log);
-    UGrid(std::string t_name, size_t t_dim, size_t t_N, std::shared_ptr<Log> t_log);
+
     UGrid(std::vector<T> t_ugrid, std::shared_ptr<Log> t_log);
     UGrid(std::vector<std::vector<T>> t_ugrid,
           std::shared_ptr<Log> t_log);
@@ -63,25 +145,14 @@ namespace ET
     //--------------------------------------------------------------------------
     //  Getters
     //--------------------------------------------------------------------------
-    const size_t getDim();
-    const size_t getN();
-    std::vector<std::vector<T>>  getUGrid();
-    const std::string getName();
+
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
     std::vector<std::vector<size_t>> getNeighborsRadius();
     std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(size_t t_index);
-    std::shared_ptr<Log> getLogger();
     //--------------------------------------------------------------------------
 
-    //--------------------------------------------------------------------------
-    //  Setters
-    //--------------------------------------------------------------------------
-    void setDim(size_t t_dim);
-    void setN(size_t t_N);
-    void setUGrid(std::vector<std::vector<T>> t_ugrid);
-    void setName(std::string t_name);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -126,9 +197,6 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    std::string m_name {""};                    //  Name of the grid
-    size_t m_dim {0};                           //  Dimension of the grid
-    size_t m_N {0};                             //  Number of points t_in the grid
     std::vector<std::vector<T>> m_ugrid {{{0}}};//  Vector of vectors array
     std::vector<std::string> m_coords {{""}};   //  Coordinate labels
     //--------------------------------------------------------------------------
@@ -147,10 +215,6 @@ namespace ET
     std::vector<std::vector<double>> m_distances;
     std::vector<std::vector<size_t>> m_neighbors_radius;
     std::vector<std::vector<double>> m_distances_radius;
-    //--------------------------------------------------------------------------
-    //  Logger
-    //--------------------------------------------------------------------------
-    std::shared_ptr<Log> m_log;
     //--------------------------------------------------------------------------
   };
   //----------------------------------------------------------------------------

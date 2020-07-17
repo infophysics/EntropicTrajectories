@@ -1,0 +1,2 @@
+[22:53:04] [trace] ET:KDTree:default: KDTree 'default' created at location 0x55e3b8e06050
+[23:10:51] [trace] ET:KDTree:default: KDTree 'default' destroyed at location 0x55e3b8e06050

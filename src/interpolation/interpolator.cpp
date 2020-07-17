@@ -98,10 +98,9 @@ namespace ET
   template<typename T>
   Interpolator<T>::Interpolator(std::shared_ptr<UGrid<T>> t_ugrid,
                                 std::shared_ptr<Log> t_log)
-  : m_name("default"), m_ugrid(t_ugrid)
+  : m_name("default"), m_ugrid(t_ugrid), m_log(t_log)
   {
     m_lsdriver = LSDriver::xGELS;
-    m_log = t_log;
     m_log->TRACE("Interpolator 'default' created at location "
                 + getMem(*this));
     m_log->INFO("Logger passed to Interpolator 'default'");
@@ -239,6 +238,32 @@ namespace ET
     Matrix<T> Y = AA_T_inv * t_A * t_X;
     return Y;
 	}
+  template<typename T>
+  Vector<T> Interpolator<T>::derivative(const size_t t_index,
+                                        const size_t t_degree)
+  {
+   return Vector<T>();
+  }
+  template<typename T>
+  T Interpolator<T>::derivative(const size_t t_index,
+                                const size_t t_degree,
+                                const size_t t_direction)
+  {
+   return 0;
+  }
+  template<typename T>
+  Vector<T> Interpolator<T>::derivative(const std::vector<T>& point,
+                                        const size_t t_degree)
+  {
+    return Vector<T>();
+  }
+  template<typename T>
+  T Interpolator<T>::derivative(const std::vector<T>& point,
+                                const size_t t_degree,
+                                const size_t t_direction)
+  {
+    return 0;
+  }
 
 	// //----------------------------------------------------------------------------
 	// //  nth-derivatives of scalar field

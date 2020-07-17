@@ -179,4 +179,15 @@ namespace ET
   {
     m_info = t_info;
   }
+  template<typename T>
+  Vector<T> Field<T>::constructLocalFieldValues(size_t t_index)
+  {
+    return Vector<T>();
+  }
+  template<typename T>
+  Vector<T> Field<T>::constructLocalFieldValues(const std::vector<T>& t_point,
+                                              size_t t_k)
+  {
+    return Vector<T>();
+  }
 }

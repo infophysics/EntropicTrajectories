@@ -24,11 +24,11 @@ nano_neighbors = g.get_neighbors()
 nano_distances = g.get_distances()
 start = time.time()
 tree = cKDTree(data)
-ckdtree_distances, ckdtree_neighbors = tree.query(data,10)
+cKDTree_distances, cKDTree_neighbors = tree.query(data,10)
 end = time.time()
 print("cKDTree: ", end - start)
-print(nano_neighbors == ckdtree_neighbors)
-print(np.sqrt(nano_distances) - ckdtree_distances)
+print(nano_neighbors == cKDTree_neighbors)
+print(np.sqrt(nano_distances) - cKDTree_distances)
 
 print("\nRadius search")
 start = time.time()
@@ -39,11 +39,11 @@ nano_neighbors_radius = g.get_neighbors_radius()
 nano_distances_radius = g.get_distances_radius()
 start = time.time()
 tree = cKDTree(data)
-ckdtree_neighbors_radius = tree.query_ball_point(data,2.0)
+cKDTree_neighbors_radius = tree.query_ball_point(data,2.0)
 end = time.time()
 print("cKDTree: ", end - start)
 nano = [len(nano_neighbors_radius[i]) for i in range(len(nano_neighbors_radius))]
-ckdt = [len(ckdtree_neighbors_radius[i]) for i in range(len(ckdtree_neighbors_radius))]
+ckdt = [len(cKDTree_neighbors_radius[i]) for i in range(len(cKDTree_neighbors_radius))]
 diff = [nano[i] - ckdt[i] for i in range(len(nano))]
 print(sum(diff))
 
@@ -52,9 +52,9 @@ g = Grid("10D",10)
 #   generate random 2d data
 
 nano_times = []
-ckdtree_times = []
+cKDTree_times = []
 nano_times_radius = []
-ckdtree_times_radius = []
+cKDTree_times_radius = []
 N = 10
 nums = []
 for i in range(10):
@@ -71,9 +71,9 @@ for i in range(10):
     nano_distances = g.get_distances()
     start = time.time()
     tree = cKDTree(data)
-    ckdtree_distances, ckdtree_neighbors = tree.query(data,10)
+    cKDTree_distances, cKDTree_neighbors = tree.query(data,10)
     end = time.time()
-    ckdtree_times.append(end - start)
+    cKDTree_times.append(end - start)
     print("cKDTree: ", end - start)
 
     print("\nRadius search")
@@ -86,15 +86,15 @@ for i in range(10):
     nano_distances_radius = g.get_distances_radius()
     start = time.time()
     tree = cKDTree(data)
-    ckdtree_neighbors_radius = tree.query_ball_point(data,2.0)
+    cKDTree_neighbors_radius = tree.query_ball_point(data,2.0)
     end = time.time()
-    ckdtree_times_radius.append(end - start)
+    cKDTree_times_radius.append(end - start)
     print("cKDTree: ", end - start)
     nums.append(N)
     N += 25
 fig, axs = plt.subplots()
 axs.plot(nums,nano_times,color='r',linestyle='--',label="NanoFLANN")
-axs.plot(nums,ckdtree_times,color='k',linestyle='--',label="cKDTree")
+axs.plot(nums,cKDTree_times,color='k',linestyle='--',label="cKDTree")
 axs.set_xlabel("N")
 axs.set_ylabel("Time (sec)")
 axs.set_title("Time (sec) vs. N, d = 10, k = 10")
@@ -104,7 +104,7 @@ plt.show()
 
 fig, axs = plt.subplots()
 axs.plot(nums,nano_times_radius,color='r',linestyle='--',label="NanoFLANN")
-axs.plot(nums,ckdtree_times_radius,color='k',linestyle='--',label="cKDTree")
+axs.plot(nums,cKDTree_times_radius,color='k',linestyle='--',label="cKDTree")
 axs.set_xlabel("N")
 axs.set_ylabel("Time (sec)")
 axs.set_title("Time (sec) vs. N, d = 10, r = 2.0")
