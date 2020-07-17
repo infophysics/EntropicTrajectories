@@ -116,7 +116,31 @@ namespace ET
      */
     Grid(std::string t_name, size_t t_dim, size_t t_N,
          std::shared_ptr<Log> t_log);
-
+    //! Constructor
+    /*! constructor for Grid that takes a grid array
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    */
+    Grid(std::vector<std::vector<T>> t_grid);
+    //! Constructor
+    /*! constructor for Grid that takes a grid array and a logger
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param t_log A shared logger instance.
+    */
+    Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Grid that takes a name and a grid array
+    *  @param t_name An std::string specifying this objects name.
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    */
+    Grid(std::string t_name, std::vector<std::vector<T>> t_grid);
+    //! Constructor
+    /*! constructor for Grid that takes a name, grid array and a logger
+    *  @param t_name An std::string specifying this objects name.
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param t_log A shared logger instance.
+    */
+    Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
+         std::shared_ptr<Log> t_log);
     //   Getters and Setters
     //! Get name.
     /*! Get the name of the Grid.
@@ -133,6 +157,16 @@ namespace ET
      *  @return m_N The number of elements in the grid.
      */
     size_t getN() const;
+    //! Get Grid
+    /*! Get the array containing the points in the grid.
+     *  @return m_grid The array containing the points in the grid.
+     */
+    std::vector<std::vector<T>> getGrid() const;
+    //! Get Coords
+    /*! Get the list of coordinate labels.
+     *  @return m_coords The list of coordinate labels.
+     */
+    std::vector<std::string> getCoords() const;
     //! Get Log
     /*! Get the shared logger for this Grid.
      *  @return m_log The shared instance of the logger.
@@ -154,11 +188,98 @@ namespace ET
      *  elements in the Grid.
      */
     void setN(const size_t t_N);
+    //! Set Grid
+    /*! Set the array containing the points in the grid.
+     *  @param t_grid A std::vector<std::vector<T>> of the points.
+     */
+    void setGrid(const std::vector<std::vector<T>> t_grid);
+    //! Set Coords
+    /*! Set the coordinate labels for the grid.
+     *  @param t_coords A list of coordinate labels for the grid.
+     */
+    void setCoords(const std::vector<std::string> t_coords);
     //! Set Log
     /*! Set the shared logger for this Grid.
      *  @param t_log A std::shared_ptr<Log> instance of a logger.
      */
     void setLog(std::shared_ptr<Log> t_log);
+
+    //  Operator overloads
+    /*!
+        @param t_Grid A const Grid<T>& reference.
+        @return A copy of the Grid
+    */
+    Grid<T>& operator=(const Grid<T>& t_Grid);
+    /*! Is equal.  Determines whether two grids are equivalent.
+        @param t_Grid A const Grid<T>& reference.
+        @return A boolean quantifying whether this Grid and Grid
+        are equivalent.
+    */
+    bool operator==(const Grid<T>& t_Grid) const;
+    /*! Is not equal.  Determines whether two grids are not equal.
+        @param t_Grid A const Grid<T>& reference.
+        @return A boolean quantifying whether this Grid and Grid
+        are not equivalent.
+    */
+    bool operator!=(const Grid<T>& t_Grid) const;
+    /*! Minus.  Constructs a copy of the Grid \f$\vec{v}\f$ multiplied by
+        minus one, \f$-\vec{v}\f$.
+        @return A copy of this Grid multiplied by \f$-1\f$.
+    */
+    Grid<T> operator-() const;
+    /*! Sum.  Adds two grids together.
+        @param t_Grid A const Grid<T>& reference.
+        @return The sum of this Grid and Grid.
+    */
+    Grid<T> operator+(const Grid<T>& t_Grid) const;
+    /*! Sum equals.  Adds a Grid to the current one.
+        @param t_Grid A const Grid<T>& reference.
+        @return This Grid plus Grid
+    */
+    Grid<T>& operator+=(const Grid<T>& t_Grid);
+    /*! Difference.  Subtracts two grids.
+        @param t_Grid A const Grid<T>& reference.
+        @return The difference of this Grid and Grid.
+    */
+    Grid<T> operator-(const Grid<T>& t_Grid) const;
+    /*! Difference equals.  Subtracts a Grid from the current one.
+        @param t_Grid A const Grid<T>& reference.
+        @return This Grid minus Grid.
+    */
+    Grid<T>& operator-=(const Grid<T>& t_Grid);
+    //  Access operators
+    /*! Access operator.  An access operator for changing entries of the Grid.
+        @param t_i A const size_t& reference for the index of
+        the desired element.
+        @param t_j A const size_t& reference for the index of
+        the desired dimension.
+        @return The (i,j)-element of the array.
+    */
+    T& operator()(const size_t& t_i, const size_t& t_j);
+    /*! Access operator.  An access operator for retrieving coefficients
+        of the Grid.
+        @param t_i A const size_t& reference for the index of
+        the desired element.
+        @param t_j A const size_t& reference for the index of
+        the desired dimension.
+        @return The (i,j)-element of the array.
+    */
+    const T& operator()(const size_t& t_i, const size_t& t_j) const;
+    //  Access operators
+    /*! Access operator.  An access operator for changing entries of the Grid.
+        @param t_i A const size_t& reference for the index of
+        the desired element.
+        @return The ith-point in the Grid.
+    */
+    std::vector<T>& operator()(const size_t& t_i);
+    /*! Access operator.  An access operator for retrieving coefficients
+        of the Grid.
+        @param t_i A const size_t& reference for the index of
+        the desired element.
+        @return The ith-point in the Grid.
+    */
+    const std::vector<T>& operator()(const size_t& t_i) const;
+
 
   protected:
     /*! Name.  Name of the Grid.  Defaulted to empty string.
@@ -170,6 +291,14 @@ namespace ET
     /*! N.  Number of elements in the grid.  Default to 0.
      */
     size_t m_N {0};
+    /*! grid.  Array containing the points of the grid.
+     *  Defaulted to an single point whose value is zero.
+     */
+    std::vector<std::vector<T>> m_grid {{{0}}};
+    /*! Coordinates.  List of values labeling the coordinates.
+     *  Defaulted to list containing a single empty string.
+     */
+    std::vector<std::string> m_coords {{""}};
     /*! Logger.  Shared instance of a logger.
      */
     std::shared_ptr<Log> m_log;

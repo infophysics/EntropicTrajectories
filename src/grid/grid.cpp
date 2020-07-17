@@ -142,6 +142,45 @@ namespace ET
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>::Grid(std::vector<std::vector<T>> t_grid)
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  {
+    m_log = std::make_shared<Log>();
+		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
+		m_log->TRACE("Grid '" + m_name + "' created at location "
+		            + getMem(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>::Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log)
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  {
+    m_log->TRACE("Grid '" + m_name + "' created at location "
+                + getMem(*this));
+    m_log->INFO("Logger passed to Grid '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid)
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  {
+    m_log = std::make_shared<Log>();
+		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
+		m_log->TRACE("Grid '" + m_name + "' created at location "
+		            + getMem(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
+                std::shared_ptr<Log> t_log)
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  {
+    m_log->TRACE("Grid '" + m_name + "' created at location "
+                + getMem(*this));
+    m_log->INFO("Logger passed to Grid '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
@@ -160,6 +199,18 @@ namespace ET
   size_t Grid<T>::getN() const
   {
     return m_N;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<T>> Grid<T>::getGrid() const
+  {
+    return m_grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::string> Grid<T>::getCoords() const
+  {
+    return m_coords;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -187,11 +238,219 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  void Grid<T>::setGrid(const std::vector<std::vector<T>> t_grid)
+  {
+    m_grid = t_grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setCoords(const std::vector<std::string> t_coords)
+  {
+    m_coords = t_coords;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   void Grid<T>::setLog(std::shared_ptr<Log> t_log)
   {
     m_log = t_log;
   }
   //----------------------------------------------------------------------------
-
+  template<typename T>
+  Grid<T>& Grid<T>::operator=(const Grid<T>& t_Grid)
+  {
+    if (&t_Grid == this) {
+      return *this;
+    }
+    m_name = t_Grid.getName();
+    m_dim = t_Grid.getDim();
+    m_N = t_Grid.getN();
+    m_coords = t_Grid.getCoords();
+    m_log = t_Grid.getLog();
+    m_grid.resize(m_dim);
+    for (auto i = 0; i < m_N; i++) {
+        m_grid[i] = t_Grid(i);
+    }
+    return *this;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  bool Grid<T>::operator==(const Grid<T>& t_Grid) const
+  {
+    return m_grid == t_Grid.getGrid();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  bool Grid<T>::operator!=(const Grid<T>& t_Grid) const
+  {
+    return m_grid != t_Grid.getGrid();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T> Grid<T>::operator-() const
+  {
+    auto grid = m_grid;
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < m_dim; j++) {
+        grid[i][j] *= -1;
+      }
+    }
+    auto name = "-" + m_name;
+    return Grid<T>(name,grid,m_log);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T> Grid<T>::operator+(const Grid<T>& t_Grid) const
+  {
+    //  Check that grids are compatible
+    if (m_N != t_Grid.getN() || m_dim != t_Grid.getDim()) {
+      m_log->ERROR("Attempted to add two grids of size ("
+                   + std::to_string(m_dim) + " x " + std::to_string(m_N)
+                   + ") and (" + std::to_string(t_Grid.getDim()) + " x "
+                   + std::to_string(t_Grid.getN()) + ").");
+      m_log->INFO("Returning lvalue Grid.");
+      return *this;
+    }
+    //  If so then add the grids element by element
+    auto grid = m_grid;
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < m_dim; j++) {
+        grid[i][j] += t_Grid(i,j);
+      }
+    }
+    auto name = m_name + "+" + t_Grid.getName();
+    return Grid<T>(name,grid,m_log);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>& Grid<T>::operator+=(const Grid<T>& t_Grid)
+  {
+    //  Check that grids are compatible
+    if (m_N != t_Grid.getN() || m_dim != t_Grid.getDim()) {
+      m_log->ERROR("Attempted to add two grids of size ("
+                   + std::to_string(m_dim) + " x " + std::to_string(m_N)
+                   + ") and (" + std::to_string(t_Grid.getDim()) + " x "
+                   + std::to_string(t_Grid.getN()) + ").");
+      m_log->INFO("Returning lvalue Grid.");
+      return *this;
+    }
+    //  If so then add the grids element by element
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < m_dim; j++) {
+        m_grid[i][j] += t_Grid(i,j);
+      }
+    }
+    m_name += "+" + t_Grid.getName();
+    return *this;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T> Grid<T>::operator-(const Grid<T>& t_Grid) const
+  {
+    //  Check that grids are compatible
+    if (m_N != t_Grid.getN() || m_dim != t_Grid.getDim()) {
+      m_log->ERROR("Attempted to subtract two grids of size ("
+                   + std::to_string(m_dim) + " x " + std::to_string(m_N)
+                   + ") and (" + std::to_string(t_Grid.getDim()) + " x "
+                   + std::to_string(t_Grid.getN()) + ").");
+      m_log->INFO("Returning lvalue Grid.");
+      return *this;
+    }
+    //  If so then add the grids element by element
+    auto grid = m_grid;
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < m_dim; j++) {
+        grid[i][j] -= t_Grid(i,j);
+      }
+    }
+    auto name = m_name + "-" + t_Grid.getName();
+    return Grid<T>(name,grid,m_log);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>& Grid<T>::operator-=(const Grid<T>& t_Grid)
+  {
+    //  Check that grids are compatible
+    if (m_N != t_Grid.getN() || m_dim != t_Grid.getDim()) {
+      m_log->ERROR("Attempted to subtract two grids of size ("
+                   + std::to_string(m_dim) + " x " + std::to_string(m_N)
+                   + ") and (" + std::to_string(t_Grid.getDim()) + " x "
+                   + std::to_string(t_Grid.getN()) + ").");
+      m_log->INFO("Returning lvalue Grid.");
+      return *this;
+    }
+    //  If so then add the grids element by element
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < m_dim; j++) {
+        m_grid[i][j] -= t_Grid(i,j);
+      }
+    }
+    m_name += "-" + t_Grid.getName();
+    return *this;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T& Grid<T>::operator()(const size_t& t_i, const size_t& t_j)
+  {
+    //  Check that indicies are within the bounds
+    if (t_i >= m_N || t_j >= m_dim) {
+      m_log->ERROR("Attempted to access the (" + std::to_string(t_i)
+                   + "," + std::to_string(t_j) + ")th element of Grid with "
+                   + "size (" + std::to_string(m_dim) + " x "
+                   + std::to_string(m_N) + ").");
+      m_log->INFO("Returning the first element.");
+      return m_grid[0][0];
+    }
+    //  otherwise return the correct element
+    return m_grid[t_i][t_j];
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  const T& Grid<T>::operator()(const size_t& t_i, const size_t& t_j) const
+  {
+    //  Check that indicies are within the bounds
+    if (t_i >= m_N || t_j >= m_dim) {
+      m_log->ERROR("Attempted to access the (" + std::to_string(t_i)
+                   + "," + std::to_string(t_j) + ")th element of Grid with "
+                   + "size (" + std::to_string(m_dim) + " x "
+                   + std::to_string(m_N) + ").");
+      m_log->INFO("Returning the first element.");
+      return m_grid[0][0];
+    }
+    //  otherwise return the correct element
+    return m_grid[t_i][t_j];
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>& Grid<T>::operator()(const size_t& t_i)
+  {
+    //  Check that indicies are within the bounds
+    if (t_i >= m_N) {
+      m_log->ERROR("Attempted to access the (" + std::to_string(t_i)
+                   + ")th point of Grid with "
+                   + "size (" + std::to_string(m_dim) + " x "
+                   + std::to_string(m_N) + ").");
+      m_log->INFO("Returning the first element.");
+      return m_grid[0];
+    }
+    //  otherwise return the correct element
+    return m_grid[t_i];
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  const std::vector<T>& Grid<T>::operator()(const size_t& t_i) const
+  {
+    //  Check that indicies are within the bounds
+    if (t_i >= m_N) {
+      m_log->ERROR("Attempted to access the (" + std::to_string(t_i)
+                   + ")th point of Grid with "
+                   + "size (" + std::to_string(m_dim) + " x "
+                   + std::to_string(m_N) + ").");
+      m_log->INFO("Returning the first element.");
+      return m_grid[0];
+    }
+    //  otherwise return the correct element
+    return m_grid[t_i];
+  }
+  //----------------------------------------------------------------------------
 
 }

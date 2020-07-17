@@ -1,0 +1,4 @@
+/home/ncarrara/workspace/EntropicTrajectories/docs/CMakeFiles/rebuild_cache.dir
+/home/ncarrara/workspace/EntropicTrajectories/docs/CMakeFiles/edit_cache.dir
+/home/ncarrara/workspace/EntropicTrajectories/docs/CMakeFiles/Doxygen.dir
+/home/ncarrara/workspace/EntropicTrajectories/docs/CMakeFiles/Sphinx.dir

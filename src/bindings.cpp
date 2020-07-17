@@ -455,14 +455,27 @@ PYBIND11_MODULE(etraj, m) {
          py::arg("name"), py::arg("dim"), py::arg("N"))
     .def(py::init<std::string,size_t,size_t,std::shared_ptr<Log>>(),
          py::arg("name"), py::arg("dim"), py::arg("N"), py::arg("log"))
+    .def(py::init<std::vector<std::vector<double>>>(),
+         py::arg("grid"))
+    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>>(),
+         py::arg("grid"), py::arg("log"))
+    .def(py::init<std::string,std::vector<std::vector<double>>>(),
+        py::arg("name"), py::arg("grid"))
+    .def(py::init<std::string,std::vector<std::vector<double>>,
+                  std::shared_ptr<Log>>(),
+        py::arg("name"), py::arg("grid"), py::arg("log"))
     //  Getters and Setters
     .def("get_name", &Grid<double>::getName)
     .def("get_dim", &Grid<double>::getDim)
     .def("get_N", &Grid<double>::getN)
+    .def("get_grid", &Grid<double>::getGrid)
+    .def("get_coords", &Grid<double>::getCoords)
     .def("get_log", &Grid<double>::getLog)
     .def("set_name", &Grid<double>::setName)
     .def("set_dim", &Grid<double>::setDim)
     .def("set_N", &Grid<double>::setN)
+    .def("set_grid", &Grid<double>::setGrid)
+    .def("set_coords", &Grid<double>::setCoords)
     .def("set_log", &Grid<double>::setLog)
     .def_property("name", &Grid<double>::getName,
                   &Grid<double>::setName)
@@ -470,6 +483,77 @@ PYBIND11_MODULE(etraj, m) {
                   &Grid<double>::setDim)
     .def_property("N", &Grid<double>::getN,
                   &Grid<double>::setN)
+    .def_property("grid", &Grid<double>::getGrid,
+                  &Grid<double>::setGrid)
+    .def_property("coords", &Grid<double>::getCoords,
+                  &Grid<double>::setCoords)
+    //  Operator overloads
+    .def(py::self == py::self)
+		.def(py::self != py::self)
+    .def(py::self + py::self)
+    .def(py::self += py::self)
+    .def(py::self - py::self)
+    .def(py::self -= py::self)
+    .def(-py::self)
+    //	Matrix array access.  This first method allows the user
+		//	to write x = m[i,j] to get elements.
+    .def("__getitem__", [](const Grid<double> &self,
+													 std::tuple<size_t, size_t> ij)
+		{
+			size_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getN())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
+																" out of bounds for array with "
+																+ std::to_string(self.getN())
+																+ " rows!");
+			}
+			if (j < 0 || j >= self.getDim())
+			{
+				throw py::index_error("Index " + std::to_string(j) +
+															  " out of bounds for array with "
+															  + std::to_string(self.getDim())
+																+ " columns!");
+			}
+			return self(i,j);
+		}, py::is_operator())
+		//	now for the setter of the same type.  To set an element to a Grid
+		//	at index i,j, write - m[i,j] = x.
+		.def("__setitem__", [](Grid<double> &self,
+													 std::tuple<size_t, size_t> ij,
+													 const double& val)
+		{
+			size_t i, j;
+			std::tie(i, j) = ij;
+			if (i < 0 || i >= self.getN())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
+																" out of bounds for array with "
+																+ std::to_string(self.getN())
+																+ " rows!");
+			}
+			if (j < 0 || j >= self.getDim())
+			{
+				throw py::index_error("Index " + std::to_string(j) +
+															  " out of bounds for array with "
+															  + std::to_string(self.getDim())
+																+ " columns!");
+			}
+			self(i,j) = val;
+		}, py::is_operator())
+		//	this will allow the user to get a point.
+		.def("__getitem__", [](Grid<double> &self, int i)
+		{
+			if (i < 0 || i >= self.getN())
+			{
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getN())
+															+ " rows!");
+			}
+			return self(i);
+		}, py::is_operator())
     //    __len__
     .def("__len__", &Grid<double>::getN)
     //    __repr__

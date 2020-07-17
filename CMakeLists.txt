@@ -98,6 +98,7 @@ MESSAGE(STATUS "LAPACK  location is: " ${LAPACK_INCLUDE_DIRS})
 MESSAGE(STATUS "LAPACKE location is: " ${LAPACKE_INCLUDE_DIRS})
 MESSAGE(STATUS "BOOST   location is: " ${Boost_INCLUDE_DIRS})
 
+
 include_directories(${BLAS_INCLUDE_DIRS}
                     ${CBLAS_INCLUDE_DIRS}
                     ${LAPACK_INCLUDE_DIRS}
@@ -115,3 +116,5 @@ target_link_libraries(etraj PUBLIC ${MY_LIBRARIES}
                                    ${LAPACK_LIBRARIES}
                                    ${LAPACKE_LIBRARIES}
                                    ${Boost_LIBRARIES})
+
+add_subdirectory("docs")

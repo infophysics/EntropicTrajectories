@@ -1,1 +1,3 @@
-[23:17:44] [trace] ET:Grid:default_0: Grid 'default' created at location 0x55a320a919f[2[23:17:45] [trace] ET:Grid:default_0: Grid 'default' destroyed at location 0x55a320a919f0
+[14:02:41] [trace] ET:UGrid:default: UGrid 'default' created at location 0x55597876b1a0
+[15:14:52] [trace] ET:UGrid:default: UGrid 'default' destroyed at location 0x55597876b1a0
+[15:14:52] [trace] ET:UGrid:default: Grid 'default' destroyed at location 0x55597876b1a0

@@ -75,7 +75,7 @@ setup(
     long_description='',
     packages=find_packages('src'),
     package_dir={'':'src'},
-    ext_modules=[CMakeExtension('etraj/etraj')],
+    ext_modules=[CMakeExtension('etraj')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
     include_package_data=True,
