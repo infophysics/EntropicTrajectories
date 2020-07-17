@@ -144,7 +144,8 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Grid<T>::Grid(std::vector<std::vector<T>> t_grid)
-  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size()),
+    m_grid(t_grid)
   {
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
@@ -154,7 +155,8 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Grid<T>::Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log)
-  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size()),
+    m_grid(t_grid)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
                 + getMem(*this));
@@ -163,7 +165,8 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid)
-  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size()),
+    m_grid(t_grid)
   {
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
@@ -174,7 +177,8 @@ namespace ET
   template<typename T>
   Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
                 std::shared_ptr<Log> t_log)
-  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size()),
+    m_grid(t_grid)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
                 + getMem(*this));
@@ -217,6 +221,28 @@ namespace ET
   std::shared_ptr<Log> Grid<T>::getLog() const
   {
     return m_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  enum GridType Grid<T>::getType() const
+  {
+    return m_type;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> Grid<T>::getPoint(const size_t t_i) const
+  {
+    //  Check that indicies are within the bounds
+    if (t_i >= m_N) {
+      m_log->ERROR("Attempted to access the (" + std::to_string(t_i)
+                   + ")th point of Grid with "
+                   + "size (" + std::to_string(m_dim) + " x "
+                   + std::to_string(m_N) + ").");
+      m_log->INFO("Returning the first element.");
+      return m_grid[0];
+    }
+    //  otherwise return the correct element
+    return m_grid[t_i];
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -452,5 +478,47 @@ namespace ET
     return m_grid[t_i];
   }
   //----------------------------------------------------------------------------
+  //  Special functions
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> Grid<T>::proj(const size_t t_axis)
+  {
+    std::vector<T> projection(m_N,0);
+    //  Check that the axis exists
+    if (t_axis >= m_dim) {
+      m_log->ERROR("Attempted to project along axis " + std::to_string(t_axis)
+                   + " when Grid has dimension " + std::to_string(m_dim));
+      m_log->INFO("Returning empty std::vector");
+      return projection;
+    }
+    //  otherwise construct the projection
+    for (auto i = 0; i < m_N; i++) {
+      projection[i] = m_grid[i][t_axis];
+    }
+    return projection;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<T>> Grid<T>::proj(const std::vector<size_t> t_axes)
+  {
+    //  Check that each the axis' exists
+    std::vector<std::vector<T>> projection(m_N,std::vector<T>(t_axes.size(),0));
+    for (auto i = 0; i < t_axes.size(); i++) {
+      if (t_axes[i] >= m_dim) {
+        m_log->ERROR("Attempted to project along axis "
+                     + std::to_string(t_axes[i]) +" when Grid has dimension "
+                     + std::to_string(m_dim));
+        m_log->INFO("Returning empty std::vector");
+        return projection;
+      }
+    }
+    //  otherwise construct the projection
+    for (auto i = 0; i < m_N; i++) {
+      for (auto j = 0; j < t_axes.size(); j++) {
+        projection[i][j] = m_grid[i][t_axes[j]];
+      }
+    }
+    return projection;
+  }
 
 }

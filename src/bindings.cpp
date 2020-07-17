@@ -150,21 +150,11 @@ PYBIND11_MODULE(etraj, m) {
 		//--------------------------------------------------------------------------
 
 		//--------------------------------------------------------------------------
-		//	Instantiations of vectors
-		//--------------------------------------------------------------------------
-		//m.def("zeros", (Vector<double> (*)(size_t)) &zeros);
-		//m.def("zeros", (Vector<double> (*)(size_t,size_t)) &zeros);
-		//m.def("ones", (Vector<double> (*)(size_t)) &ones);
-		//m.def("ones", (Vector<double> (*)(size_t,size_t)) &ones);
-		//--------------------------------------------------------------------------
-
-		//--------------------------------------------------------------------------
 		//	Level 1 BLAS methods
 		//--------------------------------------------------------------------------
 		m.def("dswap", &DSWAP);
 		m.def("dscal", &DSCAL);
-		m.def("dcopy", (void (*)(Vector<double>&,
-				  Vector<double>&)) &DCOPY);
+		m.def("dcopy", (void (*)(Vector<double>&, Vector<double>&)) &DCOPY);
 		m.def("dcopy", (Vector<double> (*)(Vector<double>&)) &DCOPY);
 		m.def("daxpy", &DAXPY);
 		m.def("ddot",  &DDOT);
@@ -426,6 +416,17 @@ PYBIND11_MODULE(etraj, m) {
 	m.def("dgetri", &DGETRI);
 	//--------------------------------------------------------------------------
 
+  //--------------------------------------------------------------------------
+  //  GridType enum
+  //--------------------------------------------------------------------------
+  py::enum_<GridType>(m, "GridType")
+		.value("default", GridType::DEFAULT)
+    .value("structured", GridType::STRUCTURED)
+    .value("unstructured", GridType::UNSTRUCTURED)
+    .value("meshless", GridType::MESHLESS)
+		;
+  //--------------------------------------------------------------------------
+
   //----------------------------------------------------------------------------
 	//	Grid Base class
 	//----------------------------------------------------------------------------
@@ -456,21 +457,26 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string,size_t,size_t,std::shared_ptr<Log>>(),
          py::arg("name"), py::arg("dim"), py::arg("N"), py::arg("log"))
     .def(py::init<std::vector<std::vector<double>>>(),
-         py::arg("grid"))
+         py::arg("grid"), py::keep_alive<1, 2>())
     .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>>(),
-         py::arg("grid"), py::arg("log"))
+         py::arg("grid"), py::arg("log"), py::keep_alive<1, 2>())
     .def(py::init<std::string,std::vector<std::vector<double>>>(),
-        py::arg("name"), py::arg("grid"))
+        py::arg("name"), py::arg("grid"), py::keep_alive<1, 2>())
     .def(py::init<std::string,std::vector<std::vector<double>>,
                   std::shared_ptr<Log>>(),
-        py::arg("name"), py::arg("grid"), py::arg("log"))
+        py::arg("name"), py::arg("grid"), py::arg("log"),
+        py::keep_alive<1, 2>())
     //  Getters and Setters
     .def("get_name", &Grid<double>::getName)
     .def("get_dim", &Grid<double>::getDim)
     .def("get_N", &Grid<double>::getN)
-    .def("get_grid", &Grid<double>::getGrid)
+    .def("get_grid", &Grid<double>::getGrid,
+         py::return_value_policy::reference)
     .def("get_coords", &Grid<double>::getCoords)
     .def("get_log", &Grid<double>::getLog)
+    .def("get_type", &Grid<double>::getType)
+    .def("get_point", &Grid<double>::getPoint,
+         py::return_value_policy::reference)
     .def("set_name", &Grid<double>::setName)
     .def("set_dim", &Grid<double>::setDim)
     .def("set_N", &Grid<double>::setN)
@@ -487,6 +493,7 @@ PYBIND11_MODULE(etraj, m) {
                   &Grid<double>::setGrid)
     .def_property("coords", &Grid<double>::getCoords,
                   &Grid<double>::setCoords)
+    .def_property_readonly("type", &Grid<double>::getType)
     //  Operator overloads
     .def(py::self == py::self)
 		.def(py::self != py::self)
@@ -579,6 +586,11 @@ PYBIND11_MODULE(etraj, m) {
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
+    //  Special functions
+    .def("proj", (std::vector<double> (Grid<double>::*)(const size_t))
+         &Grid<double>::proj)
+    .def("proj", (std::vector<std::vector<double>> (Grid<double>::*)
+         (const std::vector<size_t>)) &Grid<double>::proj)
     ;
 	//----------------------------------------------------------------------------
 	//	UGrid class
@@ -610,16 +622,16 @@ PYBIND11_MODULE(etraj, m) {
         py::arg("name"), py::arg("dim"), py::arg("N"))
     .def(py::init<std::string,size_t,size_t,std::shared_ptr<Log>>(),
         py::arg("name"), py::arg("dim"), py::arg("N"), py::arg("log"))
-		.def(py::init<std::vector<double>>(), py::keep_alive<1, 2>())
-		.def(py::init<std::vector<std::vector<double>>>(), py::keep_alive<1, 2>())
-
-		.def(py::init<std::vector<double>, std::shared_ptr<Log>>(),
-		     py::keep_alive<1, 2>())
-		.def(py::init<std::vector<std::vector<double>>,
-			            std::shared_ptr<Log>>(), py::keep_alive<1, 2>())
+    .def(py::init<std::vector<std::vector<double>>>(),
+        py::arg("grid"))
+    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>>(),
+        py::arg("grid"), py::arg("log"))
+    .def(py::init<std::string,std::vector<std::vector<double>>>(),
+       py::arg("name"), py::arg("grid"))
+    .def(py::init<std::string,std::vector<std::vector<double>>,
+                 std::shared_ptr<Log>>(),
+       py::arg("name"), py::arg("grid"), py::arg("log"))
     //  Getters and Setters
-		.def("get_ugrid", &UGrid<double>::getUGrid,
-		     py::return_value_policy::reference)
 		.def("get_neighbors", (std::vector<std::vector<size_t>>
 				 (UGrid<double>::*)()) &UGrid<double>::getNeighbors,
 				 py::return_value_policy::reference)
@@ -646,14 +658,6 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("get_distances_radius", &UGrid<double>::getDistancesRadius,
 		     py::return_value_policy::reference)
-		// .def("get_logger", &UGrid<double>::getLogger,
-		//      py::return_value_policy::reference)
-    // .def_property("name", &UGrid<double>::getName,
-    //               &UGrid<double>::setName)
-    // .def_property("dim", &UGrid<double>::getDim,
-    //               &UGrid<double>::setDim)
-    // .def_property("N", &UGrid<double>::getN,
-    //               &UGrid<double>::setN)
 		.def("output", [](UGrid<double>& self)
 		{
 			std::string out = self.getLog()->getOutput();
@@ -664,189 +668,6 @@ PYBIND11_MODULE(etraj, m) {
 			std::string out = self.getLog()->getOutput(i);
 			py::print(out);
 		})
-
-		.def("set_ugrid", &UGrid<double>::setUGrid)
-		//  Access operators
-		.def("__getitem__", [](UGrid<double> &self,
-					std::tuple<int, int> ij)
-		{
-			int i, j;
-			std::tie(i, j) = ij;
-			if (i < 0 || i >= self.getN())
-			{
-				if (i < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with invalid value "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				else if (i >= self.getN())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with index "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(i) +
-															" out of bounds for array with "
-															+ std::to_string(self.getN())
-															+ " points!");
-			}
-			if (j < 0 || j >= self.getDim())
-			{
-				if (j < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of dimension "
-											+ std::to_string(self.getDim()) + " with invalid value "
-											+ std::to_string(j));
-					//####################################################################
-				}
-				else if (j >= self.getDim())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of dimension "
-											+ std::to_string(self.getDim()) + " with index "
-											+ std::to_string(j));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(j) +
-														  " out of bounds for array with dimension "
-														  + std::to_string(self.getDim()));
-			}
-			return self(i,j);
-		}, py::is_operator())
-		//--------------------------------------------------------------------------
-		.def("__setitem__", [](UGrid<double> &self,
-					std::tuple<int, int> ij, const double& val)
-		{
-			int i, j;
-			std::tie(i, j) = ij;
-			if (i < 0 || i >= self.getN())
-			{
-				if (i < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with invalid value "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				else if (i >= self.getN())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with index "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(i) +
-															" out of bounds for array with "
-															+ std::to_string(self.getN())
-															+ " points!");
-			}
-			if (j < 0 || j >= self.getDim())
-			{
-				if (j < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of dimension "
-											+ std::to_string(self.getDim()) + " with invalid value "
-											+ std::to_string(j));
-					//####################################################################
-				}
-				else if (j >= self.getDim())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of dimension "
-											+ std::to_string(self.getDim()) + " with index "
-											+ std::to_string(j));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(j) +
-														  " out of bounds for array with dimension "
-														  + std::to_string(self.getDim()));
-			}
-			self(i,j) = val;
-		}, py::is_operator())
-		//--------------------------------------------------------------------------
-		.def("__getitem__", [](UGrid<double> &self, int i)
-		{
-			if (i < 0 || i >= self.getN())
-			{
-				if (i < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with invalid value "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				else if (i >= self.getN())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with index "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(i) +
-															" out of bounds for array with "
-															+ std::to_string(self.getN())
-															+ " rows!");
-			}
-			else
-			{
-				return self(i);
-			}
-		}, py::is_operator())
-		//--------------------------------------------------------------------------
-		.def("__setitem__", [](UGrid<double> &self, int i,
-			                     std::vector<double> x)
-		{
-			if (i < 0 || i >= self.getN())
-			{
-				if (i < 0)
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with invalid value "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				else if (i >= self.getN())
-				{
-					//####################################################################
-					self.getLog()->ERROR("UGrid " + self.getName()
-											+ ": Attempted to access _ugrid array of size "
-											+ std::to_string(self.getN()) + " with index "
-											+ std::to_string(i));
-					//####################################################################
-				}
-				throw py::index_error("Index " + std::to_string(i) +
-															" out of bounds for array with "
-															+ std::to_string(self.getN())
-															+ " rows!");
-			}
-			else
-			{
-				self(i) = x;
-			}
-		}, py::is_operator())
 		//--------------------------------------------------------------------------
 		//  KDTree functions
 		//--------------------------------------------------------------------------

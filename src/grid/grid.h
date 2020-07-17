@@ -31,6 +31,17 @@
 
 namespace ET
 {
+
+  //! \enum Grid Types
+  /*! An enum to collect the various types of grids.
+   */
+  enum class GridType
+  {
+    DEFAULT,
+    STRUCTURED,
+    UNSTRUCTURED,
+    MESHLESS,
+  };
   //! \class Grid Class
   /*! A Base class for various different types of grids.
    */
@@ -172,6 +183,19 @@ namespace ET
      *  @return m_log The shared instance of the logger.
      */
     std::shared_ptr<Log> getLog() const;
+    //! Get type
+    /*! Get the type of the grid.  This will be useful for other classes
+     *  which only have a shared pointer to a generic Grid<T>, but do not
+     *  otherwise know which functions are available.
+     */
+    enum GridType getType() const;
+    //! Get point
+    /*! Get a particular point in the grid.  This method is identical to
+     *  the operator()(const size_t t_i)
+     *  @param t_i The index of the desired point
+     *  @return A std::vector<T> of the point.
+     */
+    std::vector<T> getPoint(const size_t t_i) const;
     //! Set name.
     /*! Set the name of the Grid.
      *  @param t_name A std::string specifying the name of the Grid.
@@ -280,6 +304,22 @@ namespace ET
     */
     const std::vector<T>& operator()(const size_t& t_i) const;
 
+    //  Special functions
+    //! Projection
+    /*! Proj. Get a projection along a particular axis.
+     *  @param t_axis The axis to project along.
+     *  @return An std::vector<T> of the coordinates along that axis.
+     */
+    std::vector<T> proj(const size_t t_axis);
+    //! Projection
+    /*! Proj.  Get a projection along a set of axes.
+     *  @param t_axes The axes to project along.
+     *  @return An std::vector<std::vector<T>> of the coordinates along
+     *  the projection.
+     */
+    std::vector<std::vector<T>> proj(const std::vector<size_t> t_axes);
+
+
 
   protected:
     /*! Name.  Name of the Grid.  Defaulted to empty string.
@@ -301,8 +341,11 @@ namespace ET
     std::vector<std::string> m_coords {{""}};
     /*! Logger.  Shared instance of a logger.
      */
-    std::shared_ptr<Log> m_log;
-
+    std::shared_ptr<Log> m_log {std::make_shared<Log>()};
+    /*! Grid Type.  A const enum declaring the type of the grid.
+     *  Defaulted to default.
+     */
+    const enum GridType m_type {GridType::DEFAULT};
   };
 
   template class Grid<double>;

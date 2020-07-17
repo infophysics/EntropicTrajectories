@@ -116,60 +116,39 @@ namespace ET
      *  @param t_log A shared logger instance.
      */
     UGrid(std::string t_name, size_t t_dim, size_t t_N,
-         std::shared_ptr<Log> t_log);
-
-    //   Getters and Setters
-    //! Get UGrid
-    /*! Get the ugrid array.
-     *  @return The ugrid array.
-     */
-    std::vector<std::vector<T>> getUGrid() const;
-
-    //! Set UGrid
-    /*! Sets the UGrid array.
-     *  @param t_ugrid A std::vector<std::vector<T>> of the array.
-     */
-    void setUGrid(std::vector<std::vector<T>> t_ugrid);
-
-    UGrid(std::vector<T> t_ugrid);
-    UGrid(std::vector<std::vector<T>> t_ugrid);
-    //--------------------------------------------------------------------------
-    //  Constructors with shared loggers
-    //--------------------------------------------------------------------------
-
-    UGrid(std::vector<T> t_ugrid, std::shared_ptr<Log> t_log);
-    UGrid(std::vector<std::vector<T>> t_ugrid,
           std::shared_ptr<Log> t_log);
-    //--------------------------------------------------------------------------
+    //! Constructor
+    /*! constructor for Grid that takes a grid array
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    */
+    UGrid(std::vector<std::vector<T>> t_grid);
+    //! Constructor
+    /*! constructor for Grid that takes a grid array and a logger
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param t_log A shared logger instance.
+    */
+    UGrid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Grid that takes a name and a grid array
+    *  @param t_name An std::string specifying this objects name.
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    */
+    UGrid(std::string t_name, std::vector<std::vector<T>> t_grid);
+    //! Constructor
+    /*! constructor for Grid that takes a name, grid array and a logger
+    *  @param t_name An std::string specifying this objects name.
+    *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param t_log A shared logger instance.
+    */
+    UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
+          std::shared_ptr<Log> t_log);
 
-    //--------------------------------------------------------------------------
-    //  Getters
-    //--------------------------------------------------------------------------
 
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
     std::vector<std::vector<size_t>> getNeighborsRadius();
     std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(size_t t_index);
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //  Access operators for t_ugrid
-    //--------------------------------------------------------------------------
-    T& operator()(const size_t t_i, const size_t t_j);
-    const T& operator()(const size_t t_i, const size_t t_j) const;
-    std::vector<T>& operator()(const size_t t_i);
-    const std::vector<T>& operator()(const size_t t_i) const;
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //  Points and projections
-    //--------------------------------------------------------------------------
-    const std::vector<T>& getPoint(const size_t t_i) const;
-    std::vector<T> projection(size_t t_j);
-    void setPoint(size_t t_i, std::vector<T> t_p);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------
@@ -216,6 +195,8 @@ namespace ET
     std::vector<std::vector<size_t>> m_neighbors_radius;
     std::vector<std::vector<double>> m_distances_radius;
     //--------------------------------------------------------------------------
+    /*! Grid Type.  The grid type for this object is UNSTRUCTURED.*/
+    const enum GridType t_type {GridType::UNSTRUCTURED};
   };
   //----------------------------------------------------------------------------
 
