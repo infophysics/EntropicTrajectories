@@ -118,7 +118,10 @@ namespace ET
   : m_name("default"), m_dim(t_dim), m_N(t_N), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + getMem(*this));m_log = std::make_shared<Log>();
+		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
+		m_log->TRACE("KDTree 'default' created at location "
+		            + getMem(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -249,24 +252,29 @@ namespace ET
   void Grid<T>::setName(const std::string t_name)
   {
     m_name = t_name;
+    m_log->INFO("Set name to '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Grid<T>::setDim(const size_t t_dim)
   {
     m_dim = t_dim;
+    m_log->INFO("Set dimension to " + std::to_string(m_dim));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Grid<T>::setN(const size_t t_N)
   {
     m_N = t_N;
+    m_log->INFO("Set number of points to " + std::to_string(m_N));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Grid<T>::setGrid(const std::vector<std::vector<T>> t_grid)
   {
     m_grid = t_grid;
+    m_log->INFO("Set grid to array of size (" + std::to_string(m_dim)
+                + " x " + std::to_string(m_N) + ")");
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -279,6 +287,7 @@ namespace ET
   void Grid<T>::setLog(std::shared_ptr<Log> t_log)
   {
     m_log = t_log;
+    m_log->INFO("Logger passed to KDTree '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>

@@ -1,3 +1,4 @@
 [19:34:19] [trace] ET:Grid:default_3: Grid 'default' created at location 0x55e7efdc7330
 [19:34:33] [error] ET:Grid:default_3: Attempted to project along axis 3 when Grid has dimension 2
 [19:34:33] [info] ET:Grid:default_3: Returning empty std::vector
+[15:35:57] [trace] ET:Grid:default_3: Grid 'default' destroyed at location 0x55e7efdc7330

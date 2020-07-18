@@ -24,6 +24,7 @@ Entropic Trajectories
 
   vector
   matrix
+  kdtree
   grid
 
 .. toctree::

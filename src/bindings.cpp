@@ -701,7 +701,7 @@ PYBIND11_MODULE(etraj, m) {
   py::class_<KDTree<double>,
              std::shared_ptr<KDTree<double>>>(m, "KDTree")
     .def(py::init<>())
-    .def(py::init([](std::vector<std::vector<double>> points) {
+    .def(py::init([](const std::vector<std::vector<double>> points) {
       return std::shared_ptr<KDTree<double>>(new KDTree<double>
       (std::make_shared<std::vector<std::vector<double>>>(points)));
     }))
@@ -739,8 +739,8 @@ PYBIND11_MODULE(etraj, m) {
     //  Overloads of query_neighbors
     .def("query_neighbors", (void (KDTree<double>::*)(size_t))
          &KDTree<double>::queryNeighbors)
-    // .def("query_neighbors", (void (KDTree<double>::*)(double))
-    //      &KDTree<double>::queryNeighbors)
+    .def("query_neighbors", (void (KDTree<double>::*)(double))
+         &KDTree<double>::queryNeighbors)
     .def("query_neighbors", (std::vector<size_t> (KDTree<double>::*)
          (const std::vector<double>&,size_t)) &KDTree<double>::queryNeighbors)
     .def("query_distances", (std::vector<double> (KDTree<double>::*)

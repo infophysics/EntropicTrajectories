@@ -29,6 +29,19 @@
 
 namespace ET
 {
+  //! \enum KDTreeSearchFlags
+  /*! An enum corresponding to behavior of the KDTree
+   */
+  enum class KDTreeSearchFlags
+  {
+    OUTDATED,
+    BUILT,
+    NEW_K,
+    NEW_RADIUS,
+    NEW_POINTS,
+    CURRENT_K,
+    CURRENT_RADIUS,
+  };
   //! \class KDTree
   /*! This is a wrapper for various KDTree implementations such as
    *  nanoflann.  */
@@ -48,7 +61,7 @@ namespace ET
     /*! Constructor taking a shared pointer of the set of points.
      *  @param t_points A std::shared_ptr of a std::vector<std::vector<T>>
      */
-    KDTree(std::shared_ptr<std::vector<std::vector<T>>> t_points);
+    KDTree(const std::shared_ptr<std::vector<std::vector<T>>> t_points);
 
     //  Getters and Setters
     //! Get name.
@@ -194,6 +207,15 @@ namespace ET
      */
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
+    //! Query distances
+    /*! Query the tree for t_k nearest neighbors of a set of points
+     *  and return the distances of the neighbors.
+     *  @param t_points The points to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::vector<std::vector<double>> of the neighbors distances.
+     */
+    std::vector<std::vector<double>>
+    queryDistances(const std::vector<std::vector<T>>& t_points, size_t t_k);
     //! Query neighbors
     /*! Query the tree for nearest neighbors of a particular point
      *  within a radius t_radius and return the indices of the neighbors.
@@ -221,6 +243,15 @@ namespace ET
      */
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& t_points, double t_radius);
+    //! Query distances
+    /*! Query the tree for nearest neighbors of a set of points
+     *  within a radius t_radius and return the distances of the neighbors.
+     *  @param t_points The points to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::vector<std::vector<double>> of the neighbors distances.
+     */
+    std::vector<std::vector<double>>
+    queryDistances(const std::vector<std::vector<T>>& t_points, double t_radius);
     //--------------------------------------------------------------------------
 
   private:
@@ -261,8 +292,9 @@ namespace ET
      *  distances that were found in the most recent search.
      */
     std::vector<std::vector<double>> m_currentNeighborDistances {{{0}}};
-
-    int m_searchFlag;
+    /*! Search flag.  An enum that classifies the state of the tree.
+     */
+    enum KDTreeSearchFlags m_searchFlag {KDTreeSearchFlags::OUTDATED};
     //--------------------------------------------------------------------------
   };
 
