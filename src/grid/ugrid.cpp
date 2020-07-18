@@ -184,22 +184,12 @@ namespace ET
 	template<typename T>
 	std::vector<std::vector<size_t>> UGrid<T>::getNeighbors()
 	{
-		return m_kdt.getNeighbors();
+		return m_kdt.getCurrentNeighborIndices();
 	}
 	template<typename T>
 	std::vector<std::vector<double>> UGrid<T>::getDistances()
 	{
-		return m_kdt.getDistances();
-	}
-	template<typename T>
-	std::vector<std::vector<size_t>> UGrid<T>::getNeighborsRadius()
-	{
-		return m_kdt.getNeighborsRadius();
-	}
-	template<typename T>
-	std::vector<std::vector<double>> UGrid<T>::getDistancesRadius()
-	{
-		return m_kdt.getDistancesRadius();
+		return m_kdt.getCurrentNeighborDistances();
 	}
 	template<typename T>
 	std::vector<size_t> UGrid<T>::getNeighbors(uint64_t index)
@@ -228,7 +218,7 @@ namespace ET
 			}
 		}
 
-  	return m_kdt.getNeighbors(index);
+  	return m_kdt.getCurrentNeighborIndices(index);
 	}
 
 	//----------------------------------------------------------------------------
@@ -273,11 +263,6 @@ namespace ET
 		                       uint64_t k)
   {
     return m_kdt.queryNeighbors(points,k);
-  }
-	template<typename T>
-  void UGrid<T>::queryRadius(double radius)
-  {
-    return m_kdt.queryRadius(radius);
   }
 	//----------------------------------------------------------------------------
 

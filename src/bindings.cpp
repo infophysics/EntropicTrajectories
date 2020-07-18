@@ -654,10 +654,6 @@ PYBIND11_MODULE(etraj, m) {
 		}, py::return_value_policy::reference)
 		.def("get_distances", &UGrid<double>::getDistances,
 		     py::return_value_policy::reference)
-		.def("get_neighbors_radius", &UGrid<double>::getNeighborsRadius,
-		     py::return_value_policy::reference)
-		.def("get_distances_radius", &UGrid<double>::getDistancesRadius,
-		     py::return_value_policy::reference)
 		.def("output", [](UGrid<double>& self)
 		{
 			std::string out = self.getLog()->getOutput();
@@ -682,7 +678,6 @@ PYBIND11_MODULE(etraj, m) {
  		     (UGrid<double>::*)(const std::vector<std::vector<double>>&,
 					                      size_t k))
  				 &UGrid<double>::queryNeighbors)
-		.def("query_radius", &UGrid<double>::queryRadius)
     //--------------------------------------------------------------------------
 		//  Query neighbors for arbitrary points
 		//--------------------------------------------------------------------------
@@ -700,6 +695,58 @@ PYBIND11_MODULE(etraj, m) {
 		;
 	//----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //	KDTree class
+  //----------------------------------------------------------------------------
+  py::class_<KDTree<double>,
+             std::shared_ptr<KDTree<double>>>(m, "KDTree")
+    .def(py::init<>())
+    .def(py::init([](std::vector<std::vector<double>> points) {
+      return std::shared_ptr<KDTree<double>>(new KDTree<double>
+      (std::make_shared<std::vector<std::vector<double>>>(points)));
+    }))
+    .def("get_name", &KDTree<double>::getName)
+    .def("get_dim", &KDTree<double>::getDim)
+    .def("get_N", &KDTree<double>::getN)
+    .def("get_points", [](const KDTree<double>& self) {
+      return *self.getPoints();
+    }, py::return_value_policy::reference)
+    .def("get_current_neighbor_indices", (std::vector<std::vector<size_t>>
+         (KDTree<double>::*)()) &KDTree<double>::getCurrentNeighborIndices)
+    .def("get_current_neighbor_distances", (std::vector<std::vector<double>>
+         (KDTree<double>::*)()) &KDTree<double>::getCurrentNeighborDistances)
+    .def("get_current_neighbor_indices",
+         (std::vector<size_t> (KDTree<double>::*)(const size_t))
+         &KDTree<double>::getCurrentNeighborIndices)
+    .def("get_current_neighbor_distances",
+         (std::vector<double> (KDTree<double>::*)(const size_t))
+         &KDTree<double>::getCurrentNeighborDistances)
+    .def("get_current_global_k", &KDTree<double>::getCurrentGlobalK)
+    .def("get_current_global_radius", &KDTree<double>::getCurrentGlobalRadius)
+    .def("get_log", &KDTree<double>::getLog)
+    .def("set_name", &KDTree<double>::setName)
+    .def("set_dim", &KDTree<double>::setDim)
+    .def("set_N", &KDTree<double>::setN)
+    .def("set_points", [](KDTree<double>& self,
+                          const std::vector<std::vector<double>> points) {
+      self.setPoints(std::make_shared<std::vector<std::vector<double>>>(points));
+    })
+    .def("set_current_global_k", &KDTree<double>::setCurrentGlobalK)
+    .def("set_current_global_radius", &KDTree<double>::setCurrentGlobalRadius)
+    .def("set_log", &KDTree<double>::setLog)
+    //  KDTree methods
+    .def("setup_tree", &KDTree<double>::setupTree)
+    //  Overloads of query_neighbors
+    .def("query_neighbors", (void (KDTree<double>::*)(size_t))
+         &KDTree<double>::queryNeighbors)
+    // .def("query_neighbors", (void (KDTree<double>::*)(double))
+    //      &KDTree<double>::queryNeighbors)
+    .def("query_neighbors", (std::vector<size_t> (KDTree<double>::*)
+         (const std::vector<double>&,size_t)) &KDTree<double>::queryNeighbors)
+    .def("query_distances", (std::vector<double> (KDTree<double>::*)
+         (const std::vector<double>&,size_t)) &KDTree<double>::queryDistances)
+    ;
+  //----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------
 	//	ScalarField class
 	//----------------------------------------------------------------------------
@@ -1452,13 +1499,6 @@ PYBIND11_MODULE(etraj, m) {
 	m.def("taylor_polynomial", &taylorPolynomial);
 	//----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-	//	KDTree class
-	//----------------------------------------------------------------------------
-  py::class_<KDTree<double>,
-             std::shared_ptr<KDTree<double>>>(m, "KDTree")
-    .def(py::init<>())
-    ;
-  //----------------------------------------------------------------------------
+
 
 }

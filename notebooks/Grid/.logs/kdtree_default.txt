@@ -1,0 +1,5 @@
+[10:59:58] [trace] ET:KDTree:default: KDTree 'default' created at location 0x55afbfe0cb10
+[10:59:59] [info] ET:KDTree:default: Initialized KDTree with 5 points in 2 dimensions
+[10:59:59] [info] ET:KDTree:default: KDTree default: Querying each point in array _grid of size 5 and dimension 2 for the nearest 2 neighbors
+[11:00:07] [info] ET:KDTree:default: KDTree default: Querying each point in array _grid of size 5 and dimension 2 for the nearest 3 neighbors
+[11:00:17] [info] ET:KDTree:default: KDTree default: Querying each point in array _grid of size 5 and dimension 2 for the nearest 4 neighbors

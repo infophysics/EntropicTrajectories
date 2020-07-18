@@ -75,26 +75,26 @@ namespace ET
     /*! Get the values of the indices for the last search that was performed.
      *  @return The list of indices for the last nearest neighbor search.
      */
-    std::vector<std::vector<size_t>> getCurrentNeighborIndices() const;
+    std::vector<std::vector<size_t>> getCurrentNeighborIndices();
     //! Get current neighbor distances
     /*! Get the values of the distances for the last search that was performed.
      *  @return The list of distances for the last nearest neighbor search.
      */
-    std::vector<std::vector<double>> getCurrentNeighborDistances() const;
+    std::vector<std::vector<double>> getCurrentNeighborDistances();
     //! Get current neighbor indices
     /*! Get the values of the indices for the last search that was performed
      *  for a particular point in t_points.
      *  @param t_i Index to the point of interest in t_points.
      *  @return The list of indices for the last nearest neighbor search.
      */
-    std::vector<size_t> getCurrentNeighborIndices(size_t t_i) const;
+    std::vector<size_t> getCurrentNeighborIndices(const size_t t_i);
     //! Get current neighbor distances
     /*! Get the values of the distances for the last search that was performed
      *. for a particular point in t_points.
      *  @param t_i Index to the point of interest in t_points.
      *  @return The list of distances for the last nearest neighbor search.
      */
-    std::vector<double> getCurrentNeighborDistances(size_t t_i) const;
+    std::vector<double> getCurrentNeighborDistances(const size_t t_i);
     //! Get current global k
     /*! Get the current global k value.
      *  @return The current global k value.
@@ -148,14 +148,6 @@ namespace ET
      *  @param t_radius A double object denoting the radius to use.
      */
     void setCurrentGlobalRadius(const double t_radius);
-
-
-    std::vector<std::vector<size_t>> getNeighbors();
-    std::vector<std::vector<double>> getDistances();
-    std::vector<std::vector<size_t>> getNeighborsRadius();
-    std::vector<std::vector<double>> getDistancesRadius();
-    std::vector<size_t> getNeighbors(size_t t_index);
-
     //  KDTree methods
     //! Setup tree
     /*! Initialize the KDTree object using m_points.
@@ -175,17 +167,60 @@ namespace ET
      *  @param t_radius The search radius to use for nearest neighbors.
      */
     void queryNeighbors(double t_radius);
-
+    //! Query neighbors
+    /*! Query the tree for t_k nearest neighbors of a particular point
+     *  and return the indices of the neighbors.
+     *  @param t_point The point to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::vector<size_t> of the neighbors indices.
+     */
     std::vector<size_t>
     queryNeighbors(const std::vector<T>& t_point, size_t t_k);
-
+    //! Query neighbors
+    /*! Query the tree for t_k nearest neighbors of a particular point
+     *  and return the distances to each neighbor.
+     *  @param t_point The point to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::vector<double> of the neighbors distances.
+     */
     std::vector<double>
     queryDistances(const std::vector<T>& t_point, size_t t_k);
-
+    //! Query neighbors
+    /*! Query the tree for t_k nearest neighbors of a set of points
+     *  and return the indices of the neighbors.
+     *  @param t_points The points to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::vector<std::vector<size_t>> of the neighbors indices.
+     */
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
-
-    void queryRadius(double t_radius);
+    //! Query neighbors
+    /*! Query the tree for nearest neighbors of a particular point
+     *  within a radius t_radius and return the indices of the neighbors.
+     *  @param t_point The point to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::vector<size_t> of the neighbors indices.
+     */
+    std::vector<size_t>
+    queryNeighbors(const std::vector<T>& t_point, double t_radius);
+    //! Query neighbors
+    /*! Query the tree for nearest neighbors of a particular point
+     *  within a radius t_radius and return the distances to each neighbor.
+     *  @param t_point The point to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::vector<double> of the neighbors distances.
+     */
+    std::vector<double>
+    queryDistances(const std::vector<T>& t_point, double t_radius);
+    //! Query neighbors
+    /*! Query the tree for nearest neighbors of a set of points
+     *  within a radius t_radius and return the indices of the neighbors.
+     *  @param t_points The points to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::vector<std::vector<size_t>> of the neighbors indices.
+     */
+    std::vector<std::vector<size_t>>
+    queryNeighbors(const std::vector<std::vector<T>>& t_points, double t_radius);
     //--------------------------------------------------------------------------
 
   private:
@@ -206,7 +241,7 @@ namespace ET
      *  implementation of the tree.
      */
     std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> m_KDTree;
+                     std::vector<std::vector<T>>,T>> m_kdtree;
     /*! Logger.  Shared instance of a logger.
     */
     std::shared_ptr<Log> m_log {std::make_shared<Log>()};
@@ -227,13 +262,7 @@ namespace ET
      */
     std::vector<std::vector<double>> m_currentNeighborDistances {{{0}}};
 
-    int m_searchFlag;          //  flag for changes
-    size_t m_k;               //  number of neighbors to search
-    double m_radius;          //  search radius
-    std::vector<std::vector<size_t>> m_neighbors;
-    std::vector<std::vector<double>> m_distances;
-    std::vector<std::vector<size_t>> m_neighbors_radius;
-    std::vector<std::vector<double>> m_distances_radius;
+    int m_searchFlag;
     //--------------------------------------------------------------------------
   };
 

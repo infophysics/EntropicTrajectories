@@ -146,8 +146,6 @@ namespace ET
 
     std::vector<std::vector<size_t>> getNeighbors();
     std::vector<std::vector<double>> getDistances();
-    std::vector<std::vector<size_t>> getNeighborsRadius();
-    std::vector<std::vector<double>> getDistancesRadius();
     std::vector<size_t> getNeighbors(size_t t_index);
     //--------------------------------------------------------------------------
 
@@ -166,7 +164,6 @@ namespace ET
     std::vector<std::vector<size_t>>
     queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
 
-    void queryRadius(double t_radius);
     //--------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------

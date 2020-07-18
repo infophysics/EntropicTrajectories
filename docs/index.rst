@@ -1,29 +1,41 @@
-.. Entropic Trajectories documentation master file, created by
-   sphinx-quickstart on Fri Jul 17 12:58:03 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. only: not latex
 
-Welcome to Entropic Trajectories's documentation!
+Entropic Trajectories
 =================================================
 
+    Contents:
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  :caption: Entropic Trajectories
+  :maxdepth: 2
+
+  intro
+  install
+  gettingstarted
+
+.. toctree::
+  :caption: The Entropic Trajectories API
+  :maxdepth: 2
+
+
+.. toctree::
+  :caption: Classes
+  :maxdepth: 2
+
+  vector
+  matrix
+  grid
+
+.. toctree::
+  :caption: Useful Information
+  :maxdepth: 1
+
+  faq
+  support
 
 Docs
 ====
 
-.. doxygenclass:: ET::Vector
-   :project: etraj
-   :members:
-
-.. doxygenclass:: ET::Matrix
-   :project: etraj
-   :members:
-
-.. doxygenclass:: ET::Grid
-   :project: etraj
-   :members:
 
 Indices and tables
 ==================
