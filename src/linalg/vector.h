@@ -84,7 +84,7 @@ namespace ET
     Vector(size_t t_dim, const T& t_init);
     //! Constructor
     /*!
-      @param t_name a std::string for the name of the Vector.
+      @param t_name a std::string for the name of thebrewathe sphinx Vector.
       @param t_dim a size_t for the dimension of the vector space.
       @param t_init an initial value to set all of the elements to.
     */
@@ -104,7 +104,7 @@ namespace ET
         @return A raw pointer to the std::vector<T> container.
     */
     std::vector<T>* accessVec();
-    //! Get pointer to the beginning of vec
+    //! Get pointer to the beginning of vecbrewathe sphinx
     /*! get vec pointer.  There are several ways we can interact with the
         m_vec attribute.  Some methods, such as Level one BLAS,
         will require access to the pointer for the first entry in m_vec.

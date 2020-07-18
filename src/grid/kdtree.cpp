@@ -25,9 +25,9 @@ namespace ET
   template<typename T>
   KDTree<T>::KDTree() : m_N(0), m_dim(0), m_name("default")
   {
-		m_log = std::make_shared<Log>();
-		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
-		m_log->TRACE("KDTree 'default' created at location "
+    m_log = std::make_shared<Log>();
+		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
+		m_log->TRACE("KDTree '" + m_name + "' created at location "
 		            + getMem(*this));
 		m_searchFlag = -1;
   }
@@ -42,9 +42,9 @@ namespace ET
   : m_N(t_points->size()), m_dim((*t_points)[0].size()), m_name("default")
   {
     m_points = t_points;
-		m_log = std::make_shared<Log>();
-		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
-		m_log->TRACE("KDTree 'default' created at location "
+    m_log = std::make_shared<Log>();
+		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
+		m_log->TRACE("KDTree '" + m_name + "' created at location "
 		            + getMem(*this));
   }
 
@@ -52,47 +52,79 @@ namespace ET
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  uint64_t KDTree<T>::getDim()
-  {
-    return m_dim;
-  }
-  template<typename T>
-  uint64_t KDTree<T>::getN()
-  {
-    return m_N;
-  }
-  template<typename T>
-  std::shared_ptr<std::vector<std::vector<T>>> KDTree<T>::getPoints()
-  {
-    return m_points;
-  }
-  template<typename T>
-  std::string KDTree<T>::getName()
+  std::string KDTree<T>::getName() const
   {
     return m_name;
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  size_t KDTree<T>::getDim() const
+  {
+    return m_dim;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  size_t KDTree<T>::getN() const
+  {
+    return m_N;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<std::vector<std::vector<T>>> KDTree<T>::getPoints() const
+  {
+    return m_points;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<size_t>> KDTree<T>::getCurrentNeighborIndices() const
+  {
+    return m_currentNeighborIndices;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<double>> KDTree<T>::getCurrentNeighborDistances() const
+  {
+    return m_currentNeighborDistances;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  size_t KDTree<T>::getCurrentGlobalK() const
+  {
+    return m_currentGlobalK;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  double KDTree<T>::getCurrentGlobalRadius() const
+  {
+    return m_currentGlobalRadius;
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<size_t>> KDTree<T>::getNeighbors()
   {
     return m_neighbors;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<double>> KDTree<T>::getDistances()
   {
     return m_distances;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<size_t>> KDTree<T>::getNeighborsRadius()
   {
     return m_neighbors_radius;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<std::vector<double>> KDTree<T>::getDistancesRadius()
   {
     return m_distances_radius;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<size_t> KDTree<T>::getNeighbors(uint64_t t_index)
+  std::vector<size_t> KDTree<T>::getNeighbors(size_t t_index)
   {
     if (t_index > m_N) {
       m_log->ERROR("KDTree " + m_name
@@ -110,11 +142,50 @@ namespace ET
     }
     return m_neighbors[t_index];
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  std::shared_ptr<Log> KDTree<T>::getLogger()
+  void KDTree<T>::setName(const std::string t_name)
   {
-    return m_log;
+    m_name = t_name;
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void KDTree<T>::setDim(const size_t t_dim)
+  {
+    m_dim = t_dim;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void KDTree<T>::setN(const size_t t_N)
+  {
+    m_N = t_N;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void
+  Grid<T>::setPoints(const std::shared_ptr<std::vector<std::vector<T>>> t_points)
+  {
+    m_points = t_points;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setLog(std::shared_ptr<Log> t_log)
+  {
+    m_log = t_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setCurrentGlobalK(const size_t t_k)
+  {
+    m_currentGlobalK = t_k;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setCurrentGlobalRadius(const double t_radius)
+  {
+    m_currentGlobalRadius = t_radius;
+  }
+  //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //  KDTree methods
   //----------------------------------------------------------------------------
@@ -131,7 +202,7 @@ namespace ET
                + "in " + std::to_string(m_dim) + " dimensions");
   }
   template<typename T>
-  void KDTree<T>::queryNeighbors(uint64_t t_k)
+  void KDTree<T>::queryNeighbors(size_t t_k)
   {
     //	check if anything has changed since last query
 		if (m_searchFlag == 0 && t_k == m_k) {
@@ -176,7 +247,7 @@ namespace ET
   }
   template<typename T>
   std::vector<size_t>
-  KDTree<T>::queryNeighbors(const std::vector<T>& t_point, uint64_t t_k)
+  KDTree<T>::queryNeighbors(const std::vector<T>& t_point, size_t t_k)
   {
     if (t_k >= m_N) {
 			m_log->ERROR("KDTree " + m_name
@@ -211,7 +282,7 @@ namespace ET
   }
   template<typename T>
   std::vector<double>
-  KDTree<T>::queryDistances(const std::vector<T>& t_point, uint64_t t_k)
+  KDTree<T>::queryDistances(const std::vector<T>& t_point, size_t t_k)
   {
     if (t_k >= m_N) {
 			m_log->ERROR("KDTree " + m_name
@@ -252,7 +323,7 @@ namespace ET
   template<typename T>
   std::vector<std::vector<size_t>>
   KDTree<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
-                            uint64_t t_k)
+                            size_t t_k)
   {
     if (t_k >= m_N) {
 			m_log->ERROR("KDTree " + m_name
