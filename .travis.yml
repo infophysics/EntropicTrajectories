@@ -1,12 +1,9 @@
 # setting langauges to c++ and python
 language: c++
-language: python
 sudo: true
 c++:
   -17
   -20
-python:
-  - 3.7
 compiler:
   - clang
   - gcc
