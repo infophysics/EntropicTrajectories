@@ -22,7 +22,7 @@ before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
-  - git submodule update --init --recursive
+  - cd include && git submodule update --init --recursive
   - sudo apt-get update
   - sudo apt-get install libblas-dev
   - sudo apt-get install liblapack-dev
@@ -31,7 +31,7 @@ before_install:
   - sudo apt-get install doxygen
   - git clone https://github.com/gabime/spdlog.git
   - cd spdlog && mkdir build && cd build
-  - cmake .. && make -j && cd ../../
+  - cmake .. && make -j && cd ../../../
   - sudo apt-get install python3-sphinx
   - sudo apt-get install gfortran
   - python --version
