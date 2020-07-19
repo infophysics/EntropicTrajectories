@@ -1,6 +1,6 @@
-[00:02:08] [trace] ET:KDTree:default: KDTree 'default' created at location 0x55747f9df420
-[00:02:08] [info] ET:KDTree:default: Initialized KDTree with 5 points in 2 dimensions
-[00:02:09] [info] ET:KDTree:default: Initialized KDTree with 5 points in 2 dimensions
-[00:02:10] [info] ET:KDTree:default: Set global radius value to 0.210000
-[00:02:10] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (5 x 2) for neighbors within radius 0.210000
-[00:02:17] [info] ET:KDTree:default: KDTree default: Querying a point for the nearest 2 neighbors.
+[19:16:10] [trace] ET:KDTree:default: KDTree 'default' created at location 0x563bc373bac0
+[19:16:10] [info] ET:KDTree:default: Initialized KDTree with 5 points in 2 dimensions
+[19:16:10] [info] ET:KDTree:default: Initialized KDTree with 5 points in 2 dimensions
+[19:16:10] [info] ET:KDTree:default: Set global radius value to 0.210000
+[19:16:10] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (5 x 2) for neighbors within radius 0.210000
+[19:16:12] [info] ET:KDTree:default: KDTree default: Querying a point for the nearest 2 neighbors.
