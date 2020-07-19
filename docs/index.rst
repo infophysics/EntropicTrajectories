@@ -26,6 +26,11 @@ Entropic Trajectories
   matrix
   kdtree
   grid
+  ugrid
+  sgrid
+  interpolator
+  lte
+  rbf
 
 .. toctree::
   :caption: Useful Information

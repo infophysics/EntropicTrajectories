@@ -257,6 +257,13 @@ namespace ET
   template<typename T>
   void KDTree<T>::queryNeighbors(double t_radius)
   {
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
     //	check if anything has changed since last query
     if (t_radius != m_currentGlobalRadius) {
       setCurrentGlobalRadius(t_radius);
@@ -363,6 +370,45 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  std::tuple<std::vector<size_t>,std::vector<double>>
+  KDTree<T>::query(const std::vector<T>& t_point, size_t t_k)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_point.size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with a point of dimension "
+                   + std::to_string(t_point.size()));
+      m_log->INFO("Returning empty vector.");
+      return std::tuple<std::vector<size_t>,std::vector<double>>();
+    }
+    if (t_k >= m_N) {
+      m_log->ERROR("KDTree " + m_name
+                  + ": Attempted to query " + std::to_string(t_k)
+                  + " neighbors for points in array m_points of size "
+                  + std::to_string(m_N));
+      m_log->INFO("Setting k to 3 for this search.");
+      t_k = 3;
+    }
+    m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+                + std::to_string(t_k) + " neighbors.");
+
+    const size_t num_results = m_currentGlobalK;
+    std::vector<size_t> ret_indexes(num_results);
+    std::vector<double> out_dists_sqr(num_results);
+    nanoflann::KNNResultSet<double> resultSet(num_results);
+    resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
+    m_kdtree->index->findNeighbors(resultSet, &t_point[0],
+                             nanoflann::SearchParams(10));
+    std::vector<double> out_dists(out_dists_sqr.size());
+    for (auto i = 0; i < out_dists_sqr.size(); i++) {
+     out_dists[i] = sqrt(out_dists_sqr[i]);
+    }
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    result {ret_indexes, out_dists};
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   std::vector<std::vector<size_t>>
   KDTree<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
                             size_t t_k)
@@ -384,12 +430,14 @@ namespace ET
       t_k = 3;
 		}
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
+    std::vector<std::vector<double>> distances(t_points.size());
     m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
                 + "nearest " + std::to_string(t_k) + " neighbors.");
 
     const size_t num_results = t_k;
     for (auto i = 0; i < t_points.size(); i++) {
 			neighbors[i].resize(num_results);
+      distances[i].resize(num_results);
       std::vector<size_t> ret_indexes(num_results);
       std::vector<double> out_dists_sqr(num_results);
 
@@ -445,6 +493,301 @@ namespace ET
 			distances[i] = std::move(out_dists);
     }
 		return distances;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+  KDTree<T>::query(const std::vector<std::vector<T>>& t_points,
+                            size_t t_k)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_points[0].size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with points of dimension "
+                   + std::to_string(t_points[0].size()));
+      m_log->INFO("Returning empty vector.");
+      return std::tuple<std::vector<std::vector<size_t>>,
+                        std::vector<std::vector<double>>>();
+    }
+    if (t_k >= m_N) {
+			m_log->ERROR("KDTree " + m_name
+									+ ": Attempted to query " + std::to_string(t_k)
+									+ " neighbors for points in array m_points of size "
+									+ std::to_string(m_N));
+      m_log->INFO("Setting k to 3 for this search.");
+      t_k = 3;
+		}
+		std::vector<std::vector<size_t>> neighbors(t_points.size());
+    std::vector<std::vector<double>> distances(t_points.size());
+    m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
+                + "nearest " + std::to_string(t_k) + " neighbors.");
+
+    const size_t num_results = t_k;
+    for (auto i = 0; i < t_points.size(); i++) {
+			neighbors[i].resize(num_results);
+      distances[i].resize(num_results);
+      std::vector<size_t> ret_indexes(num_results);
+      std::vector<double> out_dists_sqr(num_results);
+
+      nanoflann::KNNResultSet<double> resultSet(num_results);
+      resultSet.init(&ret_indexes[0], &out_dists_sqr[0]);
+			m_kdtree->index->findNeighbors(resultSet, &t_points[i][0],
+				                       nanoflann::SearchParams(10));
+      std::vector<double> out_dists(out_dists_sqr.size());
+      for (auto i = 0; i < out_dists_sqr.size(); i++) {
+        out_dists[i] = sqrt(out_dists_sqr[i]);
+      }
+			neighbors[i] = std::move(ret_indexes);
+      distances[i] = std::move(out_dists);
+    }
+    std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+    result {neighbors,distances};
+		return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<size_t>
+  KDTree<T>::queryNeighbors(const std::vector<T>& t_point, double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_point.size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with a point of dimension "
+                   + std::to_string(t_point.size()));
+      m_log->INFO("Returning empty vector.");
+      return std::vector<size_t>(0);
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+
+  	m_kdtree->index->radiusSearch(&t_point[0], t_radius, ret_matches,
+  		                      nanoflann::SearchParams(10));
+    std::vector<size_t> indices(ret_matches.size());
+    for (auto j = 0; j < ret_matches.size(); j++) {
+      indices[j] = ret_matches[j].first;
+    }
+		return indices;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<double>
+  KDTree<T>::queryDistances(const std::vector<T>& t_point, double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_point.size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with a point of dimension "
+                   + std::to_string(t_point.size()));
+      m_log->INFO("Returning empty vector.");
+      return std::vector<double>(0);
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+
+  	m_kdtree->index->radiusSearch(&t_point[0], t_radius, ret_matches,
+  		                      nanoflann::SearchParams(10));
+		std::vector<double> distances(ret_matches.size());
+		for (auto j = 0; j < ret_matches.size(); j++) {
+			distances[j] = ret_matches[j].second;
+		}
+		return distances;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<size_t>,std::vector<double>>
+  KDTree<T>::query(const std::vector<T>& t_point, double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_point.size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with a point of dimension "
+                   + std::to_string(t_point.size()));
+      m_log->INFO("Returning empty vector.");
+      return std::tuple<std::vector<size_t>,std::vector<double>>();
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+
+  	m_kdtree->index->radiusSearch(&t_point[0], t_radius, ret_matches,
+  		                      nanoflann::SearchParams(10));
+    std::vector<size_t> indices(ret_matches.size());
+    std::vector<double> distances(ret_matches.size());
+    for (auto j = 0; j < ret_matches.size(); j++) {
+      indices[j] = ret_matches[j].first;
+      distances[j] = sqrt(ret_matches[j].second);
+    }
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    result {indices,distances};
+		return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<size_t>>
+  KDTree<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
+                            double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_points[0].size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with points of dimension "
+                   + std::to_string(t_points[0].size()));
+      m_log->INFO("Returning empty vector.");
+      return std::vector<std::vector<size_t>>(0);
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+    std::vector<std::vector<size_t>> indices;
+    for (auto i = 0; i < t_points.size(); i++) {
+  	  m_kdtree->index->radiusSearch(&t_points[i][0], t_radius, ret_matches,
+  		                        nanoflann::SearchParams(10));
+      std::vector<size_t> temp_indices(ret_matches.size());
+  		for (auto j = 0; j < ret_matches.size(); j++) {
+  			temp_indices[j] = ret_matches[j].first;
+  		}
+      indices[i] = std::move(temp_indices);
+    }
+		return indices;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<double>>
+  KDTree<T>::queryDistances(const std::vector<std::vector<T>>& t_points,
+                            double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_points[0].size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with points of dimension "
+                   + std::to_string(t_points[0].size()));
+      m_log->INFO("Returning empty vector.");
+      return std::vector<std::vector<double>>(0);
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+    std::vector<std::vector<double>> distances;
+    for (auto i = 0; i < t_points.size(); i++) {
+  	  m_kdtree->index->radiusSearch(&t_points[i][0], t_radius, ret_matches,
+  		                        nanoflann::SearchParams(10));
+      std::vector<double> temp_distances(ret_matches.size());
+  		for (auto j = 0; j < ret_matches.size(); j++) {
+  			temp_distances[j] = ret_matches[j].second;
+  		}
+      distances[i] = std::move(temp_distances);
+    }
+		return distances;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+  KDTree<T>::query(const std::vector<std::vector<T>>& t_points,
+                   double t_radius)
+  {
+    //  check that t_point has the same dimension as m_points.
+    if (t_points[0].size() != m_dim) {
+      m_log->ERROR("Attempted to search a tree of dimension "
+                   + std::to_string(m_dim) + " with points of dimension "
+                   + std::to_string(t_points[0].size()));
+      m_log->INFO("Returning empty vector.");
+      return std::tuple<std::vector<std::vector<size_t>>,
+                        std::vector<std::vector<double>>>();
+    }
+    //  make sure that radius is positive
+    if (t_radius < 0) {
+      m_log->WARN("Attempted to use a negative search radius "
+                  + std::to_string(t_radius) + " in nearest neighbor search.");
+      m_log->INFO("Setting radius to its absolute value.");
+      t_radius = abs(t_radius);
+    }
+
+		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+							  + "neighbors within a radius of " + std::to_string(t_radius));
+    //  WARNING: Nanoflann uses radius^2 for searchs since it is
+    //  computationally simpler than taking the square root for every
+    //  iteration.
+    t_radius *= t_radius;
+    std::vector<std::pair<size_t,double>> ret_matches;
+    std::vector<std::vector<size_t>> indices;
+    std::vector<std::vector<double>> distances;
+    for (auto i = 0; i < t_points.size(); i++) {
+  	  m_kdtree->index->radiusSearch(&t_points[i][0], t_radius, ret_matches,
+  		                        nanoflann::SearchParams(10));
+      std::vector<size_t> temp_indices(ret_matches.size());
+      std::vector<double> temp_distances(ret_matches.size());
+  		for (auto j = 0; j < ret_matches.size(); j++) {
+  			temp_indices[j] = ret_matches[j].first;
+        temp_distances[j] = sqrt(ret_matches[j].second);
+  		}
+      indices[i] = std::move(temp_indices);
+      distances[i] = std::move(temp_distances);
+    }
+    std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+    result {indices,distances};
+		return result;
   }
   //----------------------------------------------------------------------------
 }

@@ -1,7 +1,7 @@
-Grid Class
-==========
+Grid
+====
 
-The Grid class 
+The Grid class
 
 
 Grid Source Code

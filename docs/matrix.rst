@@ -1,5 +1,5 @@
-Matrix Class
-============
+Matrix
+======
 
 
 The Matrix class

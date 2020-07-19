@@ -717,10 +717,12 @@ PYBIND11_MODULE(etraj, m) {
          (KDTree<double>::*)()) &KDTree<double>::getCurrentNeighborDistances)
     .def("get_current_neighbor_indices",
          (std::vector<size_t> (KDTree<double>::*)(const size_t))
-         &KDTree<double>::getCurrentNeighborIndices)
+         &KDTree<double>::getCurrentNeighborIndices,
+         py::arg("index"))
     .def("get_current_neighbor_distances",
          (std::vector<double> (KDTree<double>::*)(const size_t))
-         &KDTree<double>::getCurrentNeighborDistances)
+         &KDTree<double>::getCurrentNeighborDistances,
+         py::arg("index"))
     .def("get_current_global_k", &KDTree<double>::getCurrentGlobalK)
     .def("get_current_global_radius", &KDTree<double>::getCurrentGlobalRadius)
     .def("get_log", &KDTree<double>::getLog)
@@ -738,13 +740,57 @@ PYBIND11_MODULE(etraj, m) {
     .def("setup_tree", &KDTree<double>::setupTree)
     //  Overloads of query_neighbors
     .def("query_neighbors", (void (KDTree<double>::*)(size_t))
-         &KDTree<double>::queryNeighbors)
+         &KDTree<double>::queryNeighbors,
+         py::arg("k"))
     .def("query_neighbors", (void (KDTree<double>::*)(double))
-         &KDTree<double>::queryNeighbors)
+         &KDTree<double>::queryNeighbors,
+         py::arg("radius"))
     .def("query_neighbors", (std::vector<size_t> (KDTree<double>::*)
-         (const std::vector<double>&,size_t)) &KDTree<double>::queryNeighbors)
+         (const std::vector<double>&,size_t)) &KDTree<double>::queryNeighbors,
+         py::arg("point"), py::arg("k"))
     .def("query_distances", (std::vector<double> (KDTree<double>::*)
-         (const std::vector<double>&,size_t)) &KDTree<double>::queryDistances)
+         (const std::vector<double>&,size_t)) &KDTree<double>::queryDistances,
+         py::arg("point"), py::arg("k"))
+    .def("query", (std::tuple<std::vector<size_t>,std::vector<double>>
+         (KDTree<double>::*)(const std::vector<double>&,size_t))
+         &KDTree<double>::query,
+         py::arg("point"), py::arg("k"))
+    .def("query_neighbors", (std::vector<size_t> (KDTree<double>::*)
+         (const std::vector<double>&,double)) &KDTree<double>::queryNeighbors,
+         py::arg("point"), py::arg("radius"))
+    .def("query_distances", (std::vector<double> (KDTree<double>::*)
+         (const std::vector<double>&,double)) &KDTree<double>::queryDistances,
+         py::arg("point"), py::arg("radius"))
+    .def("query", (std::tuple<std::vector<size_t>,std::vector<double>>
+         (KDTree<double>::*)(const std::vector<double>&,double))
+         &KDTree<double>::query,
+         py::arg("point"), py::arg("radius"))
+    .def("query_neighbors", (std::vector<std::vector<size_t>>
+         (KDTree<double>::*)(const std::vector<std::vector<double>>&,size_t))
+         &KDTree<double>::queryNeighbors,
+         py::arg("points"), py::arg("k"))
+    .def("query_distances", (std::vector<std::vector<double>>
+         (KDTree<double>::*)(const std::vector<std::vector<double>>&,size_t))
+         &KDTree<double>::queryDistances,
+         py::arg("points"), py::arg("k"))
+    .def("query", (std::tuple<std::vector<std::vector<size_t>>,
+                              std::vector<std::vector<double>>>
+        (KDTree<double>::*)(const std::vector<std::vector<double>>&,size_t))
+        &KDTree<double>::query,
+        py::arg("points"), py::arg("k"))
+    .def("query_neighbors", (std::vector<std::vector<size_t>>
+         (KDTree<double>::*)(const std::vector<std::vector<double>>&,double))
+         &KDTree<double>::queryNeighbors,
+         py::arg("points"), py::arg("radius"))
+    .def("query_distances", (std::vector<std::vector<double>>
+         (KDTree<double>::*)(const std::vector<std::vector<double>>&,double))
+         &KDTree<double>::queryDistances,
+         py::arg("points"), py::arg("radius"))
+    .def("query", (std::tuple<std::vector<std::vector<size_t>>,
+                             std::vector<std::vector<double>>>
+       (KDTree<double>::*)(const std::vector<std::vector<double>>&,double))
+       &KDTree<double>::query,
+       py::arg("points"), py::arg("radius"))
     ;
   //----------------------------------------------------------------------------
 	//----------------------------------------------------------------------------

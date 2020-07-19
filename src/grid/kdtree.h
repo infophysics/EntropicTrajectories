@@ -198,6 +198,16 @@ namespace ET
      */
     std::vector<double>
     queryDistances(const std::vector<T>& t_point, size_t t_k);
+    //! Query
+    /*! Query the tree for t_k nearest neighbors of a particular point
+     *  and return the indices and distances for each neighbor.
+     *  @param t_point The point to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::tuple<std::vector<size_t>,std::vector<double>>
+     *  of indices and distances.
+     */
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    query(const std::vector<T>& t_point, size_t t_k);
     //! Query neighbors
     /*! Query the tree for t_k nearest neighbors of a set of points
      *  and return the indices of the neighbors.
@@ -216,6 +226,17 @@ namespace ET
      */
     std::vector<std::vector<double>>
     queryDistances(const std::vector<std::vector<T>>& t_points, size_t t_k);
+    //! Query
+    /*! Query the tree for t_k nearest neighbors of a set of points
+     *  and return the indices and distances for each neighbor.
+     *  @param t_points The points to search near.
+     *  @param t_k The number of neighbors to search for.
+     *  @return An std::tuple<std::vector<std::vector<size_t>>,
+     *  std::vector<std::vector<double>>> of indices and distances.
+     */
+    std::tuple<std::vector<std::vector<size_t>>,
+               std::vector<std::vector<double>>>
+    query(const std::vector<std::vector<T>>& t_points, size_t t_k);
     //! Query neighbors
     /*! Query the tree for nearest neighbors of a particular point
      *  within a radius t_radius and return the indices of the neighbors.
@@ -234,6 +255,17 @@ namespace ET
      */
     std::vector<double>
     queryDistances(const std::vector<T>& t_point, double t_radius);
+    //! Query
+    /*! Query the tree for nearest neighbors of a particular point
+     *  within a radius t_radius and return the indices and distances
+     *  for each neighbor.
+     *  @param t_point The point to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::tuple<std::vector<size_t>,std::vector<double>>
+     *  of indices and distances.
+     */
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    query(const std::vector<T>& t_point, double t_radius);
     //! Query neighbors
     /*! Query the tree for nearest neighbors of a set of points
      *  within a radius t_radius and return the indices of the neighbors.
@@ -252,6 +284,18 @@ namespace ET
      */
     std::vector<std::vector<double>>
     queryDistances(const std::vector<std::vector<T>>& t_points, double t_radius);
+    //! Query
+    /*! Query the tree for nearest neighbors of a set of points
+     *  within a radius t_radius and return the indices and distances
+     *  for each neighbor.
+     *  @param t_points The points to search near.
+     *  @param t_radius The radius to search within.
+     *  @return An std::tuple<std::vector<std::vector<size_t>>,
+     *  std::vector<std::vector<double>>> of indices and distances.
+     */
+    std::tuple<std::vector<std::vector<size_t>>,
+               std::vector<std::vector<double>>>
+    query(const std::vector<std::vector<T>>& t_points, double t_radius);
     //--------------------------------------------------------------------------
 
   private:

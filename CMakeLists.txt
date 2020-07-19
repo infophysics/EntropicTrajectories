@@ -8,6 +8,15 @@ else ()
   set (CMAKE_CXX_STANDARD 17)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif ()
+if(USE_LOG_LEVEL_DEBUG)
+  add_definitions(-DLOG_LEVEL_DEBUG)
+endif()
+
+# log level debug precompiler command
+# this can be changed in setup.py
+option(USE_LOG_LEVEL_DEBUG "Using debug mode for loggers" OFF)
+
+
 
 MESSAGE("CMAKE FLAGS: " ${CMAKE_CXX_FLAGS})
 project(etraj LANGUAGES CXX C Fortran)

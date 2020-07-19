@@ -1,6 +1,5 @@
-================
-The Vector Class
-================
+Vector
+======
 
 This is the vector class.
 
