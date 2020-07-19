@@ -55,6 +55,7 @@ include_directories(${SOURCE_DIR})
 include_directories("${INCLUDE_DIR}nanoflann"
                     "${INCLUDE_DIR}nanoflann/examples"
                     "${INCLUDE_DIR}nanoflann/include"
+                    "${INCLUDE_DIR}spdlog/include/"
                     "${INCLUDE_DIR}monomial"
                     "${SOURCE_DIR}fields"
                     "${SOURCE_DIR}geometry"
