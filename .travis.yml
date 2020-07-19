@@ -34,6 +34,8 @@ before_install:
   - sudo apt-get install liblapack-dev
   - sudo apt-get install liblapacke-dev
   - sudo apt-get install libopenblas-dev
+  - sudo apt-get install doxygen
+  - sudo apt-get install libspdlog-dev
   # create a build folder for the out-of-source build
   - mkdir build
   # switch to build directory
@@ -56,6 +58,6 @@ after_failure:
 
 after_script:
 
-before_deploy:
-
-after_deploy:
+deploy:
+  provider: pages
+  skip-cleanup: true
