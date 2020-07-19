@@ -10,6 +10,24 @@ which is a header only library that is based on the
 *curriously recurring template pattern* (CRTP) as a means of speeding up the
 original flann library.
 
+The KDTree data structure was invented in 1975 by Jon Louis Bentley [JLB]_ as a
+type of binary search tree.  For a set of :math:`N` points, KDTrees have a time
+complexity of :math:`\mathcal{O}(N)` for constructing the tree and an average
+complexity of order :math:`\mathcal{O}(\log N)` for searching.  Worst case
+scenarios for searching result in being equivalent to brute force.  As is
+mentioned in the `Wikipedia <https://en.wikipedia.org/wiki/K-d_tree#High-dimensional_data>`_
+article, for spaces of dimension :math:`k`, the number of points of the
+data :math:`N` should be much larger than :math:`N \gg 2^k`.  Due to this problem,
+many *approximate nearest neighbor* algorithms have been developed. One of these
+is `FLANN <https://github.com/mariusmuja/flann>`_, which is based on the
+paper by Muja and Lowe [MujaLowe]_.
+
+Switching Backends
+------------------
+
+
+
+
 Creating a KDTree
 -----------------
 
@@ -82,3 +100,10 @@ KDTree Source Code
 .. doxygenclass:: ET::KDTree
    :project: etraj
    :members:
+
+
+
+
+
+.. [JLB] Bentley, J. L. (1975). "Multidimensional binary search trees used for associative searching". Communications of the ACM. 18 (9): 509–517.
+.. [MujaLowe] Marius Muja and David G. Lowe, "Fast Approximate Nearest Neighbors with Automatic Algorithm Configuration", in International Conference on Computer Vision Theory and Applications (VISAPP'09), 2009

@@ -9,7 +9,7 @@ At the command line::
 Logging system
 --------------
 
-The ET framework comes with an wrapped implementation of `spdlog <>`_
+The ET framework comes with an wrapped implementation of `spdlog <https://github.com/gabime/spdlog>`_
 that generates two different types of behavior.  In default mode, all logging
 messages are sent out to files which can all be handled independently by
 different objects.  One can also pass around a single instance of a logger

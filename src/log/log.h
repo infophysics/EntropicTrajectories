@@ -35,8 +35,8 @@
 #include <cblas.h>
 #include <stdint.h>
 #include <complex>
-#include <spdlog/spdlog.h>
-#include <spdlog/fmt/ostr.h>
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
 #include <sys/stat.h>
 #include <sys/types.h>
 

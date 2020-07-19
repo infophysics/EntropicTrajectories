@@ -1,5 +1,4 @@
-.. image:: et.png
-  :center:
+.. image:: pics/et.png
 
 Introduction
 ============

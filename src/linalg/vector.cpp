@@ -146,6 +146,16 @@ namespace ET
     return m_name;
   }
   template<typename T>
+  int Vector<T>::getFlag() const
+  {
+    return m_flag;
+  }
+  template<typename T>
+  std::string Vector<T>::getInfo() const
+  {
+    return m_info;
+  }
+  template<typename T>
   void Vector<T>::setDim(size_t t_dim)
   {
     m_dim = t_dim;

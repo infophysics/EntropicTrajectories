@@ -5,7 +5,12 @@
 
 using namespace ET;
 
-void testKDTreeCreate()
+void testKDTreeDefaultConstructor()
+{
+  KDTree<double> kdt();
+}
+
+void testKDTreeConstructors()
 {
   using array = std::vector<std::vector<double>>;
   //  generate some random data
@@ -16,22 +21,20 @@ void testKDTreeCreate()
   std::uniform_real_distribution<double> distr(range_from, range_to);
 
   size_t N = 10000;
-  std::shared_ptr<array> data = std::make_shared<array>(N);
+  array data(N);
+
   for (size_t i = 0; i < N; i++) {
-   (*data)[i][0] = distr(generator);
-   (*data)[i][1] = distr(generator);
+    double x = distr(generator);
+    double y = distr(generator);
+    data[i].resize(2);
+    data[i][0] = x;
+    data[i][1] = y;
   }
-
-  KDTree<double> kdt(data);
-
-  //  Query k neighbors for each point in data
-  size_t k = 5;
-  kdt.queryNeighbors(k);
+  KDTree<double> kdt(std::make_shared<array>(data));
 }
-
 
 int main(int, char**)
 {
-  void testKDTreeCreate();
-  return 0;
+  testKDTreeDefaultConstructor();
+  testKDTreeConstructors();
 }
