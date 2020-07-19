@@ -670,9 +670,11 @@ namespace ET
   //----------------------------------------------------------------------------
   size_t IDAMIN(Vector<double>& t_v)
   {
-    return cblas_idamin(t_v.getDim(),//  dimension of the t_vectors
-                        t_v.data(),  //  pointer to the elements of v
-                        1);          //  increment of the elements of v
+    // this is broken for now
+    return 0;
+    // return cblas_idamin(t_v.getDim(),//  dimension of the t_vectors
+    //                     t_v.data(),  //  pointer to the elements of v
+    //                     1);          //  increment of the elements of v
   }
   //----------------------------------------------------------------------------
 }
