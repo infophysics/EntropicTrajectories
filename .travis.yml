@@ -29,7 +29,7 @@ before_install:
   - sudo apt-get install doxygen
   - sudo apt-get install libspdlog-dev
   - sudo apt-get install python3-sphinx
-  - sudo apt-get install libatlas-base-dev
+  - sudo apt-get install gfortran
   - python --version
   - pip install -U pip
   - pip install -U pytest
