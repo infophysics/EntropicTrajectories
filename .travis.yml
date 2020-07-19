@@ -6,7 +6,7 @@ c++:
   -17
   -20
 python:
-  - 3.7
+  - 3.8
 compiler:
   - clang
   - gcc-9
