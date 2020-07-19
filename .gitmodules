@@ -7,6 +7,3 @@
 [submodule "include/qhull"]
 	path = include/qhull
 	url = git@github.com:qhull/qhull
-[submodule "include/spdlog"]
-	path = include/spdlog
-	url = git@github.com:gabime/spdlog
