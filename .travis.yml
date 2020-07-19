@@ -29,7 +29,7 @@ before_install:
   - sudo apt-get install doxygen
   - git clone https://github.com/gabime/spdlog.git
   - cd spdlog && mkdir build && cd build
-  - cmake .. && make -j
+  - cmake .. && make -j && cd ../../
   - sudo apt-get install python3-sphinx
   - sudo apt-get install gfortran
   - python --version
