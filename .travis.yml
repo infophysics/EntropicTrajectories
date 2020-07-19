@@ -20,9 +20,8 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-6
-      - g++-6
-      - cmake
+      - gcc-9
+      - g++-9
 
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
@@ -52,6 +51,8 @@ install:
 before_script:
 
 script:
+  - export CC=gcc-9
+  - export CXX=g++-9
   # once CMake has done its job we just build using make as usual
   - make
   # if the project uses ctest we can run the tests like this
