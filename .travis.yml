@@ -1,10 +1,14 @@
+# setting langauges to c++ and python
 language: c++
+language: python
 sudo: true
 c++:
   -11
   -14
   -17
   -20
+python:
+  - 3.7
 compiler:
   - clang
   - gcc
@@ -13,6 +17,15 @@ cache: npm
 git:
     submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-6
+      - g++-6
+      - cmake
+
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
@@ -21,12 +34,22 @@ before_install:
   - sudo apt-get install liblapack-dev
   - sudo apt-get install liblapacke-dev
   - sudo apt-get install libopenblas-dev
+  # create a build folder for the out-of-source build
+  - mkdir build
+  # switch to build directory
+  - cd build
+  # run cmake; here we assume that the project's
+  # top-level CMakeLists.txt is located at '..'
+  - cmake ..
 install:
 
 before_script:
 
 script:
-
+  # once CMake has done its job we just build using make as usual
+  - make
+  # if the project uses ctest we can run the tests like this
+  - make test
 after_success:
 
 after_failure:
