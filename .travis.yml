@@ -17,11 +17,6 @@ git:
     submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 dist: bionic
-addons:
-  apt:
-    packages:
-      - gcc-9
-      - g++-9
 
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
@@ -47,7 +42,7 @@ install:
   - cd build
   # run cmake; here we assume that the project's
   # top-level CMakeLists.txt is located at '..'
-  - cmake .. 
+  - cmake ..
 before_script:
 
 script:
