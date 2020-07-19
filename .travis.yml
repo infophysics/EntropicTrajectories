@@ -36,6 +36,7 @@ before_install:
   - sudo apt-get install libopenblas-dev
   - sudo apt-get install doxygen
   - sudo apt-get install libspdlog-dev
+  - sudo apt-get install python3-sphinx
   # create a build folder for the out-of-source build
   - mkdir build
   # switch to build directory
@@ -61,3 +62,6 @@ after_script:
 deploy:
   provider: pages
   skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  on:
+    branch: gh-pages
