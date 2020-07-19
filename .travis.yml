@@ -1,9 +1,12 @@
 # setting langauges to c++ and python
 language: c++
+language: python
 sudo: true
 c++:
   -17
   -20
+python:
+  - 3.7
 compiler:
   - clang
   - gcc
@@ -33,6 +36,12 @@ before_install:
   - sudo apt-get install libspdlog-dev
   - sudo apt-get install python3-sphinx
   - sudo apt-get install libatlas-base-dev
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install codecov
+
+install:
   # create a build folder for the out-of-source build
   - mkdir build
   # switch to build directory
@@ -40,8 +49,6 @@ before_install:
   # run cmake; here we assume that the project's
   # top-level CMakeLists.txt is located at '..'
   - cmake ..
-install:
-
 before_script:
 
 script:
