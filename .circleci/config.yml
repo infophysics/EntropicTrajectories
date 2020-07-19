@@ -1,0 +1,66 @@
+# setting langauges to c++ and python
+language: c++
+language: python
+sudo: true
+c++:
+  -17
+  -20
+python:
+  - 3.8
+compiler:
+  - clang
+  - gcc-9
+  - g++-9
+cache: npm
+# Handle git submodules yourself
+git:
+    submodules: false
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+dist: bionic
+
+before_install:
+  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+  - git submodule update --init --recursive
+  - sudo apt-get update
+  - sudo apt-get install libblas-dev
+  - sudo apt-get install liblapack-dev
+  - sudo apt-get install liblapacke-dev
+  - sudo apt-get install libopenblas-dev
+  - sudo apt-get install doxygen
+  - git clone https://github.com/gabime/spdlog.git
+  - cd spdlog && mkdir build && cd build
+  - cmake .. && make -j && cd ../../
+  - sudo apt-get install python3-sphinx
+  - sudo apt-get install gfortran
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install codecov
+
+install:
+  # create a build folder for the out-of-source build
+  - mkdir build
+  # switch to build directory
+  - cd build
+  # run cmake; here we assume that the project's
+  # top-level CMakeLists.txt is located at '..'
+  - cmake ..
+before_script:
+
+script:
+  # once CMake has done its job we just build using make as usual
+  - make
+  # if the project uses ctest we can run the tests like this
+  - make test
+after_success:
+
+after_failure:
+
+after_script:
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  on:
+    branch: gh-pages
