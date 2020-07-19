@@ -8,6 +8,8 @@ using namespace ET;
 void testKDTreeDefaultConstructor()
 {
   KDTree<double> kdt();
+  KDTree<double>* kdt_p = new KDTree<double>();
+  delete kdt_p;
 }
 
 void testKDTreeConstructors()

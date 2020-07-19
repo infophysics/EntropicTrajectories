@@ -25,9 +25,9 @@ namespace ET
   template<typename T>
   KDTree<T>::KDTree() : m_N(0), m_dim(0), m_name("default")
   {
-    m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-                                std::vector<std::vector<T>>,T>>
-                                (m_dim, *m_points, 16);
+    // m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
+    //                             std::vector<std::vector<T>>,T>>
+    //                             (m_dim, *m_points, 16);
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
 		m_log->TRACE("KDTree '" + m_name + "' created at location "
