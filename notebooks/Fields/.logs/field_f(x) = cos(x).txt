@@ -1,5 +1,5 @@
-[15:30:33] [trace] ET:Field:f(x) = cos(x)_1: Field 'f(x) = cos(x)' created at location 0x55de93ff5630
-[15:30:33] [trace] ET:Field:f(x) = cos(x)_1: Interpolator 'default' created at location 0x55de94424270
-[15:30:33] [info] ET:Field:f(x) = cos(x)_1: Logger passed to Interpolator 'default'
-[15:33:31] [trace] ET:Field:f(x) = cos(x)_1: Field 'f(x) = cos(x)' destroyed at location 0x55de93ff5630
-[15:33:31] [trace] ET:Field:f(x) = cos(x)_1: Interpolator 'default' destroyed at location 0x55de94424270
+[18:13:13] [trace] ET:Field:f(x) = cos(x): Field 'f(x) = cos(x)' created at location 0x56033dc328d0
+[18:13:13] [trace] ET:Field:f(x) = cos(x): Interpolator 'default' created at location 0x56033e7d3fb0
+[18:13:13] [info] ET:Field:f(x) = cos(x): Logger passed to Interpolator 'default'
+[18:13:46] [trace] ET:Field:f(x) = cos(x): Field 'f(x) = cos(x)' destroyed at location 0x56033dc328d0
+[18:13:46] [trace] ET:Field:f(x) = cos(x): Interpolator 'default' destroyed at location 0x56033e7d3fb0

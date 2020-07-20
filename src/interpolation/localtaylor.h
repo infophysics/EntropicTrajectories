@@ -62,22 +62,37 @@ namespace ET
      */
     ~LocalTaylorInterpolator();
     //! Constructor
+    /*! constructor for LTI that takes a name
+     */
+    LocalTaylorInterpolator(std::string t_name);
+    //! Constructor
     /*! constructor for LTI that takes a UGrid
      */
     LocalTaylorInterpolator(std::shared_ptr<UGrid<T>> t_ugrid);
+    //! Constructor
+    /*! constructor for LTI that takes a name and a UGrid
+     */
+    LocalTaylorInterpolator(std::string t_name,
+                            std::shared_ptr<UGrid<T>> t_ugrid);
     //! Constructor
     /*! constructor for LTI that takes a Logger
      */
     LocalTaylorInterpolator(std::shared_ptr<Log> t_log);
     //! Constructor
+    /*! constructor for LTI that takes a name and a Logger
+     */
+    LocalTaylorInterpolator(std::string t_name, std::shared_ptr<Log> t_log);
+    //! Constructor
     /*! constructor for LTI that takes a UGrid and a logger
      */
-     LocalTaylorInterpolator(std::shared_ptr<UGrid<T>> t_ugrid,
-                  std::shared_ptr<Log> t_log);
-    /*! Get name.  Get the name of the LTI.
-     *  @return The name of the LTI.
+    LocalTaylorInterpolator(std::shared_ptr<UGrid<T>> t_ugrid,
+                            std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for LTI that takes a name, UGrid and a logger
      */
-    std::string getName();
+    LocalTaylorInterpolator(std::string t_name,
+                            std::shared_ptr<UGrid<T>> t_ugrid,
+                            std::shared_ptr<Log> t_log);
     /*! Get k.  Get the nearest neighbor value.
      *  @return The nearest neighbor value k.
      */
@@ -94,11 +109,6 @@ namespace ET
      *  @return The type of search scheme used.
      */
     SearchScheme getSearchScheme();
-    /*! Set name.  Set the name of the LTI.
-     *  @param t_name The name to assign to the LTI.
-     *  @return void
-     */
-    void setName(std::string t_name);
     /*! Set k.  Set the nearest neighbor value.
      *  @param t_k The nearest neighbor value to set to m_k.
      *  @return void
@@ -252,9 +262,6 @@ namespace ET
                  const size_t t_degree,
                  const size_t t_direction);
   private:
-    /*! Name.  Name of the LTI.  Defaulted to empty string.
-     */
-    std::string m_name {""};
     /*! k.  Number of nearest neighbors to use in interpolation.
         Defaulted to k = 3
      */

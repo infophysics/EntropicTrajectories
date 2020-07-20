@@ -29,6 +29,7 @@
 #include "params.h"
 #include "utils.h"
 #include "matrix.h"
+#include "log.h"
 
 //------------------------------------------------------------------------------
 //  Forward declaration of ScalarField
@@ -41,8 +42,8 @@ namespace ET
 }
 
 #include "field.h"
-//#include "scalarfield.h"
-//#include "vectorfield.h"
+//#include "scalarField.h"
+//#include "vectorField.h"
 
 namespace ET
 {
@@ -68,8 +69,11 @@ namespace ET
     xGELSS,
   };
 
+  extern std::map<std::string, LSDriver> LSDriverMap;
+  extern std::map<LSDriver, std::string> LSDriverNameMap;
+
   //! \class Interpolator Class
-  /*! A Base class for interpolating on unstructured grids.
+  /*! A Base class for interpolating on unstructured Grids.
    *  Each instance has an associated shared pointer to a Grid which
    *  gets passed to each derived class.
    */
@@ -86,17 +90,34 @@ namespace ET
      */
     ~Interpolator();
     //! Constructor
+    /*! constructor for Interpolator that takes a name
+     */
+    Interpolator(std::string t_name);
+    //! Constructor
     /*! constructor for Interpolator that takes a Grid
      */
-    Interpolator(std::shared_ptr<Grid<T>> t_grid);
+    Interpolator(std::shared_ptr<Grid<T>> t_Grid);
     //! Constructor
-    /*! constructor for Interpolator that takes a Logger
+    /*! constructor for Interpolator that takes a name and a Grid
+     */
+    Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid);
+    //! Constructor
+    /*! constructor for Interpolator that takes a Log
      */
     Interpolator(std::shared_ptr<Log> t_log);
     //! Constructor
+    /*! constructor for Interpolator that takes a name and a Log
+     */
+    Interpolator(std::string t_name, std::shared_ptr<Log> t_log);
+    //! Constructor
     /*! constructor for Interpolator that takes a Grid and a logger
      */
-    Interpolator(std::shared_ptr<Grid<T>> t_grid,
+    Interpolator(std::shared_ptr<Grid<T>> t_Grid,
+                 std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Interpolator that takes a name, Grid and a logger
+    */
+    Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
                  std::shared_ptr<Log> t_log);
 
     /*! Get name.  Get the name of the Interpolator.
@@ -114,7 +135,7 @@ namespace ET
     /*! Get log.  Get the shared instance of the logger.
      *  @return A shared pointer to the logger
      */
-    std::shared_ptr<Log> getLogger() const;
+    std::shared_ptr<Log> getLog() const;
     //! Get flag
     /*! get flag.
      *  @return An int that classifies the type of information stored in
@@ -138,19 +159,19 @@ namespace ET
     void setName(std::string t_name);
     //! Set Grid
     /*! set Grid.  Sets the shared pointer for the associated Grid.
-     *  @param t_grid A shared pointer for a Grid instance.
+     *  @param t_Grid A shared pointer for a Grid instance.
      */
-    void setGrid(std::shared_ptr<Grid<T>> t_grid);
+    void setGrid(std::shared_ptr<Grid<T>> t_Grid);
     //! Set Field
     /*! set Field.  Sets the shared pointer for the associated Field.
-     *  @param t_field A shared pointer for a Field instance.
+     *  @param t_Field A shared pointer for a Field instance.
      */
-    void setField(std::shared_ptr<Field<T>> t_field);
-    //! Set Logger
-    /*! set Logger.  Sets the shared pointer for the associated logger.
+    void setField(std::shared_ptr<Field<T>> t_Field);
+    //! Set Log
+    /*! set Log.  Sets the shared pointer for the associated logger.
      *  @param t_log A shared pointer for a Log instance.
      */
-    void setLogger(std::shared_ptr<Log> t_log);
+    void setLog(std::shared_ptr<Log> t_log);
     //! Set flag
     /*! set flag.  Sets the flag pertaining to info.
         @param t_flag an int that classifies the type of information stored
@@ -238,28 +259,28 @@ namespace ET
      */
     Matrix<T> xMLSx(Matrix<T> A, Matrix<T> X);
 
-    //--------------------------------------------------------------------------
-    //  various functions
-    //--------------------------------------------------------------------------
-    const std::string summary();
-    //--------------------------------------------------------------------------
-
   protected:
-    /*! Name.  The name of the Interpolator. */
+    /*! Name.  The name of the Interpolator.
+     */
     std::string m_name {""};
-    /*! Logger.  A shared instance of a Logger.*/
+    /*! Log.  A shared instance of a Log.
+     */
     std::shared_ptr<Log> m_log;
-    /*! Grid.  A shared instance of a Grid.*/
-    std::shared_ptr<Grid<T>> m_grid;
-    /*! Field.  A shared instance of a Field.*/
-    std::shared_ptr<Field<T>> m_field;
+    /*! Grid.  A shared instance of a Grid.
+     */
+    std::shared_ptr<Grid<T>> m_Grid;
+    /*! Field.  A shared instance of a Field.
+     */
+    std::shared_ptr<Field<T>> m_Field;
     /*! LSDriver.  An enum that denotes the type of least squares
      *  method to use.
      */
     enum LSDriver m_lsdriver {LSDriver::xGELS};
-    /*! Flag.  An in that denotes the type of message stored in info.*/
+    /*! Flag.  An in that denotes the type of message stored in info.
+     */
     int m_flag {0};
-    /*! Info.  A container for storing important information.*/
+    /*! Info.  A container for storing important information.
+     */
     std::string m_info {""};
   };
 

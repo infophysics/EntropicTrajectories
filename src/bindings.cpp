@@ -1133,319 +1133,196 @@ PYBIND11_MODULE(etraj, m) {
 	// 	;
 	// //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+	//	LSDriver enum
+	//----------------------------------------------------------------------------
+	py::enum_<LSDriver>(m, "LSDriver")
+		.value("xGELS", LSDriver::xGELS)
+		.value("xGELSY", LSDriver::xGELSY)
+		.value("xGELSD", LSDriver::xGELSD)
+		.value("xGELSS", LSDriver::xGELSS)
+		;
+	//----------------------------------------------------------------------------
+
 	//----------------------------------------------------------------------------
 	//	Interpolator class
 	//----------------------------------------------------------------------------
 	py::class_<Interpolator<double>,
 	           std::shared_ptr<Interpolator<double>>>(m, "Interpolator")
-		//--------------------------------------------------------------------------
-		//	Constructors
-		//--------------------------------------------------------------------------
 		.def(py::init<>())
-		//.def(py::init<int>())
-		//.def(py::init<std::string>())
-		//--------------------------------------------------------------------------
-		//	Constructors with shared loggers
-		//--------------------------------------------------------------------------
-		.def(py::init<std::shared_ptr<Log>>())
-		//.def(py::init<int,std::shared_ptr<Log>>())
-		//.def(py::init<std::string,std::shared_ptr<Log>>())
-		//--------------------------------------------------------------------------
-		//	Getters and setters
-		//--------------------------------------------------------------------------
-		// .def("get_approx_type", &Interpolator<double>::getInterpolatorType,
-		//      py::return_value_policy::reference)
-		// .def("get_approx_params", &Interpolator<double>::getInterpolatorParams,
-		//      py::return_value_policy::reference)
-		.def("get_lsdriver", &Interpolator<double>::getLSDriver,
-		     py::return_value_policy::reference)
-		.def("get_flag", &Interpolator<double>::getFlag,
-		     py::return_value_policy::reference)
-		.def("get_info", &Interpolator<double>::getInfo,
-		     py::return_value_policy::reference)
-		.def("get_logger", &Interpolator<double>::getLogger,
-  	     py::return_value_policy::reference)
-		// .def("set_approx_type", &Interpolator<double>::setInterpolatorType)
-		// .def("set_approx_params", &Interpolator<double>::setInterpolatorParams)
+		.def(py::init<std::string>(),
+         py::arg("name"))
+		.def(py::init<std::shared_ptr<Log>>(),
+         py::arg("log"))
+    .def(py::init<std::string,std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("log"))
+		.def(py::init<std::shared_ptr<Grid<double>>>(),
+         py::arg("Grid"))
+    .def(py::init<std::string,std::shared_ptr<Grid<double>>>(),
+         py::arg("name"), py::arg("Grid"))
+    .def(py::init<std::shared_ptr<Grid<double>>,std::shared_ptr<Log>>(),
+         py::arg("Grid"), py::arg("log"))
+    .def(py::init<std::string,std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("Grid"), py::arg("log"))
+    //  Getters and Setters
+    .def("get_name", &Interpolator<double>::getName)
+    .def("get_Grid", &Interpolator<double>::getGrid)
+    .def("get_Field", &Interpolator<double>::getField)
+    .def("get_log", &Interpolator<double>::getLog)
+    .def("get_flag", &Interpolator<double>::getFlag)
+    .def("get_info", &Interpolator<double>::getInfo)
+		.def("get_lsdriver", &Interpolator<double>::getLSDriver)
+		.def("set_name", &Interpolator<double>::setName)
+    .def("set_Grid", &Interpolator<double>::setGrid)
+    .def("set_Field", &Interpolator<double>::setField)
+    .def("set_log", &Interpolator<double>::setLog)
+    .def("set_flag", &Interpolator<double>::setFlag)
+    .def("set_info", &Interpolator<double>::setInfo)
 		.def("set_lsdriver", &Interpolator<double>::setLSDriver)
-		// .def("set_k", [](Interpolator<double>& self, int k)
-		// {
-		// 	if (k <= 0)
-		// 	{
-		// 		throw py::value_error("Invalid value " + std::to_string(k)
-		// 		                      + " passed to Interpolator::set_k");
-		// 	}
-		// 	else
-		// 	{
-		// 		return self.set_k(k);
-		// 	}
-		// })
-		// .def("set_n", [](Interpolator<double>& self, int n)
-		// {
-		// 	if (n <= 0)
-		// 	{
-		// 		throw py::value_error("Invalid value " + std::to_string(n)
-		// 		                      + " passed to Interpolator::set_n");
-		// 	}
-		// 	else
-		// 	{
-		// 		return self.set_n(n);
-		// 	}
-		// })
-    // .def("set_shape", &Interpolator<double>::set_shape)
-		.def("set_flag", &Interpolator<double>::setFlag)
-		.def("set_info", &Interpolator<double>::setInfo)
+    .def_property("name", &Interpolator<double>::getName,
+                          &Interpolator<double>::setName)
+    .def_property("Grid", &Interpolator<double>::getGrid,
+                          &Interpolator<double>::setGrid)
+    .def_property("Field", &Interpolator<double>::getField,
+                           &Interpolator<double>::setField)
+    .def_property("log", &Interpolator<double>::getLog,
+                         &Interpolator<double>::setLog)
+    .def_property("flag", &Interpolator<double>::setFlag,
+                          &Interpolator<double>::setFlag)
+    .def_property("info", &Interpolator<double>::getInfo,
+                          &Interpolator<double>::setInfo)
+    .def_property("lsdriver", &Interpolator<double>::getLSDriver,
+                              &Interpolator<double>::setLSDriver)
 		.def("output", [](Interpolator<double>& self)
 		{
-			std::string out = self.getLogger()->getOutput();
+			std::string out = self.getLog()->getOutput();
 			py::print(out);
 		})
 		.def("output", [](Interpolator<double>& self, size_t i)
 		{
-			std::string out = self.getLogger()->getOutput(i);
+			std::string out = self.getLog()->getOutput(i);
 			py::print(out);
 		})
-		// //--------------------------------------------------------------------------
-		// //	scalar field methods
-		// //--------------------------------------------------------------------------
-		// .def("scalar_gradient",
-		//      (std::vector<std::vector<double>> (Interpolator<double>::*)
-		// 		  (const std::shared_ptr<UGrid<double>>,
-		// 		   const std::shared_ptr<ScalarField<double>>))
-		// 		 &Interpolator<double>::scalarGradient,
-	  //      py::return_value_policy::reference)
-	  // .def("scalar_gradient",
-		//      (std::vector<std::vector<double>> (Interpolator<double>::*)
-		// 		  (const std::shared_ptr<UGrid<double>>,
-		// 			 const ScalarField<double>&))
-		// 		 &Interpolator<double>::scalarGradient,
-	  //      py::return_value_policy::reference)
-		//  .def("scalar_gradient_ls",
- 		//      (std::vector<std::vector<double>> (Interpolator<double>::*)
- 		// 		  (const std::shared_ptr<UGrid<double>>,
- 		// 		   const std::shared_ptr<ScalarField<double>>))
- 		// 		 &Interpolator<double>::scalarGradientLS,
- 	  //      py::return_value_policy::reference)
- 	  // .def("scalar_gradient_ls",
- 		//      (std::vector<std::vector<double>> (Interpolator<double>::*)
- 		// 		  (const std::shared_ptr<UGrid<double>>,
- 		// 			 const ScalarField<double>&))
- 		// 		 &Interpolator<double>::scalarGradientLS,
- 	  //      py::return_value_policy::reference)
-	  //--------------------------------------------------------------------------
-		//  Scalar derivative (order n)
-		//--------------------------------------------------------------------------
-	  // .def("scalar_derivative",
-		// 		 (std::vector<std::vector<double>> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		//  			 const std::shared_ptr<ScalarField<double>>,
-		// 			 size_t))
-		//  		 &Interpolator<double>::scalarDerivative,
-	  //      py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
-	 	// //  Scalar derivative (direction dir, order n)
-	 	// //--------------------------------------------------------------------------
-		// .def("scalar_derivative",
-		// 		 (std::vector<double> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 size_t, size_t))
-		// 		 &Interpolator<double>::scalarDerivative,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
- 	 	// //  Scalar derivative (direction dir, order n)
- 	 	// //--------------------------------------------------------------------------
- 		// .def("scalar_derivative",
- 		// 		 (std::vector<double> (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const std::shared_ptr<ScalarField<double>>,
- 		// 			 std::vector<size_t>))
- 		// 		 &Interpolator<double>::scalarDerivative,
- 		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
- 	 	// //  Scalar derivative (index i, order n)
- 	 	// //--------------------------------------------------------------------------
-		// .def("scalar_derivative_point",
-		// 		 (std::vector<double> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 size_t, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-	 	// //  Scalar derivative (point p, order n)
-	 	// //--------------------------------------------------------------------------
-		// .def("scalar_derivative_point",
-		// 		 (std::vector<double> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 std::vector<double>, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
- 	 	// //  Scalar derivative (index i, direction dir, order n)
- 	 	// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative_point",
-	 	// 		 (double (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 size_t, size_t, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-	 	// //  Scalar derivative (point p, direction dir, order n)
-	 	// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative_point",
-	 	// 		 (double (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 std::vector<double>, size_t, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
-  	// //  Scalar derivative (index i, direction dir, order n)
-  	// //--------------------------------------------------------------------------
- 	  // .def("scalar_derivative_point",
- 	 	// 		 (double (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const std::shared_ptr<ScalarField<double>>,
- 		// 			 size_t, std::vector<size_t>))
- 		// 		 &Interpolator<double>::scalarDerivativePoint,
- 		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-   	// //  Scalar derivative (point p, direction dir, order n)
-   	// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative_point",
-	 	// 		 (double (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const std::shared_ptr<ScalarField<double>>,
-		// 			 std::vector<double>, std::vector<size_t>))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
-		// //  Passing Scalarfield by reference
-		// //--------------------------------------------------------------------------
-		// //--------------------------------------------------------------------------
- 	 	// //  Scalar derivative (order n)
- 	 	// //--------------------------------------------------------------------------
-		// .def("scalar_derivative",
- 		// 		 (std::vector<std::vector<double>> (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		//  			 const ScalarField<double>&,
- 		// 			 size_t))
- 		//  		 &Interpolator<double>::scalarDerivative,
- 	  //      py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
- 	 	// //  Scalar derivative (direction dir, order n)
- 	 	// //--------------------------------------------------------------------------
- 	  // .def("scalar_derivative",
- 		// 		 (std::vector<double> (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const ScalarField<double>&,
- 		// 			 size_t, size_t))
- 		// 		 &Interpolator<double>::scalarDerivative,
- 		// 		 py::return_value_policy::reference)
-	  // //--------------------------------------------------------------------------
-	 	// //  Scalar derivative (direction dir, order n)
-	 	// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative",
-		// 		 (std::vector<double> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const ScalarField<double>&,
-		// 			 std::vector<size_t>))
-		// 		 &Interpolator<double>::scalarDerivative,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
-		// //  Scalar derivative (index i, order n)
-		// //--------------------------------------------------------------------------
- 		// .def("scalar_derivative_point",
- 		// 		 (std::vector<double> (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const ScalarField<double>&,
- 		// 			 size_t, size_t))
- 		// 		 &Interpolator<double>::scalarDerivativePoint,
- 		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-		// //  Scalar derivative (point p, order n)
-		// //--------------------------------------------------------------------------
-		// .def("scalar_derivative_point",
-		// 		 (std::vector<double> (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const ScalarField<double>&,
-		// 			 std::vector<double>, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
-		// //  Scalar derivative (index i, direction dir, order n)
-		// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative_point",
-	 	// 		 (double (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const ScalarField<double>&,
-		// 			 size_t, size_t, size_t))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
- 		// //  Scalar derivative (point p, direction dir, order n)
- 		// //--------------------------------------------------------------------------
- 	  // .def("scalar_derivative_point",
- 	 	// 		 (double (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const ScalarField<double>&,
- 		// 			 std::vector<double>, size_t, size_t))
- 		// 		 &Interpolator<double>::scalarDerivativePoint,
- 		// 		 py::return_value_policy::reference)
-		// //--------------------------------------------------------------------------
- 		// //  Scalar derivative (index i, direction dir, order n)
- 		// //--------------------------------------------------------------------------
- 	  // .def("scalar_derivative_point",
- 	 	// 		 (double (Interpolator<double>::*)
- 		// 		 	(const std::shared_ptr<UGrid<double>>,
- 		// 			 const ScalarField<double>&,
- 		// 			 size_t, std::vector<size_t>))
- 		// 		 &Interpolator<double>::scalarDerivativePoint,
- 		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-		// //  Scalar derivative (point p, direction dir, order n)
-		// //--------------------------------------------------------------------------
-	  // .def("scalar_derivative_point",
-	 	// 		 (double (Interpolator<double>::*)
-		// 		 	(const std::shared_ptr<UGrid<double>>,
-		// 			 const ScalarField<double>&,
-		// 			 std::vector<double>, std::vector<size_t>))
-		// 		 &Interpolator<double>::scalarDerivativePoint,
-		// 		 py::return_value_policy::reference)
-    // //--------------------------------------------------------------------------
-    // //  Various matrices
-    // //--------------------------------------------------------------------------
-		// .def("construct_taylor_matrix",
-		//      (Matrix<double> (Interpolator<double>::*)
-		// 		  (const std::shared_ptr<UGrid<double>>,
-    //        const std::vector<size_t>,size_t,size_t))
-		// 		 &Interpolator<double>::constructTaylorMatrix)
-    // .def("construct_taylor_matrix",
-    //      (Matrix<double> (Interpolator<double>::*)
-    // 		  (const std::shared_ptr<UGrid<double>>,
-    //       const std::vector<size_t>,std::vector<double>,size_t))
-    // 		 &Interpolator<double>::constructTaylorMatrix)
-		// .def("construct_taylor_matrix",
-		//      (Matrix<double> (Interpolator<double>::*)
-		// 		  (const std::shared_ptr<UGrid<double>>,
-    //        const std::vector<size_t>,size_t,Monomial&))
-		// 		 &Interpolator<double>::constructTaylorMatrix)
-		//--------------------------------------------------------------------------
-		//	print functionality
-		//--------------------------------------------------------------------------
-    .def("__repr__", [](Interpolator<double> &field)
-		{
-			std::stringstream s;
-			s << &field;
-			std::string res = "++++++++++++++++++++++++++++++++++++++++++++++++++++";
-			res += "\n<etraj.Interpolator ref at " + s.str() + ">\n";
-			return res + field.summary();
-		})
+    //    __str__
+    .def("__str__", [](const Interpolator<double> &inter) {
+     std::stringstream s;
+     s << &inter;
+     std::string sum;
+     sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
+     sum += "\n<etraj.Inteprolator<double> ref at " + s.str() + ">";
+     sum += "\n---------------------------------------------------";
+     sum += "\n<ET::Inteprolator<double> object at " + getMem(inter) + ">";
+     sum += "\n---------------------------------------------------";
+     sum += "\n    name: '" + inter.getName() + "'";
+     sum += "\nLSDriver:  " + LSDriverNameMap[inter.getLSDriver()];
+     sum += "\n---------------------------------------------------";
+     sum += "\n        Grid at: " + getMem(*inter.getGrid()) + ",";
+     sum += "\n         ref at: " + getMem(inter.getGrid());
+     sum += "\n---------------------------------------------------";
+     sum += "\n       Field at: " + getMem(*inter.getGrid()) + ",";
+     sum += "\n         ref at: " + getMem(inter.getGrid());
+     sum += "\n---------------------------------------------------";
+     sum += "\n      Logger at: " + getMem(*inter.getLog()) + ",";
+     sum += "\n         ref at: " + getMem(inter.getLog());
+     sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
+     return sum;
+    })
     ;
 	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Search Scheme enum
+  //----------------------------------------------------------------------------
+  py::enum_<SearchScheme>(m, "SearchScheme")
+    .value("nearest_neighbors", SearchScheme::NEAREST_NEIGHBORS)
+    .value("radius", SearchScheme::RADIUS)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Local Taylor Interpolator
+  //----------------------------------------------------------------------------
+  py::class_<LocalTaylorInterpolator<double>, Interpolator<double>,
+             std::shared_ptr<LocalTaylorInterpolator<double>>>
+             (m, "LocalTaylorInterpolator")
+    .def(py::init<>())
+    .def(py::init<std::string>(),
+        py::arg("name"))
+    .def(py::init<std::shared_ptr<Log>>(),
+        py::arg("log"))
+    .def(py::init<std::string,std::shared_ptr<Log>>(),
+        py::arg("name"), py::arg("log"))
+    .def(py::init<std::shared_ptr<UGrid<double>>>(),
+        py::arg("UGrid"))
+    .def(py::init<std::string,std::shared_ptr<UGrid<double>>>(),
+        py::arg("name"), py::arg("UGrid"))
+    .def(py::init<std::shared_ptr<UGrid<double>>,std::shared_ptr<Log>>(),
+        py::arg("UGrid"), py::arg("log"))
+    .def(py::init<std::string,std::shared_ptr<UGrid<double>>,
+                 std::shared_ptr<Log>>(),
+        py::arg("name"), py::arg("UGrid"), py::arg("log"))
+    //  Getters and Setters
+    .def("get_k", &LocalTaylorInterpolator<double>::getK)
+    .def("get_n", &LocalTaylorInterpolator<double>::getN)
+    .def("get_radius", &LocalTaylorInterpolator<double>::getRadius)
+    .def("get_search_scheme", &LocalTaylorInterpolator<double>::getSearchScheme)
+    .def("set_k", &LocalTaylorInterpolator<double>::setK)
+    .def("set_n", &LocalTaylorInterpolator<double>::setN)
+    .def("set_radius", &LocalTaylorInterpolator<double>::setRadius)
+    .def("set_search_scheme", &LocalTaylorInterpolator<double>::setSearchScheme)
+    .def_property("k", &LocalTaylorInterpolator<double>::getK,
+                       &LocalTaylorInterpolator<double>::setK)
+    .def_property("n", &LocalTaylorInterpolator<double>::getN,
+                       &LocalTaylorInterpolator<double>::setN)
+    .def_property("radius", &LocalTaylorInterpolator<double>::getRadius,
+                            &LocalTaylorInterpolator<double>::setRadius)
+    .def_property("search_scheme", &LocalTaylorInterpolator<double>::getSearchScheme,
+                                   &LocalTaylorInterpolator<double>::setSearchScheme)
+    //  Taylor Matrices
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const std::vector<double>))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const size_t, const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const std::vector<double>, size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const size_t, const double))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const std::vector<double>, const double))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const size_t, const size_t, const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const std::vector<double>, const size_t, const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const size_t, const double, const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("construct_local_taylor_matrix", (Matrix<double>
+         (LocalTaylorInterpolator<double>::*)
+         (const std::vector<double>, const double, const size_t))
+         &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    ;
+
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
 	//  RBF class
@@ -1538,16 +1415,7 @@ PYBIND11_MODULE(etraj, m) {
 	// 	;
 	// //----------------------------------------------------------------------------
 
-	//----------------------------------------------------------------------------
-	//	LSDriver enum
-	//----------------------------------------------------------------------------
-	py::enum_<LSDriver>(m, "LSDriver")
-		.value("xGELS", LSDriver::xGELS)
-		.value("xGELSY", LSDriver::xGELSY)
-		.value("xGELSD", LSDriver::xGELSD)
-		.value("xGELSS", LSDriver::xGELSS)
-		;
-	//----------------------------------------------------------------------------
+
 
 	// //----------------------------------------------------------------------------
 	// //	Interpolator Parameters Struct

@@ -25,84 +25,113 @@ namespace ET
     { "NEAREST_NEIGHBORS", SearchScheme::NEAREST_NEIGHBORS },
     { "RADIUS", SearchScheme::RADIUS },
   };
-
+  //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator()
   : Interpolator(), m_name("default")
   {
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::~LocalTaylorInterpolator()
   {
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator
+  (std::string t_name) : Interpolator(t_name)
+  {
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
   (std::shared_ptr<UGrid<T>> t_ugrid) : Interpolator(t_ugrid)
   {
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator
+  (std::string t_name, std::shared_ptr<UGrid<T>> t_ugrid)
+  : Interpolator(t_name, t_ugrid)
+  {
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
   (std::shared_ptr<Log> t_log) : Interpolator(t_log)
   {
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator
+  (std::string t_name, std::shared_ptr<Log> t_log)
+  : Interpolator(t_name, t_log)
+  {
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
   (std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log)
-  : Interpolator(t_ugrid,t_log)
+  : Interpolator(t_ugrid, t_log)
   {
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
-  std::string LocalTaylorInterpolator<T>::getName()
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator
+  (std::string t_name, std::shared_ptr<UGrid<T>> t_ugrid,
+   std::shared_ptr<Log> t_log)
+  : Interpolator(t_name, t_ugrid, t_log)
   {
-    return m_name;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   size_t LocalTaylorInterpolator<T>::getK()
   {
     return m_k;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   size_t LocalTaylorInterpolator<T>::getN()
   {
     return m_n;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   double LocalTaylorInterpolator<T>::getRadius()
   {
     return m_radius;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   SearchScheme LocalTaylorInterpolator<T>::getSearchScheme()
   {
     return m_searchScheme;
   }
-  template<typename T>
-  void LocalTaylorInterpolator<T>::setName(std::string t_name)
-  {
-    m_name = t_name;
-  }
+  //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolator<T>::setK(size_t t_k)
   {
     m_k = t_k;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolator<T>::setN(size_t t_n)
   {
     m_n = t_n;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolator<T>::setRadius(double t_radius)
   {
     m_radius = t_radius;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolator<T>::setSearchScheme(std::string t_searchScheme)
   {
     m_searchScheme = SearchSchemeMap[t_searchScheme];
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const size_t t_index)
@@ -136,7 +165,7 @@ namespace ET
     }
     return Matrix<T>("LTI",LTI);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const std::vector<T> t_point)
@@ -161,7 +190,7 @@ namespace ET
     return Matrix<T>("LTI",LTI);
     }
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const size_t t_index,
@@ -178,7 +207,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_index);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const std::vector<T>& t_point
@@ -195,6 +224,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_point);
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const size_t t_index,
@@ -208,7 +238,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_index);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const std::vector<T>& t_point
@@ -222,7 +252,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_point);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const size_t t_index,
@@ -251,7 +281,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_index);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const std::vector<T>& t_point,
@@ -280,6 +310,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_point);
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const size_t t_index,
@@ -305,7 +336,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_index);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Matrix<T>
   LocalTaylorInterpolator<T>::constructLocalTaylorMatrix(const std::vector<T>& t_point,
@@ -331,7 +362,7 @@ namespace ET
     }
     return constructLocalTaylorMatrix(t_point);
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
   LocalTaylorInterpolator<T>::derivative(const size_t t_index,
@@ -354,7 +385,7 @@ namespace ET
 		}
     return result;
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   T LocalTaylorInterpolator<T>::derivative(const size_t t_index,
                                            const size_t t_degree,
@@ -362,7 +393,7 @@ namespace ET
   {
     return derivative(t_index,t_degree)[t_direction];
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
   LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
@@ -385,12 +416,12 @@ namespace ET
 		}
     return result;
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
   T LocalTaylorInterpolator<T>::derivative(const size_t std::vector<T>& point,
                                            const size_t t_degree,
                                            const size_t t_direction)
   {
   }
-
+  //----------------------------------------------------------------------------
 }

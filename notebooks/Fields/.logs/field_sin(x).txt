@@ -1,5 +1,3 @@
-[15:30:34] [trace] ET:Field:sin(x)_1: Field 'sin(x)' created at location 0x55de933d28d0
-[15:30:34] [trace] ET:Field:sin(x)_1: Interpolator 'default' created at location 0x55de93f73a30
-[15:30:34] [info] ET:Field:sin(x)_1: Logger passed to Interpolator 'default'
-[15:33:31] [trace] ET:Field:sin(x)_1: Field 'sin(x)' destroyed at location 0x55de933d28d0
-[15:33:31] [trace] ET:Field:sin(x)_1: Interpolator 'default' destroyed at location 0x55de93f73a30
+[18:13:15] [trace] ET:Field:sin(x): Field 'sin(x)' created at location 0x56033db19710
+[18:13:15] [trace] ET:Field:sin(x): Interpolator 'default' created at location 0x56033e7d75c0
+[18:13:15] [info] ET:Field:sin(x): Logger passed to Interpolator 'default'

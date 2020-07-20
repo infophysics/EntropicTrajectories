@@ -1,11 +1,8 @@
-[15:30:41] [trace] ET:Field:2.0_0: Field '2.0' created at location 0x55de943f0320
-[15:30:41] [trace] ET:Field:2.0_0: Interpolator 'default' created at location 0x55de94163900
-[15:30:41] [info] ET:Field:2.0_0: Logger passed to Interpolator 'def[15:30[15:30:41] [trace] ET:Field:2.0_0: Field 'default' created at location 0x7ffd14d45400
-[15:30:41] [info] ET:Field:2.0_0: Logger passed to Field 'default'
-[15:30:41] [trace] ET:Field:2.0_0: Interpolator 'default' created at location 0x55de93404e40
-[15:30:41] [info] ET:Field:2.0_0: Logger passed to Interpolator 'default'
-[15:30:41] [trace] ET:Field:2.0_0: Field 'default' destroyed at location 0x7ffd14d45400
-[15:33:31] [trace] ET:Field:2.0_0: Field '2.0' destroyed at location 0x55de943f0320
-[15:33:31] [trace] ET:Field:2.0_0: Interpolator 'default' destroyed at location 0x55de94163900
-[15:33:31] [trace] ET:Field:2.0_0: Field 'default' destroyed at location 0x55de933c3c70
-[15:33:31] [trace] ET:Field:2.0_0: Interpolator 'default' destroyed at location 0x55de93404e40
+[18:13:18] [trace] ET:Field:2.0: Field '2.0' created at location 0x56033ef72670
+[18:13:18] [trace] ET:Field:2.0: Interpolator 'default' created at location 0x56033e9b5980
+[18:13:18] [info] ET:Field:2.0: Logger passed to Interpolator 'default'
+[18:13:18] [trace] ET:Field:2.0: Field 'default' created at location 0x7fffaf5e8850
+[18:13:18] [info] ET:Field:2.0: Logger passed to Field 'default'
+[18:13:18] [trace] ET:Field:2.0: Interpolator 'default' created at location 0x56033eb40820
+[18:13:18] [info] ET:Field:2.0: Logger passed to Interpolator 'default'
+[18:13:18] [trace] ET:Field:2.0: Field 'default' destroyed at location 0x7fffaf5e8850
