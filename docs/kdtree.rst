@@ -41,7 +41,28 @@ a random two-dimensional data set.
    //  include the kdtree header
    #include "kdtree.h"
    #include <random>
-   #include <iostream>
+   #include <iostream>//  generate some random data
+      const int range_from  = 0.0;
+      const int range_to    = 1.0;
+      std::random_device rand_dev;
+      std::mt19937 generator(rand_dev());
+      std::uniform_real_distribution<double> distr(range_from, range_to);
+
+      size_t N = 10000;
+      std::vector<std::vector<double>> data(N);
+      for (auto i = 0; i < N; i++) {
+        data[i][0] = distr(generator);
+        data[i][1] = distr(generator);
+      }
+
+      ET::KDTree<double> kdt = new ET::KDTree<double>(data);
+
+      //  Query k neighbors for each point in data
+      size_t k = 5
+      kdt->queryNeighbors(k);
+
+      delete kdt;
+      return 0;
    int main
    {
       //  generate some random data

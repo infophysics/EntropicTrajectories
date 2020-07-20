@@ -29,6 +29,14 @@
 
 namespace ET
 {
+  //! \enum KDTreeBackend
+  /*! An enum corresponding to the choice of backend for the kdtree.
+   */
+  enum class KDTreeBackend
+  {
+    NANOFLANN,
+    FLANN,
+  };
   //! \enum KDTreeSearchFlags
   /*! An enum corresponding to behavior of the KDTree
    */
@@ -62,6 +70,13 @@ namespace ET
      *  @param t_points A std::shared_ptr of a std::vector<std::vector<T>>
      */
     KDTree(const std::shared_ptr<std::vector<std::vector<T>>> t_points);
+    //! Constructor
+    /*! Constructor taking a name and a shared pointer of the set of points.
+     *  @param t_name An std::string for the name of the object.
+     *  @param t_points A std::shared_ptr of a std::vector<std::vector<T>>
+     */
+    KDTree(const std::string t_name,
+           const std::shared_ptr<std::vector<std::vector<T>>> t_points);
 
     //  Getters and Setters
     //! Get name.

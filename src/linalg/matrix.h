@@ -35,33 +35,91 @@
 
 namespace ET
 {
-  //--------------------------------------------------------------------------
-  //  This matrix class acts as a general container for (m x n) matrices
-  //  which are row ordered, i.e. m(i,j) picks the element of the ith row
-  //  and the jth column.  It wraps several methods from BLAS and LAPACK.
-  //--------------------------------------------------------------------------
+  //! Matrix Class
+  /*! This matrix class acts as a wrapper for several BLAS and LAPACK
+   *  routines that will be necessary in the ET framework.
+   */
   template<typename T>
   class Matrix
   {
   public:
+    //! Default Constructor
+    /*! Default constructor for a matrix object.
+     */
     Matrix();
+    //! Destructor
+    /*  Destructor for a matrix object.
+     */
     ~Matrix();
+    //! Copy constructor
+    /*  Override for the copy constructor.
+     */
     Matrix(const Matrix<T>& t_matrix);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(size_t t_m);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, size_t t_m);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(size_t t_m, size_t t_n);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, size_t t_m, size_t t_n);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(size_t t_m, size_t t_n, const T& t_init);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, size_t t_m, size_t t_n, const T& t_init);
-
-    //  Constructors passing elements
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(size_t t_m, std::vector<T> t_flat);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, size_t t_m, std::vector<T> t_flat);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(size_t t_m, size_t t_n, std::vector<T> t_flat);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, size_t t_m,
       size_t t_n, std::vector<T> t_flat);
+      //! Constructor
+      /*!
+       *
+       */
     Matrix(std::string t_name, size_t t_m, size_t t_n, T* t_array);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::vector<std::vector<T>> t_array);
+    //! Constructor
+    /*!
+     *
+     */
     Matrix(std::string t_name, std::vector<std::vector<T>> t_array);
 
     //  Getters

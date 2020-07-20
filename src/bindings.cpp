@@ -705,6 +705,11 @@ PYBIND11_MODULE(etraj, m) {
       return std::shared_ptr<KDTree<double>>(new KDTree<double>
       (std::make_shared<std::vector<std::vector<double>>>(points)));
     }))
+    .def(py::init([](const std::string name,
+                     const std::vector<std::vector<double>> points) {
+      return std::shared_ptr<KDTree<double>>(new KDTree<double>
+      (name,std::make_shared<std::vector<std::vector<double>>>(points)));
+    }))
     .def("get_name", &KDTree<double>::getName)
     .def("get_dim", &KDTree<double>::getDim)
     .def("get_N", &KDTree<double>::getN)

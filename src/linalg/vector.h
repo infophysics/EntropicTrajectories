@@ -43,8 +43,7 @@ namespace ET
   {
   public:
     //! Default constructor
-    /*!
-      Default constructor for a Vector object.
+    /*! Default constructor for a Vector object.
     */
     Vector();
     //! Destructor

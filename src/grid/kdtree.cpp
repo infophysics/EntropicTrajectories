@@ -25,9 +25,6 @@ namespace ET
   template<typename T>
   KDTree<T>::KDTree() : m_N(0), m_dim(0), m_name("default")
   {
-    // m_kdtree = std::make_shared<KDTreeVectorOfVectorsAdaptor<
-    //                             std::vector<std::vector<T>>,T>>
-    //                             (m_dim, *m_points, 16);
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
 		m_log->TRACE("KDTree '" + m_name + "' created at location "
@@ -39,6 +36,7 @@ namespace ET
 		m_log->TRACE("KDTree '" + m_name
 		            + "' destroyed at location " + getMem(*this));
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   KDTree<T>::KDTree(const std::shared_ptr<std::vector<std::vector<T>>> t_points)
   : m_N(t_points->size()), m_dim((*t_points)[0].size()), m_name("default"),
@@ -52,7 +50,21 @@ namespace ET
     m_currentNeighborIndices.resize(m_N);
     m_currentNeighborDistances.resize(m_N);
   }
-
+  //----------------------------------------------------------------------------
+  template<typename T>
+  KDTree<T>::KDTree(const std::string t_name,
+                    const std::shared_ptr<std::vector<std::vector<T>>> t_points)
+  : m_N(t_points->size()), m_dim((*t_points)[0].size()), m_name(t_name),
+    m_points(t_points)
+  {
+    m_log = std::make_shared<Log>();
+    m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
+    m_log->TRACE("KDTree '" + m_name + "' created at location "
+                + getMem(*this));
+    setupTree();
+    m_currentNeighborIndices.resize(m_N);
+    m_currentNeighborDistances.resize(m_N);
+  }
   //----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
