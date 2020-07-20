@@ -22,7 +22,7 @@
 #include <iostream>
 #include <memory>
 
-#include "ugrid.h"
+#include "grid.h"
 #include "log.h"
 
 //------------------------------------------------------------------------------
@@ -59,43 +59,90 @@ namespace ET
      */
     virtual ~ScalarField();
     //! Constructor
+    /*! constructor for Field that takes a name
+     */
+    ScalarField(std::string t_name);
+    //! Constructor
     /*! constructor for Field that takes a Logger
      */
     ScalarField(std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for Field that takes a UGrid
+    /*! constructor for Field that takes a name and a Logger
      */
-    ScalarField(std::shared_ptr<UGrid<T>> t_ugrid);
+    ScalarField(std::string t_name, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a Grid
+     */
+    ScalarField(std::shared_ptr<Grid<T>> t_grid);
+    //! Constructor
+    /*! constructor for Field that takes a name and a Grid
+     */
+    ScalarField(std::string t_name, std::shared_ptr<Grid<T>> t_grid);
     //! Constructor
     /*! constructor for Field that takes a Interpolator
      */
     ScalarField(std::shared_ptr<Interpolator<T>> t_interpolator);
     //! Constructor
-    /*! constructor for Field that takes a UGrid and a logger
+    /*! constructor for Field that takes a name and a Interpolator
      */
-    ScalarField(std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log);
+    ScalarField(std::string t_name,
+                std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Constructor
+    /*! constructor for Field that takes a Grid and a logger
+     */
+    ScalarField(std::shared_ptr<Grid<T>> t_grid, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a name, Grid and a logger
+     */
+    ScalarField(std::string t_name, std::shared_ptr<Grid<T>> t_grid,
+                std::shared_ptr<Log> t_log);
     //! Constructor
     /*! constructor for Field that takes a field
      */
     ScalarField(std::vector<T> t_field);
     //! Constructor
-    /*! constructor for Field that takes a field and aLogger
+    /*! constructor for Field that takes a name and a field
+     */
+    ScalarField(std::string t_name, std::vector<T> t_field);
+    //! Constructor
+    /*! constructor for Field that takes a field and a Logger
      */
     ScalarField(std::vector<T> t_field, std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for Field that takes a field and a UGrid
+    /*! constructor for Field that takes a name, field and a Logger
      */
-    ScalarField(std::vector<T> t_field, std::shared_ptr<UGrid<T>> t_ugrid);
+    ScalarField(std::string t_name, std::vector<T> t_field,
+                std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a field and a Grid
+     */
+    ScalarField(std::vector<T> t_field, std::shared_ptr<Grid<T>> t_grid);
+    //! Constructor
+    /*! constructor for Field that takes a name, field and a Grid
+     */
+    ScalarField(std::string t_name, std::vector<T> t_field,
+                std::shared_ptr<Grid<T>> t_grid);
     //! Constructor
     /*! constructor for Field that takes a field and a Interpolator
      */
     ScalarField(std::vector<T> t_field,
                 std::shared_ptr<Interpolator<T>> t_interpolator);
     //! Constructor
-    /*! constructor for Field that takes a field, UGrid and a logger
+    /*! constructor for Field that takes a name, field and a Interpolator
+     */
+    ScalarField(std::string t_name, std::vector<T> t_field,
+                std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Constructor
+    /*! constructor for Field that takes a field, Grid and a logger
      */
     ScalarField(std::vector<T> t_field,
-                std::shared_ptr<UGrid<T>> t_ugrid,
+                std::shared_ptr<Grid<T>> t_grid,
+                std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a name, field, Grid and a logger
+     */
+    ScalarField(std::string t_name, std::vector<T> t_field,
+                std::shared_ptr<Grid<T>> t_grid,
                 std::shared_ptr<Log> t_log);
 
     //! Get field.
@@ -243,7 +290,7 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    /*! field.  std::vector<T> of field values associated to ugrid. */
+    /*! field.  std::vector<T> of field values associated to grid. */
     std::vector<T> m_field;
     //--------------------------------------------------------------------------
     //  Objects for differential equation solver

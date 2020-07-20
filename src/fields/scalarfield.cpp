@@ -26,35 +26,79 @@ namespace ET
   {
     this->m_dim = 1;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::~ScalarField()
   {
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name)
+  : Field<T>(t_name)
+  {
+    this->m_dim = 1;
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::shared_ptr<Log> t_log)
   : Field<T>(t_log)
   {
     this->m_dim = 1;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> t_ugrid)
-  : Field<T>(t_ugrid)
+  ScalarField<T>::ScalarField(std::string t_name, std::shared_ptr<Log> t_log)
+  : Field<T>(t_name, t_log)
   {
     this->m_dim = 1;
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::shared_ptr<Grid<T>> t_grid)
+  : Field<T>(t_grid)
+  {
+    this->m_dim = 1;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name, std::shared_ptr<Grid<T>> t_grid)
+  : Field<T>(t_name, t_grid)
+  {
+    this->m_dim = 1;
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::shared_ptr<Interpolator<T>> t_interpolator)
   : Field<T>(t_interpolator)
   {
     this->m_dim = 1;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::shared_ptr<UGrid<T>> t_ugrid,
-                              std::shared_ptr<Log> t_log)
-  : Field<T>(t_ugrid, t_log)
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::shared_ptr<Interpolator<T>> t_interpolator)
+  : Field<T>(t_name, t_interpolator)
   {
     this->m_dim = 1;
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::shared_ptr<Grid<T>> t_grid,
+                              std::shared_ptr<Log> t_log)
+  : Field<T>(t_grid, t_log)
+  {
+    this->m_dim = 1;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::shared_ptr<Grid<T>> t_grid,
+                              std::shared_ptr<Log> t_log)
+  : Field<T>(t_name, t_grid, t_log)
+  {
+    this->m_dim = 1;
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::vector<T> t_field)
   : Field<T>()
@@ -63,6 +107,16 @@ namespace ET
     this->m_dim = 1;
     this->m_N = m_field.size();
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name, std::vector<T> t_field)
+  : Field<T>(t_name)
+  {
+    m_field = t_field;
+    this->m_dim = 1;
+    this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::vector<T> t_field,
                               std::shared_ptr<Log> t_log)
@@ -72,15 +126,39 @@ namespace ET
     this->m_dim = 1;
     this->m_N = m_field.size();
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::vector<T> t_field,
-                              std::shared_ptr<UGrid<T>> t_ugrid)
-  : Field<T>(t_ugrid)
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::vector<T> t_field,
+                              std::shared_ptr<Log> t_log)
+  : Field<T>(t_name, t_log)
   {
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<Grid<T>> t_grid)
+  : Field<T>(t_grid)
+  {
+    m_field = t_field;
+    this->m_dim = 1;
+    this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::vector<T> t_field,
+                              std::shared_ptr<Grid<T>> t_grid)
+  : Field<T>(t_name, t_grid)
+  {
+    m_field = t_field;
+    this->m_dim = 1;
+    this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::vector<T> t_field,
                               std::shared_ptr<Interpolator<T>> t_interpolator)
@@ -90,41 +168,65 @@ namespace ET
     this->m_dim = 1;
     this->m_N = m_field.size();
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  ScalarField<T>::ScalarField(std::vector<T> t_field,
-                              std::shared_ptr<UGrid<T>> t_ugrid,
-                              std::shared_ptr<Log> t_log)
-  : Field<T>(t_ugrid, t_log)
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::vector<T> t_field,
+                              std::shared_ptr<Interpolator<T>> t_interpolator)
+  : Field<T>(t_name, t_interpolator)
   {
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
   }
-
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::vector<T> t_field,
+                              std::shared_ptr<Grid<T>> t_grid,
+                              std::shared_ptr<Log> t_log)
+  : Field<T>(t_grid, t_log)
+  {
+    m_field = t_field;
+    this->m_dim = 1;
+    this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ScalarField<T>::ScalarField(std::string t_name,
+                              std::vector<T> t_field,
+                              std::shared_ptr<Grid<T>> t_grid,
+                              std::shared_ptr<Log> t_log)
+  : Field<T>(t_name, t_grid, t_log)
+  {
+    m_field = t_field;
+    this->m_dim = 1;
+    this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T> ScalarField<T>::getField() const
   {
     return m_field;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>* ScalarField<T>::accessField()
   {
     return &m_field;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   T* ScalarField<T>::data()
   {
     return m_field.data();
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   void ScalarField<T>::setField(std::vector<T> t_field)
   {
     m_field = t_field;
     this->m_N = m_field.size();
   }
-
-  //----------------------------------------------------------------------------
-  //  Operator overloads
   //----------------------------------------------------------------------------
 	template<typename T>
 	ScalarField<T> ScalarField<T>::operator+(const ScalarField<T>& t_scalar) const
@@ -142,8 +244,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -153,7 +255,7 @@ namespace ET
 		if (this->m_name != " " && t_scalar.getName() != " ") {
 			name += "(" + this->m_name + " + " + t_scalar.getName() + ")";
 		}
-		return ScalarField<T>(copy,this->m_ugrid,this->m_log);
+		return ScalarField<T>(copy,this->m_Grid,this->m_log);
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -172,8 +274,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -183,7 +285,7 @@ namespace ET
 		if (this->m_name != " " && t_scalar.getName() != " ") {
 			name += "(" + this->m_name + " - " + t_scalar.getName() + ")";
 		}
-		return ScalarField<T>(copy,this->m_ugrid,this->m_log);
+		return ScalarField<T>(copy,this->m_Grid,this->m_log);
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -202,8 +304,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -213,7 +315,7 @@ namespace ET
 		if (this->m_name != " " && t_scalar.getName() != " ") {
 			name += "(" + this->m_name + " * " + t_scalar.getName() + ")";
 		}
-		return ScalarField<T>(copy,this->m_ugrid,this->m_log);
+		return ScalarField<T>(copy,this->m_Grid,this->m_log);
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -232,8 +334,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -243,7 +345,7 @@ namespace ET
 		if (this->m_name != " " && t_scalar.getName() != " ") {
 			name += "(" + this->m_name + " / " + t_scalar.getName() + ")";
 		}
-		return ScalarField<T>(copy,this->m_ugrid,this->m_log);
+		return ScalarField<T>(copy,this->m_Grid,this->m_log);
 	}
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -262,8 +364,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -294,8 +396,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -326,8 +428,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -358,8 +460,8 @@ namespace ET
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
-		if (this->m_ugrid != t_scalar.getUGrid()) {
-			this->m_log->WARN("UGrids for t_scalar fields " + this->m_name  + " and "
+		if (this->m_Grid != t_scalar.getGrid()) {
+			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -418,8 +520,9 @@ namespace ET
   Vector<T> ScalarField<T>::constructLocalFieldValues(size_t t_index)
   {
     //  Get the nearest neighbors for the index
-    this->m_ugrid->queryNeighbors(t_index);
-    std::vector<size_t> neighbors = this->m_ugrid->getNeighbors(t_index);
+    this->m_Grid->getKDTree().queryNeighbors(t_index);
+    std::vector<size_t>
+    neighbors = this->m_Grid->getKDTree().getCurrentNeighborIndices(t_index);
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
@@ -427,13 +530,15 @@ namespace ET
     }
     return f;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
   ScalarField<T>::constructLocalFieldValues(const std::vector<T>& t_point,
                                             size_t t_k)
   {
     //  Get the nearest neighbors for the index
-    std::vector<size_t> neighbors = this->m_ugrid->queryNeighbors(t_point, t_k);
+    std::vector<size_t>
+    neighbors = this->m_Grid->getKDTree().queryNeighbors(t_point, t_k);
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
@@ -441,11 +546,11 @@ namespace ET
     }
     return f;
   }
-
+  //----------------------------------------------------------------------------
   // template<typename T>
   // std::vector<std::vector<T>> ScalarField<T>::gradient()
   // {
-  //   return _approx->t_scalarGradient(this->m_ugrid,(*this));
+  //   return _approx->t_scalarGradient(this->m_Grid,(*this));
   // }
   // //----------------------------------------------------------------------------
   //
@@ -456,7 +561,7 @@ namespace ET
 	// std::vector<std::vector<T>>
 	// ScalarField<T>::derivative(size_t n)
 	// {
-	// 	return _approx->t_scalarDerivative(this->m_ugrid, (*this), n);
+	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -466,7 +571,7 @@ namespace ET
 	// template<typename T>
 	// std::vector<T> ScalarField<T>::derivative(size_t dir, size_t n)
 	// {
-	// 	return _approx->t_scalarDerivative(this->m_ugrid, (*this), dir, n);
+	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), dir, n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -476,7 +581,7 @@ namespace ET
 	// template<typename T>
 	// std::vector<T> ScalarField<T>::derivative(std::vector<size_t> deriv)
 	// {
-	// 	return _approx->t_scalarDerivative(this->m_ugrid, (*this), deriv);
+	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), deriv);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -486,7 +591,7 @@ namespace ET
 	// template<typename T>
 	// std::vector<T> ScalarField<T>::derivativePoint(size_t index, size_t n)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), index, n);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -496,7 +601,7 @@ namespace ET
 	// template<typename T>
 	// T ScalarField<T>::derivativePoint(size_t index, size_t dir, size_t n)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), index, dir, n);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, dir, n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -506,7 +611,7 @@ namespace ET
 	// template<typename T>
 	// T ScalarField<T>::derivativePoint(size_t index, std::vector<size_t> deriv)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), index, deriv);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, deriv);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -517,7 +622,7 @@ namespace ET
 	// std::vector<T>
   // ScalarField<T>::derivativePoint(std::vector<T> point, size_t n)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), point, n);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -528,7 +633,7 @@ namespace ET
 	// T ScalarField<T>::derivativePoint(std::vector<T> point, size_t dir,
   //                                   size_t n)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), point, dir, n);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, dir, n);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -539,7 +644,7 @@ namespace ET
 	// T ScalarField<T>::derivativePoint(std::vector<T> point,
   //                                   std::vector<size_t> deriv)
 	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_ugrid, (*this), point, deriv);
+	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, deriv);
 	// }
 	// //----------------------------------------------------------------------------
   //
@@ -586,13 +691,13 @@ namespace ET
 		sum += "\n    dim: " + std::to_string(this->m_dim);
 		sum += "\n      N: " + std::to_string(this->m_N);
 		sum += "\n---------------------------------------------------";
-		std::string grid = "UGrid '" + this->m_ugrid->getName() + "' at: ";
+		std::string grid = "Grid '" + this->m_Grid->getName() + "' at: ";
 		int grid_colon_loc = grid.length()-8;
 		sum += "\n" + grid + getMem(this->m_log) + ",";
 		std::string grid_ref;
 		grid_ref.resize(grid_colon_loc,' ');
 		sum += "\n" + grid_ref;
-		sum += "ref at: " + getMem(this->m_ugrid);
+		sum += "ref at: " + getMem(this->m_Grid);
 		sum += "\nInterpolator at: " + getMem(*this->m_interpolator) + ",";
 		sum += "\n         ref at: " + getMem(this->m_interpolator);
 		sum += "\nLogger at: " + getMem(*this->m_log) + ",";

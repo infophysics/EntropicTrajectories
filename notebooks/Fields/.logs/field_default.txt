@@ -1,0 +1,8 @@
+[15:30:33] [trace] ET:Field:default_1: Field 'default' created at location 0x55de93ff5630
+[15:30:33] [trace] ET:Field:default_1: Grid 'default' created at location 0x55de94424270
+[15:30:33] [info] ET:Field:default_1: Logger passed to Grid 'default'
+[15:30:33] [trace] ET:Field:default_1: Interpolator 'default' created at location 0x55de942ac770
+[15:30:33] [info] ET:Field:default_1: Logger passed to Interpolator 'default'
+[15:30:33] [trace] ET:Field:default_1: Field 'default' destroyed at location 0x55de93ff5630
+[15:30:33] [trace] ET:Field:default_1: Interpolator 'default' destroyed at location 0x55de942ac770
+[15:30:33] [trace] ET:Field:default_1: Grid 'default' destroyed at location 0x55de94424270

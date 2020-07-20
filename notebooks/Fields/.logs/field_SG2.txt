@@ -1,0 +1,5 @@
+[15:30:34] [trace] ET:Field:SG2_1: Field 'SG2' created at location 0x55de94400e60
+[15:30:34] [trace] ET:Field:SG2_1: Interpolator 'default' created at location 0x55de943d92a0
+[15:30:34] [info] ET:Field:SG2_1: Logger passed to Interpolator 'default'
+[15:33:31] [trace] ET:Field:SG2_1: Field 'SG2' destroyed at location 0x55de94400e60
+[15:33:31] [trace] ET:Field:SG2_1: Interpolator 'default' destroyed at location 0x55de943d92a0

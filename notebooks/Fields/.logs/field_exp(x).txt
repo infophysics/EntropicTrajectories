@@ -1,0 +1,5 @@
+[15:30:41] [trace] ET:Field:exp(x): Field 'exp(x)' created at location 0x55de94270df0
+[15:30:41] [trace] ET:Field:exp(x): Interpolator 'default' created at location 0x55de941605a0
+[15:30:41] [info] ET:Field:exp(x): Logger passed to Interpolator 'default'
+[15:33:31] [trace] ET:Field:exp(x): Field 'exp(x)' destroyed at location 0x55de94270df0
+[15:33:31] [trace] ET:Field:exp(x): Interpolator 'default' destroyed at location 0x55de941605a0

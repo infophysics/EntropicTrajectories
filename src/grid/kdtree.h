@@ -20,6 +20,8 @@
 
 #include <vector>
 #include <string>
+#include <map>
+
 #include "utils.h"
 #include "matrix.h"
 #include "log.h"
@@ -50,6 +52,10 @@ namespace ET
     CURRENT_K,
     CURRENT_RADIUS,
   };
+
+  extern std::map<std::string, KDTreeBackend> KDTreeBackendMap;
+  extern std::map<KDTreeBackend, std::string> KDTreeBackendNameMap;
+  
   //! \class KDTree
   /*! This is a wrapper for various KDTree implementations such as
    *  nanoflann.  */
@@ -79,6 +85,11 @@ namespace ET
            const std::shared_ptr<std::vector<std::vector<T>>> t_points);
 
     //  Getters and Setters
+    //! Get Backend
+    /*! Get the backend enum for the KDTree.
+     *  @return A KDTreeBackend enum.
+     */
+    enum KDTreeBackend getBackend() const;
     //! Get name.
     /*! Get the name of the KDTree.
      *  @return m_name The name of the KDTree.
@@ -138,6 +149,16 @@ namespace ET
      *  @return m_log The shared instance of the logger.
      */
     std::shared_ptr<Log> getLog() const;
+    //! Get Search Flag
+    /*! Get the current search flag
+     *  @return An enum for the search flag.
+     */
+    enum KDTreeSearchFlags getSearchFlag() const;
+    //! Set Backend.
+    /*! Set the backend for the KDTree.
+     *  @param t_backend A KDTreeBackend enum.
+     */
+    void setBackend(enum KDTreeBackend t_backend);
     //! Set name.
     /*! Set the name of the Grid.
      *  @param t_name A std::string specifying the name of the Grid.
@@ -314,6 +335,9 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
+    /*! Backend.  The backend to use for the KDTree.  Defaulted to NANOFLANN.
+     */
+    enum KDTreeBackend m_backend {KDTreeBackend::NANOFLANN};
     /*! Name.  Name of the KDTree.  Defaulted to empty string.
      */
     std::string m_name {""};

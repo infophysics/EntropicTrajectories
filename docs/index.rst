@@ -31,6 +31,8 @@ Entropic Trajectories
   interpolator
   lte
   rbf
+  field
+  scalarfield
 
 .. toctree::
   :caption: Useful Information

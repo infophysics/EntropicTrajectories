@@ -180,116 +180,41 @@ namespace ET
                 + getMem(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
   }
-	//----------------------------------------------------------------------------
-	template<typename T>
-	std::vector<std::vector<size_t>> UGrid<T>::getNeighbors()
-	{
-		return m_kdt.getCurrentNeighborIndices();
-	}
-	template<typename T>
-	std::vector<std::vector<double>> UGrid<T>::getDistances()
-	{
-		return m_kdt.getCurrentNeighborDistances();
-	}
-	template<typename T>
-	std::vector<size_t> UGrid<T>::getNeighbors(uint64_t index)
-	{
-		if (index > this->m_N)
-		{
-			//########################################################################
-			this->m_log->ERROR("UGrid " + this->m_name
-									+ ": Attempted to access neighbors array of size "
-									+ std::to_string(this->m_N) + " with index "
-									+ std::to_string(index));
-			//########################################################################
-			if(m_neighbors.size() > 0)
-			{
-				//######################################################################
-				this->m_log->INFO("UGrid " + this->m_name + ": Returning the element at index 0");
-				//######################################################################
-				return m_neighbors[0];
-			}
-			else
-			{
-				//######################################################################
-				this->m_log->INFO("UGrid " + this->m_name + ": Returning empty neighbors array");
-				//######################################################################
-				return std::vector<size_t>(1,0);
-			}
-		}
-
-  	return m_kdt.getCurrentNeighborIndices(index);
-	}
+  //----------------------------------------------------------------------------
+  //  Getters and Setters
+  //----------------------------------------------------------------------------
+  template<typename T>
+  KDTree<T> UGrid<T>::getKDTree() const
+  {
+    return m_kdtree;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::setKDTree(KDTree<T> t_kdtree)
+  {
+    m_kdtree = t_kdtree;
+  }
 
 	//----------------------------------------------------------------------------
-	//	KDTree methods
-	//----------------------------------------------------------------------------
-	template<typename T>
-	void UGrid<T>::setupTree()
-	{
-    m_kdt = KDTree<T>(std::make_shared<std::vector<std::vector<T>>>(m_ugrid));
-	}
-	template<typename T>
-  void UGrid<T>::queryNeighbors(uint64_t k)
-  {
-    return m_kdt.queryNeighbors(k);
-  }
-	//----------------------------------------------------------------------------
-	//	Query the tree for neighbors of some point
-	//----------------------------------------------------------------------------
-	template<typename T>
-  std::vector<size_t>
-  UGrid<T>::queryNeighbors(const std::vector<T>& point,
-		                       uint64_t k)
-  {
-    return m_kdt.queryNeighbors(point,k);
-  }
-	//----------------------------------------------------------------------------
-	//	Query the tree for neighbors of some point
-	//----------------------------------------------------------------------------
-	template<typename T>
-  std::vector<double>
-  UGrid<T>::queryDistances(const std::vector<T>& point,
-		                       uint64_t k)
-  {
-    return m_kdt.queryDistances(point,k);
-  }
-	//----------------------------------------------------------------------------
-	//	Query the tree for neighbors of some set of points
-	//----------------------------------------------------------------------------
-	template<typename T>
-  std::vector<std::vector<size_t>>
-  UGrid<T>::queryNeighbors(const std::vector<std::vector<T>>& points,
-		                       uint64_t k)
-  {
-    return m_kdt.queryNeighbors(points,k);
-  }
-	//----------------------------------------------------------------------------
-
-	//----------------------------------------------------------------------------
-	//	Check the consistency of internal elements
+	//	Various functions
 	//----------------------------------------------------------------------------
 	template<typename T>
 	bool UGrid<T>::checkConsistency()
 	{
 		bool consistency = true;
-		if(m_ugrid.size() != this->m_N)
+		if(this->m_grid.size() != this->m_N)
 		{
 			consistency = false;
-			//########################################################################
 			this->m_log->WARN("UGrid " + this->m_name + ": Attribute this->m_N with value "
-			           + std::to_string(this->m_N) + " does not match array m_ugrid"
-								 + " with size " + std::to_string(m_ugrid.size()));
-			//########################################################################
+			           + std::to_string(this->m_N) + " does not match array this->m_grid"
+								 + " with size " + std::to_string(this->m_grid.size()));
 		}
-		if(m_ugrid[0].size() != this->m_dim)
+		if(this->m_grid[0].size() != this->m_dim)
 		{
 			consistency = false;
-			//########################################################################
 			this->m_log->WARN("UGrid " + this->m_name + ": Attribute this->m_dim with value "
-			           + std::to_string(this->m_dim) + " does not match array m_ugrid"
-								 + " with dimension " + std::to_string(m_ugrid[0].size()));
-			//########################################################################
+			           + std::to_string(this->m_dim) + " does not match array this->m_grid"
+								 + " with dimension " + std::to_string(this->m_grid[0].size()));
 		}
 		return consistency;
 	}

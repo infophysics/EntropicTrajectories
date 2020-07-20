@@ -54,7 +54,7 @@ namespace ET
     DiffEQ();
     ~DiffEQ();
     DiffEQ(std::shared_ptr<Log> log);
-    DiffEQ(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
+    DiffEQ(std::shared_ptr<Grid<T>> ugrid, std::shared_ptr<Log> log);
   private:
   };
   //----------------------------------------------------------------------------

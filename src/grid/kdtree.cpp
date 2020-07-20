@@ -22,6 +22,19 @@
 
 namespace ET
 {
+  //  map for a string to enum of KDTreeBackend
+  std::map<std::string, KDTreeBackend> KDTreeBackendMap =
+  {
+    { "NANOFLANN",  KDTreeBackend::NANOFLANN },
+    { "FLANN",      KDTreeBackend::FLANN }
+  };
+  //  map for a enum of KDTreeBackend to a string
+  std::map<KDTreeBackend, std::string> KDTreeBackendNameMap =
+  {
+    { KDTreeBackend::NANOFLANN, "NANOFLANN" },
+    { KDTreeBackend::FLANN,     "FLANN" }
+  };
+
   template<typename T>
   KDTree<T>::KDTree() : m_N(0), m_dim(0), m_name("default")
   {
@@ -67,6 +80,12 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   //  Getters and Setters
+  //----------------------------------------------------------------------------
+  template<typename T>
+  enum KDTreeBackend KDTree<T>::getBackend() const
+  {
+    return m_backend;
+  }
   //----------------------------------------------------------------------------
   template<typename T>
   std::string KDTree<T>::getName() const
@@ -150,6 +169,18 @@ namespace ET
   std::shared_ptr<Log> KDTree<T>::getLog() const
   {
     return m_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  enum KDTreeSearchFlags KDTree<T>::getSearchFlag() const
+  {
+    return m_searchFlag;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void KDTree<T>::setBackend(enum KDTreeBackend t_backend)
+  {
+    m_backend = t_backend;
   }
   //----------------------------------------------------------------------------
   template<typename T>

@@ -56,16 +56,16 @@ namespace ET
     Integrator(std::string type);
 
     Integrator(std::shared_ptr<Log> log);
-    Integrator(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log);
+    Integrator(std::shared_ptr<Grid<T>> ugrid, std::shared_ptr<Log> log);
 
     //void setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>));
 
     // //--------------------------------------------------------------------------
     // //  Integration methods
     // //--------------------------------------------------------------------------
-    // void scalarIntegrate(const UGrid<T>& ugrid, ScalarField<T>& field);
+    // void scalarIntegrate(const Grid<T>& ugrid, ScalarField<T>& field);
     // //--------------------------------------------------------------------------
-    // void scalarRK4Step(const UGrid<T>& ugrid, ScalarField<T>& field, double dt);
+    // void scalarRK4Step(const Grid<T>& ugrid, ScalarField<T>& field, double dt);
 
   private:
     IntegratorType _type;

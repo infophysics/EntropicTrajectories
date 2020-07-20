@@ -1,0 +1,6 @@
+[15:30:34] [trace] ET:Field:SG1_1: Field 'SG1' created at location 0x55de932b9710
+[15:30:34] [trace] ET:Field:SG1_1: Interpolator 'default' created at location 0x55de93f76f20
+[15:30:34] [info] ET:Field:SG1_1: Logger passed to Interpolator 'default'
+[15:30:34] [warning] ET:Field:SG1_1: Grids for t_scalar fields SG1 and SG2 do not match
+[15:33:31] [trace] ET:Field:SG1_1: Field '(SG1 + SG2)' destroyed at location 0x55de932b9710
+[15:33:31] [trace] ET:Field:SG1_1: Interpolator 'default' destroyed at location 0x55de93f76f20

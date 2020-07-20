@@ -22,7 +22,7 @@
 #include <iostream>
 #include <memory>
 
-#include "ugrid.h"
+#include "grid.h"
 #include "log.h"
 
 //------------------------------------------------------------------------------
@@ -60,21 +60,42 @@ namespace ET
      */
     ~Field();
     //! Constructor
+    /*! constructor for Field that takes a name
+     */
+    Field(std::string t_name);
+    //! Constructor
     /*! constructor for Field that takes a Logger
      */
     Field(std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for Field that takes a UGrid
+    /*! constructor for Field that takes a name and a Logger
      */
-    Field(std::shared_ptr<UGrid<T>> t_ugrid);
+    Field(std::string t_name, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a Grid
+     */
+    Field(std::shared_ptr<Grid<T>> t_grid);
+    //! Constructor
+    /*! constructor for Field that takes a name and a Grid
+     */
+    Field(std::string t_name, std::shared_ptr<Grid<T>> t_grid);
     //! Constructor
     /*! constructor for Field that takes a Interpolator
      */
     Field(std::shared_ptr<Interpolator<T>> t_interpolator);
     //! Constructor
-    /*! constructor for Field that takes a UGrid and a logger
+    /*! constructor for Field that takes a name and a Interpolator
      */
-    Field(std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log);
+    Field(std::string t_name, std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Constructor
+    /*! constructor for Field that takes a Grid and a logger
+     */
+    Field(std::shared_ptr<Grid<T>> t_grid, std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Field that takes a name, Grid and a logger
+     */
+    Field(std::string, std::shared_ptr<Grid<T>> t_grid,
+          std::shared_ptr<Log> t_log);
 
     //! Get Name
     /*! get name.  Get the name of the field.
@@ -95,10 +116,10 @@ namespace ET
      *  @return A shared pointer to the Log.
      */
     std::shared_ptr<Log> getLog() const;
-    /*! Get UGrid.  Get the shared instance of the UGrid.
-     *  @return A shared pointer to the UGrid.
+    /*! Get Grid.  Get the shared instance of the Grid.
+     *  @return A shared pointer to the Grid.
      */
-    std::shared_ptr<UGrid<T>> getUGrid() const;
+    std::shared_ptr<Grid<T>> getGrid() const;
     /*! Get Interpolator.  Get the shared instance of the Interpolator.
      *  @return A shared pointer to the Interpolator.
      */
@@ -127,11 +148,21 @@ namespace ET
         @param t_name a std::string for the name of the Field.
     */
     void setName(std::string t_name);
-    //! Set UGrid
-    /*! set UGrid.  Sets the shared pointer for the associated UGrid.
-     *  @param t_ugrid A shared pointer for a UGrid instance.
+    //! Set Dim.
+    /*! Set Dim.  Sets the dimension of the Field.
+     *  @param t_dim The dimension to set the field to.
      */
-    void setUGrid(std::shared_ptr<UGrid<T>> t_ugrid);
+    void setDim(size_t t_dim);
+    //! Set N
+    /*! Set N.  Sets the value of N for the field.
+     *  @param t_N The number of points to set the Field to.
+     */
+    void setN(size_t t_N);
+    //! Set Grid
+    /*! set Grid.  Sets the shared pointer for the associated Grid.
+     *  @param t_grid A shared pointer for a Grid instance.
+     */
+    void setGrid(std::shared_ptr<Grid<T>> t_grid);
     //! Set Log
     /*! set Log.  Sets the shared pointer for the associated Log.
      *  @param t_log A shared pointer for a Log instance.
@@ -182,25 +213,35 @@ namespace ET
                                                 size_t t_k);
 
   protected:
-    /*! Name.  The name of the Interpolator. */
+    /*! Name.  The name of the Interpolator.
+     */
     std::string m_name {""};
-    /*! Dim.  Dimension of the field. */
+    /*! Dim.  Dimension of the field.
+     */
     size_t m_dim {0};
-    /*! N.  Number of samples of the field. */
+    /*! N.  Number of samples of the field.
+     */
     size_t m_N {0};
-    /*! Logger.  A shared instance of a Logger.*/
+    /*! Logger.  A shared instance of a Logger.
+     */
     std::shared_ptr<Log> m_log;
-    /*! UGrid.  A shared instance of a UGrid.*/
-    std::shared_ptr<UGrid<T>> m_ugrid;
-    /*! Interpolator.  A shared instance of an Interpolator. */
+    /*! Grid.  A shared instance of a Grid.
+     */
+    std::shared_ptr<Grid<T>> m_Grid;
+    /*! Interpolator.  A shared instance of an Interpolator.
+     */
     std::shared_ptr<Interpolator<T>> m_interpolator;
-    /*! DiffEQ.  A shared instance of a DiffEQ. */
+    /*! DiffEQ.  A shared instance of a DiffEQ.
+     */
     std::shared_ptr<DiffEQ<T>> m_diffeq;
-    /*! Integrator.  A shared instance of an Integrator. */
+    /*! Integrator.  A shared instance of an Integrator.
+     */
     std::shared_ptr<Integrator<T>> m_integrator;
-    /*! Flag.  An in that denotes the type of message stored in info.*/
+    /*! Flag.  An in that denotes the type of message stored in info.
+     */
     int m_flag;
-    /*! Info.  A container for storing important information.*/
+    /*! Info.  A container for storing important information.
+     */
     std::string m_info;
   };
 

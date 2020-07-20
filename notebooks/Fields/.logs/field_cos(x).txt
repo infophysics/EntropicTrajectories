@@ -1,0 +1,26 @@
+[15:30:34] [trace] ET:Field:cos(x)_1: Field 'cos(x)' created at location 0x55de942150d0
+[15:30:34] [trace] ET:Field:cos(x)_1: Interpolator 'default' created at location 0x55de9470f090
+[15:30:34] [info] ET:Field:cos(x)_1: Logger passed to Interpolator 'default'
+[15:30:34] [trace] ET:Field:cos(x)_1: Field 'default' created at location 0x7ffd14d44b80
+[15:30:34] [info] ET:Field:cos(x)_1: Logger passed to Field 'default'
+[15:30:34] [trace] ET:Field:cos(x)_1: Interpolator 'default' created at location 0x55de931d9fb0
+[15:30:34] [info] ET:Field:cos(x)_1: Logger passed to Interpolator 'default'
+[15:30:34] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x7ffd14d44b80
+[15:30:35] [trace] ET:Field:cos(x)_1: Field 'default' created at location 0x7ffd14d45410
+[15:30:35] [info] ET:Field:cos(x)_1: Logger passed to Field 'default'
+[15:30:35] [trace] ET:Field:cos(x)_1: Interpolator 'default' created at location 0x55de941bf140
+[15:30:35] [info] ET:Field:cos(x)_1: Logger passed to Interpolator 'default'
+[15:30:35] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x7ffd14d45410
+[15:30:37] [trace] ET:Field:cos(x)_1: Field 'default' created at location 0x7ffd14d45410
+[15:30:37] [info] ET:Field:cos(x)_1: Logger passed to Field 'default'
+[15:30:37] [trace] ET:Field:cos(x)_1: Interpolator 'default' created at location 0x55de94129580
+[15:30:37] [info] ET:Field:cos(x)_1: Logger passed to Interpolator 'default'
+[15:30:37] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x7ffd14d45410
+[15:33:31] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x55de941c0f00
+[15:33:31] [trace] ET:Field:cos(x)_1: Interpolator 'default' destroyed at location 0x55de94129580
+[15:33:31] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x55de9416a4f0
+[15:33:31] [trace] ET:Field:cos(x)_1: Interpolator 'default' destroyed at location 0x55de931d9fb0
+[15:33:31] [trace] ET:Field:cos(x)_1: Field 'default' destroyed at location 0x55de94171f10
+[15:33:31] [trace] ET:Field:cos(x)_1: Interpolator 'default' destroyed at location 0x55de941bf140
+[15:33:31] [trace] ET:Field:cos(x)_1: Field 'cos(x)' destroyed at location 0x55de942150d0
+[15:33:31] [trace] ET:Field:cos(x)_1: Interpolator 'default' destroyed at location 0x55de9470f090

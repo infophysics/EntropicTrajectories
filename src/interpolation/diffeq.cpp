@@ -36,7 +36,7 @@ namespace ET
   {
   }
   template<typename T>
-  DiffEQ<T>::DiffEQ(std::shared_ptr<UGrid<T>> ugrid, std::shared_ptr<Log> log)
+  DiffEQ<T>::DiffEQ(std::shared_ptr<Grid<T>> ugrid, std::shared_ptr<Log> log)
   {
   }
   //----------------------------------------------------------------------------

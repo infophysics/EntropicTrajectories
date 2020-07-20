@@ -232,7 +232,7 @@ namespace ET
     /*!
         @param t_Grid A const Grid<T>& reference.
         @return A copy of the Grid
-    */
+    *///--------------------------------------------------------------------------
     Grid<T>& operator=(const Grid<T>& t_Grid);
     /*! Is equal.  Determines whether two grids are equivalent.
         @param t_Grid A const Grid<T>& reference.
@@ -319,7 +319,11 @@ namespace ET
      */
     std::vector<std::vector<T>> proj(const std::vector<size_t> t_axes);
 
-
+    //  Virtual functions for subclasses
+    //! get KDTree
+    virtual KDTree<T> getKDTree() const { return KDTree<T>(); }
+    //! set KDtree
+    virtual void setKDTree(KDTree<T> t_kdtree) { return; }
 
   protected:
     /*! Name.  Name of the Grid.  Defaulted to empty string.

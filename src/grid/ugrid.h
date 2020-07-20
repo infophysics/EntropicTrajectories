@@ -143,60 +143,28 @@ namespace ET
     UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
           std::shared_ptr<Log> t_log);
 
+    //  Getters and Setters
+    //! Get KDTree.
+    /*! Get the KDTree.
+     *  @return A KDTree<T> object.
+     */
+    KDTree<T> getKDTree() const;
+    //! Set KDTree.
+    /*! Set the KDTree.
+     *  @param t_kdtree A KDTree<T> object.
+     */
+    void setKDTree(KDTree<T> t_kdtree);
 
-    std::vector<std::vector<size_t>> getNeighbors();
-    std::vector<std::vector<double>> getDistances();
-    std::vector<size_t> getNeighbors(size_t t_index);
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
-    //  KDTree methods
-    //--------------------------------------------------------------------------
-    void setupTree();
-    void queryNeighbors(size_t t_k);
-
-    std::vector<size_t>
-    queryNeighbors(const std::vector<T>& t_point, size_t t_k);
-
-    std::vector<double>
-    queryDistances(const std::vector<T>& t_point, size_t t_k);
-
-    std::vector<std::vector<size_t>>
-    queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
-
-    //--------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------
     //  Various functions
-    //--------------------------------------------------------------------------
     bool checkConsistency();
-    //--------------------------------------------------------------------------
 
   private:
-    std::vector<std::vector<T>> m_ugrid {{{0}}};//  Vector of vectors array
-    std::vector<std::string> m_coords {{""}};   //  Coordinate labels
-    //--------------------------------------------------------------------------
-    //  KDTree
-    //--------------------------------------------------------------------------
-    KDTree<T> m_kdt;
-    std::shared_ptr<KDTreeVectorOfVectorsAdaptor<
-                     std::vector<std::vector<T>>,T>> m_KDTree;
-    //--------------------------------------------------------------------------
-    //  Results from KDTree searches
-    //--------------------------------------------------------------------------
-    int m_searchFlag;                   //  flag for changes
-    size_t m_k;                       //  number of neighbors to search
-    double m_radius;                    //  search radius
-    std::vector<std::vector<size_t>> m_neighbors;
-    std::vector<std::vector<double>> m_distances;
-    std::vector<std::vector<size_t>> m_neighbors_radius;
-    std::vector<std::vector<double>> m_distances_radius;
-    //--------------------------------------------------------------------------
+    /*! KDTree for the grid.*/
+    KDTree<T> m_kdtree;
     /*! Grid Type.  The grid type for this object is UNSTRUCTURED.*/
     const enum GridType t_type {GridType::UNSTRUCTURED};
   };
-  //----------------------------------------------------------------------------
 
-  //  Explicit construction of type double
   template class UGrid<double>;
+
 }

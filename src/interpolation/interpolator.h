@@ -24,7 +24,7 @@
 #include <map>
 #include <memory>
 
-#include "ugrid.h"
+#include "grid.h"
 #include "geometry.h"
 #include "params.h"
 #include "utils.h"
@@ -70,7 +70,7 @@ namespace ET
 
   //! \class Interpolator Class
   /*! A Base class for interpolating on unstructured grids.
-   *  Each instance has an associated shared pointer to a UGrid which
+   *  Each instance has an associated shared pointer to a Grid which
    *  gets passed to each derived class.
    */
   template<typename T>
@@ -86,27 +86,27 @@ namespace ET
      */
     ~Interpolator();
     //! Constructor
-    /*! constructor for Interpolator that takes a UGrid
+    /*! constructor for Interpolator that takes a Grid
      */
-    Interpolator(std::shared_ptr<UGrid<T>> t_ugrid);
+    Interpolator(std::shared_ptr<Grid<T>> t_grid);
     //! Constructor
     /*! constructor for Interpolator that takes a Logger
      */
     Interpolator(std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for Interpolator that takes a UGrid and a logger
+    /*! constructor for Interpolator that takes a Grid and a logger
      */
-    Interpolator(std::shared_ptr<UGrid<T>> t_ugrid,
+    Interpolator(std::shared_ptr<Grid<T>> t_grid,
                  std::shared_ptr<Log> t_log);
 
     /*! Get name.  Get the name of the Interpolator.
      *  @return The name of the Interpolator.
      */
     std::string getName() const;
-    /*! Get UGrid.  Get the shared instance of the UGrid.
-     *  @return A shared pointer to the UGrid.
+    /*! Get Grid.  Get the shared instance of the Grid.
+     *  @return A shared pointer to the Grid.
      */
-    std::shared_ptr<UGrid<T>> getUGrid() const;
+    std::shared_ptr<Grid<T>> getGrid() const;
     /*! Get Field.  Get the shared instance of the Field.
      *  @return A shared pointer to the Field.
      */
@@ -136,11 +136,11 @@ namespace ET
         @param t_name a std::string for the name of the Field.
     */
     void setName(std::string t_name);
-    //! Set UGrid
-    /*! set UGrid.  Sets the shared pointer for the associated UGrid.
-     *  @param t_ugrid A shared pointer for a UGrid instance.
+    //! Set Grid
+    /*! set Grid.  Sets the shared pointer for the associated Grid.
+     *  @param t_grid A shared pointer for a Grid instance.
      */
-    void setUGrid(std::shared_ptr<UGrid<T>> t_ugrid);
+    void setGrid(std::shared_ptr<Grid<T>> t_grid);
     //! Set Field
     /*! set Field.  Sets the shared pointer for the associated Field.
      *  @param t_field A shared pointer for a Field instance.
@@ -172,7 +172,7 @@ namespace ET
     //  Derivative functions that must be overloaded in derived classes.
 
     //! Derivative
-    /*! derivative.  Derivative for a point in the UGrid given by index,
+    /*! derivative.  Derivative for a point in the Grid given by index,
      *  of degree t_degree.
      *  @return The nth-derivative at the point given
      *  by the index.
@@ -180,7 +180,7 @@ namespace ET
     virtual Vector<T> derivative(const size_t t_index,
                                  const size_t t_degree);
     //! Derivative
-    /*! derivative.  Derivative for a point in the UGrid given by index,
+    /*! derivative.  Derivative for a point in the Grid given by index,
      *  of degree t_degree and in the direction t_direction.
      *  @return The nth-derivative in the lth-direction at the point given
      *  by the index.
@@ -249,8 +249,8 @@ namespace ET
     std::string m_name {""};
     /*! Logger.  A shared instance of a Logger.*/
     std::shared_ptr<Log> m_log;
-    /*! UGrid.  A shared instance of a UGrid.*/
-    std::shared_ptr<UGrid<T>> m_ugrid;
+    /*! Grid.  A shared instance of a Grid.*/
+    std::shared_ptr<Grid<T>> m_grid;
     /*! Field.  A shared instance of a Field.*/
     std::shared_ptr<Field<T>> m_field;
     /*! LSDriver.  An enum that denotes the type of least squares

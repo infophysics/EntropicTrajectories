@@ -43,7 +43,7 @@ namespace ET
     _log = log;
   }
   template<typename T>
-  Integrator<T>::Integrator(std::shared_ptr<UGrid<T>>, std::shared_ptr<Log> log)
+  Integrator<T>::Integrator(std::shared_ptr<Grid<T>>, std::shared_ptr<Log> log)
   {
     _log = log;
   }
@@ -57,7 +57,7 @@ namespace ET
   // //  Integration methods
   // //----------------------------------------------------------------------------
   // template<typename T>
-  // void Integrator<T>::scalarIntegrate(const UGrid<T>& ugrid,
+  // void Integrator<T>::scalarIntegrate(const Grid<T>& ugrid,
   //                                     ScalarField<T>& field)
   // {
   //   std::vector<T> result(field.getN());
@@ -70,7 +70,7 @@ namespace ET
   // //  Runge-Kutta 4th-order single time step
   // //----------------------------------------------------------------------------
   // template<typename T>
-  // void Integrator<T>::scalarRK4Step(const UGrid<T>& ugrid,
+  // void Integrator<T>::scalarRK4Step(const Grid<T>& ugrid,
   //                    ScalarField<T>& field, double dt)
   // {
   //   // //  grab the initial field values
