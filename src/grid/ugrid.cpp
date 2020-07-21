@@ -27,14 +27,15 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::~UGrid()
   {
     this->m_log->TRACE("UGrid '" + this->m_name
-								+ "' destroyed at location " + getMem(*this));
+								+ "' destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -42,8 +43,9 @@ namespace ET
   : Grid<T>(t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -53,7 +55,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -61,8 +64,9 @@ namespace ET
   : Grid<T>(t_name, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -72,7 +76,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -80,8 +85,9 @@ namespace ET
   : Grid<T>(t_dim, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -91,7 +97,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -99,8 +106,9 @@ namespace ET
   : Grid<T>(t_name, t_dim, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -110,7 +118,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -118,8 +127,9 @@ namespace ET
   : Grid<T>(t_dim, t_N, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -129,7 +139,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -138,8 +149,9 @@ namespace ET
   : Grid<T>(t_name, t_dim, t_N, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -149,7 +161,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>(std::make_shared<std::vector<std::vector<T>>>(this->m_grid));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -157,8 +170,9 @@ namespace ET
   : Grid<T>(t_grid, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>(std::make_shared<std::vector<std::vector<T>>>(this->m_grid));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -168,7 +182,8 @@ namespace ET
     this->m_log = std::make_shared<Log>();
 		this->m_log->init("ET:UGrid:" + this->m_name, ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
+    m_kdtree = std::make_shared<KDTree<T>>(std::make_shared<std::vector<std::vector<T>>>(this->m_grid));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -177,20 +192,21 @@ namespace ET
   : Grid<T>(t_name, t_grid, t_log)
   {
     this->m_log->TRACE("UGrid '" + this->m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     this->m_log->INFO("Logger passed to UGrid '" + this->m_name + "'");
+    m_kdtree = std::make_shared<KDTree<T>>(std::make_shared<std::vector<std::vector<T>>>(this->m_grid));
   }
   //----------------------------------------------------------------------------
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
-  KDTree<T> UGrid<T>::getKDTree() const
+  std::shared_ptr<KDTree<T>> UGrid<T>::getKDTree() const
   {
     return m_kdtree;
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void UGrid<T>::setKDTree(KDTree<T> t_kdtree)
+  void UGrid<T>::setKDTree(std::shared_ptr<KDTree<T>> t_kdtree)
   {
     m_kdtree = t_kdtree;
   }

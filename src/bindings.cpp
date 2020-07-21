@@ -35,7 +35,8 @@
 #include "kdtree.h"
 #include "scalarfield.h"
 #include "vectorfield.h"
-#include "utils.h"
+#include "random.h"
+#include "utilities.h"
 #include "radialbasis.h"
 #include "localtaylor.h"
 #include "interpolator.h"
@@ -595,14 +596,14 @@ PYBIND11_MODULE(etraj, m) {
       sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
 			sum += "\n<etraj.Grid<double> ref at " + s.str() + ">";
       sum += "\n---------------------------------------------------";
-      sum += "\n<ET::Grid<double> object at " + getMem(g) + ">";
+      sum += "\n<ET::Grid<double> object at " + address_to_string(g) + ">";
       sum += "\n---------------------------------------------------";
       sum += "\n   name: '" + g.getName() + "'";
       sum += "\n    dim: " + std::to_string(g.getDim());
       sum += "\n      N: " + std::to_string(g.getN());
       sum += "\n---------------------------------------------------";
-      sum += "\n Logger at: " + getMem(*g.getLog()) + ",";
-      sum += "\n    ref at: " + getMem(g.getLog());
+      sum += "\n Logger at: " + address_to_string(*g.getLog()) + ",";
+      sum += "\n    ref at: " + address_to_string(g.getLog());
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
@@ -674,16 +675,16 @@ PYBIND11_MODULE(etraj, m) {
       sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
 			sum += "\n<etraj.UGrid<double> ref at " + s.str() + ">";
       sum += "\n---------------------------------------------------";
-      sum += "\n<ET::UGrid<double> object at " + getMem(g) + ">";
+      sum += "\n<ET::UGrid<double> object at " + address_to_string(g) + ">";
       sum += "\n---------------------------------------------------";
       sum += "\n   name: '" + g.getName() + "'";
       sum += "\n    dim: " + std::to_string(g.getDim());
       sum += "\n      N: " + std::to_string(g.getN());
       sum += "\n---------------------------------------------------";
-      sum += "\n KDTree at: " + getMem(g.getKDTree()) + ",";
+      sum += "\n KDTree at: " + address_to_string(g.getKDTree()) + ",";
       sum += "\n---------------------------------------------------";
-      sum += "\n Logger at: " + getMem(*g.getLog()) + ",";
-      sum += "\n    ref at: " + getMem(g.getLog());
+      sum += "\n Logger at: " + address_to_string(*g.getLog()) + ",";
+      sum += "\n    ref at: " + address_to_string(g.getLog());
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
@@ -836,18 +837,29 @@ PYBIND11_MODULE(etraj, m) {
      sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
      sum += "\n<etraj.KDTree<double> ref at " + s.str() + ">";
      sum += "\n---------------------------------------------------";
-     sum += "\n<ET::KDTree<double> object at " + getMem(kdt) + ">";
+     sum += "\n<ET::KDTree<double> object at " + address_to_string(kdt) + ">";
      sum += "\n---------------------------------------------------";
      sum += "\n   name: '" + kdt.getName() + "'";
      sum += "\n    dim: " + std::to_string(kdt.getDim());
      sum += "\n      N: " + std::to_string(kdt.getN());
      sum += "\nBackend: " + KDTreeBackendNameMap[kdt.getBackend()];
      sum += "\n---------------------------------------------------";
-     sum += "\n Logger at: " + getMem(*kdt.getLog()) + ",";
-     sum += "\n    ref at: " + getMem(kdt.getLog());
+     sum += "\n Logger at: " + address_to_string(*kdt.getLog()) + ",";
+     sum += "\n    ref at: " + address_to_string(kdt.getLog());
      sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
      return sum;
     })
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Field Type enum
+  //----------------------------------------------------------------------------
+  py::enum_<FieldType>(m, "FieldType")
+    .value("default", FieldType::DEFAULT)
+    .value("scalar", FieldType::SCALAR)
+    .value("vector", FieldType::VECTOR)
+    .value("frame", FieldType::FRAME)
     ;
   //----------------------------------------------------------------------------
 
@@ -893,6 +905,7 @@ PYBIND11_MODULE(etraj, m) {
     .def("set_Integrator", &Field<double>::setIntegrator)
     .def("set_flag", &Field<double>::setFlag)
     .def("set_info", &Field<double>::setInfo)
+    .def("get_type", &Field<double>::getType)
     .def_property("name", &Field<double>::getName, &Field<double>::setName)
     .def_property("dim", &Field<double>::getDim, &Field<double>::setDim)
     .def_property("N", &Field<double>::getN, &Field<double>::setN)
@@ -930,26 +943,26 @@ PYBIND11_MODULE(etraj, m) {
       sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
 			sum += "\n<etraj.Field<double> ref at " + s.str() + ">";
       sum += "\n---------------------------------------------------";
-      sum += "\n<ET::Field<double> object at " + getMem(f) + ">";
+      sum += "\n<ET::Field<double> object at " + address_to_string(f) + ">";
       sum += "\n---------------------------------------------------";
       sum += "\n   name: '" + f.getName() + "'";
       sum += "\n    dim: " + std::to_string(f.getDim());
       sum += "\n      N: " + std::to_string(f.getN());
       sum += "\n---------------------------------------------------";
-      sum += "\n        Grid at: " + getMem(*f.getGrid()) + ",";
-      sum += "\n         ref at: " + getMem(f.getGrid());
+      sum += "\n        Grid at: " + address_to_string(*f.getGrid()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getGrid());
       sum += "\n---------------------------------------------------";
-      sum += "\nInterpolator at: " + getMem(*f.getInterpolator()) + ",";
-      sum += "\n         ref at: " + getMem(f.getInterpolator());
+      sum += "\nInterpolator at: " + address_to_string(*f.getInterpolator()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getInterpolator());
       sum += "\n---------------------------------------------------";
-      sum += "\n      DiffEQ at: " + getMem(*f.getDiffEQ()) + ",";
-      sum += "\n         ref at: " + getMem(f.getDiffEQ());
+      sum += "\n      DiffEQ at: " + address_to_string(*f.getDiffEQ()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getDiffEQ());
       sum += "\n---------------------------------------------------";
-      sum += "\n  Integrator at: " + getMem(*f.getIntegrator()) + ",";
-      sum += "\n         ref at: " + getMem(f.getIntegrator());
+      sum += "\n  Integrator at: " + address_to_string(*f.getIntegrator()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getIntegrator());
       sum += "\n---------------------------------------------------";
-      sum += "\n      Logger at: " + getMem(*f.getLog()) + ",";
-      sum += "\n         ref at: " + getMem(f.getLog());
+      sum += "\n      Logger at: " + address_to_string(*f.getLog()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getLog());
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
@@ -1049,6 +1062,18 @@ PYBIND11_MODULE(etraj, m) {
     .def("construct_local_field_values", (Vector<double>
         (ScalarField<double>::*)(const std::vector<double>&,size_t))
         &ScalarField<double>::constructLocalFieldValues)
+    .def("derivative", (Vector<double> (ScalarField<double>::*)
+         (const size_t, const size_t))
+         &ScalarField<double>::derivative)
+    .def("derivative", (double (ScalarField<double>::*)
+         (const size_t, const size_t, const size_t))
+         &ScalarField<double>::derivative)
+    .def("derivative", (Vector<double> (ScalarField<double>::*)
+         (const std::vector<double>&, const size_t))
+         &ScalarField<double>::derivative)
+    .def("derivative", (double (ScalarField<double>::*)
+         (const std::vector<double>&, const size_t, const size_t))
+         &ScalarField<double>::derivative)
     .def("log_output", [](ScalarField<double>& self)
     {
     	std::string out = self.getLog()->getOutput();
@@ -1073,65 +1098,31 @@ PYBIND11_MODULE(etraj, m) {
       sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
 			sum += "\n<etraj.ScalarField<double> ref at " + s.str() + ">";
       sum += "\n---------------------------------------------------";
-      sum += "\n<ET::ScalarField<double> object at " + getMem(f) + ">";
+      sum += "\n<ET::ScalarField<double> object at " + address_to_string(f) + ">";
       sum += "\n---------------------------------------------------";
       sum += "\n   name: '" + f.getName() + "'";
       sum += "\n    dim: " + std::to_string(f.getDim());
       sum += "\n      N: " + std::to_string(f.getN());
       sum += "\n---------------------------------------------------";
-      sum += "\n        Grid at: " + getMem(*f.getGrid()) + ",";
-      sum += "\n         ref at: " + getMem(f.getGrid());
+      sum += "\n        Grid at: " + address_to_string(*f.getGrid()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getGrid());
       sum += "\n---------------------------------------------------";
-      sum += "\nInterpolator at: " + getMem(*f.getInterpolator()) + ",";
-      sum += "\n         ref at: " + getMem(f.getInterpolator());
+      sum += "\nInterpolator at: " + address_to_string(*f.getInterpolator()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getInterpolator());
       sum += "\n---------------------------------------------------";
-      sum += "\n      DiffEQ at: " + getMem(*f.getDiffEQ()) + ",";
-      sum += "\n         ref at: " + getMem(f.getDiffEQ());
+      sum += "\n      DiffEQ at: " + address_to_string(*f.getDiffEQ()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getDiffEQ());
       sum += "\n---------------------------------------------------";
-      sum += "\n  Integrator at: " + getMem(*f.getIntegrator()) + ",";
-      sum += "\n         ref at: " + getMem(f.getIntegrator());
+      sum += "\n  Integrator at: " + address_to_string(*f.getIntegrator()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getIntegrator());
       sum += "\n---------------------------------------------------";
-      sum += "\n      Logger at: " + getMem(*f.getLog()) + ",";
-      sum += "\n         ref at: " + getMem(f.getLog());
+      sum += "\n      Logger at: " + address_to_string(*f.getLog()) + ",";
+      sum += "\n         ref at: " + address_to_string(f.getLog());
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
     ;
 	//----------------------------------------------------------------------------
-
-	// //----------------------------------------------------------------------------
-	// //	Scalarfield examples
-	// //----------------------------------------------------------------------------
-	// //----------------------------------------------------------------------------
-	// //	Wave EQ in 1D
-	// //----------------------------------------------------------------------------
-	// py::class_<WaveEQ1D<double>,
-	//            ScalarField<double>,
-	// 					 std::shared_ptr<WaveEQ1D<double>>>(m,"WaveEQ1D")
-	// 	.def(py::init<>())
-	// 	.def(py::init<std::shared_ptr<UGrid<double>>>())
-	// 	.def(py::init<std::shared_ptr<UGrid<double>>,double,double,double>())
-	// 	.def("get_A", &WaveEQ1D<double>::getA)
-	// 	.def("set_A", &WaveEQ1D<double>::setA)
-	// 	.def("get_k", &WaveEQ1D<double>::getk)
-	// 	.def("set_k", &WaveEQ1D<double>::setk)
-	// 	.def("get_w", &WaveEQ1D<double>::getw)
-	// 	.def("set_w", &WaveEQ1D<double>::setw)
-	// 	;
-	// //----------------------------------------------------------------------------
-	// //----------------------------------------------------------------------------
-	// //	Klein-Gordon field in 1D
-	// //----------------------------------------------------------------------------
-	// py::class_<KleinGordon1D<double>,
-	//            ScalarField<double>,
-	// 					 std::shared_ptr<KleinGordon1D<double>>>(m,"KleinGordon1D")
-	// 	.def(py::init<>())
-	// 	.def(py::init<std::shared_ptr<UGrid<double>>>())
-	// 	.def(py::init<std::shared_ptr<UGrid<double>>,double>())
-	// 	.def("get_mass", &KleinGordon1D<double>::getMass)
-	// 	.def("set_mass", &KleinGordon1D<double>::setMass)
-	// 	;
-	// //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
 	//	LSDriver enum
@@ -1212,19 +1203,19 @@ PYBIND11_MODULE(etraj, m) {
      sum += "++++++++++++++++++++++++++++++++++++++++++++++++++++";
      sum += "\n<etraj.Inteprolator<double> ref at " + s.str() + ">";
      sum += "\n---------------------------------------------------";
-     sum += "\n<ET::Inteprolator<double> object at " + getMem(inter) + ">";
+     sum += "\n<ET::Inteprolator<double> object at " + address_to_string(inter) + ">";
      sum += "\n---------------------------------------------------";
      sum += "\n    name: '" + inter.getName() + "'";
      sum += "\nLSDriver:  " + LSDriverNameMap[inter.getLSDriver()];
      sum += "\n---------------------------------------------------";
-     sum += "\n        Grid at: " + getMem(*inter.getGrid()) + ",";
-     sum += "\n         ref at: " + getMem(inter.getGrid());
+     sum += "\n        Grid at: " + address_to_string(*inter.getGrid()) + ",";
+     sum += "\n         ref at: " + address_to_string(inter.getGrid());
      sum += "\n---------------------------------------------------";
-     sum += "\n       Field at: " + getMem(*inter.getGrid()) + ",";
-     sum += "\n         ref at: " + getMem(inter.getGrid());
+     sum += "\n       Field at: " + address_to_string(*inter.getGrid()) + ",";
+     sum += "\n         ref at: " + address_to_string(inter.getGrid());
      sum += "\n---------------------------------------------------";
-     sum += "\n      Logger at: " + getMem(*inter.getLog()) + ",";
-     sum += "\n         ref at: " + getMem(inter.getLog());
+     sum += "\n      Logger at: " + address_to_string(*inter.getLog()) + ",";
+     sum += "\n         ref at: " + address_to_string(inter.getLog());
      sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
      return sum;
     })
@@ -1286,7 +1277,7 @@ PYBIND11_MODULE(etraj, m) {
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
-         (const std::vector<double>))
+         (const std::vector<double>&))
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
@@ -1294,7 +1285,7 @@ PYBIND11_MODULE(etraj, m) {
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
-         (const std::vector<double>, size_t))
+         (const std::vector<double>&, size_t))
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
@@ -1302,7 +1293,7 @@ PYBIND11_MODULE(etraj, m) {
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
-         (const std::vector<double>, const double))
+         (const std::vector<double>&, const double))
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
@@ -1310,7 +1301,7 @@ PYBIND11_MODULE(etraj, m) {
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
-         (const std::vector<double>, const size_t, const size_t))
+         (const std::vector<double>&, const size_t, const size_t))
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
@@ -1318,8 +1309,36 @@ PYBIND11_MODULE(etraj, m) {
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
     .def("construct_local_taylor_matrix", (Matrix<double>
          (LocalTaylorInterpolator<double>::*)
-         (const std::vector<double>, const double, const size_t))
+         (const std::vector<double>&, const double, const size_t))
          &LocalTaylorInterpolator<double>::constructLocalTaylorMatrix)
+    .def("derivative", (Vector<double> (LocalTaylorInterpolator<double>::*)
+        (const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::derivative)
+    .def("derivative", (double (LocalTaylorInterpolator<double>::*)
+        (const size_t, const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::derivative)
+    .def("derivative", (Vector<double> (LocalTaylorInterpolator<double>::*)
+        (const std::vector<double>&, const size_t))
+        &LocalTaylorInterpolator<double>::derivative)
+    .def("derivative", (double (LocalTaylorInterpolator<double>::*)
+        (const std::vector<double>&, const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::derivative)
+    .def("scalarFieldDerivative", (Vector<double>
+        (LocalTaylorInterpolator<double>::*)
+        (const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::scalarFieldDerivative)
+    .def("scalarFieldDerivative", (double
+        (LocalTaylorInterpolator<double>::*)
+        (const size_t, const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::scalarFieldDerivative)
+    .def("scalarFieldDerivative", (Vector<double>
+        (LocalTaylorInterpolator<double>::*)
+        (const std::vector<double>&, const size_t))
+        &LocalTaylorInterpolator<double>::scalarFieldDerivative)
+    .def("scalarFieldDerivative", (double
+        (LocalTaylorInterpolator<double>::*)
+        (const std::vector<double>&, const size_t, const size_t))
+        &LocalTaylorInterpolator<double>::scalarFieldDerivative)
     ;
 
   //----------------------------------------------------------------------------

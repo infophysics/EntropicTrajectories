@@ -43,6 +43,16 @@ namespace ET
 
 namespace ET
 {
+  //! \enum Field Types
+  /*! An enum to collect the various types of grids.
+   */
+  enum class FieldType
+  {
+    DEFAULT,
+    SCALAR,
+    VECTOR,
+    FRAME
+  };
   //! Field Class
   /*! A Base class for various types of fields, such as ET::ScalarField,
    *  ET::VectorField and ET::FrameField.
@@ -143,6 +153,11 @@ namespace ET
      *  @return The std::string info that contains relevant information.
      */
     std::string getInfo() const;
+    //! Get type
+    /*! Get type.  Get the type of field.
+     *  @return An FieldType enum
+     */
+    enum FieldType getType() const;
     //! Set name
     /*! set name.  Sets the name of the Field.
         @param t_name a std::string for the name of the Field.
@@ -230,19 +245,23 @@ namespace ET
     std::shared_ptr<Grid<T>> m_Grid;
     /*! Interpolator.  A shared instance of an Interpolator.
      */
-    std::shared_ptr<Interpolator<T>> m_interpolator;
+    std::shared_ptr<Interpolator<T>> m_Interpolator;
     /*! DiffEQ.  A shared instance of a DiffEQ.
      */
-    std::shared_ptr<DiffEQ<T>> m_diffeq;
+    std::shared_ptr<DiffEQ<T>> m_DiffEQ;
     /*! Integrator.  A shared instance of an Integrator.
      */
-    std::shared_ptr<Integrator<T>> m_integrator;
+    std::shared_ptr<Integrator<T>> m_Integrator;
     /*! Flag.  An in that denotes the type of message stored in info.
      */
     int m_flag;
     /*! Info.  A container for storing important information.
      */
     std::string m_info;
+    /*! Field Type.  A const enum declaring the type of the Field.
+     *  Defaulted to default.
+     */
+    const enum FieldType m_type {FieldType::DEFAULT};
   };
 
   template class Field<double>;

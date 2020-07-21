@@ -4,7 +4,7 @@
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
 //  [ncarrara@albany.edu]
-
+//
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -23,7 +23,7 @@
 #include <vector>
 #include <random>
 
-#include "utils.h"
+#include "utilities.h"
 
 namespace ET
 {
@@ -34,6 +34,6 @@ namespace ET
     ~Random();
 
   private:
-    std::mt16637_64 _generator;
+    std::mt19937_64 _generator;
   };
 }

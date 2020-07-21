@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------------
-//  utils.h
+//  utilities.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
 //  [ncarrara@albany.edu]
-
+//
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -50,14 +50,13 @@ namespace ET
     typedef typename std::remove_reference<T>::type TR;
     std::unique_ptr<char, void(*)(void*)> own
     (
-    #ifndef _MSC_VER
-                    abi::__cxa_demangle(typeid(TR).name(), nullptr,
-                                               nullptr, nullptr),
-    #else
-                    nullptr,
-    #endif
-                    std::free
-               );
+#ifndef _MSC_VER
+      abi::__cxa_demangle(typeid(TR).name(), nullptr, nullptr, nullptr),
+#else
+      nullptr,
+#endif
+      std::free
+    );
     std::string r = own != nullptr ? own.get() : typeid(TR).name();
     if (std::is_const<TR>::value)
         r += " const";
@@ -75,7 +74,7 @@ namespace ET
   //  Function for turning a memory address into a string
   //----------------------------------------------------------------------------
   template<class T>
-  std::string getMem(const T& object)
+  std::string address_to_string(const T& object)
   {
     std::ostringstream address;
     address << &object;
@@ -83,67 +82,18 @@ namespace ET
   }
   //----------------------------------------------------------------------------
 
-
   //----------------------------------------------------------------------------
   //  Method for turning a double into scientific
   //  notation with a certain number of decimal places
   //----------------------------------------------------------------------------
   template<typename T>
   std::string scientific_not(T x, size_t dec);
-  //  specialization declaration
 
   //----------------------------------------------------------------------------
   //  Cartesian product between two vectors
   //----------------------------------------------------------------------------
-  std::vector<std::vector<double> > cartesianProduct(std::vector<double> a,
-                                                     std::vector<double> b);
-
-  //----------------------------------------------------------------------------
-  //  Class for generating d-dimensional monomials of degree n
-  //  for use in a moving least squares algorithm.
-  //----------------------------------------------------------------------------
-  class Monomial
-  {
-  public:
-    Monomial();
-    ~Monomial();
-    Monomial(size_t dim);
-    Monomial(size_t dim, size_t deg);
-
-    //  Getters
-    size_t getDim();
-    size_t getDeg();
-    std::vector<std::vector<size_t>> getMono();
-    std::vector<std::vector<size_t>> getMono(size_t deg);
-    std::vector<std::vector<std::string>> getMonoFactors();
-    size_t getMultisetCoefficient(size_t deg);
-    size_t getTaylorIndex(std::vector<size_t> term);
-    //  Setters
-    void setDim(size_t dim);
-    void setDeg(size_t deg);
-    void generateMonomial();
-    void generateMonomial(size_t deg);
-
-    //  Various functions
-    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
-                                                const std::vector<double>& x2);
-    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
-                                                const std::vector<double>& x2,
-                                                size_t deg);
-    const std::string summary();
-
-  private:
-    size_t _dim;
-    size_t _deg;
-    size_t m_numElements;
-    std::vector<std::vector<size_t>> _mono;
-    std::vector<std::vector<std::string>> _monoFactors;
-    std::vector<size_t> _multisetCoeffs;
-    //  conatiner for message status
-    int _flag;
-    //  container for messages
-    std::string _info;
-  };
+  std::vector<std::vector<double>> cartesianProduct(std::vector<double> a,
+                                                    std::vector<double> b);
 
   //----------------------------------------------------------------------------
   //  Method for generating a set of taylor polynomials for
@@ -158,36 +108,53 @@ namespace ET
   bool checkConsistency(std::vector<std::vector<double>>& array,
                         std::vector<std::pair<size_t,size_t>>& rows);
 
-  //----------------------------------------------------------------------------
-  //  Error messages
-  //  Here we have a set of functions for generating various
-  //  error messages
-  //----------------------------------------------------------------------------
-  std::string MATRIX_INCONSISTENT_ARRAY(std::vector<std::pair<size_t,size_t>>& rows);
-  std::string MATRIX_OUT_OF_BOUNDS(bool axis, const size_t& bound,
-                                   const size_t& attempt,
-                                   const std::string& name);
-  std::string MATRIX_ADD_INCOMPATIBLE_ROWS(const size_t& m1,
-                                           const size_t& m2,
-                                           const std::string& name1,
-                                           const std::string& name2);
-  std::string MATRIX_ADD_INCOMPATIBLE_COLS(const size_t& n1,
-                                           const size_t& n2,
-                                           const std::string& name1,
-                                           const std::string& name2);
-  std::string MATRIX_SUB_INCOMPATIBLE_ROWS(const size_t& m1,
-                                           const size_t& m2,
-                                           const std::string& name1,
-                                           const std::string& name2);
-  std::string MATRIX_SUB_INCOMPATIBLE_COLS(const size_t& n1,
-                                           const size_t& n2,
-                                           const std::string& name1,
-                                           const std::string& name2);
-  std::string MATRIX_MUL_INCOMPATIBLE(const size_t& n1,
-                                      const size_t& m2);
-  std::string MATRIX_ZERO_DIV(const size_t& m, const size_t& n);
+  //! \class Monomial class.
+  /*! Class for generating d-dimensional monomials of degree n
+   *  for use in a local Taylor expansion algorithm.
+   */
+  class Monomial
+  {
+  public:
+    Monomial();
+    ~Monomial();
+    Monomial(size_t t_dim);
+    Monomial(size_t t_dim, size_t t_deg);
 
-  //----------------------------------------------------------------------------
+    //  Getters
+    size_t getDim();
+    size_t getDeg();
+    std::vector<std::vector<size_t>> getMono();
+    std::vector<std::vector<size_t>> getMono(size_t t_deg);
+    std::vector<std::vector<std::string>> getMonoFactors();
+    size_t getMultisetCoefficient(size_t t_deg);
+    size_t getTaylorIndex(std::vector<size_t> t_term);
+    //  Setters
+    void setDim(size_t t_dim);
+    void setDeg(size_t t_deg);
 
+
+    void generateMonomial();
+    void generateMonomial(size_t t_deg);
+
+    //  Various functions
+    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
+                                                const std::vector<double>& x2);
+    std::vector<double> taylorMonomialExpansion(const std::vector<double>& x1,
+                                                const std::vector<double>& x2,
+                                                size_t deg);
+    const std::string summary();
+
+  private:
+    size_t m_dim;
+    size_t m_deg;
+    size_t m_numElements;
+    std::vector<std::vector<size_t>> m_mono;
+    std::vector<std::vector<std::string>> m_monoFactors;
+    std::vector<size_t> m_multisetCoeffs;
+    //  conatiner for message status
+    int m_flag;
+    //  container for messages
+    std::string m_info;
+  };
 
 }

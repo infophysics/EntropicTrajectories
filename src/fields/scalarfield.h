@@ -256,26 +256,41 @@ namespace ET
     Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
                                         size_t t_k);
 
-    // T laplacian(size_t index);
-    // //--------------------------------------------------------------------------
-    // //  Derivatives along the entire grid
-    // //--------------------------------------------------------------------------
-    // std::vector<std::vector<T>> derivative(size_t n);
-    // std::vector<T> derivative(size_t dir, size_t n);
-    // std::vector<T> derivative(std::vector<size_t> deriv);
-    // //--------------------------------------------------------------------------
-    // //  Derivatives at points on the grid
-    // //--------------------------------------------------------------------------
-    // std::vector<T> derivativePoint(size_t index, size_t n);
-    // T derivativePoint(size_t index, size_t dir, size_t n);
-    // T derivativePoint(size_t index, std::vector<size_t> deriv);
-    // //--------------------------------------------------------------------------
-    // //  Derivatives at arbitrary points
-    // //--------------------------------------------------------------------------
-    // std::vector<T> derivativePoint(std::vector<T> point, size_t n);
-    // T derivativePoint(std::vector<T> point, size_t dir, size_t n);
-    // T derivativePoint(std::vector<T> point, std::vector<size_t> deriv);
-    // //--------------------------------------------------------------------------
+    //  Derivative functions
+    //! Derivative
+    /*! derivative.  Derivative for a point in the Grid given by index,
+     *  of degree t_degree.
+     *  @return The nth-derivative at the point given
+     *  by the index.
+     */
+    Vector<T> derivative(const size_t t_index,
+                         const size_t t_degree);
+    //! Derivative
+    /*! derivative.  Derivative for a point in the Grid given by index,
+     *  of degree t_degree and in the direction t_direction.
+     *  @return The nth-derivative in the lth-direction at the point given
+     *  by the index.
+     */
+    T derivative(const size_t t_index,
+                 const size_t t_degree,
+                 const size_t t_direction);
+   //! Derivative
+   /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+   Vector<T> derivative(const std::vector<T>& point,
+                        const size_t t_degree);
+   //! Derivative
+   /*! derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+   T derivative(const std::vector<T>& point,
+                const size_t t_degree,
+                const size_t t_direction);
 
     //--------------------------------------------------------------------------
     //  Methods for calculating integrals
@@ -292,16 +307,16 @@ namespace ET
   private:
     /*! field.  std::vector<T> of field values associated to grid. */
     std::vector<T> m_field;
+    /*! Field Type.  A const enum declaring the type of the Field.
+     *  Defaulted to default.
+     */
+    const enum FieldType m_type {FieldType::SCALAR};
     //--------------------------------------------------------------------------
     //  Objects for differential equation solver
     //--------------------------------------------------------------------------
     size_t _point_cache;
     std::vector<size_t> _neighbor_cache;
     std::vector<double> _distance_cache;
-
-    int _flag;
-    std::string _info;
-    //--------------------------------------------------------------------------
 
   };
   //----------------------------------------------------------------------------

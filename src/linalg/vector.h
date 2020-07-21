@@ -28,7 +28,8 @@
 #include <cblas.h>
 #include <stdint.h>
 
-#include "utils.h"
+#include "utilities.h"
+#include "log.h"
 
 namespace ET
 {

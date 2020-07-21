@@ -22,7 +22,7 @@
 #include <string>
 #include <map>
 
-#include "utils.h"
+#include "utilities.h"
 #include "matrix.h"
 #include "log.h"
 
@@ -55,7 +55,7 @@ namespace ET
 
   extern std::map<std::string, KDTreeBackend> KDTreeBackendMap;
   extern std::map<KDTreeBackend, std::string> KDTreeBackendNameMap;
-  
+
   //! \class KDTree
   /*! This is a wrapper for various KDTree implementations such as
    *  nanoflann.  */

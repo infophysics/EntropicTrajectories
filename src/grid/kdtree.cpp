@@ -41,13 +41,13 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
 		m_log->TRACE("KDTree '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   template<typename T>
   KDTree<T>::~KDTree()
   {
 		m_log->TRACE("KDTree '" + m_name
-		            + "' destroyed at location " + getMem(*this));
+		            + "' destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -58,7 +58,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
 		m_log->TRACE("KDTree '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
     setupTree();
     m_currentNeighborIndices.resize(m_N);
     m_currentNeighborDistances.resize(m_N);
@@ -73,7 +73,7 @@ namespace ET
     m_log = std::make_shared<Log>();
     m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
     m_log->TRACE("KDTree '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     setupTree();
     m_currentNeighborIndices.resize(m_N);
     m_currentNeighborDistances.resize(m_N);

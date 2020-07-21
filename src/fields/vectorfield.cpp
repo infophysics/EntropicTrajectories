@@ -36,7 +36,7 @@ namespace ET
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:default", ".logs/vectorfield_default.txt");
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -47,7 +47,7 @@ namespace ET
   {
     //##########################################################################
     _log->TRACE("Vector Field '" + _name
-                + "' destroyed at location " + getMem(*this));
+                + "' destroyed at location " + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace ET
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:default", ".logs/vectorfield_default.txt");
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace ET
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:" + _name, ".logs/vectorfield_default.txt");
     _log->TRACE("Vector Field '" + _name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -109,7 +109,7 @@ namespace ET
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:default", ".logs/vectorfield_default.txt");
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ namespace ET
     _log = std::make_shared<Log>();
     _log->init("ET:VectorField:" + _name, ".logs/vectorfield_default.txt");
     _log->TRACE("Vector Field '" + _name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     //##########################################################################
   }
   //----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ namespace ET
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     _log->INFO("Logger passed to Vector Field 'default'");
     //##########################################################################
   }
@@ -169,7 +169,7 @@ namespace ET
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     _log->INFO("Logger passed to Vector Field 'default'");
     //##########################################################################
   }
@@ -190,7 +190,7 @@ namespace ET
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field '" + _name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     _log->INFO("Logger passed to Vector Field '" + _name + "'");
     //##########################################################################
   }
@@ -211,7 +211,7 @@ namespace ET
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field 'default' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     _log->INFO("Logger passed to Vector Field 'default'");
     //##########################################################################
   }
@@ -233,7 +233,7 @@ namespace ET
     //##########################################################################
     _log = log;
     _log->TRACE("Vector Field '" + _name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     _log->INFO("Logger passed to Vector Field '" + _name + "'");
     //##########################################################################
   }

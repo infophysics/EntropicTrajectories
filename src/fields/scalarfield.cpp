@@ -520,9 +520,9 @@ namespace ET
   Vector<T> ScalarField<T>::constructLocalFieldValues(size_t t_index)
   {
     //  Get the nearest neighbors for the index
-    this->m_Grid->getKDTree().queryNeighbors(t_index);
+    this->m_Grid->getKDTree()->queryNeighbors(t_index);
     std::vector<size_t>
-    neighbors = this->m_Grid->getKDTree().getCurrentNeighborIndices(t_index);
+    neighbors = this->m_Grid->getKDTree()->getCurrentNeighborIndices(t_index);
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
@@ -538,7 +538,7 @@ namespace ET
   {
     //  Get the nearest neighbors for the index
     std::vector<size_t>
-    neighbors = this->m_Grid->getKDTree().queryNeighbors(t_point, t_k);
+    neighbors = this->m_Grid->getKDTree()->queryNeighbors(t_point, t_k);
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
@@ -547,135 +547,36 @@ namespace ET
     return f;
   }
   //----------------------------------------------------------------------------
-  // template<typename T>
-  // std::vector<std::vector<T>> ScalarField<T>::gradient()
-  // {
-  //   return _approx->t_scalarGradient(this->m_Grid,(*this));
-  // }
-  // //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative for every point in all directions
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<std::vector<T>>
-	// ScalarField<T>::derivative(size_t n)
-	// {
-	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for every point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<T> ScalarField<T>::derivative(size_t dir, size_t n)
-	// {
-	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), dir, n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for every point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<T> ScalarField<T>::derivative(std::vector<size_t> deriv)
-	// {
-	// 	return _approx->t_scalarDerivative(this->m_Grid, (*this), deriv);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<T> ScalarField<T>::derivativePoint(size_t index, size_t n)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// T ScalarField<T>::derivativePoint(size_t index, size_t dir, size_t n)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, dir, n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// T ScalarField<T>::derivativePoint(size_t index, std::vector<size_t> deriv)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), index, deriv);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-	// //	nth-derivative for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<T>
-  // ScalarField<T>::derivativePoint(std::vector<T> point, size_t n)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// T ScalarField<T>::derivativePoint(std::vector<T> point, size_t dir,
-  //                                   size_t n)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, dir, n);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	nth-derivative in the ith-direction for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// T ScalarField<T>::derivativePoint(std::vector<T> point,
-  //                                   std::vector<size_t> deriv)
-	// {
-	// 	return _approx->t_scalarDerivativePoint(this->m_Grid, (*this), point, deriv);
-	// }
-	// //----------------------------------------------------------------------------
-  //
-  //
-	// //----------------------------------------------------------------------------
-	// //	Laplacian for every point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// std::vector<T> ScalarField<T>::laplacian()
-	// {
-	// 	std::vector<T> result(this->m_N);
-	// 	std::vector<std::vector<T>> second_derivative = derivative(2);
-	// 	for (size_t i = 0; i < _N; i++)
-	// 	{
-	// 		result[i] = std::accumulate(second_derivative[i].begin(),
-	// 	                              second_derivative[i].end(),0);
-	// 	}
-	// 	return result;
-	// }
-	// //----------------------------------------------------------------------------
-  //
-	// //----------------------------------------------------------------------------
-	// //	Laplacian for a single point
-	// //----------------------------------------------------------------------------
-	// template<typename T>
-	// T ScalarField<T>::laplacian(size_t index)
-	// {
-	// 	std::vector<T> second_derivative = derivative(index, 2);
-	// 	return std::accumulate(second_derivative.begin(),second_derivative.end(),0);
-	// }
-	// //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> ScalarField<T>::derivative(const size_t t_index,
+                                       const size_t t_degree)
+  {
+    return this->m_Interpolator->derivative(t_index, t_degree);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T ScalarField<T>::derivative(const size_t t_index,
+                               const size_t t_degree,
+                               const size_t t_direction)
+  {
+    return this->m_Interpolator->derivative(t_index, t_degree, t_direction);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> ScalarField<T>::derivative(const std::vector<T>& t_point,
+                                       const size_t t_degree)
+  {
+    return this->m_Interpolator->derivative(t_point, t_degree);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T ScalarField<T>::derivative(const std::vector<T>& t_point,
+                                       const size_t t_degree,
+                                       const size_t t_direction)
+  {
+    return this->m_Interpolator->derivative(t_point, t_degree, t_direction);
+  }
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Various functions
@@ -685,7 +586,7 @@ namespace ET
 	{
 		std::string sum = "---------------------------------------------------";
 		sum += "\n<ET::ScalarField<"+ type_name<decltype(m_field[0])>();
-		sum += "> object at " + getMem(this) + ">";
+		sum += "> object at " + address_to_string(this) + ">";
 		sum += "\n---------------------------------------------------";
     sum += "\n   name: '" + this->m_name + "'";
 		sum += "\n    dim: " + std::to_string(this->m_dim);
@@ -693,15 +594,15 @@ namespace ET
 		sum += "\n---------------------------------------------------";
 		std::string grid = "Grid '" + this->m_Grid->getName() + "' at: ";
 		int grid_colon_loc = grid.length()-8;
-		sum += "\n" + grid + getMem(this->m_log) + ",";
+		sum += "\n" + grid + address_to_string(this->m_log) + ",";
 		std::string grid_ref;
 		grid_ref.resize(grid_colon_loc,' ');
 		sum += "\n" + grid_ref;
-		sum += "ref at: " + getMem(this->m_Grid);
-		sum += "\nInterpolator at: " + getMem(*this->m_interpolator) + ",";
-		sum += "\n         ref at: " + getMem(this->m_interpolator);
-		sum += "\nLogger at: " + getMem(*this->m_log) + ",";
-		sum += "\n   ref at: " + getMem(this->m_log);
+		sum += "ref at: " + address_to_string(this->m_Grid);
+		sum += "\nInterpolator at: " + address_to_string(*this->m_Interpolator) + ",";
+		sum += "\n         ref at: " + address_to_string(this->m_Interpolator);
+		sum += "\nLogger at: " + address_to_string(*this->m_log) + ",";
+		sum += "\n   ref at: " + address_to_string(this->m_log);
 		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		return sum;
 	}

@@ -26,7 +26,8 @@
 #include "ugrid.h"
 #include "geometry.h"
 #include "params.h"
-#include "utils.h"
+#include "utilities.h"
+#include "vector.h"
 #include "matrix.h"
 
 #include "interpolator.h"
@@ -143,7 +144,7 @@ namespace ET
      *  @param t_point An arbitrary point to build a Taylor Matrix around.
      *  @return The LTI Matrix for the point.
      */
-    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point);
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point);
     //! LTI Matrix
     /*! Local Taylor Interpolator Matrix constructor that takes in a
      *  point from an associated grid and a value for k.
@@ -160,7 +161,7 @@ namespace ET
      *  @param t_k The number of neighbors to use for the influence domain.
      *  @return The LTI Matrix for the point.
      */
-    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point,
                                          const size_t t_k);
     //! LTI Matrix
     /*! Local Taylor Interpolator Matrix constructor that takes in a
@@ -178,7 +179,7 @@ namespace ET
     *  @param t_radius The radius to use for the influence domain.
     *  @return The LTI Matrix for the point.
     */
-    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point,
                                          const double t_radius);
     //! LTI Matrix
     /*! Local Taylor Interpolator Matrix constructor that takes in a
@@ -199,7 +200,7 @@ namespace ET
     *  @param t_n The order of the Taylor expansion to be used.
     *  @return The LTI Matrix for the point.
     */
-    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point,
                                          const size_t t_k,
                                          const size_t t_n);
     //! LTI Matrix
@@ -221,12 +222,11 @@ namespace ET
     *  @param t_n The order of the Taylor expansion to be used.
     *  @return The LTI Matrix for the point.
     */
-    Matrix<T> constructLocalTaylorMatrix(const std::vector<T> t_point,
+    Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point,
                                          const double t_radius,
                                          const size_t t_n);
 
     //  Overloaded derivative functions
-
     //! Derivative
     /*! derivative.  Derivative for a point in the UGrid given by index,
     *  of degree t_degree.
@@ -234,7 +234,7 @@ namespace ET
     *  by the index.
     */
     Vector<T> derivative(const size_t t_index,
-                              const size_t t_degree);
+                         const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the UGrid given by index,
     *  of degree t_degree and in the direction t_direction.
@@ -261,6 +261,42 @@ namespace ET
     T derivative(const std::vector<T>& point,
                  const size_t t_degree,
                  const size_t t_direction);
+
+    //  Derivatives for scalar fields
+    //! Derivative
+    /*! scalar field derivative.  Derivative for a point in the UGrid given by index,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+    Vector<T> scalarFieldDerivative(const size_t t_index,
+                                    const size_t t_degree);
+    //! Derivative
+    /*! scalar field derivative.  Derivative for a point in the UGrid given by index,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+    T scalarFieldDerivative(const size_t t_index,
+                            const size_t t_degree,
+                            const size_t t_direction);
+    //! Derivative
+    /*! scalar field derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree.
+    *  @return The nth-derivative at the point given
+    *  by the index.
+    */
+    Vector<T> scalarFieldDerivative(const std::vector<T>& point,
+                                    const size_t t_degree);
+    //! Derivative
+    /*! scalar field derivative.  Derivative for an arbitrary point,
+    *  of degree t_degree and in the direction t_direction.
+    *  @return The nth-derivative in the lth-direction at the point given
+    *  by the index.
+    */
+    T scalarFieldDerivative(const std::vector<T>& point,
+                            const size_t t_degree,
+                            const size_t t_direction);
   private:
     /*! k.  Number of nearest neighbors to use in interpolation.
         Defaulted to k = 3

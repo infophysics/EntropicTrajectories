@@ -25,7 +25,7 @@
 
 #include "ugrid.h"
 #include "params.h"
-#include "utils.h"
+#include "utilities.h"
 #include "matrix.h"
 
 // //------------------------------------------------------------------------------

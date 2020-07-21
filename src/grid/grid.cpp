@@ -27,14 +27,14 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Grid<T>::~Grid()
   {
     m_log->TRACE("Grid '" + m_name
-								+ "' destroyed at location " + getMem(*this));
+								+ "' destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -42,7 +42,7 @@ namespace ET
   : m_name("default"), m_dim(0), m_N(0), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -61,7 +61,7 @@ namespace ET
   : m_name(t_name), m_dim(0), m_N(0), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -80,7 +80,7 @@ namespace ET
   : m_name("default"), m_dim(t_dim), m_N(0), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -99,7 +99,7 @@ namespace ET
   : m_name(t_name), m_dim(t_dim), m_N(0), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -110,7 +110,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -118,10 +118,10 @@ namespace ET
   : m_name("default"), m_dim(t_dim), m_N(t_N), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));m_log = std::make_shared<Log>();
+                + address_to_string(*this));m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:default", ".logs/KDTree_default.txt");
 		m_log->TRACE("KDTree 'default' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -132,7 +132,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -141,7 +141,7 @@ namespace ET
   : m_name(t_name), m_dim(t_dim), m_N(t_N), m_log(t_log)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -162,7 +162,7 @@ namespace ET
     m_grid(t_grid)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -174,7 +174,7 @@ namespace ET
     m_log = std::make_shared<Log>();
 		m_log->init("ET:Grid:" + m_name, ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE("Grid '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -184,7 +184,7 @@ namespace ET
     m_grid(t_grid)
   {
     m_log->TRACE("Grid '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Logger passed to Grid '" + m_name + "'");
   }
   //----------------------------------------------------------------------------

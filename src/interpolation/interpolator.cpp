@@ -55,14 +55,14 @@ namespace ET
 		m_log = std::make_shared<Log>();
 		m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
   template<typename T>
   Interpolator<T>::~Interpolator()
   {
 		m_log->TRACE("Interpolator '" + m_name
-								+ "' destroyed at location " + getMem(*this));
+								+ "' destroyed at location " + address_to_string(*this));
 	}
   //----------------------------------------------------------------------------
   template<typename T>
@@ -74,7 +74,7 @@ namespace ET
 		m_log = std::make_shared<Log>();
 		m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
   template<typename T>
@@ -85,7 +85,7 @@ namespace ET
 		m_log = std::make_shared<Log>();
     m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -96,7 +96,7 @@ namespace ET
 		m_log = std::make_shared<Log>();
     m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
 	template<typename T>
@@ -107,7 +107,7 @@ namespace ET
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = t_log;
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
 		m_log->INFO("Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ namespace ET
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = t_log;
 		m_log->TRACE("Interpolator '" + m_name + "' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
 		m_log->INFO("Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ namespace ET
   {
     m_lsdriver = LSDriver::xGELS;
     m_log->TRACE("Interpolator '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ namespace ET
   {
     m_lsdriver = LSDriver::xGELS;
     m_log->TRACE("Interpolator '" + m_name + "' created at location "
-                + getMem(*this));
+                + address_to_string(*this));
     m_log->INFO("Log passed to Interpolator '" + m_name + "'");
   }
 	//----------------------------------------------------------------------------
@@ -156,6 +156,12 @@ namespace ET
   std::shared_ptr<Grid<T>> Interpolator<T>::getGrid() const
   {
     return m_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Field<T>> Interpolator<T>::getField() const
+  {
+    return m_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -192,6 +198,12 @@ namespace ET
   void Interpolator<T>::setGrid(std::shared_ptr<Grid<T>> t_Grid)
   {
     m_Grid = t_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Interpolator<T>::setField(std::shared_ptr<Field<T>> t_Field)
+  {
+    m_Field = t_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>

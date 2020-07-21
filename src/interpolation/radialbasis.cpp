@@ -46,7 +46,7 @@ namespace ET
     m_log = std::make_shared<Log>();
     m_log->init("ET:RadialBasisInterpolator:default", ".logs/rbf_default.txt");
 		m_log->TRACE("RadialBasisInterpolator 'default' created at location "
-		            + getMem(*this));
+		            + address_to_string(*this));
   }
   template<typename T>
   RadialBasisInterpolator<T>::~RadialBasisInterpolator()
@@ -254,13 +254,13 @@ namespace ET
 	{
 		std::string sum = "---------------------------------------------------";
 		sum += "\n<ET::RadialBasisInterpolator<double";
-		sum += "> object at " + getMem(this) + ">";
+		sum += "> object at " + address_to_string(this) + ">";
 		sum += "\n---------------------------------------------------";
     sum += "\n   type: '" + RBFKernelTypeNameMap[m_type] + "'";
     sum += "\n  shape:  " + std::to_string(m_shape);
 		sum += "\n---------------------------------------------------";
-		sum += "\nLogger at: " + getMem(*getLogger()) + ",";
-		sum += "\n   ref at: " + getMem(m_log);
+		sum += "\nLogger at: " + address_to_string(*getLogger()) + ",";
+		sum += "\n   ref at: " + address_to_string(m_log);
 		sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		return sum;
 	}

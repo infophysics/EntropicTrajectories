@@ -27,7 +27,7 @@
 #include "grid.h"
 #include "geometry.h"
 #include "params.h"
-#include "utils.h"
+#include "utilities.h"
 #include "matrix.h"
 #include "log.h"
 
@@ -47,6 +47,20 @@ namespace ET
 
 namespace ET
 {
+  //! Interpolator Type enum
+  /*! Determines whether one uses LS, MLS or WMLS methods for
+   *  various algorithms.
+   */
+  enum class InterpolatorType
+  {
+    /*! Enum value: ET::InterpolatorType::LS.*/
+    LS,
+    /*! Enum value: ET::InteprolatorType::MLS.*/
+    MLS,
+    /*! Enum value: ET::InteprolatorType::WMLS.*/
+    WMLS,
+  };
+
   //! LSDriver enum
   /*! Enum for determining the type of least squares driver to use.
    *
@@ -191,7 +205,6 @@ namespace ET
     void setLSDriver(std::string type);
 
     //  Derivative functions that must be overloaded in derived classes.
-
     //! Derivative
     /*! derivative.  Derivative for a point in the Grid given by index,
      *  of degree t_degree.

@@ -21,7 +21,7 @@
 #include <vector>
 #include <string>
 
-#include "utils.h"
+#include "utilities.h"
 #include "matrix.h"
 #include "kdtree.h"
 #include "log.h"
@@ -321,9 +321,9 @@ namespace ET
 
     //  Virtual functions for subclasses
     //! get KDTree
-    virtual KDTree<T> getKDTree() const { return KDTree<T>(); }
+    virtual std::shared_ptr<KDTree<T>> getKDTree() const { return std::make_shared<KDTree<T>>(); }
     //! set KDtree
-    virtual void setKDTree(KDTree<T> t_kdtree) { return; }
+    virtual void setKDTree(std::shared_ptr<KDTree<T>> t_kdtree) { return; }
 
   protected:
     /*! Name.  Name of the Grid.  Defaulted to empty string.

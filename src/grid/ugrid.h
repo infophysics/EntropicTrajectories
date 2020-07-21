@@ -22,7 +22,7 @@
 #include <string>
 
 #include "grid.h"
-#include "utils.h"
+#include "utilities.h"
 #include "matrix.h"
 #include "kdtree.h"
 #include "log.h"
@@ -148,20 +148,22 @@ namespace ET
     /*! Get the KDTree.
      *  @return A KDTree<T> object.
      */
-    KDTree<T> getKDTree() const;
+    std::shared_ptr<KDTree<T>> getKDTree() const;
     //! Set KDTree.
     /*! Set the KDTree.
      *  @param t_kdtree A KDTree<T> object.
      */
-    void setKDTree(KDTree<T> t_kdtree);
+    void setKDTree(std::shared_ptr<KDTree<T>> t_kdtree);
 
     //  Various functions
     bool checkConsistency();
 
   private:
-    /*! KDTree for the grid.*/
-    KDTree<T> m_kdtree;
-    /*! Grid Type.  The grid type for this object is UNSTRUCTURED.*/
+    /*! KDTree for the grid.
+     */
+    std::shared_ptr<KDTree<T>> m_kdtree;
+    /*! Grid Type.  The grid type for this object is UNSTRUCTURED.
+     */
     const enum GridType t_type {GridType::UNSTRUCTURED};
   };
 

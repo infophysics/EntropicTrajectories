@@ -4,7 +4,7 @@
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
 //  [ncarrara@albany.edu]
-
+//
 //
 //  Permission to use, copy, modify, and/or distribute this software for any
 //  purpose with or without fee is hereby granted.
@@ -23,33 +23,7 @@
 
 namespace ET
 {
-  enum class MatrixType
-  {
-    SQUARE,
-    SYMMETRIC,
-    PERSYMMETRIC,
-    CENTROSYMMETRIC,
-    ANTI_SYMMETRIC,
-    UPPER_TRIANGULAR,
-    LOWER_TRIANGULAR,
-    DIAGONAL,
-    BIDIAGONAL,
-    TRIDIAGONAL,
-    ANTI_DIAGONAL,
-    BAND,
-  };
 
-  //----------------------------------------------------------------------------
-  //  Interpolator type
-  //----------------------------------------------------------------------------
-  enum class InterpolatorType
-  {
-    LS,
-    MLS,
-    WMLS,
-    RBF,
-  };
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Weight function type

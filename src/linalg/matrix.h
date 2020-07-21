@@ -31,11 +31,31 @@
 #include <complex>
 
 #include "vector.h"
-#include "utils.h"
+#include "utilities.h"
+#include "log.h"
 
 namespace ET
 {
-  //! Matrix Class
+
+  //! \enum Matrix Type enum
+  /*! Classifications of different types of matrices.*/
+  enum class MatrixType
+  {
+    SQUARE,
+    SYMMETRIC,
+    PERSYMMETRIC,
+    CENTROSYMMETRIC,
+    ANTI_SYMMETRIC,
+    UPPER_TRIANGULAR,
+    LOWER_TRIANGULAR,
+    DIAGONAL,
+    BIDIAGONAL,
+    TRIDIAGONAL,
+    ANTI_DIAGONAL,
+    BAND,
+  };
+
+  //! \class Matrix Class
   /*! This matrix class acts as a wrapper for several BLAS and LAPACK
    *  routines that will be necessary in the ET framework.
    */
