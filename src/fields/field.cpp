@@ -313,6 +313,7 @@ namespace ET
   template<typename T>
   Vector<T> Field<T>::constructLocalFieldValues(size_t t_index)
   {
+    std::cout << "default" << std::endl;
     return Vector<T>();
   }
   //----------------------------------------------------------------------------

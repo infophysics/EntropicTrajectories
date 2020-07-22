@@ -1032,8 +1032,14 @@ PYBIND11_MODULE(etraj, m) {
 		     py::return_value_policy::reference)
 		.def("set_field", &ScalarField<double>::setField)
     .def("set_Interpolator", &ScalarField<double>::setInterpolator)
+    .def("set_DiffEQ", &ScalarField<double>::setDiffEQ)
+    .def("set_Integrator", &ScalarField<double>::setIntegrator)
     .def_property("Interpolator", &Field<double>::getInterpolator,
                                   &ScalarField<double>::setInterpolator)
+    .def_property("DiffEQ", &Field<double>::getDiffEQ,
+                                  &ScalarField<double>::setDiffEQ)
+    .def_property("Integrator", &Field<double>::getIntegrator,
+                                  &ScalarField<double>::setIntegrator)
     .def_property_readonly("type", &ScalarField<double>::getType)
 		//	Operator overloads
 		.def(py::self + py::self)

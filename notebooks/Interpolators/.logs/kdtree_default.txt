@@ -1,5 +1,5 @@
-[14:34:21] [trace] ET:KDTree:default: KDTree 'default' created at location 0x55d879384110
-[14:34:21] [info] ET:KDTree:default: Initialized KDTree with 1000 points in 1 dimensions
-[14:34:21] [info] ET:KDTree:default: Set global k value to 10
-[14:34:21] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (1000 x 1) for the nearest 10 neighbors
-[14:34:22] [info] ET:KDTree:default: KDTree is up to date with 10 neighbor values.  Aborting search.
+[19:57:25] [trace] ET:KDTree:default: KDTree 'default' created at location 0x55dea4ed93a0
+[19:57:25] [info] ET:KDTree:default: Initialized KDTree with 1000 points in 1 dimensions
+[19:57:25] [info] ET:KDTree:default: Set global k value to 10
+[19:57:25] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (1000 x 1) for the nearest 10 neighbors
+[19:57:28] [info] ET:KDTree:default: KDTree is up to date with 10 neighbor values.  Aborting search.

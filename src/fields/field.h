@@ -193,12 +193,12 @@ namespace ET
     /*! set DiffEQ.  Sets the shared pointer for the associated DiffEQ.
      *  @param t_diffeq A shared pointer for a DiffEQ instance.
      */
-    void setDiffEQ(std::shared_ptr<DiffEQ<T>> t_diffeq);
+    virtual void setDiffEQ(std::shared_ptr<DiffEQ<T>> t_diffeq);
     //! Set Integrator
     /*! set Integrator.  Sets the shared pointer for the associated Integrator.
      *  @param t_integrator A shared pointer for a Integrator instance.
      */
-    void setIntegrator(std::shared_ptr<Integrator<T>> t_integrator);
+    virtual void setIntegrator(std::shared_ptr<Integrator<T>> t_integrator);
     //! Set flag
     /*! set flag.  Sets the flag pertaining to info.
         @param t_flag an int that classifies the type of information stored

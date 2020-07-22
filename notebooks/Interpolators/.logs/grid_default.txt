@@ -1,5 +1,6 @@
-[14:34:21] [trace] ET:UGrid:default: UGrid 'default' created at location 0x55d879b6c030
-[14:34:21] [trace] ET:UGrid:default: Field 'default' created at location 0x55d879b35930
-[14:34:21] [info] ET:UGrid:default: Logger passed to Field 'default'
-[14:34:21] [trace] ET:UGrid:default: Interpolator 'default' created at location 0x55d879b9a010
-[14:34:21] [info] ET:UGrid:default: Log passed to Interpolator 'default'
+[19:57:25] [trace] ET:UGrid:default: UGrid 'default' created at location 0x55dea4ffc490
+[19:57:25] [trace] ET:UGrid:default: Field 'default' created at location 0x55dea4fc5940
+[19:57:25] [info] ET:UGrid:default: Logger passed to Field 'default'
+[19:57:25] [trace] ET:UGrid:default: Interpolator 'default' created at location 0x55dea502a470
+[19:57:25] [info] ET:UGrid:default: Log passed to Interpolator 'default'
+[19:57:25] [trace] ET:UGrid:default: Field 'default' destroyed at location 0x55dea4439670

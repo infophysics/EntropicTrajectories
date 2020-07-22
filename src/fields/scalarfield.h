@@ -176,6 +176,16 @@ namespace ET
      *  @param t_interpolator A shared pointer for a Interpolator instance.
      */
     virtual void setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator);
+    //! Set DiffEQ
+    /*! set DiffEQ.  Sets the shared pointer for the associated DiffEQ.
+     *  @param t_diffeq A shared pointer for a DiffEQ instance.
+     */
+    virtual void setDiffEQ(std::shared_ptr<DiffEQ<T>> t_diffeq);
+    //! Set Integrator
+    /*! set Integrator.  Sets the shared pointer for the associated Integrator.
+     *  @param t_integrator A shared pointer for a Integrator instance.
+     */
+    virtual void setIntegrator(std::shared_ptr<Integrator<T>> t_integrator);
     //  Operator overloads
     //! Plus.
     /*! plus operator.  Add two scalar fields together
@@ -256,7 +266,7 @@ namespace ET
      *  @param t_index The index of the point to construct around.
      *  @return A vector of field values.
      */
-    Vector<T> constructLocalScalarFieldValues(size_t t_index);
+    virtual Vector<T> constructLocalFieldValues(size_t t_index);
     //! Construct local field values
     /*! Function for generating vectors and matrices
      *  of local field values to use for interpolation.
@@ -264,8 +274,9 @@ namespace ET
      *  @param t_k The number of neighbors to use.
      *  @return Either vectors or matrices.
      */
-    Vector<T> constructLocalScalarFieldValues(const std::vector<T>& t_point,
-                                        size_t t_k);
+    virtual Vector<T>
+    constructLocalFieldValues(const std::vector<T>& t_point,
+                                    size_t t_k);
 
     //  Derivative functions
     //! Derivative
@@ -274,7 +285,7 @@ namespace ET
      *  @return The nth-derivative at the point given
      *  by the index.
      */
-    Vector<T> derivative(const size_t t_index,
+    virtual Vector<T> derivative(const size_t t_index,
                          const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the Grid given by index,
@@ -282,7 +293,7 @@ namespace ET
      *  @return The nth-derivative in the lth-direction at the point given
      *  by the index.
      */
-    T derivative(const size_t t_index,
+    virtual T derivative(const size_t t_index,
                  const size_t t_degree,
                  const size_t t_direction);
    //! Derivative
@@ -291,7 +302,7 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-   Vector<T> derivative(const std::vector<T>& point,
+   virtual Vector<T> derivative(const std::vector<T>& point,
                         const size_t t_degree);
    //! Derivative
    /*! derivative.  Derivative for an arbitrary point,
@@ -299,7 +310,7 @@ namespace ET
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-   T derivative(const std::vector<T>& point,
+   virtual T derivative(const std::vector<T>& point,
                 const size_t t_degree,
                 const size_t t_direction);
 
