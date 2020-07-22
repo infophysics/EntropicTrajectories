@@ -21,6 +21,20 @@
 
 namespace ET
 {
+  //  map for a string to enum of Interpolator type
+  std::map<std::string, InterpolatorType> InterpolatorTypeMap =
+  {
+    { "DEFAULT", InterpolatorType::DEFAULT },
+    { "LTE",     InterpolatorType::LTE },
+    { "RBF",     InterpolatorType::RBF },
+  };
+  //  map for a  enum to string of Interpolator type
+  std::map<InterpolatorType, std::string> InterpolatorTypeNameMap =
+  {
+    { InterpolatorType::DEFAULT, "DEFAULT" },
+    { InterpolatorType::LTE,     "LTE" },
+    { InterpolatorType::RBF,     "RBF" },
+  };
   //  map for a string to enum of LSDriver type
   std::map<std::string, LSDriver> LSDriverMap =
   {
@@ -29,14 +43,6 @@ namespace ET
     { "xGELSD", LSDriver::xGELSD },
     { "xGELSS", LSDriver::xGELSS }
   };
-  //  map for a int to enum of LSDriver type
-  std::map<int, LSDriver> LSDriverMapInt =
-  {
-    { 0, LSDriver::xGELS },
-    { 1, LSDriver::xGELSY },
-    { 2, LSDriver::xGELSD },
-    { 3, LSDriver::xGELSS }
-  };
   //  map for a string to enum of LSDriver type
   std::map<LSDriver, std::string> LSDriverNameMap =
   {
@@ -44,6 +50,30 @@ namespace ET
     { LSDriver::xGELSY, "xGELSY" },
     { LSDriver::xGELSD, "xGELSD" },
     { LSDriver::xGELSS, "xGELSS" }
+  };
+  //  map for a string to enum of Solver type
+  std::map<std::string, SolverType> SolverTypeMap =
+  {
+    { "LS",   SolverType::LS },
+    { "MLS",  SolverType::MLS },
+    { "WMLS", SolverType::WMLS },
+  };
+  //  map for a  enum to string of Solver type
+  std::map<SolverType, std::string> SolverTypeNameMap =
+  {
+    { SolverType::LS,   "LS" },
+    { SolverType::MLS,  "MLS" },
+    { SolverType::WMLS, "WMLS" },
+  };
+  //  map for a string to enum of WeightMatrix type
+  std::map<std::string, WeightMatrixType> WeightMatrixTypeMap =
+  {
+    { "GAUSSIAN",   WeightMatrixType::GAUSSIAN },
+  };
+  //  map for a  enum to string of WeightMatrix type
+  std::map<WeightMatrixType, std::string> WeightMatrixTypeNameMap =
+  {
+    { WeightMatrixType::GAUSSIAN,   "GAUSSIAN" },
   };
   //----------------------------------------------------------------------------
 	template<typename T>
@@ -177,6 +207,12 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  SolverType Interpolator<T>::getSolverType() const
+  {
+    return m_solvertype;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   int Interpolator<T>::getFlag() const
   {
     return m_flag;
@@ -186,6 +222,12 @@ namespace ET
   std::string Interpolator<T>::getInfo() const
   {
     return m_info;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  InterpolatorType Interpolator<T>::getInterpolatorType() const
+  {
+    return m_interpolatortype;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -227,6 +269,20 @@ namespace ET
 	}
   //----------------------------------------------------------------------------
   template<typename T>
+  void Interpolator<T>::setSolverType(std::string t_type)
+  {
+		auto res = SolverTypeMap.find(t_type);
+		if (res == SolverTypeMap.end()) {
+			m_log->ERROR("Interpolator " + m_name + ": Attempted to set SolverType "
+		              + "to " + t_type + " which is not a valid type");
+		}
+		else {
+			m_solvertype = SolverTypeMap[t_type];
+			m_log->INFO("Interpolator " + m_name + ": SolverType set to " + t_type);
+		}
+	}
+  //----------------------------------------------------------------------------
+  template<typename T>
   void Interpolator<T>::setFlag(int t_flag)
   {
     m_flag = t_flag;
@@ -236,6 +292,66 @@ namespace ET
   void Interpolator<T>::setInfo(std::string t_info)
   {
     m_info = t_info;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> Interpolator<T>::xLinearSolvex(Matrix<T> t_A, Vector<T> t_x,
+                                           size_t t_index)
+  {
+    if (m_solvertype == SolverType::LS) {
+      return xGELSx(t_A,t_x);
+    }
+    else if (m_solvertype == SolverType::MLS) {
+      return xMLSx(t_A,t_x);
+    }
+    else {
+      return xWMLSx(t_A,t_x,t_index);
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Matrix<T> Interpolator<T>::xLinearSolvex(Matrix<T> t_A, Matrix<T> t_X,
+                                           size_t t_index)
+  {
+    if (m_solvertype == SolverType::LS) {
+      return xGELSx(t_A,t_X);
+    }
+    else if (m_solvertype == SolverType::MLS) {
+      return xMLSx(t_A,t_X);
+    }
+    else {
+      return xWMLSx(t_A,t_X,t_index);
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> Interpolator<T>::xLinearSolvex(Matrix<T> t_A, Vector<T> t_x,
+                                           std::vector<T> t_point)
+  {
+    if (m_solvertype == SolverType::LS) {
+      return xGELSx(t_A,t_x);
+    }
+    else if (m_solvertype == SolverType::MLS) {
+      return xMLSx(t_A,t_x);
+    }
+    else {
+      return xWMLSx(t_A,t_x,t_point);
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Matrix<T> Interpolator<T>::xLinearSolvex(Matrix<T> t_A, Matrix<T> t_X,
+                                           std::vector<T> t_point)
+  {
+    if (m_solvertype == SolverType::LS) {
+      return xGELSx(t_A,t_X);
+    }
+    else if (m_solvertype == SolverType::MLS) {
+      return xMLSx(t_A,t_X);
+    }
+    else {
+      return xWMLSx(t_A,t_X,t_point);
+    }
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -285,6 +401,7 @@ namespace ET
     Vector<T> y = AA_T_inv * t_A * t_x;
     return y;
 	}
+  //----------------------------------------------------------------------------
   template<typename T>
 	Matrix<T> Interpolator<T>::xMLSx(Matrix<T> t_A, Matrix<T> t_X)
 	{
@@ -298,12 +415,74 @@ namespace ET
     Matrix<T> Y = AA_T_inv * t_A * t_X;
     return Y;
 	}
+  //----------------------------------------------------------------------------
+  template<typename T>
+	Vector<T> Interpolator<T>::xWMLSx(Matrix<T> t_A, Vector<T> t_x,
+                                    size_t t_index)
+	{
+    //  Construct the transpose of A
+    Matrix<T> A_T = t_A.transpose();
+    //  Construct the product A*A_T
+    Matrix<T> AA_T = t_A * A_T;
+    //  Find the inverse of A*A_T
+    Matrix<T> AA_T_inv = DGETRI(AA_T);
+    //  Create the solution
+    Vector<T> y = AA_T_inv * t_A * t_x;
+    return y;
+	}
+  //----------------------------------------------------------------------------
+  template<typename T>
+	Matrix<T> Interpolator<T>::xWMLSx(Matrix<T> t_A, Matrix<T> t_X,
+                                    size_t t_index)
+	{
+    //  Construct the transpose of A
+    Matrix<T> A_T = t_A.transpose();
+    //  Construct the product A*A_T
+    Matrix<T> AA_T = t_A * A_T;
+    //  Find the inverse of A*A_T
+    Matrix<T> AA_T_inv = DGETRI(AA_T);
+    //  Create the solution
+    Matrix<T> Y = AA_T_inv * t_A * t_X;
+    return Y;
+	}
+  //----------------------------------------------------------------------------
+  template<typename T>
+	Vector<T> Interpolator<T>::xWMLSx(Matrix<T> t_A, Vector<T> t_x,
+                                    std::vector<T> t_point)
+	{
+    //  Construct the transpose of A
+    Matrix<T> A_T = t_A.transpose();
+    //  Construct the product A*A_T
+    Matrix<T> AA_T = t_A * A_T;
+    //  Find the inverse of A*A_T
+    Matrix<T> AA_T_inv = DGETRI(AA_T);
+    //  Create the solution
+    Vector<T> y = AA_T_inv * t_A * t_x;
+    return y;
+	}
+  //----------------------------------------------------------------------------
+  template<typename T>
+	Matrix<T> Interpolator<T>::xWMLSx(Matrix<T> t_A, Matrix<T> t_X,
+                                    std::vector<T> t_point)
+	{
+    //  Construct the transpose of A
+    Matrix<T> A_T = t_A.transpose();
+    //  Construct the product A*A_T
+    Matrix<T> AA_T = t_A * A_T;
+    //  Find the inverse of A*A_T
+    Matrix<T> AA_T_inv = DGETRI(AA_T);
+    //  Create the solution
+    Matrix<T> Y = AA_T_inv * t_A * t_X;
+    return Y;
+	}
+  //----------------------------------------------------------------------------
   template<typename T>
   Vector<T> Interpolator<T>::derivative(const size_t t_index,
                                         const size_t t_degree)
   {
    return Vector<T>();
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   T Interpolator<T>::derivative(const size_t t_index,
                                 const size_t t_degree,
@@ -311,12 +490,14 @@ namespace ET
   {
    return 0;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   Vector<T> Interpolator<T>::derivative(const std::vector<T>& point,
                                         const size_t t_degree)
   {
     return Vector<T>();
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   T Interpolator<T>::derivative(const std::vector<T>& point,
                                 const size_t t_degree,
@@ -324,6 +505,7 @@ namespace ET
   {
     return 0;
   }
+  //----------------------------------------------------------------------------
 
 	// //----------------------------------------------------------------------------
 	// //  nth-derivatives of scalar Field

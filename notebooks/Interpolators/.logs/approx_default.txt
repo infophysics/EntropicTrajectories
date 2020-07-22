@@ -1,5 +1,0 @@
-[07:42:44] [trace] ET:Interpolator:default_2: Interpolator 'default' created at location 0x56325a0a3010
-[07:42:44] [info] ET:Interpolator:default_2: Interpolator default: InterpolatorType set to RBF
-[07:42:44] [info] ET:Interpolator:default_2: Interpolator default: shape set to 10.000000
-[07:42:44] [info] ET:Interpolator:default_2: Interpolator default: k set to 24
-[07:45:17] [trace] ET:Interpolator:default_2: Interpolator 'default' destroyed at location 0x56325a0a3010

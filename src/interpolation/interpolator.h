@@ -47,21 +47,19 @@ namespace ET
 
 namespace ET
 {
-  //! Interpolator Type enum
-  /*! Determines whether one uses LS, MLS or WMLS methods for
-   *  various algorithms.
+  //! \enum Interpolator Type
+  /*! Enum for determining the type of interpolation scheme.
    */
   enum class InterpolatorType
   {
-    /*! Enum value: ET::InterpolatorType::LS.*/
-    LS,
-    /*! Enum value: ET::InteprolatorType::MLS.*/
-    MLS,
-    /*! Enum value: ET::InteprolatorType::WMLS.*/
-    WMLS,
+    /*! Enum value: ET::InterpolatorType::DEFAULT.*/
+    DEFAULT,
+    /*! Enum value: ET::InterpolatorType::LTE.*/
+    LTE,
+    /*! Enum value: ET::InterpolatorType::RBF.*/
+    RBF,
   };
-
-  //! LSDriver enum
+  //! \enum LSDriver enum
   /*! Enum for determining the type of least squares driver to use.
    *
    */
@@ -82,9 +80,37 @@ namespace ET
      */
     xGELSS,
   };
+  //! \enum Solver Type enum
+  /*! Determines whether one uses LS, MLS or WMLS methods for
+   *  various algorithms.
+   */
+  enum class SolverType
+  {
+    /*! Enum value: ET::SolverType::LS.*/
+    LS,
+    /*! Enum value: ET::SolverType::MLS.*/
+    MLS,
+    /*! Enum value: ET::SolverType::WMLS.*/
+    WMLS,
+  };
+  //! \enum Weight matrix type
+  /*! Enum for determining the type of weight matrix to use
+   *  in the WMLS method.
+   */
+  enum class WeightMatrixType
+  {
+    /*! Enum value: ET::WeightMatrixType::GAUSSIAN.*/
+    GAUSSIAN,
+  };
 
+  extern std::map<std::string, InterpolatorType> InterpolatorTypeMap;
+  extern std::map<InterpolatorType, std::string> InterpolatorTypeNameMap;
   extern std::map<std::string, LSDriver> LSDriverMap;
   extern std::map<LSDriver, std::string> LSDriverNameMap;
+  extern std::map<std::string, SolverType> SolverTypeMap;
+  extern std::map<SolverType, std::string> SolverTypeNameMap;
+  extern std::map<std::string, WeightMatrixType> WeightMatrixTypeMap;
+  extern std::map<WeightMatrixType, std::string> WeightMatrixTypeNameMap;
 
   //! \class Interpolator Class
   /*! A Base class for interpolating on unstructured Grids.
@@ -161,11 +187,21 @@ namespace ET
      *  @return The std::string info that contains relevant information.
      */
     std::string getInfo() const;
+    //! Get SolverType
+    /*! get the solver type.
+     *  @return The SolverType enum that is currently set.
+     */
+    SolverType getSolverType() const;
     //! Get LSDriver
     /*! get least squares driver.
      *  @return The LSDriver enum that is currently set to be used.
      */
     LSDriver getLSDriver() const;
+    //! Get InterpolatorType
+    /*! get least squares driver.
+     *  @return The InterpolatorType enum that is currently set to be used.
+     */
+    InterpolatorType getInterpolatorType() const;
     //! Set name
     /*! set name.  Sets the name of the Vector.
         @param t_name a std::string for the name of the Field.
@@ -202,7 +238,13 @@ namespace ET
      *  method to use.
      *  @param t_type A string denoting the type of LS driver to use.
      */
-    void setLSDriver(std::string type);
+    void setLSDriver(std::string t_type);
+    //! Set SolverType
+    /*! set the solver type.  Sets the solver type to use,
+     *  either LS, MLS or WMLS.
+     *  @param t_type A string denoting the solver type.
+     */
+    void setSolverType(std::string t_type);
 
     //  Derivative functions that must be overloaded in derived classes.
     //! Derivative
@@ -239,6 +281,46 @@ namespace ET
    virtual T derivative(const std::vector<T>& point,
                         const size_t t_degree,
                         const size_t t_direction);
+    //! xLinearSolvex
+    /*! xLinearSolvex.  Helper function for running either,
+     *  LS, MLS or WMLS methods.
+     *  @param t_A The Matrix A.
+     *  @param t_x The Vector x.
+     *  @param t_index Index of the point in the grid (only for WMLS)
+     *  @return The solution Vector y.
+     */
+    Vector<T> xLinearSolvex(Matrix<T> A, Vector<T> x,
+                            size_t t_index = (size_t)-1);
+    //! xLinearSolvex
+    /*! xLinearSolvex.  Helper function for running either,
+     *  LS, MLS or WMLS methods.
+     *  @param t_A The Matrix A.
+     *  @param t_X The Matrix X.
+     *  @param t_index Index of the point in the grid (only for WMLS)
+     *  @return The solution Matrix Y.
+     */
+    Matrix<T> xLinearSolvex(Matrix<T> A, Matrix<T> x,
+                            size_t t_index = (size_t)-1);
+    //! xLinearSolvex
+    /*! xLinearSolvex.  Helper function for running either,
+     *  LS, MLS or WMLS methods.
+     *  @param t_A The Matrix A.
+     *  @param t_x The Vector x.
+     *  @param t_point The point to expand around (only for WMLS)
+     *  @return The solution Vector y.
+     */
+    Vector<T> xLinearSolvex(Matrix<T> A, Vector<T> x,
+                            std::vector<T> t_point = {});
+    //! xLinearSolvex
+    /*! xLinearSolvex.  Helper function for running either,
+     *  LS, MLS or WMLS methods.
+     *  @param t_A The Matrix A.
+     *  @param t_X The Matrix X.
+     *  @param t_point The point to expand around (only for WMLS)
+     *  @return The solution Matrix Y.
+     */
+    Matrix<T> xLinearSolvex(Matrix<T> A, Matrix<T> x,
+                            std::vector<T> t_point = {});
     //! xGELSx
     /*! xGELSx.  Helper function for running the least squares
      *  algorithm for the system Ax = y.
@@ -271,6 +353,43 @@ namespace ET
      *  @return The solution Matrix Y.
      */
     Matrix<T> xMLSx(Matrix<T> A, Matrix<T> X);
+    //! xWMLSx
+    /*! xWMLSx.  Helper function for running the weighted moving least squares
+     *  algorithm for the system Ax = y.
+     *  @param t_point The point to expand around.
+     *  @param t_A The Matrix A.
+     *  @param t_x The Vector x.
+     *  @param t_index The index to expand around.
+     *  @return The solution Vector y.
+     */
+    Vector<T> xWMLSx(Matrix<T> A, Vector<T> x, size_t t_index);
+    //! xWMLSx
+    /*! xWMLSx.  Helper function for running the weighted moving least squares
+     *  algorithm for the system AX = Y.
+     *  @param t_A The Matrix A.
+     *  @param t_X The Matrix X.
+     *  @param t_index The index to expand around.
+     *  @return The solution Matrix Y.
+     */
+    Matrix<T> xWMLSx(Matrix<T> A, Matrix<T> X, size_t t_index);
+    //! xWMLSx
+    /*! xWMLSx.  Helper function for running the weighted moving least squares
+     *  algorithm for the system Ax = y.
+     *  @param t_A The Matrix A.
+     *  @param t_x The Vector x.
+     *  @param t_point The point to expand around.
+     *  @return The solution Vector y.
+     */
+    Vector<T> xWMLSx(Matrix<T> A, Vector<T> x, std::vector<T> t_point);
+    //! xWMLSx
+    /*! xWMLSx.  Helper function for running the weighted moving least squares
+     *  algorithm for the system AX = Y.
+     *  @param t_A The Matrix A.
+     *  @param t_X The Matrix X.
+     *  @param t_point The point to expand around.
+     *  @return The solution Matrix Y.
+     */
+    Matrix<T> xWMLSx(Matrix<T> A, Matrix<T> X, std::vector<T> t_point);
 
   protected:
     /*! Name.  The name of the Interpolator.
@@ -289,12 +408,18 @@ namespace ET
      *  method to use.
      */
     enum LSDriver m_lsdriver {LSDriver::xGELS};
+    /*! Solver Type.  An enum that denotes the type of solver to use.
+     */
+    enum SolverType m_solvertype {SolverType::LS};
     /*! Flag.  An in that denotes the type of message stored in info.
      */
     int m_flag {0};
     /*! Info.  A container for storing important information.
      */
     std::string m_info {""};
+    /*! Interpolator Type.  A const identifier of the type of interpolator.
+     */
+    const enum InterpolatorType m_interpolatortype {InterpolatorType::DEFAULT};
   };
 
   template class Interpolator<double>;

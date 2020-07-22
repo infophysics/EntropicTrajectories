@@ -271,6 +271,8 @@ namespace ET
   void Field<T>::setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator)
   {
     m_Interpolator = t_interpolator;
+    //  m_Grid takes presidence over the grid from t_interpolator
+    m_Interpolator->setGrid(m_Grid);
   }
   //----------------------------------------------------------------------------
   template<typename T>

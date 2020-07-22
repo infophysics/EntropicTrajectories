@@ -890,7 +890,7 @@ PYBIND11_MODULE(etraj, m) {
     .def("get_N", &Field<double>::getN)
     .def("get_log", &Field<double>::getLog)
     .def("get_Grid", &Field<double>::getGrid)
-    .def("get_Inteprolator", &Field<double>::getInterpolator)
+    .def("get_Interpolator", &Field<double>::getInterpolator)
     .def("get_DiffEQ", &Field<double>::getDiffEQ)
     .def("get_Integrator", &Field<double>::getIntegrator)
     .def("get_flag", &Field<double>::getFlag)
@@ -1125,6 +1125,16 @@ PYBIND11_MODULE(etraj, m) {
 	//----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
+  //  InterpolatorType enum
+  //----------------------------------------------------------------------------
+  py::enum_<InterpolatorType>(m, "InterpolatorType")
+    .value("default", InterpolatorType::DEFAULT)
+    .value("local_taylor", InterpolatorType::LTE)
+    .value("radial_basis", InterpolatorType::RBF)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
 	//	LSDriver enum
 	//----------------------------------------------------------------------------
 	py::enum_<LSDriver>(m, "LSDriver")
@@ -1134,6 +1144,24 @@ PYBIND11_MODULE(etraj, m) {
 		.value("xGELSS", LSDriver::xGELSS)
 		;
 	//----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  SolverType enum
+  //----------------------------------------------------------------------------
+  py::enum_<SolverType>(m, "SolverType")
+    .value("LS", SolverType::LS)
+    .value("MLS", SolverType::MLS)
+    .value("WMLS", SolverType::WMLS)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  WeightMatrixType enum
+  //----------------------------------------------------------------------------
+  py::enum_<WeightMatrixType>(m, "WeightMatrixType")
+    .value("gaussian", WeightMatrixType::GAUSSIAN)
+    ;
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Interpolator class
@@ -1163,7 +1191,9 @@ PYBIND11_MODULE(etraj, m) {
     .def("get_log", &Interpolator<double>::getLog)
     .def("get_flag", &Interpolator<double>::getFlag)
     .def("get_info", &Interpolator<double>::getInfo)
+    .def("get_type", &Interpolator<double>::getInterpolatorType)
 		.def("get_lsdriver", &Interpolator<double>::getLSDriver)
+    .def("get_solvertype", &Interpolator<double>::getSolverType)
 		.def("set_name", &Interpolator<double>::setName)
     .def("set_Grid", &Interpolator<double>::setGrid)
     .def("set_Field", &Interpolator<double>::setField)
@@ -1171,6 +1201,7 @@ PYBIND11_MODULE(etraj, m) {
     .def("set_flag", &Interpolator<double>::setFlag)
     .def("set_info", &Interpolator<double>::setInfo)
 		.def("set_lsdriver", &Interpolator<double>::setLSDriver)
+    .def("set_solvertype", &Interpolator<double>::setSolverType)
     .def_property("name", &Interpolator<double>::getName,
                           &Interpolator<double>::setName)
     .def_property("Grid", &Interpolator<double>::getGrid,
@@ -1185,6 +1216,9 @@ PYBIND11_MODULE(etraj, m) {
                           &Interpolator<double>::setInfo)
     .def_property("lsdriver", &Interpolator<double>::getLSDriver,
                               &Interpolator<double>::setLSDriver)
+    .def_property("solvertype", &Interpolator<double>::getSolverType,
+                                &Interpolator<double>::setSolverType)
+    .def_property_readonly("type", &Interpolator<double>::getInterpolatorType)
 		.def("output", [](Interpolator<double>& self)
 		{
 			std::string out = self.getLog()->getOutput();
@@ -1205,8 +1239,9 @@ PYBIND11_MODULE(etraj, m) {
      sum += "\n---------------------------------------------------";
      sum += "\n<ET::Inteprolator<double> object at " + address_to_string(inter) + ">";
      sum += "\n---------------------------------------------------";
-     sum += "\n    name: '" + inter.getName() + "'";
-     sum += "\nLSDriver:  " + LSDriverNameMap[inter.getLSDriver()];
+     sum += "\n      name: '" + inter.getName() + "'";
+     sum += "\nSolverType: " + SolverTypeNameMap[inter.getSolverType()];
+     sum += "\n  LSDriver: " + LSDriverNameMap[inter.getLSDriver()];
      sum += "\n---------------------------------------------------";
      sum += "\n        Grid at: " + address_to_string(*inter.getGrid()) + ",";
      sum += "\n         ref at: " + address_to_string(inter.getGrid());

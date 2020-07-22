@@ -1,8 +1,97 @@
-[19:07:24] [trace] ET:KDTree:default: KDTree 'default' created at location 0x5617541940b0
-[19:07:24] [info] ET:KDTree:default: Initialized KDTree with 1000 points in 1 dimensions
-[19:07:28] [info] ET:KDTree:default: Set global k value to 10
-[19:07:28] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (1000 x 1) for the nearest 10 neighbors
-[19:07:33] [info] ET:KDTree:default: KDTree is up to date with 10 neighbor values.  Aborting search.
-[19:08:09] [info] ET:KDTree:default: Set global k value to 3
-[19:08:09] [info] ET:KDTree:default: KDTree default: Querying each point in array m_points of size (1000 x 1) for the nearest 3 neighbors
-[19:08:51] [info] ET:KDTree:default: KDTree is up to date with 3 neighbor values.  Aborting search.
+[07:02:44] [trace] ET:KDTree:default_0: KDTree 'default' created at location 0x556fa1958b40
+[07:02:44] [info] ET:KDTree:default_0: Initialized KDTree with 50 points in 1 dimensions
+[07:02:44] [info] ET:KDTree:default_0: Set global k value to 3
+[07:02:44] [info] ET:KDTree:default_0: KDTree default: Querying each point in array m_points of size (50 x 1) for the nearest 3 neighbors
+[07:02:44] [info] ET:KDTree:default_0: KDTree is up to date with 3 neighbor values.  Aborting search.
+[07:02:44] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:44] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:48] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:49] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
+[07:02:50] [info] ET:KDTree:default_0: KDTree default: Querying a point for the nearest 3 neighbors.
