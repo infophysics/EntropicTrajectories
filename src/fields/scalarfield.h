@@ -145,6 +145,11 @@ namespace ET
                 std::shared_ptr<Grid<T>> t_grid,
                 std::shared_ptr<Log> t_log);
 
+    //! Get type
+    /*! Get type.  Get the type of field.
+     *  @return An FieldType enum
+     */
+    enum FieldType getType() const;
     //! Get field.
     /*! get field.  Returns a const copy of the field values vector.
      *  @return m_field An std::vector<T> of field values.
@@ -245,7 +250,7 @@ namespace ET
      *  @param t_index The index of the point to construct around.
      *  @return A vector of field values.
      */
-    Vector<T> constructLocalFieldValues(size_t t_index);
+    Vector<T> constructLocalScalarFieldValues(size_t t_index);
     //! Construct local field values
     /*! Function for generating vectors and matrices
      *  of local field values to use for interpolation.
@@ -253,7 +258,7 @@ namespace ET
      *  @param t_k The number of neighbors to use.
      *  @return Either vectors or matrices.
      */
-    Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
+    Vector<T> constructLocalScalarFieldValues(const std::vector<T>& t_point,
                                         size_t t_k);
 
     //  Derivative functions

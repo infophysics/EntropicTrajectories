@@ -210,6 +210,14 @@ namespace ET
         @param t_info an std::string containing useful messages.
     */
     void setInfo(std::string t_info);
+    //  Operators
+    //! Assignment operator
+    /*! Virtual function for the assignment operator which prevents slicing.
+     */
+    virtual Field<T>& operator=(const Field<T>& field)
+    {
+      assign(field);
+    }
     //! Construct local field values
     /*! Function for generating vectors and matrices
      *  of local field values to use for interpolation.
@@ -262,6 +270,9 @@ namespace ET
      *  Defaulted to default.
      */
     const enum FieldType m_type {FieldType::DEFAULT};
+    /*! Assign operation.
+     */
+    void assign(const Field<T>& field);
   };
 
   template class Field<double>;

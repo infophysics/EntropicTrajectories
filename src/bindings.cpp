@@ -665,8 +665,10 @@ PYBIND11_MODULE(etraj, m) {
                  std::shared_ptr<Log>>(),
        py::arg("name"), py::arg("grid"), py::arg("log"))
     //  Getters and Setters
-		.def("get_kdtree", &UGrid<double>::getKDTree)
+    .def("get_type", &UGrid<double>::getType)
+    .def("get_kdtree", &UGrid<double>::getKDTree)
     .def_property_readonly("kdtree", &UGrid<double>::getKDTree)
+    .def_property_readonly("type", &UGrid<double>::getType)
     //    __str__
     .def("__str__", [](const UGrid<double> &g) {
       std::stringstream s;
@@ -919,6 +921,7 @@ PYBIND11_MODULE(etraj, m) {
                   &Field<double>::setIntegrator)
     .def_property("flag", &Field<double>::getFlag, &Field<double>::setFlag)
     .def_property("info", &Field<double>::getInfo, &Field<double>::setInfo)
+    .def_property_readonly("type", &Field<double>::getType)
     .def("log_output", [](Field<double>& self)
     {
     	std::string out = self.getLog()->getOutput();
@@ -1020,6 +1023,7 @@ PYBIND11_MODULE(etraj, m) {
                   std::shared_ptr<Log>>(),
           py::arg("name"), py::arg("field"), py::arg("Grid"), py::arg("log"))
 		//	Getters and Setters
+    .def("get_type", &ScalarField<double>::getType)
 		.def("get_field", &ScalarField<double>::getField,
 		     py::return_value_policy::reference)
 		.def("access_field", &ScalarField<double>::accessField,
@@ -1027,6 +1031,7 @@ PYBIND11_MODULE(etraj, m) {
 		.def("data", &ScalarField<double>::data,
 		     py::return_value_policy::reference)
 		.def("set_field", &ScalarField<double>::setField)
+    .def_property_readonly("type", &ScalarField<double>::getType)
 		//	Operator overloads
 		.def(py::self + py::self)
 		.def(py::self - py::self)

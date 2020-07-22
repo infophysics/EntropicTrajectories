@@ -204,6 +204,12 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  enum FieldType ScalarField<T>::getType() const
+  {
+    return m_type;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   std::vector<T> ScalarField<T>::getField() const
   {
     return m_field;
@@ -517,8 +523,9 @@ namespace ET
   //----------------------------------------------------------------------------
 
   template<typename T>
-  Vector<T> ScalarField<T>::constructLocalFieldValues(size_t t_index)
+  Vector<T> ScalarField<T>::constructLocalScalarFieldValues(size_t t_index)
   {
+    std::cout << "HERE" << std::endl;
     //  Get the nearest neighbors for the index
     this->m_Grid->getKDTree()->queryNeighbors(t_index);
     std::vector<size_t>
@@ -533,7 +540,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  ScalarField<T>::constructLocalFieldValues(const std::vector<T>& t_point,
+  ScalarField<T>::constructLocalScalarFieldValues(const std::vector<T>& t_point,
                                             size_t t_k)
   {
     //  Get the nearest neighbors for the index
@@ -542,6 +549,7 @@ namespace ET
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
+      std::cout << i << "," << neighbors[i] << "," << m_field[neighbors[i]] << std::endl;
       f(i) = m_field[neighbors[i]];
     }
     return f;

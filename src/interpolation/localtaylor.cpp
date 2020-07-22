@@ -76,6 +76,7 @@ namespace ET
   (std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log)
   : Interpolator<T>(t_ugrid, t_log)
   {
+    m_monomial.setDim(this->m_Grid->getDim());
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -149,7 +150,6 @@ namespace ET
       this->m_log->TRACE("Returning zero matrix.");
       return Matrix<T>("zeroes",1,0.0);
     }
-    std::cout << "HERE" << std::endl;
     //  Determine which scheme to use
     if (m_searchScheme == SearchScheme::NEAREST_NEIGHBORS) {
       this->m_Grid->getKDTree()->queryNeighbors(m_k);
@@ -157,6 +157,8 @@ namespace ET
     else {
       this->m_Grid->getKDTree()->queryNeighbors(m_radius);
     }
+    //  Reset the monomial to use the correct m_k and m_n values
+    m_monomial.setDeg(m_n);
     //  Grab the neighbors for the point at t_index.
     std::vector<size_t>
     neighbors = this->m_Grid->getKDTree()->getCurrentNeighborIndices(t_index);
@@ -168,7 +170,7 @@ namespace ET
       auto id = neighbors[i];
       std::vector<T> x = this->m_Grid->getPoint(id);
       std::vector<double> temp = m_monomial.taylorMonomialExpansion(p,x);
-      LTI[i] = temp;
+      LTI[i] = std::move(temp);
     }
     return Matrix<T>("LTI",LTI);
   }
@@ -193,7 +195,7 @@ namespace ET
       auto id = neighbors[i];
       std::vector<T> x = this->m_Grid->getPoint(id);
       std::vector<double> temp = m_monomial.taylorMonomialExpansion(t_point,x);
-      LTI[i] = temp;
+      LTI[i] = std::move(temp);
     }
     return Matrix<T>("LTI",LTI);
   }
@@ -279,7 +281,7 @@ namespace ET
     if (t_n == 0) {
       this->m_log->ERROR("Tried to set m_n to zero.");
     }
-    else {
+    else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
       this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
@@ -313,7 +315,7 @@ namespace ET
     if (t_n == 0) {
       this->m_log->ERROR("Tried to set m_n to zero.");
     }
-    else {
+    else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
       this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
@@ -347,7 +349,7 @@ namespace ET
     if (t_n == 0) {
       this->m_log->ERROR("Tried to set m_n to zero.");
     }
-    else {
+    else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
       this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
@@ -378,7 +380,7 @@ namespace ET
     if (t_n == 0) {
       this->m_log->ERROR("Tried to set m_n to zero.");
     }
-    else {
+    else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
       this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
@@ -447,7 +449,7 @@ namespace ET
   {
     Vector<T> result(this->m_Grid->getDim());
     //  Construct the LTI Matrix for the point at index.
-    Matrix<T> LTI = constructLocalTaylorMatrix(t_index, t_degree);
+    Matrix<T> LTI = constructLocalTaylorMatrix(t_index, m_k, t_degree);
     //  Construct the field object
     auto f = this->m_Field->constructLocalFieldValues(t_index);
     //  Solve the system
@@ -479,7 +481,7 @@ namespace ET
   {
     Vector<T> result(this->m_Grid->getDim());
     //  Construct the LTI Matrix for the point at index.
-    Matrix<T> LTI = constructLocalTaylorMatrix(t_point, t_degree);
+    Matrix<T> LTI = constructLocalTaylorMatrix(t_point, m_k, t_degree);
     //  Construct the field object
     auto f = this->m_Field->constructLocalFieldValues(t_point,m_k);
     //  Solve the system

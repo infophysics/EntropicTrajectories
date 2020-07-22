@@ -144,6 +144,12 @@ namespace ET
           std::shared_ptr<Log> t_log);
 
     //  Getters and Setters
+    //! Get type
+    /*! Get the type of the grid.  This will be useful for other classes
+     *  which only have a shared pointer to a generic Grid<T>, but do not
+     *  otherwise know which functions are available.
+     */
+    enum GridType getType() const;
     //! Get KDTree.
     /*! Get the KDTree.
      *  @return A KDTree<T> object.
@@ -164,7 +170,7 @@ namespace ET
     std::shared_ptr<KDTree<T>> m_kdtree;
     /*! Grid Type.  The grid type for this object is UNSTRUCTURED.
      */
-    const enum GridType t_type {GridType::UNSTRUCTURED};
+    const enum GridType m_type {GridType::UNSTRUCTURED};
   };
 
   template class UGrid<double>;

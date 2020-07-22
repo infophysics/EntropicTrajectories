@@ -200,6 +200,12 @@ namespace ET
   //  Getters and Setters
   //----------------------------------------------------------------------------
   template<typename T>
+  enum GridType UGrid<T>::getType() const
+  {
+    return m_type;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   std::shared_ptr<KDTree<T>> UGrid<T>::getKDTree() const
   {
     return m_kdtree;
