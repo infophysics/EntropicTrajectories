@@ -170,6 +170,12 @@ namespace ET
      *  @param t_field An std::vector<T> of field values.
      */
     void setField(std::vector<T> t_field);
+    //! Set Interpolator
+    /*! set Interpolator.  Sets the shared pointer for the
+     *  associated Interpolator.
+     *  @param t_interpolator A shared pointer for a Interpolator instance.
+     */
+    virtual void setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator);
     //  Operator overloads
     //! Plus.
     /*! plus operator.  Add two scalar fields together
@@ -308,6 +314,20 @@ namespace ET
     //--------------------------------------------------------------------------
     const std::string summary();
     //--------------------------------------------------------------------------
+    //! Assignment operator
+    /*! Virtual function for the assignment operator which prevents slicing.
+     */
+    virtual ScalarField<T>& operator=(const Field<T>& t_field) {
+      if (const ScalarField<T>* scalarfield =
+          dynamic_cast<const ScalarField<T>*>(&t_field)) {
+            assign(*scalarfield);
+      }
+      else {
+        throw;
+      }
+      return *this;
+    }
+
 
   private:
     /*! field.  std::vector<T> of field values associated to grid. */
@@ -322,6 +342,13 @@ namespace ET
     size_t _point_cache;
     std::vector<size_t> _neighbor_cache;
     std::vector<double> _distance_cache;
+
+  protected:
+    /*! Assignment function.  */
+    void assign(const ScalarField<T>& t_scalarfield) {
+      Field<T>::assign(t_scalarfield);
+      m_field = t_scalarfield.getField();
+    }
 
   };
   //----------------------------------------------------------------------------

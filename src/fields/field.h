@@ -157,7 +157,7 @@ namespace ET
     /*! Get type.  Get the type of field.
      *  @return An FieldType enum
      */
-    enum FieldType getType() const;
+    virtual enum FieldType getType() const;
     //! Set name
     /*! set name.  Sets the name of the Field.
         @param t_name a std::string for the name of the Field.
@@ -188,7 +188,7 @@ namespace ET
      *  associated Interpolator.
      *  @param t_interpolator A shared pointer for a Interpolator instance.
      */
-    void setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator);
+    virtual void setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator);
     //! Set DiffEQ
     /*! set DiffEQ.  Sets the shared pointer for the associated DiffEQ.
      *  @param t_diffeq A shared pointer for a DiffEQ instance.
@@ -214,9 +214,9 @@ namespace ET
     //! Assignment operator
     /*! Virtual function for the assignment operator which prevents slicing.
      */
-    virtual Field<T>& operator=(const Field<T>& field)
-    {
-      assign(field);
+    virtual Field<T>& operator=(const Field<T>& t_field) {
+      assign(t_field);
+      return *this;
     }
     //! Construct local field values
     /*! Function for generating vectors and matrices
@@ -270,9 +270,20 @@ namespace ET
      *  Defaulted to default.
      */
     const enum FieldType m_type {FieldType::DEFAULT};
-    /*! Assign operation.
+    /*! Assign operation.  Copies the contents of t_field to this.
      */
-    void assign(const Field<T>& field);
+    void assign(const Field<T>& t_field) {
+      m_name = t_field.getName();
+      m_dim = t_field.getDim();
+      m_N = t_field.getN();
+      m_log = t_field.getLog();
+      m_Grid = t_field.getGrid();
+      m_Interpolator = t_field.getInterpolator();
+      m_DiffEQ = t_field.getDiffEQ();
+      m_Integrator = t_field.getIntegrator();
+      m_flag = t_field.getFlag();
+      m_info = t_field.getInfo();
+    }
   };
 
   template class Field<double>;

@@ -25,6 +25,9 @@ namespace ET
   : Field<T>()
   {
     this->m_dim = 1;
+    //std::shared_ptr<ScalarField<T>> field = std::make_shared<ScalarField<T>>(*this);
+    //this->m_Interpolator()->setField(std::dynamic_pointer_cast<ScalarField<T>>(field));
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -37,6 +40,7 @@ namespace ET
   : Field<T>(t_name)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -44,6 +48,7 @@ namespace ET
   : Field<T>(t_log)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -51,6 +56,7 @@ namespace ET
   : Field<T>(t_name, t_log)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -58,6 +64,7 @@ namespace ET
   : Field<T>(t_grid)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -65,6 +72,7 @@ namespace ET
   : Field<T>(t_name, t_grid)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -72,6 +80,7 @@ namespace ET
   : Field<T>(t_interpolator)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -80,6 +89,7 @@ namespace ET
   : Field<T>(t_name, t_interpolator)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -88,6 +98,7 @@ namespace ET
   : Field<T>(t_grid, t_log)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -97,6 +108,7 @@ namespace ET
   : Field<T>(t_name, t_grid, t_log)
   {
     this->m_dim = 1;
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -106,6 +118,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -115,6 +128,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -125,6 +139,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -136,6 +151,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -146,6 +162,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -157,6 +174,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -167,6 +185,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -178,6 +197,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -189,6 +209,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -201,6 +222,7 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -232,6 +254,16 @@ namespace ET
   {
     m_field = t_field;
     this->m_N = m_field.size();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void
+  ScalarField<T>::setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator)
+  {
+    this->m_Interpolator = t_interpolator;
+    //  m_Grid takes presidence over the grid from t_interpolator
+    this->m_Interpolator->setGrid(this->m_Grid);
+    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
   }
   //----------------------------------------------------------------------------
 	template<typename T>

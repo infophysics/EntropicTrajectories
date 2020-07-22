@@ -1031,6 +1031,9 @@ PYBIND11_MODULE(etraj, m) {
 		.def("data", &ScalarField<double>::data,
 		     py::return_value_policy::reference)
 		.def("set_field", &ScalarField<double>::setField)
+    .def("set_Interpolator", &ScalarField<double>::setInterpolator)
+    .def_property("Interpolator", &Field<double>::getInterpolator,
+                                  &ScalarField<double>::setInterpolator)
     .def_property_readonly("type", &ScalarField<double>::getType)
 		//	Operator overloads
 		.def(py::self + py::self)
