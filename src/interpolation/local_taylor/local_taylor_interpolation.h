@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  localtaylor.h
+//  local_taylor_interpolation.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -331,6 +331,11 @@ namespace ET
      */
     Monomial m_monomial {3,3};
   };
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Global interpolation functions
+  //----------------------------------------------------------------------------
 
   template class LocalTaylorInterpolator<double>;
 

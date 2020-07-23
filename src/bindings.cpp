@@ -37,9 +37,10 @@
 #include "vectorfield.h"
 #include "random.h"
 #include "utilities.h"
-#include "radialbasis.h"
-#include "localtaylor.h"
+#include "radial_basis_interpolation.h"
+#include "local_taylor_interpolation.h"
 #include "interpolator.h"
+#include "interpolant.h"
 #include "diffeq.h"
 #include "dynamicalsystem.h"
 #include "scalarfieldexample.h"
@@ -1401,7 +1402,6 @@ PYBIND11_MODULE(etraj, m) {
         (const std::vector<double>&, const size_t, const size_t))
         &LocalTaylorInterpolator<double>::scalarFieldDerivative)
     ;
-
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -1463,6 +1463,62 @@ PYBIND11_MODULE(etraj, m) {
 			res += "\n<etraj.RadialBasisInterpolator ref at " + s.str() + ">\n";
 			return res + field.summary();
 		})
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Interpolant Base class
+  //----------------------------------------------------------------------------
+  py::class_<Interpolant<double>,
+             std::shared_ptr<Interpolant<double>>>(m, "Interpolant")
+    .def(py::init<>())
+    .def("get_name", &Interpolant<double>::getName,
+         "Get the name of the Interpolant")
+    .def("get_dim", &Interpolant<double>::getDim)
+    .def("get_ranges", &Interpolant<double>::getRanges)
+    .def("get_range", &Interpolant<double>::getRange)
+    .def("get_range_min", &Interpolant<double>::getRangeMin)
+    .def("get_range_max", &Interpolant<double>::getRangeMax)
+    .def("set_name", &Interpolant<double>::setName)
+    .def("set_dim", &Interpolant<double>::setDim)
+    .def("set_ranges", &Interpolant<double>::setRanges)
+    .def("set_range", &Interpolant<double>::setRange)
+    .def("set_range_min", &Interpolant<double>::setRangeMin)
+    .def("set_range_max", &Interpolant<double>::setRangeMax)
+    .def_property("name", &Interpolant<double>::getName,
+                          &Interpolant<double>::setName)
+    .def_property("dim", &Interpolant<double>::getDim,
+                         &Interpolant<double>::setDim)
+    .def_property("ranges", &Interpolant<double>::getRanges,
+                            &Interpolant<double>::setRanges)
+    //  Access operators
+    .def("__call__", [](Interpolant<double> &self, std::vector<double>& p)
+    {
+      return self(p);
+    })
+    //	this will allow the user to get a range.
+		.def("__getitem__", [](Interpolant<double> &self, int i)
+		{
+			if (i < 0 || i >= self.getDim()) {
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getDim())
+															+ " rows!");
+			}
+			return self[i];
+		}, py::is_operator())
+    //	this will allow the user to get a range.
+		.def("__setitem__", [](Interpolant<double> &self, int i,
+                           std::vector<double> range)
+		{
+			if (i < 0 || i >= self.getDim()) {
+				throw py::index_error("Index " + std::to_string(i) +
+															" out of bounds for array with "
+															+ std::to_string(self.getDim())
+															+ " rows!");
+			}
+			self[i] = range;
+		}, py::is_operator())
     ;
   //----------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  localtaylor.cpp
+//  local_taylor_interpolation.cpp
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
@@ -16,7 +16,7 @@
 //  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 //  IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //------------------------------------------------------------------------------
-#include "localtaylor.h"
+#include "local_taylor_interpolation.h"
 
 namespace ET
 {

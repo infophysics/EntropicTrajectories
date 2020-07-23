@@ -4,3 +4,4 @@
 [06:46:05] [trace] ET:UGrid:default: Interpolator 'default' created at location 0x557e9e8c05f0
 [06:46:05] [info] ET:UGrid:default: Log passed to Interpolator 'default'
 [06:46:05] [trace] ET:UGrid:default: Field 'default' destroyed at location 0x557e9dcd1670
+[15:36:34] [trace] ET:UGrid:default: Field 'scalar field' destroyed at location 0x557e9e85a5a0

@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-//  radialbasis.h
+//  radial_basis_interpolation.h
 //  The Entropic Trajectories Framework
 //  -----------------------------------
 //  Copyright (C) [2020] by [N. Carrara]
