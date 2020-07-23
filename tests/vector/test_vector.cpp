@@ -84,6 +84,16 @@ void testVectorOperators()
   v(1) = 5.0;
 }
 
+void testVectorIterators()
+{
+  Vector<double> v("v",{1,2,3,4});
+  Vector<double> u("u",{4,3,2,1});
+  std::vector<double> w;
+  std::transform(v.begin(),v.end(),u.begin(),
+                 std::back_inserter(w),
+                 [](double a, double b) {return a + b;});
+}
+
 int main(int, char**)
 {
   testVectorDefaultConstructor();
@@ -91,4 +101,5 @@ int main(int, char**)
   testVectorGetters();
   testVectorSetters();
   testVectorOperators();
+  testVectorIterators();
 }

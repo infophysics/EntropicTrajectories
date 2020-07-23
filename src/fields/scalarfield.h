@@ -373,7 +373,15 @@ namespace ET
       Field<T>::assign(t_scalarfield);
       m_field = t_scalarfield.getField();
     }
+  public:
+    //  Inheriting iterators from std::vector
+    using iterator = typename std::vector<T>::iterator;
+    using const_iterator = typename std::vector<T>::const_iterator;
 
+    iterator begin()              { return m_field.begin(); }
+    iterator end()                { return m_field.end(); }
+    const_iterator cbegin() const { return m_field.cbegin(); }
+    const_iterator cend() const   { return m_field.cend(); }
   };
   //----------------------------------------------------------------------------
 

@@ -350,6 +350,15 @@ namespace ET
      *  Defaulted to default.
      */
     const enum GridType m_type {GridType::DEFAULT};
+  public:
+    //  Inheriting iterators from std::vector
+    using iterator = typename std::vector<std::vector<T>>::iterator;
+    using const_iterator = typename std::vector<std::vector<T>>::const_iterator;
+
+    iterator begin()              { return m_grid.begin(); }
+    iterator end()                { return m_grid.end(); }
+    const_iterator cbegin() const { return m_grid.cbegin(); }
+    const_iterator cend() const   { return m_grid.cend(); }
   };
 
   template class Grid<double>;

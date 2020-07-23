@@ -27,6 +27,7 @@
 #include <lapacke.h>
 #include <cblas.h>
 #include <stdint.h>
+#include <iterator>
 
 #include "utilities.h"
 #include "log.h"
@@ -387,6 +388,16 @@ namespace ET
          Defaulted to an empty string.
      */
     std::string m_info {""};
+
+  public:
+    //  Inheriting iterators from std::vector
+    using iterator = typename std::vector<T>::iterator;
+    using const_iterator = typename std::vector<T>::const_iterator;
+
+    iterator begin()              { return m_vec.begin(); }
+    iterator end()                { return m_vec.end(); }
+    const_iterator cbegin() const { return m_vec.cbegin(); }
+    const_iterator cend() const   { return m_vec.cend(); }
   };
 
   //----------------------------------------------------------------------------
