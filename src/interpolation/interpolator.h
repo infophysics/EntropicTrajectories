@@ -264,23 +264,36 @@ namespace ET
     virtual T derivative(const size_t t_index,
                          const size_t t_degree,
                          const size_t t_direction);
-   //! Derivative
-   /*! derivative.  Derivative for an arbitrary point,
+    //! Derivative
+    /*! derivative.  Derivative for an arbitrary point,
     *  of degree t_degree.
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-   virtual Vector<T> derivative(const std::vector<T>& point,
+    virtual Vector<T> derivative(const std::vector<T>& point,
                                 const size_t t_degree);
-   //! Derivative
-   /*! derivative.  Derivative for an arbitrary point,
+    //! Derivative
+    /*! derivative.  Derivative for an arbitrary point,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-   virtual T derivative(const std::vector<T>& point,
+    virtual T derivative(const std::vector<T>& point,
                         const size_t t_degree,
                         const size_t t_direction);
+    //! Field Derivative
+    /*! field derivative.  Derivative for the entire field
+     *  of degree t_degree.
+     *  @return The nth-derivative of the entire field
+     */
+    virtual std::vector<Vector<T>> fieldDerivative(const size_t t_degree);
+    //! Field Derivative
+    /*! field derivative.  Derivative for the entire field
+     *  of degree t_degree and in the direction t_direction.
+     *  @return The nth-derivative in the lth-direction of the entire field
+     */
+    virtual std::vector<T> fieldDerivative(const size_t t_degree,
+                                           const size_t t_direction);
     //! xLinearSolvex
     /*! xLinearSolvex.  Helper function for running either,
      *  LS, MLS or WMLS methods.

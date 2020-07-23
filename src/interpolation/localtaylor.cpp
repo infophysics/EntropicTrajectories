@@ -443,6 +443,29 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  std::vector<Vector<T>>
+  LocalTaylorInterpolator<T>::fieldDerivative(const size_t t_degree)
+  {
+    std::vector<Vector<T>> result(this->m_Grid->getN());
+    for (auto i = 0; i < result.size(); i++) {
+      result[i] = derivative(i,t_degree);
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  LocalTaylorInterpolator<T>::fieldDerivative(const size_t t_degree,
+                                              const size_t t_direction)
+  {
+    std::vector<T> result(this->m_Grid->getN());
+    for (auto i = 0; i < result.size(); i++) {
+      result[i] = derivative(i,t_degree,t_direction);
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   Vector<T>
   LocalTaylorInterpolator<T>::scalarFieldDerivative(const size_t t_index,
                                                     const size_t t_degree)

@@ -674,6 +674,20 @@ namespace ET
     return this->m_Interpolator->derivative(t_point, t_degree, t_direction);
   }
   //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<Vector<T>>
+  ScalarField<T>::fieldDerivative(const size_t t_degree)
+  {
+    return this->m_Interpolator->fieldDerivative(t_degree);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> ScalarField<T>::fieldDerivative(const size_t t_degree,
+                                    const size_t t_direction)
+  {
+    return this->m_Interpolator->fieldDerivative(t_degree, t_direction);
+  }
+  //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------
 	//	Various functions

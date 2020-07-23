@@ -506,6 +506,19 @@ namespace ET
     return 0;
   }
   //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<Vector<T>> Interpolator<T>::fieldDerivative(const size_t t_degree)
+  {
+   return std::vector<Vector<T>>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> Interpolator<T>::fieldDerivative(const size_t t_degree,
+                                                  const size_t t_direction)
+  {
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
 
 	// //----------------------------------------------------------------------------
 	// //  nth-derivatives of scalar Field

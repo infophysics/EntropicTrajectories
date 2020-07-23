@@ -1088,6 +1088,12 @@ PYBIND11_MODULE(etraj, m) {
     .def("derivative", (double (ScalarField<double>::*)
          (const std::vector<double>&, const size_t, const size_t))
          &ScalarField<double>::derivative)
+    .def("field_derivative", (std::vector<Vector<double>>
+         (ScalarField<double>::*)(const size_t))
+         &ScalarField<double>::fieldDerivative)
+    .def("field_derivative", (std::vector<double>
+         (ScalarField<double>::*)(const size_t, const size_t))
+         &ScalarField<double>::fieldDerivative)
     .def("log_output", [](ScalarField<double>& self)
     {
     	std::string out = self.getLog()->getOutput();
@@ -1372,6 +1378,12 @@ PYBIND11_MODULE(etraj, m) {
     .def("derivative", (double (LocalTaylorInterpolator<double>::*)
         (const std::vector<double>&, const size_t, const size_t))
         &LocalTaylorInterpolator<double>::derivative)
+    .def("field_derivative", (std::vector<Vector<double>>
+         (LocalTaylorInterpolator<double>::*)(const size_t))
+         &LocalTaylorInterpolator<double>::fieldDerivative)
+    .def("field_derivative", (std::vector<double>
+         (LocalTaylorInterpolator<double>::*)(const size_t, const size_t))
+         &LocalTaylorInterpolator<double>::fieldDerivative)
     .def("scalarFieldDerivative", (Vector<double>
         (LocalTaylorInterpolator<double>::*)
         (const size_t, const size_t))

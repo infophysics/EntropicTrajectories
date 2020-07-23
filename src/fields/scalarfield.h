@@ -313,6 +313,19 @@ namespace ET
    virtual T derivative(const std::vector<T>& point,
                 const size_t t_degree,
                 const size_t t_direction);
+    //! Field Derivative
+    /*! field derivative.  Derivative for the entire field
+     *  of degree t_degree.
+     *  @return The nth-derivative of the entire field
+     */
+    virtual std::vector<Vector<T>> fieldDerivative(const size_t t_degree);
+    //! Field Derivative
+    /*! field derivative.  Derivative for the entire field
+     *  of degree t_degree and in the direction t_direction.
+     *  @return The nth-derivative in the lth-direction of the entire field
+     */
+    virtual std::vector<T> fieldDerivative(const size_t t_degree,
+                                           const size_t t_direction);
 
     //--------------------------------------------------------------------------
     //  Methods for calculating integrals
