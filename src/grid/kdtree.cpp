@@ -354,13 +354,13 @@ namespace ET
       m_log->INFO("Returning empty vector.");
       return std::vector<size_t>(0);
     }
-    if (t_k >= m_N) {
+    if (t_k > m_N) {
 			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
 		}
 		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
 							  + std::to_string(t_k) + " neighbors.");
@@ -387,13 +387,13 @@ namespace ET
       m_log->INFO("Returning empty vector.");
       return std::vector<double>(0);
     }
-    if (t_k >= m_N) {
+    if (t_k > m_N) {
 			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
 		}
 		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
 							  + std::to_string(t_k) + " neighbors.");
@@ -424,14 +424,14 @@ namespace ET
       m_log->INFO("Returning empty vector.");
       return std::tuple<std::vector<size_t>,std::vector<double>>();
     }
-    if (t_k >= m_N) {
-      m_log->ERROR("KDTree " + m_name
-                  + ": Attempted to query " + std::to_string(t_k)
-                  + " neighbors for points in array m_points of size "
-                  + std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
-    }
+    if (t_k > m_N) {
+			m_log->ERROR("KDTree " + m_name
+									+ ": Attempted to query " + std::to_string(t_k)
+									+ " neighbors for points in array m_points of size "
+									+ std::to_string(m_N));
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
+		}
     m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
                 + std::to_string(t_k) + " neighbors.");
 
@@ -464,13 +464,13 @@ namespace ET
       m_log->INFO("Returning empty vector.");
       return std::vector<std::vector<size_t>>(0);
     }
-    if (t_k >= m_N) {
+    if (t_k > m_N) {
 			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
 		}
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
     std::vector<std::vector<double>> distances(t_points.size());
@@ -506,13 +506,13 @@ namespace ET
       m_log->INFO("Returning empty vector.");
       return std::vector<std::vector<double>>(0);
     }
-    if (t_k >= m_N) {
+    if (t_k > m_N) {
 			m_log->ERROR("KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
 		}
 		std::vector<std::vector<double>> distances(t_points.size());
     m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
@@ -552,14 +552,14 @@ namespace ET
       return std::tuple<std::vector<std::vector<size_t>>,
                         std::vector<std::vector<double>>>();
     }
-    if (t_k >= m_N) {
-			m_log->ERROR("KDTree " + m_name
-									+ ": Attempted to query " + std::to_string(t_k)
-									+ " neighbors for points in array m_points of size "
-									+ std::to_string(m_N));
-      m_log->INFO("Setting k to 3 for this search.");
-      t_k = 3;
-		}
+    if (t_k > m_N) {
+      m_log->ERROR("KDTree " + m_name
+                  + ": Attempted to query " + std::to_string(t_k)
+                  + " neighbors for points in array m_points of size "
+                  + std::to_string(m_N));
+      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      t_k = m_N;
+    }
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
     std::vector<std::vector<double>> distances(t_points.size());
     m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "

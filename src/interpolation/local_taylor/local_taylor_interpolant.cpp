@@ -28,6 +28,11 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  LocalTaylorInterpolant<T>::~LocalTaylorInterpolant()
+  {
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   size_t LocalTaylorInterpolant<T>::get_n() const
   {
     return m_n;
@@ -62,7 +67,7 @@ namespace ET
   void
   LocalTaylorInterpolant<T>::setExpansionPoint(const std::vector<T>& t_point)
   {
-    m_point = t_point;
+    m_expansion_point = t_point;
     this->m_log->INFO("Set expansion point.");
   }
   //----------------------------------------------------------------------------
@@ -97,4 +102,43 @@ namespace ET
     return result;
   }
   //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Global interpolation functions
+  //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolant<T>
+  createLocalTaylorInterpolant(const std::shared_ptr<Field<T>> t_field,
+                               const std::vector<T>& t_expansion_point,
+                               const size_t& t_n)
+  {
+    const size_t num_points = t_field->getGrid()->getN();
+    //  Construct a local interpolator
+    LocalTaylorInterpolator<T> interp(t_field->getGrid());
+
+    interp.setField(t_field);
+
+    //  Create the local interpolation matrix using every point
+    Matrix<T>
+    LTI = interp.constructLocalTaylorMatrix(t_expansion_point,
+                                            num_points,
+                                            t_n);
+
+    auto f = interp.getField()->constructLocalFieldValues(t_expansion_point,
+                                                       num_points);
+    //  Solve the system
+    auto s = interp.xGELSx(LTI,f);
+    //  Create the interpolant
+    LocalTaylorInterpolant<T> interpolant;
+    interpolant.set_n(t_n);
+    interpolant.setExpansionPoint(t_expansion_point);
+    interpolant.setExpansionCoefficients(s.getVec());
+    return interpolant;
+  }
+  //----------------------------------------------------------------------------
+
+  template LocalTaylorInterpolant<double>
+  createLocalTaylorInterpolant<double>
+  (const std::shared_ptr<Field<double>> t_field,
+   const std::vector<double>& t_expansion_point, const size_t& t_n);
 }

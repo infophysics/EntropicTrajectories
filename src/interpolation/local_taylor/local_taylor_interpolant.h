@@ -18,6 +18,23 @@
 //------------------------------------------------------------------------------
 #pragma once
 
+#include <vector>
+#include <iostream>
+#include <map>
+#include <memory>
+
+#include "ugrid.h"
+#include "geometry.h"
+#include "params.h"
+#include "utilities.h"
+#include "vector.h"
+#include "matrix.h"
+#include "field.h"
+#include "interpolator.h"
+#include "local_taylor_interpolation.h"
+
+#include "interpolant.h"
+
 namespace ET
 {
   //! \class Local Taylor Interpolant
@@ -102,7 +119,7 @@ namespace ET
     /*! Logging system name generator.
      */
     virtual std::string NAME() {
-      return "LTIInterpolant:" + m_name + ":";
+      return "LTIInterpolant:" + this->m_name + ":";
     }
 
   };
@@ -110,4 +127,13 @@ namespace ET
   //----------------------------------------------------------------------------
   //  Global interpolation functions
   //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolant<T>
+  createLocalTaylorInterpolant(const std::shared_ptr<Field<T>> t_field,
+                               const std::vector<T>& t_expansion_point,
+                               const size_t& t_n);
+  //----------------------------------------------------------------------------
+
+  template class LocalTaylorInterpolant<double>;
+
 }

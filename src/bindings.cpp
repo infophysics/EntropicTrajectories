@@ -41,6 +41,8 @@
 #include "local_taylor_interpolation.h"
 #include "interpolator.h"
 #include "interpolant.h"
+#include "local_taylor_interpolant.h"
+#include "radial_basis_interpolant.h"
 #include "diffeq.h"
 #include "dynamicalsystem.h"
 #include "scalarfieldexample.h"
@@ -1520,6 +1522,41 @@ PYBIND11_MODULE(etraj, m) {
 			self[i] = range;
 		}, py::is_operator())
     ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Local Taylor Interpolant Base class
+  //----------------------------------------------------------------------------
+  py::class_<LocalTaylorInterpolant<double>, Interpolant<double>,
+             std::shared_ptr<LocalTaylorInterpolant<double>>>
+             (m, "LocalTaylorInterpolant")
+    .def(py::init<>())
+    .def("get_n", &LocalTaylorInterpolant<double>::get_n)
+    .def("get_expansion_point",
+         &LocalTaylorInterpolant<double>::getExpansionPoint)
+    .def("get_expansion_coefficients",
+         &LocalTaylorInterpolant<double>::getExpansionCoefficients)
+    .def("set_n", &LocalTaylorInterpolant<double>::set_n)
+    .def("set_expansion_point",
+         &LocalTaylorInterpolant<double>::setExpansionPoint)
+    .def("set_expansion_coefficients",
+         &LocalTaylorInterpolant<double>::setExpansionCoefficients)
+    .def_property("n", &LocalTaylorInterpolant<double>::get_n,
+                       &LocalTaylorInterpolant<double>::set_n)
+    .def_property("expansion_point",
+                  &LocalTaylorInterpolant<double>::getExpansionPoint,
+                  &LocalTaylorInterpolant<double>::setExpansionPoint)
+    .def_property("expansion_coefficients",
+                  &LocalTaylorInterpolant<double>::getExpansionCoefficients,
+                  &LocalTaylorInterpolant<double>::setExpansionCoefficients)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Inteprolant generating functions
+  //----------------------------------------------------------------------------
+  m.def("create_local_taylor_interpolant",
+        &createLocalTaylorInterpolant<double>);
   //----------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------------

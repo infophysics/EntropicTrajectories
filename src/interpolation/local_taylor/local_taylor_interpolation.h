@@ -67,14 +67,14 @@ namespace ET
      */
     LocalTaylorInterpolator(std::string t_name);
     //! Constructor
-    /*! constructor for LTI that takes a UGrid
+    /*! constructor for LTI that takes a Grid
      */
-    LocalTaylorInterpolator(std::shared_ptr<UGrid<T>> t_ugrid);
+    LocalTaylorInterpolator(std::shared_ptr<Grid<T>> t_ugrid);
     //! Constructor
-    /*! constructor for LTI that takes a name and a UGrid
+    /*! constructor for LTI that takes a name and a Grid
      */
     LocalTaylorInterpolator(std::string t_name,
-                            std::shared_ptr<UGrid<T>> t_ugrid);
+                            std::shared_ptr<Grid<T>> t_ugrid);
     //! Constructor
     /*! constructor for LTI that takes a Logger
      */
@@ -84,15 +84,15 @@ namespace ET
      */
     LocalTaylorInterpolator(std::string t_name, std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for LTI that takes a UGrid and a logger
+    /*! constructor for LTI that takes a Grid and a logger
      */
-    LocalTaylorInterpolator(std::shared_ptr<UGrid<T>> t_ugrid,
+    LocalTaylorInterpolator(std::shared_ptr<Grid<T>> t_ugrid,
                             std::shared_ptr<Log> t_log);
     //! Constructor
-    /*! constructor for LTI that takes a name, UGrid and a logger
+    /*! constructor for LTI that takes a name, Grid and a logger
      */
     LocalTaylorInterpolator(std::string t_name,
-                            std::shared_ptr<UGrid<T>> t_ugrid,
+                            std::shared_ptr<Grid<T>> t_ugrid,
                             std::shared_ptr<Log> t_log);
     /*! Get k.  Get the nearest neighbor value.
      *  @return The nearest neighbor value k.
@@ -228,7 +228,7 @@ namespace ET
 
     //  Overloaded derivative functions
     //! Derivative
-    /*! derivative.  Derivative for a point in the UGrid given by index,
+    /*! derivative.  Derivative for a point in the Grid given by index,
     *  of degree t_degree.
     *  @return The nth-derivative at the point given
     *  by the index.
@@ -236,7 +236,7 @@ namespace ET
     Vector<T> derivative(const size_t t_index,
                          const size_t t_degree);
     //! Derivative
-    /*! derivative.  Derivative for a point in the UGrid given by index,
+    /*! derivative.  Derivative for a point in the Grid given by index,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
@@ -276,7 +276,7 @@ namespace ET
                                           const size_t t_direction);
     //  Derivatives for scalar fields
     //! Derivative
-    /*! scalar field derivative.  Derivative for a point in the UGrid given by index,
+    /*! scalar field derivative.  Derivative for a point in the Grid given by index,
     *  of degree t_degree.
     *  @return The nth-derivative at the point given
     *  by the index.
@@ -284,7 +284,7 @@ namespace ET
     Vector<T> scalarFieldDerivative(const size_t t_index,
                                     const size_t t_degree);
     //! Derivative
-    /*! scalar field derivative.  Derivative for a point in the UGrid given by index,
+    /*! scalar field derivative.  Derivative for a point in the Grid given by index,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.

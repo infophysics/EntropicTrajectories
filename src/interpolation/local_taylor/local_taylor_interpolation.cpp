@@ -45,14 +45,14 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
-  (std::shared_ptr<UGrid<T>> t_ugrid) : Interpolator<T>(t_ugrid)
+  (std::shared_ptr<Grid<T>> t_ugrid) : Interpolator<T>(t_ugrid)
   {
     m_monomial.setDim(this->m_Grid->getDim());
   }
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
-  (std::string t_name, std::shared_ptr<UGrid<T>> t_ugrid)
+  (std::string t_name, std::shared_ptr<Grid<T>> t_ugrid)
   : Interpolator<T>(t_name, t_ugrid)
   {
     m_monomial.setDim(this->m_Grid->getDim());
@@ -73,7 +73,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
-  (std::shared_ptr<UGrid<T>> t_ugrid, std::shared_ptr<Log> t_log)
+  (std::shared_ptr<Grid<T>> t_ugrid, std::shared_ptr<Log> t_log)
   : Interpolator<T>(t_ugrid, t_log)
   {
     m_monomial.setDim(this->m_Grid->getDim());
@@ -81,7 +81,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolator<T>::LocalTaylorInterpolator
-  (std::string t_name, std::shared_ptr<UGrid<T>> t_ugrid,
+  (std::string t_name, std::shared_ptr<Grid<T>> t_ugrid,
    std::shared_ptr<Log> t_log)
   : Interpolator<T>(t_name, t_ugrid, t_log)
   {
@@ -146,7 +146,7 @@ namespace ET
     if (t_index >= this->m_Grid->getN()) {
       this->m_log->ERROR("Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " which is out of bounds for "
-                   + " UGrid array of size " + std::to_string(this->m_Grid->getN()));
+                   + " Grid array of size " + std::to_string(this->m_Grid->getN()));
       this->m_log->TRACE("Returning zero matrix.");
       return Matrix<T>("zeroes",1,0.0);
     }
@@ -188,6 +188,8 @@ namespace ET
     else {
       neighbors = this->m_Grid->getKDTree()->queryNeighbors(t_point,m_radius);
     }
+    //  Reset the monomial to use the correct m_k and m_n values
+    m_monomial.setDeg(m_n);
     //  Construct the empty (n x m) array for matrix LTI
     std::vector<std::vector<double>>
     LTI(neighbors.size());
