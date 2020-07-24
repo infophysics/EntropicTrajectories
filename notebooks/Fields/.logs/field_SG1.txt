@@ -1,4 +1,0 @@
-[18:13:17] [trace] ET:Field:SG1: Field 'SG1' created at location 0x56033e9b1350
-[18:13:17] [trace] ET:Field:SG1: Interpolator 'default' created at location 0x56033ea1d900
-[18:13:17] [info] ET:Field:SG1: Logger passed to Interpolator 'default'
-[18:13:17] [warning] ET:Field:SG1: Grids for t_scalar fields SG1 and SG2 do not match

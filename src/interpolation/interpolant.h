@@ -158,7 +158,7 @@ namespace ET
     /*! Logging system name generator.
      */
     virtual std::string NAME() const {
-      return "Interpolator:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
+      return "Interpolant:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
     }
     /*! Unique ID for each instance.
      */

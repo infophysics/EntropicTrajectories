@@ -38,6 +38,21 @@
 
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Class for assigning unique identifiers
+  //----------------------------------------------------------------------------
+  class UniqueID
+  {
+  protected:
+    static size_t nextID;
+  public:
+    int id;
+    UniqueID();
+    UniqueID(const UniqueID& orig);
+    UniqueID& operator=(const UniqueID& orig);
+  };
+  //----------------------------------------------------------------------------
+
   //--------------------------------------------------------------------------
   //  Function for getting the 'type' of a variable
   //  This was taken from a comment thread: https://stackoverflow.com/
@@ -155,21 +170,16 @@ namespace ET
     int m_flag;
     //  container for messages
     std::string m_info;
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "Monomial:[" + std::to_string(m_id.id) + "]:";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
   //----------------------------------------------------------------------------
 
-  //----------------------------------------------------------------------------
-  //  Class for assigning unique identifiers
-  //----------------------------------------------------------------------------
-  class UniqueID
-  {
-  protected:
-    static size_t nextID;
-  public:
-    int id;
-    UniqueID();
-    UniqueID(const UniqueID& orig);
-    UniqueID& operator=(const UniqueID& orig);
-  };
-  //----------------------------------------------------------------------------
+
 }

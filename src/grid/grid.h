@@ -350,6 +350,14 @@ namespace ET
      *  Defaulted to default.
      */
     const enum GridType m_type {GridType::DEFAULT};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "Grid:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   public:
     //  Inheriting iterators from std::vector
     using iterator = typename std::vector<std::vector<T>>::iterator;

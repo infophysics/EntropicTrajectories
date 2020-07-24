@@ -270,6 +270,14 @@ namespace ET
      *  Defaulted to default.
      */
     const enum FieldType m_type {FieldType::DEFAULT};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "Field:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
     /*! Assign operation.  Copies the contents of t_field to this.
      */
     void assign(const Field<T>& t_field) {

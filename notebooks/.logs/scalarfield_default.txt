@@ -1,8 +1,0 @@
-[20:17:57] [trace] ET:ScalarField:WaveEQ1D_0: Scalar Field 'WaveEQ1D' created at location 0x5584279a02e0
-[20:17:57] [trace] ET:ScalarField:WaveEQ1D_0: Interpolator 'default' created at location 0x558427b291a0
-[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Logger passed to Interpolator 'default'
-[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Interpolator default: k set to 10
-[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Interpolator default: n set to 5
-[20:17:57] [info] ET:ScalarField:WaveEQ1D_0: Interpolator default: InterpolatorType set to LS
-trace] ET:ScalarField:WaveEQ1D: Scalar Field 'WaveEQ1D' destroyed at location 0x558426c879e0
-[20:17:57] [trace] ET:ScalarField:WaveEQ1D: Interpolator 'default' destroyed at location 0x558426c6ac80

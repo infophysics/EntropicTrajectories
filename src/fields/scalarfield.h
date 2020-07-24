@@ -366,7 +366,14 @@ namespace ET
     size_t _point_cache;
     std::vector<size_t> _neighbor_cache;
     std::vector<double> _distance_cache;
-
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "ScalarField:[" + std::to_string(m_id.id) + "]:" + this->m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   protected:
     /*! Assignment function.  */
     void assign(const ScalarField<T>& t_scalarfield) {

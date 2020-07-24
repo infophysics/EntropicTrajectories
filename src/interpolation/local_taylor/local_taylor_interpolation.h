@@ -332,9 +332,13 @@ namespace ET
     Monomial m_monomial {1,3};
     /*! Logging system name generator.
      */
-    virtual std::string NAME() {
-      return "LTInterpolator:" + this->m_name + ":";
+    virtual std::string NAME() const {
+      return "LTInterpolator:[" + std::to_string(m_id.id) + "]:"
+             + this->m_name + ":";
     }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
   //----------------------------------------------------------------------------
 

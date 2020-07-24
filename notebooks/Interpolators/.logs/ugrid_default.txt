@@ -1,2 +1,0 @@
-[07:41:37] [trace] ET:UGrid:default: Unstructured Grid 'default' created at location 0x56325989ef50
-[07:45:17] [trace] ET:UGrid:default: Unstructured Grid 'default' destroyed at location 0x56325989ef50

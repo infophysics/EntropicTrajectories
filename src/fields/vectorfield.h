@@ -24,6 +24,7 @@
 
 #include "ugrid.h"
 #include "log.h"
+#include "field.h"
 
 //------------------------------------------------------------------------------
 //  Forward declaration of Interpolator
@@ -39,7 +40,7 @@ namespace ET
   //  Vector fields class.
   //----------------------------------------------------------------------------
   template<typename T>
-  class VectorField: public std::enable_shared_from_this<VectorField<T>>
+  class VectorField: public Field<T>
   {
   public:
     //--------------------------------------------------------------------------
@@ -120,13 +121,7 @@ namespace ET
     //--------------------------------------------------------------------------
 
   private:
-    //--------------------------------------------------------------------------
-    //  Basic attributes
-    //--------------------------------------------------------------------------
-    std::string _name;
-    uint32_t _dim;
-    uint64_t _N;
-    std::vector<std::vector<T>> _field;
+    std::vector<std::vector<T>> m_field;
     //--------------------------------------------------------------------------
     //  Shared objects
     //--------------------------------------------------------------------------
@@ -136,6 +131,14 @@ namespace ET
 
     int _flag;
     std::string _info;
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "VectorField:[" + std::to_string(m_id.id) + "]:" + this->m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
     //--------------------------------------------------------------------------
 
   };

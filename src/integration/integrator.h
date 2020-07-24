@@ -72,6 +72,14 @@ namespace ET
     struct IntegratorParams _params;
     //Vector<T>(ScalarField<T>::*_f)(const Vector<T>&,double,Vector<T>);
     std::shared_ptr<Log> _log;
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "Integrator:[" + std::to_string(m_id.id) + "]:";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
   //----------------------------------------------------------------------------
 

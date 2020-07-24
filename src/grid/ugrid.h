@@ -171,6 +171,14 @@ namespace ET
     /*! Grid Type.  The grid type for this object is UNSTRUCTURED.
      */
     const enum GridType m_type {GridType::UNSTRUCTURED};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "UGrid:[" + std::to_string(m_id.id) + "]:" + this->m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
 
   template class UGrid<double>;

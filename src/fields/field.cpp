@@ -25,8 +25,8 @@ namespace ET
   : m_name("default"), m_dim(0), m_N(0)
   {
     m_log = std::make_shared<Log>();
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Grid = std::make_shared<Grid<T>>(m_log);
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
@@ -38,7 +38,7 @@ namespace ET
   template<typename T>
   Field<T>::~Field()
   {
-    m_log->TRACE("Field '" + m_name
+    m_log->TRACE(NAME() + "Field '" + m_name
 								+ "' destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
@@ -47,8 +47,8 @@ namespace ET
   : m_name(t_name), m_dim(0), m_N(0)
   {
     m_log = std::make_shared<Log>();
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Grid = std::make_shared<Grid<T>>(m_log);
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
@@ -62,9 +62,9 @@ namespace ET
   : m_name("default"), m_dim(0), m_N(0)
   {
     m_log = t_log;
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
-		m_log->INFO("Logger passed to Field 'default'");
+		m_log->INFO(NAME() + "Logger passed to Field 'default'");
     m_Grid = std::make_shared<Grid<T>>(m_log);
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -77,9 +77,9 @@ namespace ET
   : m_name(t_name), m_dim(0), m_N(0)
   {
     m_log = t_log;
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
-		m_log->INFO("Logger passed to Field 'default'");
+		m_log->INFO(NAME() + "Logger passed to Field 'default'");
     m_Grid = std::make_shared<Grid<T>>(m_log);
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -93,8 +93,8 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_Grid = t_grid;
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -108,8 +108,8 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_Grid = t_grid;
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -124,8 +124,8 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_Interpolator = t_interpolator;
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Grid = m_Interpolator->getGrid();
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -141,8 +141,8 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_Interpolator = t_interpolator;
-		m_log->init("ET:Field:" + m_name, ".logs/field_" + m_name + ".txt");
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->init(NAME(), ".logs/field_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
     m_Grid = m_Interpolator->getGrid();
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
@@ -156,9 +156,9 @@ namespace ET
   {
     m_log = t_log;
     m_Grid = t_grid;
-		m_log->TRACE("Field '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
 		            + address_to_string(*this));
-		m_log->INFO("Logger passed to Field 'default'");
+		m_log->INFO(NAME() + "Logger passed to Field 'default'");
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
     m_Integrator = std::make_shared<Integrator<T>>(m_Grid,m_log);
@@ -172,9 +172,9 @@ namespace ET
   {
     m_log = t_log;
     m_Grid = t_grid;
-    m_log->TRACE("Field '" + m_name + "' created at location "
+    m_log->TRACE(NAME() + "Field '" + m_name + "' created at location "
                 + address_to_string(*this));
-    m_log->INFO("Logger passed to Field 'default'");
+    m_log->INFO(NAME() + "Logger passed to Field 'default'");
     m_Interpolator = std::make_shared<Interpolator<T>>(m_Grid,m_log);
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
     m_Integrator = std::make_shared<Integrator<T>>(m_Grid,m_log);
@@ -250,36 +250,49 @@ namespace ET
   template<typename T>
   void Field<T>::setName(std::string t_name)
   {
+    m_log->TRACE(NAME() + "Changed name from '" + m_name
+                 + "' to '" + t_name + "'");
     m_name = t_name;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setDim(size_t t_dim)
   {
+    m_log->TRACE(NAME() + "Changed dim from '" + std::to_string(m_dim)
+                 + "' to '" + std::to_string(t_dim) + "'");
     m_dim = t_dim;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setN(size_t t_N)
   {
+    m_log->TRACE(NAME() + "Changed N from '" + std::to_string(m_N)
+                 + "' to '" + std::to_string(t_N) + "'");
     m_N = t_N;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setGrid(std::shared_ptr<Grid<T>> t_grid)
   {
+    m_log->TRACE(NAME() + "Changed Grid from '" + address_to_string(m_Grid)
+                 + "' to '" + address_to_string(t_grid) + "'");
     m_Grid = t_grid;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setLog(std::shared_ptr<Log> t_log)
   {
+    m_log->TRACE(NAME() + "Changed log from '" + address_to_string(m_log)
+                 + "' to '" + address_to_string(t_log) + "'");
     m_log = t_log;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setInterpolator(std::shared_ptr<Interpolator<T>> t_interpolator)
   {
+    m_log->TRACE(NAME() + "Changed Interpolator from '"
+                 + address_to_string(m_Interpolator)
+                 + "' to '" + address_to_string(t_interpolator) + "'");
     m_Interpolator = t_interpolator;
     //  m_Grid takes presidence over the grid from t_interpolator
     m_Interpolator->setGrid(m_Grid);
@@ -289,31 +302,41 @@ namespace ET
   template<typename T>
   void Field<T>::setDiffEQ(std::shared_ptr<DiffEQ<T>> t_diffeq)
   {
+    m_log->TRACE(NAME() + "Changed DiffEQ from '" + address_to_string(m_DiffEQ)
+                 + "' to '" + address_to_string(t_diffeq) + "'");
     m_DiffEQ = t_diffeq;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setIntegrator(std::shared_ptr<Integrator<T>> t_integrator)
   {
+    m_log->TRACE(NAME() + "Changed Integrator from '"
+                 + address_to_string(m_Integrator)
+                 + "' to '" + address_to_string(t_integrator) + "'");
     m_Integrator = t_integrator;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setFlag(int t_flag)
   {
+    m_log->TRACE(NAME() + "Changed flag from '" + std::to_string(m_flag)
+                 + "' to '" + std::to_string(t_flag) + "'");
     m_flag = t_flag;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Field<T>::setInfo(std::string t_info)
   {
+    m_log->TRACE(NAME() + "Changed info from '" + m_info
+                 + "' to '" + t_info + "'");
     m_info = t_info;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T> Field<T>::constructLocalFieldValues(size_t t_index)
   {
-    std::cout << "default" << std::endl;
+    m_log->WARN(NAME() + "Running 'constructLocalFieldValues' from Base class");
+    m_log->WARN(NAME() + "Returning empty Vector<T>");
     return Vector<T>();
   }
   //----------------------------------------------------------------------------
@@ -321,6 +344,8 @@ namespace ET
   Vector<T> Field<T>::constructLocalFieldValues(const std::vector<T>& t_point,
                                               size_t t_k)
   {
+    m_log->WARN(NAME() + "Running 'constructLocalFieldValues' from Base class");
+    m_log->WARN(NAME() + "Returning empty Vector<T>");
     return Vector<T>();
   }
   //----------------------------------------------------------------------------

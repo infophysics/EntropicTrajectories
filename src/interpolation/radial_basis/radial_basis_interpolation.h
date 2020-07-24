@@ -124,6 +124,15 @@ namespace ET
     /*! Shared logger instance.
      */
     std::shared_ptr<Log> m_log;
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "RBFInterpolator:[" + std::to_string(m_id.id) + "]:"
+             + this->m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
   //----------------------------------------------------------------------------
 

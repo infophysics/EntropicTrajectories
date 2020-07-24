@@ -378,6 +378,14 @@ namespace ET
     /*! Search flag.  An enum that classifies the state of the tree.
      */
     enum KDTreeSearchFlags m_searchFlag {KDTreeSearchFlags::OUTDATED};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "KDTree:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
     //--------------------------------------------------------------------------
   };
 
