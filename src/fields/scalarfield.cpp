@@ -638,7 +638,6 @@ namespace ET
     //  Create the empty vector
     Vector<T> f(neighbors.size());
     for (auto i = 0; i < neighbors.size(); i++) {
-      std::cout << i << "," << neighbors[i] << "," << m_field[neighbors[i]] << std::endl;
       f(i) = m_field[neighbors[i]];
     }
     return f;

@@ -40,6 +40,7 @@ class CMakeBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
                       '-DUSE_LOG_LEVEL_DEBUG=ON',
+                      '-DLOG_LEVEL_GLOBAL=ON',
                       '-DUNIT_TEST=ON']
 
         cfg = 'Debug' if self.debug else 'Release'

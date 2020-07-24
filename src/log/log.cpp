@@ -30,6 +30,8 @@
 
 namespace ET
 {
+	//	static members must be initialized.
+	std::shared_ptr<spdlog::logger> Log::m_global_logger = nullptr;
 
 	Log::Log()
 	{
@@ -45,8 +47,18 @@ namespace ET
 	//----------------------------------------------------------------------------
 	void Log::init(std::string name, const std::string& outputFile, uint32_t debug)
 	{
-		_name = name;
-		_outputFile = outputFile;
+		//  Determine the log name through the log level
+#ifdef LOG_LEVEL_GLOBAL
+		//	If global logger has already been initialized then quit.
+		if (m_global_logger != nullptr) {
+			return;
+		}
+		m_outputFile = outputFile;
+		m_name = "ET";
+#else LOG_LEVEL_LOCAL
+		m_outputFile = name + outputFile;
+		m_name = name;
+#endif
 		std::vector<spdlog::sink_ptr> logSinks;
 		//	Generate the file logger
 		//	The mkdir command only works on Linux.  Would need to add support for
@@ -60,29 +72,38 @@ namespace ET
 		//	check that the logger doesn't exist already
 		auto l = spdlog::get(name);
 		//	if so, try and add numbers to the name
-		std::string new_name = name;
+		std::string new_name = m_name;
 		int i = 0;
 		while (l != NULL) {
-			new_name = name + "_" + std::to_string(i);
+			new_name = m_name + "_" + std::to_string(i);
 			i += 1;
 			l = spdlog::get(new_name);
 		}
-		_name = new_name;
+		m_name = new_name;
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>
-			                    (outputFile, true));
+			                    (m_outputFile, true));
+		//  Determine the log level for the sinks.
 #ifdef LOG_LEVEL_DEBUG
-		logSinks[0]->set_pattern("[%T] [%l] %n: %v");
+		logSinks[0]->set_pattern("[%T] [%l] %n:%v");
 		logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-		logSinks[1]->set_pattern("%^[%T] %n: %v%$");
+		logSinks[1]->set_pattern("%^[%T] %n:%v%$");
 #else
-		logSinks[0]->set_pattern("[%T] [%l] %n: %v");
+		logSinks[0]->set_pattern("[%T] [%l] %n:%v");
 #endif
-
-		_logger = std::make_shared<spdlog::logger>(_name, begin(logSinks),
+	  //  Determine which logger to use
+#ifdef LOG_LEVEL_LOCAL
+		m_logger = std::make_shared<spdlog::logger>(m_name, begin(logSinks),
 		                                           end(logSinks));
-		spdlog::register_logger(_logger);
-		_logger->set_level(spdlog::level::trace);
-		_logger->flush_on(spdlog::level::trace);
+		spdlog::register_logger(m_logger);
+		m_logger->set_level(spdlog::level::trace);
+		m_logger->flush_on(spdlog::level::trace);
+#else LOG_LEVEL_GLOBAL
+		m_global_logger = std::make_shared<spdlog::logger>(new_name, begin(logSinks),
+																					 end(logSinks));
+		spdlog::register_logger(m_global_logger);
+		m_global_logger->set_level(spdlog::level::trace);
+		m_global_logger->flush_on(spdlog::level::trace);
+#endif
 	}
 	//----------------------------------------------------------------------------
 
@@ -91,23 +112,43 @@ namespace ET
 	//----------------------------------------------------------------------------
 	void Log::TRACE(std::string data)
 	{
-		_logger->trace(data);
+#ifdef LOG_LEVEL_GLOBAL
+		m_global_logger->trace(data);
+#else
+		m_logger->trace(data);
+#endif
 	}
 	void Log::INFO(std::string data)
 	{
-		_logger->info(data);
+#ifdef LOG_LEVEL_GLOBAL
+		m_global_logger->info(data);
+#else
+		m_logger->info(data);
+#endif
 	}
 	void Log::WARN(std::string data)
 	{
-		_logger->warn(data);
+#ifdef LOG_LEVEL_GLOBAL
+		m_global_logger->warn(data);
+#else
+		m_logger->warn(data);
+#endif
 	}
 	void Log::ERROR(std::string data)
 	{
-		_logger->error(data);
+#ifdef LOG_LEVEL_GLOBAL
+		m_global_logger->error(data);
+#else
+		m_logger->error(data);
+#endif
 	}
 	void Log::CRITICAL(std::string data)
 	{
-		_logger->critical(data);
+#ifdef LOG_LEVEL_GLOBAL
+		m_global_logger->critical(data);
+#else
+		m_logger->critical(data);
+#endif
 	}
 	//----------------------------------------------------------------------------
 
@@ -116,7 +157,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	std::string Log::getOutput(uint64_t lines)
 	{
-    std::ifstream file(_outputFile);
+    std::ifstream file(m_outputFile);
 		std::vector<std::string> l;
 		std::string str;
 		if (!file.good()) {
@@ -141,7 +182,7 @@ namespace ET
 	//----------------------------------------------------------------------------
 	std::string Log::getOutput()
 	{
-		std::ifstream file(_outputFile);
+		std::ifstream file(m_outputFile);
 		std::string result;
 		std::string str;
 		if (!file.good()) {

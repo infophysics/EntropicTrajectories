@@ -327,9 +327,14 @@ namespace ET
      */
     enum SearchScheme m_searchScheme {SearchScheme::NEAREST_NEIGHBORS};
     /*! Monomial.  An instance of the monomial class for constructing
-     *  Taylor monomials.  Defaulted to use k=3 and n=3.
+     *  Taylor monomials.  Defaulted to use dim=1 and n=3.
      */
-    Monomial m_monomial {3,3};
+    Monomial m_monomial {1,3};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() {
+      return "LTInterpolator:" + this->m_name + ":";
+    }
   };
   //----------------------------------------------------------------------------
 

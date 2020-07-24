@@ -30,15 +30,14 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_log->init("ET:Interpolant:" + m_name, ".logs/interpolant_" + m_name + ".txt");
-		m_log->TRACE("Interpolant '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + " created at location "
 		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Interpolant<T>::~Interpolant()
   {
-    m_log->TRACE("Interpolant '" + m_name
-								+ "' destroyed at location " + address_to_string(*this));
+    m_log->TRACE(NAME() + " destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -64,9 +63,9 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to get range at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to get range at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<T>();
     }
     else {
@@ -79,9 +78,9 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to get range min at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to get range min at indeInterpolatorx " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
-      m_log->INFO("Returning zero.");
+      m_log->INFO(NAME() + "Returning zero.");
       return 0;
     }
     else {
@@ -94,9 +93,9 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to get range max at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to get range max at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
-      m_log->INFO("Returning zero.");
+      m_log->INFO(NAME() + "Returning zero.");
       return 0;
     }
     else {
@@ -108,30 +107,33 @@ namespace ET
   void Interpolant<T>::setName(const std::string t_name)
   {
     m_name = t_name;
+    m_log->INFO(NAME() + "Set 'name' to " + m_name);
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Interpolant<T>::setDim(const size_t t_dim)
   {
     m_dim = t_dim;
+    m_log->INFO(NAME() + "Set 'dim' to " + std::to_string(m_dim));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Interpolant<T>::setRanges(const std::vector<std::vector<T>> t_ranges)
   {
     m_ranges = t_ranges;
+    m_log->INFO(NAME() + "Set new ranges.");
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void Interpolant<T>::setRange(const size_t t_i, const std::vector<T> t_range)
   {
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to set ranges at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to set ranges at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
       return;
     }
     if (t_range.size() > 2) {
-      m_log->ERROR("Attempted to set ranges at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to set ranges at index " + std::to_string(t_i)
                    + " with array with more than two values.");
       return;
     }
@@ -144,7 +146,7 @@ namespace ET
   void Interpolant<T>::setRangeMin(const size_t t_i, const T t_min)
   {
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to set range min at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to set range min at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
       return;
     }
@@ -157,7 +159,7 @@ namespace ET
   void Interpolant<T>::setRangeMax(const size_t t_i, const T t_max)
   {
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to set range max at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to set range max at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
       return;
     }
@@ -178,9 +180,9 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to get range at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to get range at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       std::vector<T> result;
       return result;
     }
@@ -194,9 +196,9 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_dim) {
-      m_log->ERROR("Attempted to get range at index " + std::to_string(t_i)
+      m_log->ERROR(NAME() + "Attempted to get range at index " + std::to_string(t_i)
                   + " for Inteprolant with dimension " + std::to_string(m_dim));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<T>();
     }
     else {

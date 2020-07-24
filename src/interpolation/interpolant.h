@@ -155,6 +155,14 @@ namespace ET
     /*! Logger.  A shared instance of a Logger.
      */
     std::shared_ptr<Log> m_log;
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "Interpolator:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
+    }
+    /*! Unique ID for each instance.
+     */
+    UniqueID m_id;
   };
 
   template class Interpolant<double>;

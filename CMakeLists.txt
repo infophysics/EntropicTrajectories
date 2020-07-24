@@ -7,14 +7,24 @@ else ()
   set (CMAKE_CXX_STANDARD 17)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 endif ()
+
+# set log level for debug
 if(USE_LOG_LEVEL_DEBUG)
   add_definitions(-DLOG_LEVEL_DEBUG)
+endif()
+
+# set log level global or local
+if(LOG_LEVEL_GLOBAL)
+  add_definitions(-DLOG_LEVEL_GLOBAL)
+else()
+  add_definitions(-DLOG_LEVEL_LOCAL)
 endif()
 
 # log level debug precompiler command
 # this can be changed in setup.py
 option(USE_LOG_LEVEL_DEBUG "Using debug mode for loggers" OFF)
-
+# log level, either global or local
+option(LOG_LEVEL_GLOBAL "Using global logger" ON)
 # unit test option
 option(UNIT_TEST "Conducting unit tests" OFF)
 
@@ -61,6 +71,8 @@ include_directories("${INCLUDE_DIR}nanoflann"
                     "${SOURCE_DIR}geometry"
                     "${SOURCE_DIR}grid"
                     "${SOURCE_DIR}interpolation"
+                    "${SOURCE_DIR}interpolation/local_taylor"
+                    "${SOURCE_DIR}interpolation/radial_basis"
                     "${SOURCE_DIR}integration"
                     "${SOURCE_DIR}linalg"
                     "${SOURCE_DIR}system"
@@ -83,8 +95,9 @@ set(SOURCES "${SOURCE_DIR}linalg/vector.cpp"
             "${SOURCE_DIR}fields/scalarfieldexample.cpp"
             "${SOURCE_DIR}fields/vectorfield.cpp"
             "${SOURCE_DIR}interpolation/interpolator.cpp"
-            "${SOURCE_DIR}interpolation/localtaylor.cpp"
-            "${SOURCE_DIR}interpolation/radialbasis.cpp"
+            "${SOURCE_DIR}interpolation/interpolant.cpp"
+            "${SOURCE_DIR}interpolation/local_taylor/local_taylor_interpolation.cpp"
+            "${SOURCE_DIR}interpolation/radial_basis/radial_basis_interpolation.cpp"
             "${SOURCE_DIR}interpolation/diffeq.cpp"
             "${SOURCE_DIR}integration/integrator.cpp"
             "${SOURCE_DIR}log/log.cpp"

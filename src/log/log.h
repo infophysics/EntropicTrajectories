@@ -53,12 +53,12 @@ namespace ET
 		//--------------------------------------------------------------------------
     void init(std::string name, const std::string& outputFile=".log/default.txt",
 							uint32_t debug=2);
-
 		//--------------------------------------------------------------------------
     //  getter for the pointer for the logger object
 		//--------------------------------------------------------------------------
-    std::shared_ptr<spdlog::logger>& getLogger() { return _logger; }
-		//--------------------------------------------------------------------------
+    std::shared_ptr<spdlog::logger>& getLogger() { return m_logger; }
+    static std::shared_ptr<spdlog::logger>& getGlobalLogger() {return m_global_logger;}
+    //--------------------------------------------------------------------------
 
 		//--------------------------------------------------------------------------
 		//	Generators for logging messages
@@ -78,10 +78,11 @@ namespace ET
 		//--------------------------------------------------------------------------
 
   private:
-		std::string _name;
-		std::string _outputFile;
+		std::string m_name;
+		std::string m_outputFile;
     //  shared pointer to our logger object
-    std::shared_ptr<spdlog::logger> _logger;
+    std::shared_ptr<spdlog::logger> m_logger;
+    static std::shared_ptr<spdlog::logger> m_global_logger;
 	};
 
   //----------------------------------------------------------------------------

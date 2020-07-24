@@ -156,5 +156,20 @@ namespace ET
     //  container for messages
     std::string m_info;
   };
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Class for assigning unique identifiers
+  //----------------------------------------------------------------------------
+  class UniqueID
+  {
+  protected:
+    static size_t nextID;
+  public:
+    int id;
+    UniqueID();
+    UniqueID(const UniqueID& orig);
+    UniqueID& operator=(const UniqueID& orig);
+  };
+  //----------------------------------------------------------------------------
 }
