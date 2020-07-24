@@ -42,7 +42,7 @@ The ET framework uses a python wrapper called *pybind11* in order to generate py
  (Wenzel Jakob)
 Pybind is compiled together with the ET framework, so one only needs to extract the source files into the include directory.  This is done automatically via a submodule.
 
-
+TODO:
 ## Installing from PyPI
 
 For 64-bit Linux or Mac systems, instally 'etraj' should just require running:
@@ -87,7 +87,7 @@ For more examples on possible calls, please see the tests folder.
 
 ### Support
 
-* Bugs: Please report bugs to the [issue tracker on Github](https://github.com/) such that we can keep track of them and eventually fix them.  Please explain how to reproduce the issue (including code) and which system you are running on.
+* Bugs: Please report bugs to the [issue tracker on Github](https://github.com/infophysics/EntropicTrajectories/issues) such that we can keep track of them and eventually fix them.  Please explain how to reproduce the issue (including code) and which system you are running on.
 * Help: Help can be provided also via the issue tracker by tagging your issue with 'question'
 * Contributing:  Please fork this repository then make a pull request.  In this pull request, explain the details of your change and include tests.
 
