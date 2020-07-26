@@ -1575,6 +1575,11 @@ PYBIND11_MODULE(etraj, m) {
     {
       return self(p);
     })
+    .def("__call__", [](Interpolant<double> &self,
+                        std::vector<std::vector<double>>& p)
+    {
+      return self(p);
+    })
     //	this will allow the user to get a range.
 		.def("__getitem__", [](Interpolant<double> &self, int i)
 		{

@@ -1,26 +1,26 @@
-[06:27:39] [trace] ET:Interpolant:[1]:default: created at location 0x55936a335a90
-[06:27:39] [info] ET:Interpolant:[1]:new_name:Set 'name' to new_name
-[06:27:39] [info] ET:Interpolant:[1]:new_name:Set 'dim' to 2
-[06:27:39] [info] ET:Interpolant:[1]:new_name:Set new ranges.
-[06:27:39] [trace] ET:Grid:[2]:default:Grid 'default' created at location 0x55936a339bd0
-[06:27:39] [trace] ET:Grid:[2]:default:t_grid object copied to m_grid
-[06:27:39] [trace] ET:UGrid:[2]:default:UGrid 'default' created at location 0x55936a339bd0
-[06:27:39] [trace] ET:KDTree:[3]:default:KDTree 'default' created at location 0x55936a20eb70
-[06:27:39] [info] ET:KDTree:[3]:default:Initialized KDTree with 1000 points in 1 dimensions
-[06:27:39] [trace] ET:Field:[4]:default:Field 'default' created at location 0x55936a2fa250
-[06:27:39] [info] ET:Field:[4]:default:Logger passed to Field 'default'
-[06:27:39] [trace] ET:Interpolator:[5]:default:Interpolator 'default' created at location 0x55936a342da0
-[06:27:39] [info] ET:Interpolator:[5]:default:Log passed to Interpolator 'default'
-[06:27:39] [trace] ET:Field:[4]:default:Field 'default' destroyed at location 0x5593697529b0
-[06:27:39] [trace] ET:Interpolator:[8]:default:Interpolator 'default' created at location 0x55936a159010
-[06:28:23] [trace] ET:Interpolator:[11]:default:Interpolator 'default' created at location 0x7ffe98e968b0
-[06:28:23] [trace] ET:LTInterpolator:[13]:default:Setting m_n to 10
-[06:28:23] [trace] ET:LTInterpolator:[13]:default:Setting m_k to 1000
-[06:28:23] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
-[06:28:23] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
-[06:28:23] [trace] ET:Interpolant:[14]:default: created at location 0x7ffe98e96ab0
-[06:28:23] [info] ET:LTInterpolant:[16]:default:Set 'n' to 10
-[06:28:23] [info] ET:LTInterpolant:[16]:default:Set expansion point.
-[06:28:23] [info] ET:LTInterpolant:[16]:default:Set expansion coefficients.
-[06:28:23] [trace] ET:Interpolator:[11]:default:Interpolator 'default' destroyed at location 0x7ffe98e968b0
-[06:28:23] [trace] ET:Interpolant:[14]:default: destroyed at location 0x7ffe98e96ab0
+[06:38:54] [trace] ET:Interpolant:[1]:default: created at location 0x558773258020
+[06:38:55] [info] ET:Interpolant:[1]:new_name:Set 'name' to new_name
+[06:38:55] [info] ET:Interpolant:[1]:new_name:Set 'dim' to 2
+[06:38:55] [info] ET:Interpolant:[1]:new_name:Set new ranges.
+[06:38:55] [trace] ET:Grid:[2]:default:Grid 'default' created at location 0x55877325c160
+[06:38:55] [trace] ET:Grid:[2]:default:t_grid object copied to m_grid
+[06:38:55] [trace] ET:UGrid:[2]:default:UGrid 'default' created at location 0x55877325c160
+[06:38:55] [trace] ET:KDTree:[3]:default:KDTree 'default' created at location 0x5587724c0bc0
+[06:38:55] [info] ET:KDTree:[3]:default:Initialized KDTree with 1000 points in 1 dimensions
+[06:38:55] [trace] ET:Field:[4]:default:Field 'default' created at location 0x55877321cb50
+[06:38:55] [info] ET:Field:[4]:default:Logger passed to Field 'default'
+[06:38:55] [trace] ET:Interpolator:[5]:default:Interpolator 'default' created at location 0x558773264d20
+[06:38:55] [info] ET:Interpolator:[5]:default:Log passed to Interpolator 'default'
+[06:38:55] [trace] ET:Field:[4]:default:Field 'default' destroyed at location 0x5587724e04e0
+[06:38:55] [trace] ET:Interpolator:[8]:default:Interpolator 'default' created at location 0x55877307aad0
+[06:39:00] [trace] ET:Interpolator:[11]:default:Interpolator 'default' created at location 0x7ffd08902630
+[06:39:00] [trace] ET:LTInterpolator:[13]:default:Setting m_n to 10
+[06:39:00] [trace] ET:LTInterpolator:[13]:default:Setting m_k to 1000
+[06:39:00] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
+[06:39:00] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
+[06:39:00] [trace] ET:Interpolant:[14]:default: created at location 0x7ffd08902830
+[06:39:00] [info] ET:LTInterpolant:[16]:default:Set 'n' to 10
+[06:39:00] [info] ET:LTInterpolant:[16]:default:Set expansion point.
+[06:39:00] [info] ET:LTInterpolant:[16]:default:Set expansion coefficients.
+[06:39:00] [trace] ET:Interpolator:[11]:default:Interpolator 'default' destroyed at location 0x7ffd08902630
+[06:39:00] [trace] ET:Interpolant:[14]:default: destroyed at location 0x7ffd08902830

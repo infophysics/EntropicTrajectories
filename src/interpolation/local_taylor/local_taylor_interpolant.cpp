@@ -89,7 +89,6 @@ namespace ET
     this->m_log->INFO(NAME() + "Set Monomial object.");
   }
   //----------------------------------------------------------------------------
-  //----------------------------------------------------------------------------
   template<typename T>
   T LocalTaylorInterpolant<T>::operator()(const std::vector<T>& t_point)
   {
@@ -100,6 +99,23 @@ namespace ET
     T result = 0;
     for (auto i = 0; i < temp.size(); i++) {
       result += temp[i] * m_expansion_coefficients[i];
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  LocalTaylorInterpolant<T>::operator()(const std::vector<std::vector<T>>& t_points)
+  {
+    //  Construct the monomial expansion for the point with respect to the
+    //  expansion point.
+    std::vector<T> result(t_points.size(),0.0);
+    for (auto i = 0; i < result.size(); i++) {
+      std::vector<double>
+      temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_points[i]);
+      for (auto j = 0; j < temp.size(); j++) {
+        result[i] += temp[j] * m_expansion_coefficients[j];
+      }
     }
     return result;
   }

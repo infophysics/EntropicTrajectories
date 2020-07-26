@@ -176,6 +176,14 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  std::vector<T>
+  Interpolant<T>::operator()(const std::vector<std::vector<T>>& t_point)
+  {
+    std::vector<T> result;
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   std::vector<T>& Interpolant<T>::operator[](const size_t& t_i)
   {
     //  check that index exists

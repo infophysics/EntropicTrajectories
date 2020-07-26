@@ -128,6 +128,13 @@ namespace ET
      *  @return The return value of the interpolant.
      */
     virtual T operator()(const std::vector<T>& t_point);
+    /*! Access operator.  Operator for interpolating at a set of points.
+     *  @param t_points.  A std::vector<std::vector<T>> of the points
+     *  to interpolate at.
+     *  @return The interpolations at each point in t_points.
+    */
+    virtual std::vector<T>
+    operator()(const std::vector<std::vector<T>>& t_points);
     //! Range operator.
     /*! range operator.  This operator allows one to access the
      *  ranges in each dimension.
