@@ -40,13 +40,13 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
-		m_log->TRACE("KDTree '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "KDTree '" + m_name + "' created at location "
 		            + address_to_string(*this));
   }
   template<typename T>
   KDTree<T>::~KDTree()
   {
-		m_log->TRACE("KDTree '" + m_name
+		m_log->TRACE(NAME() + "KDTree '" + m_name
 		            + "' destroyed at location " + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
 		m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
-		m_log->TRACE("KDTree '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "KDTree '" + m_name + "' created at location "
 		            + address_to_string(*this));
     setupTree();
     m_currentNeighborIndices.resize(m_N);
@@ -72,7 +72,7 @@ namespace ET
   {
     m_log = std::make_shared<Log>();
     m_log->init("ET:KDTree:" + m_name, ".logs/kdtree_" + m_name + ".txt");
-    m_log->TRACE("KDTree '" + m_name + "' created at location "
+    m_log->TRACE(NAME() + "KDTree '" + m_name + "' created at location "
                 + address_to_string(*this));
     setupTree();
     m_currentNeighborIndices.resize(m_N);
@@ -128,10 +128,10 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_N) {
-      m_log->ERROR("Attempted to access neighbors for index "
+      m_log->ERROR(NAME() + "Attempted to access neighbors for index "
                    + std::to_string(t_i) + " for tree with "
                    + std::to_string(m_N) + " points.");
-      m_log->INFO("Returning neighbor iindices for first point.");
+      m_log->INFO(NAME() + "Returning neighbor iindices for first point.");
       return m_currentNeighborIndices[0];
     }
     //  otherwise return the point
@@ -143,10 +143,10 @@ namespace ET
   {
     //  check that index exists
     if (t_i >= m_N) {
-      m_log->ERROR("Attempted to access neighbor distances for index "
+      m_log->ERROR(NAME() + "Attempted to access neighbor distances for index "
                    + std::to_string(t_i) + " for tree with "
                    + std::to_string(m_N) + " points.");
-      m_log->INFO("Returning neighbor distances for first point.");
+      m_log->INFO(NAME() + "Returning neighbor distances for first point.");
       return m_currentNeighborDistances[0];
     }
     //  otherwise return the point
@@ -186,24 +186,27 @@ namespace ET
   template<typename T>
   void KDTree<T>::setName(const std::string t_name)
   {
+    m_log->TRACE(NAME() + "Changed name from '" + m_name
+                 + "' to '" + t_name + "'");
     m_name = t_name;
-    m_log->INFO("Set name to '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void KDTree<T>::setDim(const size_t t_dim)
   {
+    m_log->TRACE(NAME() + "Changed dim from '" + std::to_string(m_dim)
+                 + "' to '" + std::to_string(t_dim) + "'");
     m_dim = t_dim;
-    m_log->INFO("Set dimension to " + std::to_string(m_dim));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void KDTree<T>::setN(const size_t t_N)
   {
+    m_log->TRACE(NAME() + "Changed N from '" + std::to_string(m_N)
+                 + "' to '" + std::to_string(t_N) + "'");
     m_N = t_N;
     m_currentNeighborIndices.resize(m_N);
     m_currentNeighborDistances.resize(m_N);
-    m_log->INFO("Set number of points to " + std::to_string(m_N));
     m_searchFlag = KDTreeSearchFlags::OUTDATED;
   }
   //----------------------------------------------------------------------------
@@ -216,7 +219,7 @@ namespace ET
     setDim((*m_points)[0].size());
     m_currentNeighborIndices.resize(m_N);
     m_currentNeighborDistances.resize(m_N);
-    m_log->INFO("Set points to array of size (" + std::to_string(m_N)
+    m_log->INFO(NAME() + "Set points to array of size (" + std::to_string(m_N)
                 + " x " + std::to_string(m_dim) + ")");
     setupTree();
   }
@@ -225,7 +228,7 @@ namespace ET
   void KDTree<T>::setLog(std::shared_ptr<Log> t_log)
   {
     m_log = t_log;
-    m_log->INFO("Logger passed to KDTree '" + m_name + "'");
+    m_log->INFO(NAME() + "Logger passed to KDTree '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -233,7 +236,7 @@ namespace ET
   {
     m_currentGlobalK = t_k;
     m_searchFlag = KDTreeSearchFlags::NEW_K;
-    m_log->INFO("Set global k value to " + std::to_string(t_k));
+    m_log->INFO(NAME() + "Set global k value to " + std::to_string(t_k));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -241,7 +244,7 @@ namespace ET
   {
     m_currentGlobalRadius = t_radius;
     m_searchFlag = KDTreeSearchFlags::NEW_RADIUS;
-    m_log->INFO("Set global radius value to " + std::to_string(t_radius));
+    m_log->INFO(NAME() + "Set global radius value to " + std::to_string(t_radius));
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
@@ -255,7 +258,7 @@ namespace ET
                                 (m_dim, *m_points, 16);
     m_kdtree->index->buildIndex();
     m_searchFlag = KDTreeSearchFlags::BUILT;
-    m_log->INFO("Initialized KDTree with " + std::to_string(m_N) + " points "
+    m_log->INFO(NAME() + "Initialized KDTree with " + std::to_string(m_N) + " points "
                + "in " + std::to_string(m_dim) + " dimensions");
   }
   //----------------------------------------------------------------------------
@@ -264,7 +267,7 @@ namespace ET
   {
     //	check if anything has changed since last query
     if (t_k >= m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(m_currentGlobalK)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N) + ".  Aborting search.");
@@ -274,11 +277,11 @@ namespace ET
       setCurrentGlobalK(t_k);
     }
 		if (m_searchFlag == KDTreeSearchFlags::CURRENT_K) {
-      m_log->INFO("KDTree is up to date with " + std::to_string(t_k)
+      m_log->INFO(NAME() + "KDTree is up to date with " + std::to_string(t_k)
                   + " neighbor values.  Aborting search.");
 			return;
 		}
-		m_log->INFO("KDTree " + m_name + ": Querying each point in array m_points of"
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying each point in array m_points of"
 	             + " size (" + std::to_string(m_N) + " x "
 						   + std::to_string(m_dim) + ") for the nearest "
 							 + std::to_string(m_currentGlobalK) + " neighbors");
@@ -302,9 +305,9 @@ namespace ET
   {
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
     //	check if anything has changed since last query
@@ -312,11 +315,11 @@ namespace ET
       setCurrentGlobalRadius(t_radius);
     }
 		if (m_searchFlag == KDTreeSearchFlags::CURRENT_RADIUS) {
-      m_log->INFO("KDTree is up to date with " + std::to_string(t_radius)
+      m_log->INFO(NAME() + "KDTree is up to date with " + std::to_string(t_radius)
                   + " search radius.  Aborting search.");
 			return;
 		}
-		m_log->INFO("KDTree " + m_name + ": Querying each point in array m_points of"
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying each point in array m_points of"
 	             + " size (" + std::to_string(m_N) + " x "
 						   + std::to_string(m_dim) + ") for neighbors within radius "
 							 + std::to_string(m_currentGlobalRadius));
@@ -348,24 +351,24 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<size_t>(0);
     }
     if (t_k > m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
 		}
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + std::to_string(t_k) + " neighbors.");
 
-    const size_t num_results = m_currentGlobalK;
+    const size_t num_results = t_k;
     std::vector<size_t> ret_indexes(num_results);
     std::vector<double> out_dists_sqr(num_results);
     nanoflann::KNNResultSet<double> resultSet(num_results);
@@ -381,23 +384,24 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<double>(0);
     }
     if (t_k > m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
 		}
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + std::to_string(t_k) + " neighbors.");
-    const size_t num_results = m_currentGlobalK;
+
+    const size_t num_results = t_k;
     std::vector<size_t> ret_indexes(num_results);
     std::vector<double> out_dists_sqr(num_results);
     nanoflann::KNNResultSet<double> resultSet(num_results);
@@ -418,24 +422,24 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::tuple<std::vector<size_t>,std::vector<double>>();
     }
     if (t_k > m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
 		}
-    m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+    m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
                 + std::to_string(t_k) + " neighbors.");
 
-    const size_t num_results = m_currentGlobalK;
+    const size_t num_results = t_k;
     std::vector<size_t> ret_indexes(num_results);
     std::vector<double> out_dists_sqr(num_results);
     nanoflann::KNNResultSet<double> resultSet(num_results);
@@ -458,23 +462,23 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<std::vector<size_t>>(0);
     }
     if (t_k > m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
 		}
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
     std::vector<std::vector<double>> distances(t_points.size());
-    m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
+    m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a set of points for the "
                 + "nearest " + std::to_string(t_k) + " neighbors.");
 
     const size_t num_results = t_k;
@@ -500,22 +504,22 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<std::vector<double>>(0);
     }
     if (t_k > m_N) {
-			m_log->ERROR("KDTree " + m_name
+			m_log->ERROR(NAME() + "KDTree " + m_name
 									+ ": Attempted to query " + std::to_string(t_k)
 									+ " neighbors for points in array m_points of size "
 									+ std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
 		}
 		std::vector<std::vector<double>> distances(t_points.size());
-    m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
+    m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a set of points for the "
                 + "nearest " + std::to_string(t_k) + " neighbors.");
 
     const size_t num_results = t_k;
@@ -545,24 +549,24 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::tuple<std::vector<std::vector<size_t>>,
                         std::vector<std::vector<double>>>();
     }
     if (t_k > m_N) {
-      m_log->ERROR("KDTree " + m_name
+      m_log->ERROR(NAME() + "KDTree " + m_name
                   + ": Attempted to query " + std::to_string(t_k)
                   + " neighbors for points in array m_points of size "
                   + std::to_string(m_N));
-      m_log->INFO("Setting k to " + std::to_string(m_N) + " for this search.");
+      m_log->INFO(NAME() + "Setting k to " + std::to_string(m_N) + " for this search.");
       t_k = m_N;
     }
 		std::vector<std::vector<size_t>> neighbors(t_points.size());
     std::vector<std::vector<double>> distances(t_points.size());
-    m_log->INFO("KDTree " + m_name + ": Querying a set of points for the "
+    m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a set of points for the "
                 + "nearest " + std::to_string(t_k) + " neighbors.");
 
     const size_t num_results = t_k;
@@ -594,21 +598,21 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<size_t>(0);
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
@@ -631,21 +635,21 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<double>(0);
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
@@ -668,21 +672,21 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_point.size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with a point of dimension "
                    + std::to_string(t_point.size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::tuple<std::vector<size_t>,std::vector<double>>();
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
@@ -710,21 +714,21 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<std::vector<size_t>>(0);
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
@@ -751,21 +755,21 @@ namespace ET
   {
     //  check that t_point has the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::vector<std::vector<double>>(0);
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
@@ -790,28 +794,28 @@ namespace ET
   KDTree<T>::query(const std::vector<std::vector<T>>& t_points,
                    double t_radius)
   {
-    //  check that t_point has the same dimension as m_points.
+    //  check that t_point m_currentGlobalKhas the same dimension as m_points.
     if (t_points[0].size() != m_dim) {
-      m_log->ERROR("Attempted to search a tree of dimension "
+      m_log->ERROR(NAME() + "Attempted to search a tree of dimension "
                    + std::to_string(m_dim) + " with points of dimension "
                    + std::to_string(t_points[0].size()));
-      m_log->INFO("Returning empty vector.");
+      m_log->INFO(NAME() + "Returning empty vector.");
       return std::tuple<std::vector<std::vector<size_t>>,
                         std::vector<std::vector<double>>>();
     }
     //  make sure that radius is positive
     if (t_radius < 0) {
-      m_log->WARN("Attempted to use a negative search radius "
+      m_log->WARN(NAME() + "Attempted to use a negative search radius "
                   + std::to_string(t_radius) + " in nearest neighbor search.");
-      m_log->INFO("Setting radius to its absolute value.");
+      m_log->INFO(NAME() + "Setting radius to its absolute value.");
       t_radius = abs(t_radius);
     }
 
-		m_log->INFO("KDTree " + m_name + ": Querying a point for the nearest "
+		m_log->INFO(NAME() + "KDTree " + m_name + ": Querying a point for the nearest "
 							  + "neighbors within a radius of " + std::to_string(t_radius));
     //  WARNING: Nanoflann uses radius^2 for searchs since it is
     //  computationally simpler than taking the square root for every
-    //  iteration.
+    //  iteration.m_currentGlobalK
     t_radius *= t_radius;
     std::vector<std::pair<size_t,double>> ret_matches;
     std::vector<std::vector<size_t>> indices;

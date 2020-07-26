@@ -484,16 +484,18 @@ PYBIND11_MODULE(etraj, m) {
          py::arg("name"), py::arg("dim"), py::arg("N"))
     .def(py::init<std::string,size_t,size_t,std::shared_ptr<Log>>(),
          py::arg("name"), py::arg("dim"), py::arg("N"), py::arg("log"))
-    .def(py::init<std::vector<std::vector<double>>>(),
-         py::arg("grid"), py::keep_alive<1, 2>())
-    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>>(),
-         py::arg("grid"), py::arg("log"), py::keep_alive<1, 2>())
-    .def(py::init<std::string,std::vector<std::vector<double>>>(),
-        py::arg("name"), py::arg("grid"), py::keep_alive<1, 2>())
+    .def(py::init<std::vector<std::vector<double>>,bool>(),
+         py::arg("grid"), py::arg("move_grid")=false, py::keep_alive<0, 1>())
+    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>,bool>(),
+         py::arg("grid"), py::arg("log"), py::arg("move_grid")=false,
+         py::keep_alive<0, 1>())
+    .def(py::init<std::string,std::vector<std::vector<double>>,bool>(),
+         py::arg("name"), py::arg("grid"), py::arg("move_grid")=false,
+         py::keep_alive<0, 2>())
     .def(py::init<std::string,std::vector<std::vector<double>>,
-                  std::shared_ptr<Log>>(),
-        py::arg("name"), py::arg("grid"), py::arg("log"),
-        py::keep_alive<1, 2>())
+                  std::shared_ptr<Log>,bool>(),
+        py::arg("name"), py::arg("grid"), py::arg("log"), py::arg("move_grid")=false,
+        py::keep_alive<0, 2>())
     //  Getters and Setters
     .def("get_name", &Grid<double>::getName)
     .def("get_dim", &Grid<double>::getDim)
@@ -511,6 +513,7 @@ PYBIND11_MODULE(etraj, m) {
     .def("set_grid", &Grid<double>::setGrid)
     .def("set_coords", &Grid<double>::setCoords)
     .def("set_log", &Grid<double>::setLog)
+    .def("move_grid", &Grid<double>::moveGrid)
     .def_property("name", &Grid<double>::getName,
                   &Grid<double>::setName)
     .def_property("dim", &Grid<double>::getDim,
@@ -658,15 +661,18 @@ PYBIND11_MODULE(etraj, m) {
         py::arg("name"), py::arg("dim"), py::arg("N"))
     .def(py::init<std::string,size_t,size_t,std::shared_ptr<Log>>(),
         py::arg("name"), py::arg("dim"), py::arg("N"), py::arg("log"))
-    .def(py::init<std::vector<std::vector<double>>>(),
-        py::arg("grid"))
-    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>>(),
-        py::arg("grid"), py::arg("log"))
-    .def(py::init<std::string,std::vector<std::vector<double>>>(),
-       py::arg("name"), py::arg("grid"))
+    .def(py::init<std::vector<std::vector<double>>,bool>(),
+         py::arg("grid"), py::arg("move_grid")=false, py::keep_alive<0, 1>())
+    .def(py::init<std::vector<std::vector<double>>,std::shared_ptr<Log>,bool>(),
+         py::arg("grid"), py::arg("log"), py::arg("move_grid")=false,
+         py::keep_alive<0, 1>())
+    .def(py::init<std::string,std::vector<std::vector<double>>,bool>(),
+         py::arg("name"), py::arg("grid"), py::arg("move_grid")=false,
+         py::keep_alive<0, 2>())
     .def(py::init<std::string,std::vector<std::vector<double>>,
-                 std::shared_ptr<Log>>(),
-       py::arg("name"), py::arg("grid"), py::arg("log"))
+                  std::shared_ptr<Log>,bool>(),
+        py::arg("name"), py::arg("grid"), py::arg("log"), py::arg("move_grid")=false,
+        py::keep_alive<0, 2>())
     //  Getters and Setters
     .def("get_type", &UGrid<double>::getType)
     .def("get_kdtree", &UGrid<double>::getKDTree)
@@ -693,6 +699,77 @@ PYBIND11_MODULE(etraj, m) {
       sum += "\n++++++++++++++++++++++++++++++++++++++++++++++++++++";
       return sum;
     })
+    //  KDTree overloads
+    .def("get_current_neighbor_indices", (std::vector<std::vector<size_t>>
+         (UGrid<double>::*)()) &UGrid<double>::getCurrentNeighborIndices)
+    .def("get_current_neighbor_distances", (std::vector<std::vector<double>>
+         (UGrid<double>::*)()) &UGrid<double>::getCurrentNeighborDistances)
+    .def("get_current_neighbor_indices",
+         (std::vector<size_t> (UGrid<double>::*)(const size_t))
+         &UGrid<double>::getCurrentNeighborIndices,
+         py::arg("index"))
+    .def("get_current_neighbor_distances",
+         (std::vector<double> (UGrid<double>::*)(const size_t))
+         &UGrid<double>::getCurrentNeighborDistances,
+         py::arg("index"))
+    .def("get_current_global_k", &UGrid<double>::getCurrentGlobalK)
+    .def("get_current_global_radius", &UGrid<double>::getCurrentGlobalRadius)
+    .def("set_current_global_k", &UGrid<double>::setCurrentGlobalK)
+    .def("set_current_global_radius", &UGrid<double>::setCurrentGlobalRadius)
+    .def("setup_tree", &UGrid<double>::setupTree)
+    //  Overloads of query_neighbors
+    .def("query_neighbors", (void (UGrid<double>::*)(size_t))
+         &UGrid<double>::queryNeighbors,
+         py::arg("k"))
+    .def("query_neighbors", (void (UGrid<double>::*)(double))
+         &UGrid<double>::queryNeighbors,
+         py::arg("radius"))
+    .def("query_neighbors", (std::vector<size_t> (UGrid<double>::*)
+         (const std::vector<double>&,size_t)) &UGrid<double>::queryNeighbors,
+         py::arg("point"), py::arg("k"))
+    .def("query_distances", (std::vector<double> (UGrid<double>::*)
+         (const std::vector<double>&,size_t)) &UGrid<double>::queryDistances,
+         py::arg("point"), py::arg("k"))
+    .def("query", (std::tuple<std::vector<size_t>,std::vector<double>>
+         (UGrid<double>::*)(const std::vector<double>&,size_t))
+         &UGrid<double>::query,
+         py::arg("point"), py::arg("k"))
+    .def("query_neighbors", (std::vector<size_t> (UGrid<double>::*)
+         (const std::vector<double>&,double)) &UGrid<double>::queryNeighbors,
+         py::arg("point"), py::arg("radius"))
+    .def("query_distances", (std::vector<double> (UGrid<double>::*)
+         (const std::vector<double>&,double)) &UGrid<double>::queryDistances,
+         py::arg("point"), py::arg("radius"))
+    .def("query", (std::tuple<std::vector<size_t>,std::vector<double>>
+         (UGrid<double>::*)(const std::vector<double>&,double))
+         &UGrid<double>::query,
+         py::arg("point"), py::arg("radius"))
+    .def("query_neighbors", (std::vector<std::vector<size_t>>
+         (UGrid<double>::*)(const std::vector<std::vector<double>>&,size_t))
+         &UGrid<double>::queryNeighbors,
+         py::arg("points"), py::arg("k"))
+    .def("query_distances", (std::vector<std::vector<double>>
+         (UGrid<double>::*)(const std::vector<std::vector<double>>&,size_t))
+         &UGrid<double>::queryDistances,
+         py::arg("points"), py::arg("k"))
+    .def("query", (std::tuple<std::vector<std::vector<size_t>>,
+                              std::vector<std::vector<double>>>
+        (UGrid<double>::*)(const std::vector<std::vector<double>>&,size_t))
+        &UGrid<double>::query,
+        py::arg("points"), py::arg("k"))
+    .def("query_neighbors", (std::vector<std::vector<size_t>>
+         (UGrid<double>::*)(const std::vector<std::vector<double>>&,double))
+         &UGrid<double>::queryNeighbors,
+         py::arg("points"), py::arg("radius"))
+    .def("query_distances", (std::vector<std::vector<double>>
+         (UGrid<double>::*)(const std::vector<std::vector<double>>&,double))
+         &UGrid<double>::queryDistances,
+         py::arg("points"), py::arg("radius"))
+    .def("query", (std::tuple<std::vector<std::vector<size_t>>,
+                             std::vector<std::vector<double>>>
+       (UGrid<double>::*)(const std::vector<std::vector<double>>&,double))
+       &UGrid<double>::query,
+       py::arg("points"), py::arg("radius"))
 		;
 	//----------------------------------------------------------------------------
 

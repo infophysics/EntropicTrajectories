@@ -60,7 +60,9 @@ namespace ET
   void LocalTaylorInterpolant<T>::set_n(const size_t t_n)
   {
     m_n = t_n;
-    this->m_log->INFO("Set 'n' to " + std::to_string(t_n));
+    m_monomial.setDeg(m_n);
+    m_monomial.generateMonomial();
+    this->m_log->INFO(NAME() + "Set 'n' to " + std::to_string(t_n));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -68,7 +70,7 @@ namespace ET
   LocalTaylorInterpolant<T>::setExpansionPoint(const std::vector<T>& t_point)
   {
     m_expansion_point = t_point;
-    this->m_log->INFO("Set expansion point.");
+    this->m_log->INFO(NAME() + "Set expansion point.");
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -77,26 +79,26 @@ namespace ET
   (const std::vector<T>& t_coefficients)
   {
     m_expansion_coefficients = t_coefficients;
-    this->m_log->INFO("Set expansion coefficients.");
+    this->m_log->INFO(NAME() + "Set expansion coefficients.");
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolant<T>::setMonomial(const Monomial t_monomial)
   {
     m_monomial = t_monomial;
-    this->m_log->INFO("Set Monomial object.");
+    this->m_log->INFO(NAME() + "Set Monomial object.");
   }
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   template<typename T>
-  T& LocalTaylorInterpolant<T>::operator()(const std::vector<T>& t_point)
+  T LocalTaylorInterpolant<T>::operator()(const std::vector<T>& t_point)
   {
     //  Construct the monomial expansion for the point with respect to the
     //  expansion point.
     std::vector<double>
-    temp = m_monomial.taylorMonomialExpansion(t_point,m_expansion_point);
+    temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_point);
     T result = 0;
-    for (auto i = 0; i < t_point.size(); i++) {
+    for (auto i = 0; i < temp.size(); i++) {
       result += temp[i] * m_expansion_coefficients[i];
     }
     return result;
@@ -115,7 +117,6 @@ namespace ET
     const size_t num_points = t_field->getGrid()->getN();
     //  Construct a local interpolator
     LocalTaylorInterpolator<T> interp(t_field->getGrid());
-
     interp.setField(t_field);
 
     //  Create the local interpolation matrix using every point
@@ -123,7 +124,6 @@ namespace ET
     LTI = interp.constructLocalTaylorMatrix(t_expansion_point,
                                             num_points,
                                             t_n);
-
     auto f = interp.getField()->constructLocalFieldValues(t_expansion_point,
                                                        num_points);
     //  Solve the system

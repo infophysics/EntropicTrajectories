@@ -155,8 +155,8 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(std::vector<std::vector<T>> t_grid)
-  : Grid<T>(t_grid)
+  UGrid<T>::UGrid(std::vector<std::vector<T>> t_grid, bool move_grid)
+  : Grid<T>(t_grid,move_grid)
   {
     this->m_log = std::make_shared<Log>();
 		this->m_log->init(NAME(), ".logs/grid_" + this->m_name + ".txt");
@@ -166,8 +166,9 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log)
-  : Grid<T>(t_grid, t_log)
+  UGrid<T>::UGrid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log,
+                  bool move_grid)
+  : Grid<T>(t_grid, t_log, move_grid)
   {
     this->m_log->TRACE(NAME() + "UGrid '" + this->m_name + "' created at location "
                 + address_to_string(*this));
@@ -176,8 +177,9 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  UGrid<T>::UGrid(std::string t_name, std::vector<std::vector<T>> t_grid)
-  : Grid<T>(t_name, t_grid)
+  UGrid<T>::UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
+                  bool move_grid)
+  : Grid<T>(t_name, t_grid, move_grid)
   {
     this->m_log = std::make_shared<Log>();
 		this->m_log->init(NAME(), ".logs/grid_" + this->m_name + ".txt");
@@ -188,8 +190,8 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   UGrid<T>::UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
-                std::shared_ptr<Log> t_log)
-  : Grid<T>(t_name, t_grid, t_log)
+                std::shared_ptr<Log> t_log, bool move_grid)
+  : Grid<T>(t_name, t_grid, t_log, move_grid)
   {
     this->m_log->TRACE(NAME() + "UGrid '" + this->m_name + "' created at location "
                 + address_to_string(*this));
@@ -227,18 +229,176 @@ namespace ET
 		if(this->m_grid.size() != this->m_N)
 		{
 			consistency = false;
-			this->m_log->WARN("UGrid " + this->m_name + ": Attribute this->m_N with value "
+			this->m_log->WARN(NAME() + "Attribute this->m_N with value "
 			           + std::to_string(this->m_N) + " does not match array this->m_grid"
 								 + " with size " + std::to_string(this->m_grid.size()));
 		}
 		if(this->m_grid[0].size() != this->m_dim)
 		{
 			consistency = false;
-			this->m_log->WARN("UGrid " + this->m_name + ": Attribute this->m_dim with value "
+			this->m_log->WARN(NAME() + "Attribute this->m_dim with value "
 			           + std::to_string(this->m_dim) + " does not match array this->m_grid"
 								 + " with dimension " + std::to_string(this->m_grid[0].size()));
 		}
 		return consistency;
 	}
 	//----------------------------------------------------------------------------
+  //  KDTree methods
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<size_t>> UGrid<T>::getCurrentNeighborIndices()
+  {
+    return m_kdtree->getCurrentNeighborIndices();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<double>> UGrid<T>::getCurrentNeighborDistances()
+  {
+    return m_kdtree->getCurrentNeighborDistances();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<size_t> UGrid<T>::getCurrentNeighborIndices(size_t t_i)
+  {
+    return m_kdtree->getCurrentNeighborIndices(t_i);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<double> UGrid<T>::getCurrentNeighborDistances(size_t t_i)
+  {
+    return m_kdtree->getCurrentNeighborDistances(t_i);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  size_t UGrid<T>::getCurrentGlobalK() const
+  {
+    return m_kdtree->getCurrentGlobalK();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  double UGrid<T>::getCurrentGlobalRadius() const
+  {
+    return m_kdtree->getCurrentGlobalRadius();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::setCurrentGlobalK(const size_t t_k)
+  {
+    return m_kdtree->setCurrentGlobalK(t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::setCurrentGlobalRadius(const double t_radius)
+  {
+    return m_kdtree->setCurrentGlobalRadius(t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::setupTree()
+  {
+    return m_kdtree->setupTree();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::queryNeighbors(size_t t_k)
+  {
+    return m_kdtree->queryNeighbors(t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void UGrid<T>::queryNeighbors(double t_radius)
+  {
+    return m_kdtree->queryNeighbors(t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<size_t>
+  UGrid<T>::queryNeighbors(const std::vector<T>& t_point, size_t t_k)
+  {
+    return m_kdtree->queryNeighbors(t_point,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<double>
+  UGrid<T>::queryDistances(const std::vector<T>& t_point, size_t t_k)
+  {
+    return m_kdtree->queryDistances(t_point,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<size_t>,std::vector<double>>
+  UGrid<T>::query(const std::vector<T>& t_point, size_t t_k)
+  {
+    return m_kdtree->query(t_point,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<size_t>>
+  UGrid<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
+                            size_t t_k)
+  {
+    return m_kdtree->queryNeighbors(t_points,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<double>>
+  UGrid<T>::queryDistances(const std::vector<std::vector<T>>& t_points,
+                            size_t t_k)
+  {
+    return m_kdtree->queryDistances(t_points,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+  UGrid<T>::query(const std::vector<std::vector<T>>& t_points,
+                            size_t t_k)
+  {
+    return m_kdtree->query(t_points,t_k);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<size_t>
+  UGrid<T>::queryNeighbors(const std::vector<T>& t_point, double t_radius)
+  {
+    return m_kdtree->queryNeighbors(t_point,t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<double>
+  UGrid<T>::queryDistances(const std::vector<T>& t_point, double t_radius)
+  {
+    return m_kdtree->queryDistances(t_point,t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<size_t>,std::vector<double>>
+  UGrid<T>::query(const std::vector<T>& t_point, double t_radius)
+  {
+    return m_kdtree->query(t_point,t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<size_t>>
+  UGrid<T>::queryNeighbors(const std::vector<std::vector<T>>& t_points,
+                            double t_radius)
+  {
+    return m_kdtree->queryNeighbors(t_points,t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<std::vector<double>>
+  UGrid<T>::queryDistances(const std::vector<std::vector<T>>& t_points,
+                            double t_radius)
+  {
+    return m_kdtree->queryDistances(t_points,t_radius);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::tuple<std::vector<std::vector<size_t>>,std::vector<std::vector<double>>>
+  UGrid<T>::query(const std::vector<std::vector<T>>& t_points,
+                   double t_radius)
+  {
+    return m_kdtree->query(t_points,t_radius);
+  }
+  //----------------------------------------------------------------------------
 }

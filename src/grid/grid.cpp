@@ -146,46 +146,80 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  Grid<T>::Grid(std::vector<std::vector<T>> t_grid)
-  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size()),
-    m_grid(t_grid)
+  Grid<T>::Grid(std::vector<std::vector<T>> t_grid, bool move_grid)
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
   {
     m_log = std::make_shared<Log>();
 		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
 		            + address_to_string(*this));
+    //  Determine whether to copy or move the grid
+    if (move_grid == false) {
+      m_grid = t_grid;
+      m_log->TRACE(NAME() + "t_grid object copied to m_grid");
+    }
+    else {
+      m_grid = std::move(t_grid);
+      m_log->TRACE(NAME() + "t_grid object moved to m_grid");
+    }
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  Grid<T>::Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log)
-  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size()),
-    m_grid(t_grid)
+  Grid<T>::Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log,
+                bool move_grid)
+  : m_name("default"), m_dim(t_grid[0].size()), m_N(t_grid.size())
   {
     m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid)
-  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size()),
-    m_grid(t_grid)
-  {
-    m_log = std::make_shared<Log>();
-		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
-		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
-		            + address_to_string(*this));
+    //  Determine whether to copy or move the grid
+    if (move_grid == false) {
+      m_grid = t_grid;
+      m_log->TRACE(NAME() + "t_grid object copied to m_grid");
+    }
+    else {
+      m_grid = std::move(t_grid);
+      m_log->TRACE(NAME() + "t_grid object moved to m_grid");
+    }
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
-                std::shared_ptr<Log> t_log)
-  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size()),
-    m_grid(t_grid)
+                bool move_grid)
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
+  {
+    m_log = std::make_shared<Log>();
+		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
+		            + address_to_string(*this));
+    //  Determine whether to copy or move the grid
+    if (move_grid == false) {
+      m_grid = t_grid;
+      m_log->TRACE(NAME() + "t_grid object copied to m_grid");
+    }
+    else {
+      m_grid = std::move(t_grid);
+      m_log->TRACE(NAME() + "t_grid object moved to m_grid");
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Grid<T>::Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
+                std::shared_ptr<Log> t_log, bool move_grid)
+  : m_name(t_name), m_dim(t_grid[0].size()), m_N(t_grid.size())
   {
     m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
+    //  Determine whether to copy or move the grid
+    if (move_grid == false) {
+      m_grid = t_grid;
+      m_log->TRACE(NAME() + "t_grid object copied to m_grid");
+    }
+    else {
+      m_grid = std::move(t_grid);
+      m_log->TRACE(NAME() + "t_grid object moved to m_grid");
+    }
   }
   //----------------------------------------------------------------------------
   //  Getters and Setters
@@ -293,6 +327,12 @@ namespace ET
     m_log->TRACE(NAME() + "Changed log from '" + address_to_string(m_log)
                  + "' to '" + address_to_string(t_log) + "'");
     m_log = t_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::moveGrid(const std::vector<std::vector<T>> t_grid)
+  {
+    m_grid = std::move(t_grid);
   }
   //----------------------------------------------------------------------------
   template<typename T>

@@ -1,26 +1,26 @@
-[07:00:10] [trace] ET:Interpolator:[1]:default: created at location 0x563e7c4c48c0
-[07:00:10] [info] ET:Interpolator:[1]:new_name:Set 'name' to new_name
-[07:00:10] [info] ET:Interpolator:[1]:new_name:Set 'dim' to 2
-[07:00:10] [info] ET:Interpolator:[1]:new_name:Set new ranges.
-[07:00:11] [trace] ET:Grid 'default' created at location 0x563e7c4c8a00
-[07:00:11] [trace] ET:UGrid 'default' created at location 0x563e7c4c8a00
-[07:00:11] [trace] ET:KDTree 'default' created at location 0x563e7c3e9540
-[07:00:11] [info] ET:Initialized KDTree with 1000 points in 1 dimensions
-[07:00:11] [trace] ET:Field 'default' created at location 0x563e7c48d230
-[07:00:11] [info] ET:Logger passed to Field 'default'
-[07:00:11] [trace] ET:Interpolator 'default' created at location 0x563e7c4d1bb0
-[07:00:11] [info] ET:Log passed to Interpolator 'default'
-[07:00:11] [trace] ET:Field 'default' destroyed at location 0x563e7b907670
-[07:00:11] [trace] ET:Interpolator 'default' created at location 0x563e7c3f2ef0
-[07:00:12] [trace] ET:Interpolator 'default' created at location 0x7ffd10e5d7d0
-[07:00:12] [trace] ET:Setting m_n to 10
-[07:00:12] [error] ET:Tried to construct LTI Matrix for a point using 1000 neighbors, however there are only 1000 total points.
-[07:00:12] [trace] ET:Setting m_k = this->m_Grid->getN()
-[07:00:12] [info] ET:KDTree default: Querying a point for the nearest 1000 neighbors.
-[07:00:12] [info] ET:KDTree default: Querying a point for the nearest 1000 neighbors.
-[07:00:12] [trace] ET:Interpolator:[2]:default: created at location 0x7ffd10e5d9b0
-[07:00:12] [info] ET:Set 'n' to 10
-[07:00:12] [info] ET:Set expansion point.
-[07:00:12] [info] ET:Set expansion coefficients.
-[07:00:12] [trace] ET:Interpolator 'default' destroyed at location 0x7ffd10e5d7d0
-[07:00:12] [trace] ET:Interpolator:[2]:default: destroyed at location 0x7ffd10e5d9b0
+[06:27:39] [trace] ET:Interpolant:[1]:default: created at location 0x55936a335a90
+[06:27:39] [info] ET:Interpolant:[1]:new_name:Set 'name' to new_name
+[06:27:39] [info] ET:Interpolant:[1]:new_name:Set 'dim' to 2
+[06:27:39] [info] ET:Interpolant:[1]:new_name:Set new ranges.
+[06:27:39] [trace] ET:Grid:[2]:default:Grid 'default' created at location 0x55936a339bd0
+[06:27:39] [trace] ET:Grid:[2]:default:t_grid object copied to m_grid
+[06:27:39] [trace] ET:UGrid:[2]:default:UGrid 'default' created at location 0x55936a339bd0
+[06:27:39] [trace] ET:KDTree:[3]:default:KDTree 'default' created at location 0x55936a20eb70
+[06:27:39] [info] ET:KDTree:[3]:default:Initialized KDTree with 1000 points in 1 dimensions
+[06:27:39] [trace] ET:Field:[4]:default:Field 'default' created at location 0x55936a2fa250
+[06:27:39] [info] ET:Field:[4]:default:Logger passed to Field 'default'
+[06:27:39] [trace] ET:Interpolator:[5]:default:Interpolator 'default' created at location 0x55936a342da0
+[06:27:39] [info] ET:Interpolator:[5]:default:Log passed to Interpolator 'default'
+[06:27:39] [trace] ET:Field:[4]:default:Field 'default' destroyed at location 0x5593697529b0
+[06:27:39] [trace] ET:Interpolator:[8]:default:Interpolator 'default' created at location 0x55936a159010
+[06:28:23] [trace] ET:Interpolator:[11]:default:Interpolator 'default' created at location 0x7ffe98e968b0
+[06:28:23] [trace] ET:LTInterpolator:[13]:default:Setting m_n to 10
+[06:28:23] [trace] ET:LTInterpolator:[13]:default:Setting m_k to 1000
+[06:28:23] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
+[06:28:23] [info] ET:KDTree:[3]:default:KDTree default: Querying a point for the nearest 1000 neighbors.
+[06:28:23] [trace] ET:Interpolant:[14]:default: created at location 0x7ffe98e96ab0
+[06:28:23] [info] ET:LTInterpolant:[16]:default:Set 'n' to 10
+[06:28:23] [info] ET:LTInterpolant:[16]:default:Set expansion point.
+[06:28:23] [info] ET:LTInterpolant:[16]:default:Set expansion coefficients.
+[06:28:23] [trace] ET:Interpolator:[11]:default:Interpolator 'default' destroyed at location 0x7ffe98e968b0
+[06:28:23] [trace] ET:Interpolant:[14]:default: destroyed at location 0x7ffe98e96ab0

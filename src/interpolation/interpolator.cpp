@@ -84,14 +84,14 @@ namespace ET
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = std::make_shared<Log>();
 		m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
   template<typename T>
   Interpolator<T>::~Interpolator()
   {
-		m_log->TRACE("Interpolator '" + m_name
+		m_log->TRACE(NAME() + "Interpolator '" + m_name
 								+ "' destroyed at location " + address_to_string(*this));
 	}
   //----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ namespace ET
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = std::make_shared<Log>();
 		m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ namespace ET
     m_lsdriver = LSDriver::xGELS;
 		m_log = std::make_shared<Log>();
     m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
   }
   //----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ namespace ET
     m_lsdriver = LSDriver::xGELS;
 		m_log = std::make_shared<Log>();
     m_log->init("ET:Interpolator:" + m_name, ".logs/interpolator_" + m_name + ".txt");
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
   }
 	//----------------------------------------------------------------------------
@@ -136,9 +136,9 @@ namespace ET
     m_lsdriver = LSDriver::xGELS;
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = t_log;
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
-		m_log->INFO("Log passed to Interpolator '" + m_name + "'");
+		m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
 	template<typename T>
@@ -148,9 +148,9 @@ namespace ET
     m_lsdriver = LSDriver::xGELS;
     m_Grid = std::make_shared<Grid<T>>();
 		m_log = t_log;
-		m_log->TRACE("Interpolator '" + m_name + "' created at location "
+		m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
 		            + address_to_string(*this));
-		m_log->INFO("Log passed to Interpolator '" + m_name + "'");
+		m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -159,9 +159,9 @@ namespace ET
   : m_name("default"), m_Grid(t_Grid), m_log(t_log)
   {
     m_lsdriver = LSDriver::xGELS;
-    m_log->TRACE("Interpolator '" + m_name + "' created at location "
+    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
                 + address_to_string(*this));
-    m_log->INFO("Log passed to Interpolator '" + m_name + "'");
+    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -171,9 +171,9 @@ namespace ET
   : m_name(t_name), m_Grid(t_Grid), m_log(t_log)
   {
     m_lsdriver = LSDriver::xGELS;
-    m_log->TRACE("Interpolator '" + m_name + "' created at location "
+    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
                 + address_to_string(*this));
-    m_log->INFO("Log passed to Interpolator '" + m_name + "'");
+    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
 	//----------------------------------------------------------------------------
   template<typename T>
@@ -264,7 +264,7 @@ namespace ET
 		}
 		else {
 			m_lsdriver = LSDriverMap[t_type];
-			m_log->INFO("Interpolator " + m_name + ": LSDriver set to " + t_type);
+			m_log->INFO(NAME() + "Interpolator " + m_name + ": LSDriver set to " + t_type);
 		}
 	}
   //----------------------------------------------------------------------------
@@ -278,7 +278,7 @@ namespace ET
 		}
 		else {
 			m_solvertype = SolverTypeMap[t_type];
-			m_log->INFO("Interpolator " + m_name + ": SolverType set to " + t_type);
+			m_log->INFO(NAME() + "Interpolator " + m_name + ": SolverType set to " + t_type);
 		}
 	}
   //----------------------------------------------------------------------------

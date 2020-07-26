@@ -1,0 +1,27 @@
+[06:59:47] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x559cff736da0
+[06:59:47] [trace] ET:Grid:[1]:default:Changed name from 'default' to 'myName'
+[06:59:47] [trace] ET:Grid:[1]:myName:Changed dim from '0' to '10'
+[06:59:48] [trace] ET:Grid:[1]:myName:Changed N from '0' to '100'
+[06:59:48] [trace] ET:Grid:[1]:myName:Changed name from 'myName' to 'myNewName'
+[06:59:48] [trace] ET:Grid:[1]:myNewName:Changed dim from '10' to '150'
+[06:59:48] [trace] ET:Grid:[1]:myNewName:Changed N from '100' to '1'
+[06:59:49] [trace] ET:Grid:[2]:default:Grid 'default' created at location 0x559cffd79620
+[06:59:49] [trace] ET:Grid:[1]:myNewName:Grid 'myNewName' destroyed at location 0x559cff736da0
+[06:59:51] [trace] ET:Grid:[3]:default grid:Grid 'default grid' created at location 0x559cff736da0
+[06:59:51] [trace] ET:Grid:[2]:default:Grid 'default' destroyed at location 0x559cffd79620
+[06:59:51] [trace] ET:Grid:[4]:default:Grid 'default' created at location 0x559cffd79620
+[06:59:51] [trace] ET:Grid:[4]:default:t_grid object copied to m_grid
+[06:59:51] [trace] ET:Grid:[3]:default grid:Grid 'default grid' destroyed at location 0x559cff736da0
+[07:00:15] [trace] ET:Grid:[5]:default:Grid 'default' created at location 0x559cff736da0
+[07:00:15] [trace] ET:Grid:[5]:default:t_grid object copied to m_grid
+[07:00:15] [trace] ET:Grid:[4]:default:Grid 'default' destroyed at location 0x559cffd79620
+[07:00:29] [trace] ET:Grid:[6]:default:Grid 'default' created at location 0x559cffd79620
+[07:00:29] [trace] ET:Grid:[6]:default:t_grid object moved to m_grid
+[07:00:29] [trace] ET:Grid:[5]:default:Grid 'default' destroyed at location 0x559cff736da0
+[07:00:31] [trace] ET:Grid:[7]:default:Grid 'default' created at location 0x559cff736da0
+[07:00:31] [trace] ET:Grid:[7]:default:t_grid object moved to m_grid
+[07:00:31] [trace] ET:Grid:[6]:default:Grid 'default' destroyed at location 0x559cffd79620
+[07:16:50] [trace] ET:Grid:[8]:default:Grid 'default' created at location 0x559cffd79620
+[07:16:50] [trace] ET:Grid:[8]:default:t_grid object moved to m_grid
+[07:16:50] [trace] ET:Grid:[7]:default:Grid 'default' destroyed at location 0x559cff736da0
+[21:43:24] [trace] ET:Grid:[8]:default:Grid 'default' destroyed at location 0x559cffd79620

@@ -1,4 +1,7 @@
-[07:37:42] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x55cf3e271b00
-[07:37:42] [trace] ET:UGrid:[2]:default:UGrid 'default' created at location 0x55cf3e271b00
-[07:37:42] [trace] ET:KDTree 'default' created at location 0x55cf3e14a810
-[07:37:42] [info] ET:Initialized KDTree with 1000 points in 1 dimensions
+[12:42:47] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x55c56180ae90
+[12:42:47] [trace] ET:UGrid:[1]:default:UGrid 'default' created at location 0x55c56180ae90
+[12:42:47] [trace] ET:KDTree 'default' created at location 0x55c5610220b0
+[12:42:47] [info] ET:Initialized KDTree with 1000 points in 1 dimensions
+[20:49:22] [trace] ET:UGrid:[1]:default:UGrid 'default' destroyed at location 0x55c56180ae90
+[20:49:22] [trace] ET:KDTree 'default' destroyed at location 0x55c5610220b0
+[20:49:22] [trace] ET:Grid:[1]:default:Grid 'default' destroyed at location 0x55c56180ae90

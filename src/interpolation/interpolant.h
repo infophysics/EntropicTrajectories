@@ -127,7 +127,7 @@ namespace ET
      *  to interpolate at.
      *  @return The return value of the interpolant.
      */
-    virtual T& operator()(const std::vector<T>& t_point);
+    virtual T operator()(const std::vector<T>& t_point);
     //! Range operator.
     /*! range operator.  This operator allows one to access the
      *  ranges in each dimension.

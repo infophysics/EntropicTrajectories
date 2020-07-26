@@ -130,28 +130,38 @@ namespace ET
     //! Constructor
     /*! constructor for Grid that takes a grid array
     *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    Grid(std::vector<std::vector<T>> t_grid);
+    Grid(std::vector<std::vector<T>> t_grid, bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a grid array and a logger
     *  @param t_grid A std::vector<std::vector<T>> array of points.
     *  @param t_log A shared logger instance.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log);
+    Grid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log,
+         bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a name and a grid array
     *  @param t_name An std::string specifying this objects name.
     *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    Grid(std::string t_name, std::vector<std::vector<T>> t_grid);
+    Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
+         bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a name, grid array and a logger
     *  @param t_name An std::string specifying this objects name.
     *  @param t_grid A std::vector<std::vector<T>> array of points.
     *  @param t_log A shared logger instance.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
     Grid(std::string t_name, std::vector<std::vector<T>> t_grid,
-         std::shared_ptr<Log> t_log);
+         std::shared_ptr<Log> t_log, bool move_grid=false);
     //   Getters and Setters
     //! Get name.
     /*! Get the name of the Grid.
@@ -227,6 +237,12 @@ namespace ET
      *  @param t_log A std::shared_ptr<Log> instance of a logger.
      */
     void setLog(std::shared_ptr<Log> t_log);
+    //! Move data
+    /*! Reassign ownership of the elements of an std::vector<std::vector<T>>
+     *  to the m_grid data member.
+     *  @param t_grid A std::vector<std::vector<T>> of data.
+     */
+    void moveGrid(const std::vector<std::vector<T>> t_grid);
 
     //  Operator overloads
     /*!

@@ -120,28 +120,38 @@ namespace ET
     //! Constructor
     /*! constructor for Grid that takes a grid array
     *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    UGrid(std::vector<std::vector<T>> t_grid);
+    UGrid(std::vector<std::vector<T>> t_grid, bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a grid array and a logger
     *  @param t_grid A std::vector<std::vector<T>> array of points.
     *  @param t_log A shared logger instance.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    UGrid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log);
+    UGrid(std::vector<std::vector<T>> t_grid, std::shared_ptr<Log> t_log,
+          bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a name and a grid array
     *  @param t_name An std::string specifying this objects name.
     *  @param t_grid A std::vector<std::vector<T>> array of points.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
-    UGrid(std::string t_name, std::vector<std::vector<T>> t_grid);
+    UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
+          bool move_grid=false);
     //! Constructor
     /*! constructor for Grid that takes a name, grid array and a logger
     *  @param t_name An std::string specifying this objects name.
     *  @param t_grid A std::vector<std::vector<T>> array of points.
     *  @param t_log A shared logger instance.
+    *  @param move_grid A bool that determines whether the t_grid object
+    *  should be copied or moved to m_grid.
     */
     UGrid(std::string t_name, std::vector<std::vector<T>> t_grid,
-          std::shared_ptr<Log> t_log);
+          std::shared_ptr<Log> t_log, bool move_grid=false);
 
     //  Getters and Setters
     //! Get type
@@ -164,6 +174,115 @@ namespace ET
     //  Various functions
     bool checkConsistency();
 
+    //  Overriden KDTree methods
+    //! Get current neighbor indices
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<size_t>> getCurrentNeighborIndices();
+    //! Get current neighbor distances
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<double>> getCurrentNeighborDistances();
+    //! Get current neighbor indices
+    /*! calls the KDTree method
+     */
+    std::vector<size_t> getCurrentNeighborIndices(const size_t t_i);
+    //! Get current neighbor distances
+    /*! calls the KDTree method
+     */
+    std::vector<double> getCurrentNeighborDistances(const size_t t_i);
+    //! Get current global k
+    /*! calls the KDTree method
+     */
+    size_t getCurrentGlobalK() const;
+    //! Get current global radius
+    /*! calls the KDTree method
+     */
+    double getCurrentGlobalRadius() const;
+    //! Set current global k
+    /*! calls the KDTree method
+     */
+    void setCurrentGlobalK(const size_t t_k);
+    //! Set current global radius
+    /*! calls the KDTree method
+     */
+    void setCurrentGlobalRadius(const double t_radius);
+    //  KDTree methods
+    //! Setup tree
+    /*! calls the KDTree method
+     */
+    void setupTree();
+    //! Query Neighbors
+    /*! calls the KDTree method
+     */
+    void queryNeighbors(size_t t_k);
+    //! Query Neighbors
+    /*! calls the KDTree method
+     */
+    void queryNeighbors(double t_radius);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<size_t>
+    queryNeighbors(const std::vector<T>& t_point, size_t t_k);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<double>
+    queryDistances(const std::vector<T>& t_point, size_t t_k);
+    //! Query
+    /*! calls the KDTree method
+     */
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    query(const std::vector<T>& t_point, size_t t_k);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<size_t>>
+    queryNeighbors(const std::vector<std::vector<T>>& t_points, size_t t_k);
+    //! Query distances
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<double>>
+    queryDistances(const std::vector<std::vector<T>>& t_points, size_t t_k);
+    //! Query
+    /*! calls the KDTree method
+     */
+    std::tuple<std::vector<std::vector<size_t>>,
+               std::vector<std::vector<double>>>
+    query(const std::vector<std::vector<T>>& t_points, size_t t_k);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<size_t>
+    queryNeighbors(const std::vector<T>& t_point, double t_radius);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<double>
+    queryDistances(const std::vector<T>& t_point, double t_radius);
+    //! Query
+    /*! calls the KDTree method
+     */
+    std::tuple<std::vector<size_t>,std::vector<double>>
+    query(const std::vector<T>& t_point, double t_radius);
+    //! Query neighbors
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<size_t>>
+    queryNeighbors(const std::vector<std::vector<T>>& t_points, double t_radius);
+    //! Query distances
+    /*! calls the KDTree method
+     */
+    std::vector<std::vector<double>>
+    queryDistances(const std::vector<std::vector<T>>& t_points, double t_radius);
+    //! Query
+    /*! calls the KDTree method
+     */
+    std::tuple<std::vector<std::vector<size_t>>,
+               std::vector<std::vector<double>>>
+    query(const std::vector<std::vector<T>>& t_points, double t_radius);
+
   private:
     /*! KDTree for the grid.
      */
@@ -174,11 +293,9 @@ namespace ET
     /*! Logging system name generator.
      */
     virtual std::string NAME() const {
-      return "UGrid:[" + std::to_string(m_id.id) + "]:" + this->m_name + ":";
+      return "UGrid:[" + std::to_string(this->m_id.id) + "]:"
+             + this->m_name + ":";
     }
-    /*! Unique ID for each instance.
-     */
-    UniqueID m_id;
   };
 
   template class UGrid<double>;

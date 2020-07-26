@@ -169,7 +169,7 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T& Interpolant<T>::operator()(const std::vector<T>& t_point)
+  T Interpolant<T>::operator()(const std::vector<T>& t_point)
   {
     T result;
     return result;

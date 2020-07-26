@@ -116,14 +116,14 @@ namespace ET
   void LocalTaylorInterpolator<T>::setK(size_t t_k)
   {
     m_k = t_k;
-    this->m_log->TRACE("Setting m_k to " + std::to_string(t_k));
+    this->m_log->TRACE(NAME() + "Setting m_k to " + std::to_string(t_k));
   }
   //----------------------------------------------------------------------------
   template<typename T>
   void LocalTaylorInterpolator<T>::setN(size_t t_n)
   {
     m_n = t_n;
-    this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
+    this->m_log->TRACE(NAME() + "Setting m_n to " + std::to_string(t_n));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -144,10 +144,10 @@ namespace ET
   {
     //  Check that t_index is not outside the bounds of ugrid.
     if (t_index >= this->m_Grid->getN()) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point "
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " which is out of bounds for "
                    + " Grid array of size " + std::to_string(this->m_Grid->getN()));
-      this->m_log->TRACE("Returning zero matrix.");
+      this->m_log->TRACE(NAME() + "Returning zero matrix.");
       return Matrix<T>("zeroes",1,0.0);
     }
     //  Determine which scheme to use
@@ -208,17 +208,17 @@ namespace ET
                                                          const size_t t_k)
   {
     //  Check that t_k is not greater than the number of points
-    if (t_k >= this->m_Grid->getN()) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point "
+    if (t_k > this->m_Grid->getN()) {
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " using " + std::to_string(t_k)
                    + " neighbors, however there are only "
                    + std::to_string(this->m_Grid->getN()) + " total points.");
-      this->m_log->TRACE("Setting m_k = this->m_Grid->getN()");
+      this->m_log->TRACE(NAME() + "Setting m_k = this->m_Grid->getN()");
       m_k = this->m_Grid->getN();
     }
     else {
       m_k = t_k;
-      this->m_log->TRACE("Setting m_k to " + std::to_string(t_k));
+      this->m_log->TRACE(NAME() + "Setting m_k to " + std::to_string(t_k));
     }
     return constructLocalTaylorMatrix(t_index);
   }
@@ -230,18 +230,18 @@ namespace ET
                               const size_t t_k)
   {
     //  Check that t_k is not greater than the number of points
-    if (t_k >= this->m_Grid->getN()) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for a point using "
+    if (t_k > this->m_Grid->getN()) {
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for a point using "
                          + std::to_string(t_k) + " neighbors,"
                          + " however there are only "
                          + std::to_string(this->m_Grid->getN())
                          + " total points.");
-      this->m_log->TRACE("Setting m_k = this->m_Grid->getN()");
+      this->m_log->TRACE(NAME() + "Setting m_k = this->m_Grid->getN()");
       m_k = this->m_Grid->getN();
     }
     else {
       m_k = t_k;
-      this->m_log->TRACE("Setting m_k to " + std::to_string(t_k));
+      this->m_log->TRACE(NAME() + "Setting m_k to " + std::to_string(t_k));
     }
     return constructLocalTaylorMatrix(t_point);
   }
@@ -253,7 +253,7 @@ namespace ET
   {
     //  Check that t_radius is positive
     if (t_radius < 0.0) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point "
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " using a influence radius of "
                    + std::to_string(t_radius));
     }
@@ -268,7 +268,7 @@ namespace ET
   {
     //  Check that t_radius is positive
     if (t_radius < 0.0) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point using an influence radius of " + std::to_string(t_radius));
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point using an influence radius of " + std::to_string(t_radius));
     }
     return constructLocalTaylorMatrix(t_point);
   }
@@ -281,27 +281,27 @@ namespace ET
   {
     //  Check that t_n is at least 1
     if (t_n == 0) {
-      this->m_log->ERROR("Tried to set m_n to zero.");
+      this->m_log->ERROR(NAME() + "Tried to set m_n to zero.");
     }
     else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
-      this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
+      this->m_log->TRACE(NAME() + "Setting m_n to " + std::to_string(t_n));
     }
     //  Create new monomial
     m_monomial.generateMonomial(m_n);
     //  Check that t_k is not greater than the number of points
-    if (t_k >= this->m_Grid->getN()) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point "
+    if (t_k > this->m_Grid->getN()) {
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " using " + std::to_string(t_k)
                    + " neighbors, however there are only "
                    + std::to_string(this->m_Grid->getN()) + " total points.");
-      this->m_log->TRACE("Setting m_k = this->m_Grid->getN()");
+      this->m_log->TRACE(NAME() + "Setting m_k = this->m_Grid->getN()");
       m_k = this->m_Grid->getN();
     }
     else {
       m_k = t_k;
-      this->m_log->TRACE("Setting m_k to " + std::to_string(t_k));
+      this->m_log->TRACE(NAME() + "Setting m_k to " + std::to_string(t_k));
     }
     return constructLocalTaylorMatrix(t_index);
   }
@@ -315,28 +315,28 @@ namespace ET
   {
     //  Check that t_n is at least 1
     if (t_n == 0) {
-      this->m_log->ERROR("Tried to set m_n to zero.");
+      this->m_log->ERROR(NAME() + "Tried to set m_n to zero.");
     }
     else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
-      this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
+      this->m_log->TRACE(NAME() + "Setting m_n to " + std::to_string(t_n));
     }
     //  Create new monomial
     m_monomial.generateMonomial(m_n);
     //  Check that t_k is not greater than the number of points
-    if (t_k >= this->m_Grid->getN()) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for a point using "
+    if (t_k > this->m_Grid->getN()) {
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for a point using "
                          + std::to_string(t_k) + " neighbors,"
                          + " however there are only "
                          + std::to_string(this->m_Grid->getN())
                          + " total points.");
-      this->m_log->TRACE("Setting m_k = this->m_Grid->getN()");
+      this->m_log->TRACE(NAME() + "Setting m_k = this->m_Grid->getN()");
       m_k = this->m_Grid->getN();
     }
     else {
       m_k = t_k;
-      this->m_log->TRACE("Setting m_k to " + std::to_string(t_k));
+      this->m_log->TRACE(NAME() + "Setting m_k to " + std::to_string(t_k));
     }
     return constructLocalTaylorMatrix(t_point);
   }
@@ -349,24 +349,24 @@ namespace ET
   {
     //  Check that t_n is at least 1
     if (t_n == 0) {
-      this->m_log->ERROR("Tried to set m_n to zero.");
+      this->m_log->ERROR(NAME() + "Tried to set m_n to zero.");
     }
     else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
-      this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
+      this->m_log->TRACE(NAME() + "Setting m_n to " + std::to_string(t_n));
     }
     //  Create new monomial
     m_monomial.generateMonomial(m_n);
     //  Check that t_radius is positive
     if (t_radius < 0.0) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point "
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point "
                    + std::to_string(t_index) + " using a influence radius of "
                    + std::to_string(t_radius));
     }
     else {
       m_radius = t_radius;
-      this->m_log->TRACE("Setting m_radius to " + std::to_string(t_radius));
+      this->m_log->TRACE(NAME() + "Setting m_radius to " + std::to_string(t_radius));
     }
     return constructLocalTaylorMatrix(t_index);
   }
@@ -380,22 +380,22 @@ namespace ET
   {
     //  Check that t_n is at least 1
     if (t_n == 0) {
-      this->m_log->ERROR("Tried to set m_n to zero.");
+      this->m_log->ERROR(NAME() + "Tried to set m_n to zero.");
     }
     else if (m_n < t_n) {
       //  Set m_n to t_n
       m_n = t_n;
-      this->m_log->TRACE("Setting m_n to " + std::to_string(t_n));
+      this->m_log->TRACE(NAME() + "Setting m_n to " + std::to_string(t_n));
     }
     //  Create new monomial
     m_monomial.generateMonomial(m_n);
     //  Check that t_radius is positive
     if (t_radius < 0.0) {
-      this->m_log->ERROR("Tried to construct LTI Matrix for point using an influence radius of " + std::to_string(t_radius));
+      this->m_log->ERROR(NAME() + "Tried to construct LTI Matrix for point using an influence radius of " + std::to_string(t_radius));
     }
     else {
       m_radius = t_radius;
-      this->m_log->TRACE("Setting m_radius to " + std::to_string(t_radius));
+      this->m_log->TRACE(NAME() + "Setting m_radius to " + std::to_string(t_radius));
     }
     return constructLocalTaylorMatrix(t_point);
   }

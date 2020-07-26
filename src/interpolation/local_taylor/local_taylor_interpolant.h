@@ -99,7 +99,7 @@ namespace ET
      *  @param t_point.  A std::vector<T> of the point to interpolate at.
      *  @return The interpolation at t_point.
     */
-    virtual T& operator()(const std::vector<T>& t_point);
+    virtual T operator()(const std::vector<T>& t_point);
 
 
   private:

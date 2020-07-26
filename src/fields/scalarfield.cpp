@@ -328,20 +328,20 @@ namespace ET
 	ScalarField<T> ScalarField<T>::operator+(const ScalarField<T>& t_scalar) const
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to add t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to add t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to add t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to add t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -358,20 +358,20 @@ namespace ET
 	ScalarField<T> ScalarField<T>::operator-(const ScalarField<T>& t_scalar) const
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to subtract t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to subtract t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to subtract t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to subtract t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -388,20 +388,20 @@ namespace ET
 	ScalarField<T> ScalarField<T>::operator*(const ScalarField<T>& t_scalar) const
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to multiply t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to multiply t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to multiply t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to multiply t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -418,20 +418,20 @@ namespace ET
 	ScalarField<T> ScalarField<T>::operator/(const ScalarField<T>& t_scalar) const
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to divide t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to divide t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to divide t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to divide t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -448,20 +448,20 @@ namespace ET
 	ScalarField<T>& ScalarField<T>::operator+=(const ScalarField<T>& t_scalar)
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to add t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to add t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to add t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to add t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -480,20 +480,20 @@ namespace ET
 	ScalarField<T>& ScalarField<T>::operator-=(const ScalarField<T>& t_scalar)
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to subtract t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to subtract t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to subtract t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to subtract t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -512,20 +512,20 @@ namespace ET
 	ScalarField<T>& ScalarField<T>::operator*=(const ScalarField<T>& t_scalar)
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to multiply t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to multiply t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to multiply t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to multiply t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -544,20 +544,20 @@ namespace ET
 	ScalarField<T>& ScalarField<T>::operator/=(const ScalarField<T>& t_scalar)
 	{
 		if (this->m_N != t_scalar.getN()) {
-			this->m_log->ERROR("Attempted to divide t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to divide t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with sizes " + std::to_string(this->m_N)
 									+ " and " + std::to_string(t_scalar.getN()));
 			return *this;
 		}
 		if (this->m_dim != t_scalar.getDim()) {
-			this->m_log->ERROR("Attempted to divide t_scalar fields " + this->m_name  + " and "
+			this->m_log->ERROR(NAME() + "Attempted to divide t_scalar fields " + this->m_name  + " and "
 									+ t_scalar.getName() + " with dimensions "
 									+ std::to_string(this->m_dim) + " and "
 									+ std::to_string(t_scalar.getDim()));
 			return *this;
 		}
 		if (this->m_Grid != t_scalar.getGrid()) {
-			this->m_log->WARN("Grids for t_scalar fields " + this->m_name  + " and "
+			this->m_log->WARN(NAME() + "Grids for t_scalar fields " + this->m_name  + " and "
 			            + t_scalar.getName() + " do not match");
 		}
 		std::vector<T> copy = m_field;
@@ -576,16 +576,16 @@ namespace ET
   T& ScalarField<T>::operator()(const size_t& i)
   {
 		if (i >= this->m_N) {
-			this->m_log->ERROR("ScalarField " + this->m_name
+			this->m_log->ERROR(NAME() + "ScalarField " + this->m_name
 									+ ": Attempted to access m_field array of size "
 									+ std::to_string(this->m_N) + " with index "
 									+ std::to_string(i));
 			if(m_field.size() > 0) {
-				this->m_log->INFO("ScalarField "+ this->m_name +": Returning the element at index 0");
+				this->m_log->INFO(NAME() + "ScalarField "+ this->m_name +": Returning the element at index 0");
 				return m_field[0];
 			}
 			else {
-				this->m_log->INFO("ScalarField " + this->m_name + ": Terminating program");
+				this->m_log->INFO(NAME() + "ScalarField " + this->m_name + ": Terminating program");
 				exit(0);
 			}
 		}
@@ -595,16 +595,16 @@ namespace ET
   const T& ScalarField<T>::operator()(const size_t& i) const
   {
 		if (i >= this->m_N) {
-			this->m_log->ERROR("ScalarField " + this->m_name
+			this->m_log->ERROR(NAME() + "ScalarField " + this->m_name
 									+ ": Attempted to access m_field array of size "
 									+ std::to_string(this->m_N) + " with index "
 									+ std::to_string(i));
 			if(m_field.size() > 0) {
-				this->m_log->INFO("ScalarField "+ this->m_name +": Returning the element at index 0");
+				this->m_log->INFO(NAME() + "ScalarField "+ this->m_name +": Returning the element at index 0");
 				return m_field[0];
 			}
 			else {
-				this->m_log->INFO("ScalarField " + this->m_name + ": Terminating program");
+				this->m_log->INFO(NAME() + "ScalarField " + this->m_name + ": Terminating program");
 				exit(0);
 			}
 		}
