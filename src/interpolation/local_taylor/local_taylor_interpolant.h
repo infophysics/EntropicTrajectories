@@ -107,6 +107,31 @@ namespace ET
     */
     virtual std::vector<T>
     operator()(const std::vector<std::vector<T>>& t_points);
+    //  Derivatives
+    //! First derivative at a point
+    /*! Interpolate the first derivative at a point.
+     *  @param t_point An std::vector<T> for the point.
+     *  @return The value of the derivative.
+     */
+    virtual T d(const std::vector<T>& t_point);
+    //! First derivative at a set of points
+    /*! Interpolate the first derivative at a set of points.
+     *  @param t_points An std::vector<std::vector<T>> for the points.
+     *  @return The value of the derivatives at each point.
+     */
+    virtual std::vector<T> d(const std::vector<std::vector<T>>& t_point);
+    //! Second derivative at a point
+    /*! Interpolate the second derivative at a point.
+     *  @param t_point An std::vector<T> for the point.
+     *  @return The value of the derivative.
+     */
+    virtual T dd(const std::vector<T>& t_point);
+    //! Second derivative at a set of points
+    /*! Interpolate the second derivative at a set of points.
+     *  @param t_points An std::vector<std::vector<T>> for the points.
+     *  @return The value of the derivatives at each point.
+     */
+    virtual std::vector<T> dd(const std::vector<std::vector<T>>& t_point);
 
 
   private:

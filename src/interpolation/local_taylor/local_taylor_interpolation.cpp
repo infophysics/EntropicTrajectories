@@ -485,7 +485,7 @@ namespace ET
 			std::vector<size_t> deriv(this->m_Grid->getDim(),0);
 			deriv[j] = t_degree;
 			size_t l = m_monomial.getTaylorIndex(deriv);
-			result(j) = s(l);
+			result(j) = factorial(t_degree)*s(l);
 		}
     return result;
   }
@@ -517,7 +517,7 @@ namespace ET
 			std::vector<size_t> deriv(this->m_Grid->getDim(),0);
 			deriv[j] = t_degree;
 			size_t l = m_monomial.getTaylorIndex(deriv);
-			result(j) = s(l);
+			result(j) = factorial(t_degree)*s(l);
 		}
     return result;
   }

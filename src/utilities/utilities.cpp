@@ -25,6 +25,20 @@ namespace ET
   size_t UniqueID::nextID = 0;
 
   //----------------------------------------------------------------------------
+  //  Factorial function
+  //----------------------------------------------------------------------------
+  size_t factorial(size_t val)
+  {
+    if (val == 0 || val == 1) {
+      return 1;
+    }
+    else {
+      return val * factorial(val-1);
+    }
+  }
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
   //  Function for turning a number into scientific notation
   //----------------------------------------------------------------------------
   template<typename T>
@@ -232,7 +246,7 @@ namespace ET
       return taylorExp;
     }
     for (size_t i = 0; i < x1.size(); i++) {
-      taylorExp[i] = pow((x2[i]-x1[i]),1);
+      taylorExp[i] = (x2[i]-x1[i]);
     }
     std::vector<double> taylor(m_mono.size(),1.0);
     for (size_t i = 0; i < m_mono.size(); i++) {

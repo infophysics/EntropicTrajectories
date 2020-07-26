@@ -1603,6 +1603,19 @@ PYBIND11_MODULE(etraj, m) {
 			}
 			self[i] = range;
 		}, py::is_operator())
+    //  Derivatives
+    .def("d", (double (Interpolant<double>::*)
+         (const std::vector<double>&))
+         &Interpolant<double>::d)
+    .def("d", (std::vector<double> (Interpolant<double>::*)
+        (const std::vector<std::vector<double>>&))
+        &Interpolant<double>::d)
+    .def("dd", (double (Interpolant<double>::*)
+         (const std::vector<double>&))
+         &Interpolant<double>::dd)
+    .def("dd", (std::vector<double> (Interpolant<double>::*)
+        (const std::vector<std::vector<double>>&))
+        &Interpolant<double>::dd)
     ;
   //----------------------------------------------------------------------------
 

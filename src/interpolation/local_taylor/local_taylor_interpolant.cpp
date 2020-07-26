@@ -120,6 +120,68 @@ namespace ET
     return result;
   }
   //----------------------------------------------------------------------------
+  template<typename T>
+  T LocalTaylorInterpolant<T>::d(const std::vector<T>& t_point)
+  {
+    //  Construct the monomial expansion for the point with respect to the
+    //  expansion point.
+    std::vector<double>
+    temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_point);
+    T result = 0;
+    for (auto i = 0; i < temp.size()-1; i++) {
+      result += T(i+1) * temp[i] * m_expansion_coefficients[i+1];
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  LocalTaylorInterpolant<T>::d(const std::vector<std::vector<T>>& t_points)
+  {
+    //  Construct the monomial expansion for the point with respect to the
+    //  expansion point.
+    std::vector<T> result(t_points.size(),0.0);
+    for (auto i = 0; i < result.size(); i++) {
+      std::vector<double>
+      temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_points[i]);
+      for (auto j = 0; j < temp.size()-1; j++) {
+        result[i] += T(j+1) * temp[j] * m_expansion_coefficients[j+1];
+      }
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T LocalTaylorInterpolant<T>::dd(const std::vector<T>& t_point)
+  {
+    //  Construct the monomial expansion for the point with respect to the
+    //  expansion point.
+    std::vector<double>
+    temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_point);
+    T result = 0;
+    for (auto i = 0; i < temp.size()-2; i++) {
+      result += T(i+2)*(i+1) * temp[i] * m_expansion_coefficients[i+2];
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  LocalTaylorInterpolant<T>::dd(const std::vector<std::vector<T>>& t_points)
+  {
+    //  Construct the monomial expansion for the point with respect to the
+    //  expansion point.
+    std::vector<T> result(t_points.size(),0.0);
+    for (auto i = 0; i < result.size(); i++) {
+      std::vector<double>
+      temp = m_monomial.taylorMonomialExpansion(m_expansion_point,t_points[i]);
+      for (auto j = 0; j < temp.size()-2; j++) {
+        result[i] += T(j+2)*(j+1) * temp[j] * m_expansion_coefficients[j+2];
+      }
+    }
+    return result;
+  }
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //  Global interpolation functions
