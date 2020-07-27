@@ -24,7 +24,6 @@
 
 #include "grid.h"
 #include "log.h"
-#include "field.h"
 
 //------------------------------------------------------------------------------
 //  Forward declaration of Interpolator, Integrator and DiffEQ
@@ -36,6 +35,7 @@ namespace ET
   //template<typename T> class DiffEQ;
   //template<typename T> class Integrator;
 }
+#include "field.h"
 
 //#include "interpolator.h"
 //#include "diffeq.h"

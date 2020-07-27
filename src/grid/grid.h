@@ -46,7 +46,7 @@ namespace ET
   /*! A Base class for various different types of grids.
    */
   template<typename T>
-  class Grid
+  class Grid : public std::enable_shared_from_this<Grid<T>>
   {
   public:
     //  Constructors

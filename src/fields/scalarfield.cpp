@@ -25,9 +25,9 @@ namespace ET
   : Field<T>()
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -40,9 +40,9 @@ namespace ET
   : Field<T>(t_name)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -50,9 +50,9 @@ namespace ET
   : Field<T>(t_log)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -60,9 +60,9 @@ namespace ET
   : Field<T>(t_name, t_log)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -70,9 +70,9 @@ namespace ET
   : Field<T>(t_grid)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -80,9 +80,9 @@ namespace ET
   : Field<T>(t_name, t_grid)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -90,9 +90,9 @@ namespace ET
   : Field<T>(t_interpolator)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -101,9 +101,9 @@ namespace ET
   : Field<T>(t_name, t_interpolator)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -112,9 +112,9 @@ namespace ET
   : Field<T>(t_grid, t_log)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -124,9 +124,9 @@ namespace ET
   : Field<T>(t_name, t_grid, t_log)
   {
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -136,9 +136,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -148,9 +148,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -161,9 +161,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -175,9 +175,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -188,9 +188,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -202,9 +202,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -215,9 +215,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -229,9 +229,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -243,9 +243,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -258,9 +258,9 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -301,7 +301,7 @@ namespace ET
     this->m_Interpolator = t_interpolator;
     //  m_Grid takes presidence over the grid from t_interpolator
     this->m_Interpolator->setGrid(this->m_Grid);
-    this->m_Interpolator->setField(std::make_shared<ScalarField<T>>(*this));
+    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -311,7 +311,7 @@ namespace ET
     this->m_DiffEQ = t_diffeq;
     //  m_Grid takes presidence over the grid from t_interpolator
     // this->m_DiffEQ->setGrid(this->m_Grid);
-    // this->m_DiffEQ->setField(std::make_shared<ScalarField<T>>(*this));
+    // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -321,7 +321,7 @@ namespace ET
     this->m_Integrator = t_integrator;
     //  m_Grid takes presidence over the grid from t_interpolator
     // this->m_Integrator->setGrid(this->m_Grid);
-    // this->m_Integrator->setField(std::make_shared<ScalarField<T>>(*this));
+    // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
 	template<typename T>

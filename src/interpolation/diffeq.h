@@ -36,12 +36,12 @@ namespace ET
 {
   template<typename T> class Field;
   template<typename T> class Interpolator;
-  template<typename T> class ScalarField;
+  //template<typename T> class ScalarField;
   template<typename T> class Integrator;
 }
 #include "field.h"
 #include "interpolator.h"
-#include "scalarfield.h"
+//#include "scalarfield.h"
 #include "integrator.h"
 
 namespace ET
@@ -61,7 +61,7 @@ namespace ET
   /*! A base class for differential equations
    */
   template<typename T>
-  class DiffEQ
+  class DiffEQ : public std::enable_shared_from_this<DiffEQ<T>>
   {
   public:
     //! Default Constructor
@@ -148,13 +148,13 @@ namespace ET
     size_t m_dim {0};
     /*! Grid.  A shared_ptr for the underlying Grid.
      */
-    std::shared_ptr<Grid<T>> m_Grid {std::make_shared<Grid<T>>()};
+    std::shared_ptr<Grid<T>> m_Grid;
     /*! Logger.  Shared instance of a logger.
      */
     std::shared_ptr<Log> m_log {std::make_shared<Log>()};
     /*! Field.  An associated field for the diffeq.
      */
-    std::shared_ptr<Field<T>> m_Field {std::make_shared<Field<T>>()};
+    std::shared_ptr<Field<T>> m_Field;
     /* Type of the DiffEQ
      */
     const enum DiffEQType m_type {DiffEQType::DEFAULT};

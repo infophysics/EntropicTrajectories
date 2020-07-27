@@ -34,13 +34,13 @@
 namespace ET
 {
   template<typename T> class Field;
-  template<typename T> class ScalarField;
+  //template<typename T> class ScalarField;
   template<typename T> class Interpolator;
   template<typename T> class DiffEQ;
   //template<typename T> class VectorField;
 }
 #include "field.h"
-#include "scalarfield.h"
+//#include "scalarfield.h"
 #include "diffeq.h"
 #include "interpolator.h"
 //#include "vectorfield.h"
@@ -163,16 +163,16 @@ namespace ET
     size_t m_dim {0};
     /*! Grid.  A shared_ptr for the underlying Grid.
      */
-    std::shared_ptr<Grid<T>> m_Grid {std::make_shared<Grid<T>>()};
+    std::shared_ptr<Grid<T>> m_Grid;
     /*! Logger.  Shared instance of a logger.
      */
     std::shared_ptr<Log> m_log {std::make_shared<Log>()};
     /*! Field.  An associated field for the diffeq.
      */
-    std::shared_ptr<Field<T>> m_Field {std::make_shared<Field<T>>()};
+    std::shared_ptr<Field<T>> m_Field;
     /*! DiffEQ.  Shared pointer to the DiffEQ.
      */
-    std::shared_ptr<DiffEQ<T>> m_DiffEQ {std::make_shared<DiffEQ<T>>()};
+    std::shared_ptr<DiffEQ<T>> m_DiffEQ;
     /*! Type.  The type of the integrator
      */
     const enum IntegratorType m_type {IntegratorType::DEFAULT};

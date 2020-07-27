@@ -58,7 +58,7 @@ namespace ET
    *  ET::VectorField and ET::FrameField.
    */
   template<typename T>
-  class Field
+  class Field : public std::enable_shared_from_this<Field<T>>
   {
   public:
     //! Defualt Constructor
@@ -234,6 +234,9 @@ namespace ET
      */
     virtual Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
                                                 size_t t_k);
+    // std::shared_ptr<Field<T>> getptr() {
+    //   return shared_from_this();
+    // }
 
   protected:
     /*! Name.  The name of the Interpolator.
@@ -247,7 +250,7 @@ namespace ET
     size_t m_N {0};
     /*! Logger.  A shared instance of a Logger.
      */
-    std::shared_ptr<Log> m_log;
+    std::shared_ptr<Log> m_log {std::make_shared<Log>()};
     /*! Grid.  A shared instance of a Grid.
      */
     std::shared_ptr<Grid<T>> m_Grid;

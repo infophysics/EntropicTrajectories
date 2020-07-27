@@ -41,7 +41,7 @@ namespace ET
    *  Interpolants.
    */
   template<typename T>
-  class Interpolant
+  class Interpolant : public std::enable_shared_from_this<Interpolant<T>>
   {
   public:
     //! Default Constructor
