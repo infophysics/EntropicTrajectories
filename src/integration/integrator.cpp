@@ -20,70 +20,200 @@
 
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  //  Base class Integrator
+  //----------------------------------------------------------------------------
   template<typename T>
   Integrator<T>::Integrator()
+  : m_name("default"), m_dim(0)
   {
+    m_log = std::make_shared<Log>();
+		m_log->init(NAME(), ".logs/integrator_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "Integrator '" + m_name + "' created at location "
+		            + address_to_string(*this));
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   Integrator<T>::~Integrator()
   {
+    m_log->TRACE(NAME() + "Integrator '" + m_name
+								+ "' destroyed at location " + address_to_string(*this));
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  Integrator<T>::Integrator(int type)
+  Integrator<T>::Integrator(std::shared_ptr<Log> t_log)
+  : m_name("default"), m_dim(0), m_log(t_log)
   {
+    m_log->TRACE(NAME() + "Integrator '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Logger passed to Integrator '" + m_name + "'");
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  Integrator<T>::Integrator(std::string type)
+  Integrator<T>::Integrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log)
+  : m_name("default"), m_dim(0), m_Grid(t_Grid), m_log(t_log)
   {
+    m_log->TRACE(NAME() + "Integrator '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Logger passed to Integrator '" + m_name + "'");
   }
-
+  //----------------------------------------------------------------------------
   template<typename T>
-  Integrator<T>::Integrator(std::shared_ptr<Log> log)
+  std::string Integrator<T>::getName() const
   {
-    _log = log;
+    return m_name;
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  Integrator<T>::Integrator(std::shared_ptr<Grid<T>>, std::shared_ptr<Log> log)
+  size_t Integrator<T>::getDim() const
   {
-    _log = log;
+    return m_dim;
   }
-  // template<typename T>
-  // void Integrator<T>::setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>))
-  // {
-  //   _f = f;
-  // }
-
-  // //----------------------------------------------------------------------------
-  // //  Integration methods
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // void Integrator<T>::scalarIntegrate(const Grid<T>& ugrid,
-  //                                     ScalarField<T>& field)
-  // {
-  //   std::vector<T> result(field.getN());
-  //   const double dt = 0.01;
-  //   //integrate(field.DiffEQ, field.data(), 0.0, 1.0, dt);
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Runge-Kutta 4th-order single time step
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // void Integrator<T>::scalarRK4Step(const Grid<T>& ugrid,
-  //                    ScalarField<T>& field, double dt)
-  // {
-  //   // //  grab the initial field values
-  //   // Vector<T> init(field.getField());
-  //   // Vector<T> k0(field.getN(),0.0);
-  //   // //  generate k1-k4
-  //   // Vector<T> k1 = field.DiffEQ(init,0.0,k0);
-  //   // Vector<T> k2 = field.DiffEQ(init,dt/2,k1);
-  //   // Vector<T> k3 = field.DiffEQ(init,dt/2,k2);
-  //   // Vector<T> k4 = field.DiffEQ(init,dt,k3);
-  //   // Vector<T> final = init + (dt/6)*(k1 + 2*k2 + 2*k3 + k4);
-  //   // //  set new field
-  //   // field.setField(final.getVec());
-  // }
-  // //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Grid<T>> Integrator<T>::getGrid() const
+  {
+    return m_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Field<T>> Integrator<T>::getField() const
+  {
+    return m_Field;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<DiffEQ<T>> Integrator<T>::getDiffEQ() const
+  {
+    return m_DiffEQ;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Log> Integrator<T>::getLog() const
+  {
+    return m_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  enum IntegratorType Integrator<T>::getType() const
+  {
+    return m_type;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setName(const std::string t_name)
+  {
+    m_log->TRACE(NAME() + "Changed name from '" + m_name
+                 + "' to '" + t_name + "'");
+    m_name = t_name;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setDim(const size_t t_dim)
+  {
+    m_log->TRACE(NAME() + "Changed dim from '" + std::to_string(m_dim)
+                 + "' to '" + std::to_string(t_dim) + "'");
+    m_dim = t_dim;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setGrid(const std::shared_ptr<Grid<T>> t_Grid)
+  {
+    m_Grid = t_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setField(const std::shared_ptr<Field<T>> t_Field)
+  {
+    m_Field = t_Field;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setDiffEQ(const std::shared_ptr<DiffEQ<T>> t_DiffEQ)
+  {
+    m_DiffEQ = t_DiffEQ;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Integrator<T>::setLog(const std::shared_ptr<Log> t_log)
+  {
+    m_log = t_log;
+  }
+  //----------------------------------------------------------------------------
+  //  Base class ODEIntegrator
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ODEIntegrator<T>::ODEIntegrator()
+  : DiffEQ<T>()
+  {
+    this->m_log = std::make_shared<Log>();
+		this->m_log->init(NAME(), ".logs/odeintegrator_" + this->m_name + ".txt");
+		this->m_log->TRACE(NAME() + "ODEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ODEIntegrator<T>::~ODEIntegrator()
+  {
+    this->m_log->TRACE(NAME() + "ODEIntegrator '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ODEIntegrator<T>::ODEIntegrator(std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_log)
+  {
+    this->m_log->TRACE(NAME() + "ODEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to ODEIntegrator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  ODEIntegrator<T>::ODEIntegrator(std::shared_ptr<Grid<T>> t_Grid,
+                                  std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_Grid,t_log)
+  {
+    this->m_log->TRACE(NAME() + "ODEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to ODEIntegrator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  //  Base class ODEIntegrator
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDEIntegrator<T>::PDEIntegrator()
+  : DiffEQ<T>()
+  {
+    this->m_log = std::make_shared<Log>();
+		this->m_log->init(NAME(), ".logs/odeintegrator_" + this->m_name + ".txt");
+		this->m_log->TRACE(NAME() + "PDEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDEIntegrator<T>::~PDEIntegrator()
+  {
+    this->m_log->TRACE(NAME() + "PDEIntegrator '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDEIntegrator<T>::PDEIntegrator(std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_log)
+  {
+    this->m_log->TRACE(NAME() + "PDEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to PDEIntegrator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDEIntegrator<T>::PDEIntegrator(std::shared_ptr<Grid<T>> t_Grid,
+                                  std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_Grid,t_log)
+  {
+    this->m_log->TRACE(NAME() + "PDEIntegrator '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to PDEIntegrator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
 }

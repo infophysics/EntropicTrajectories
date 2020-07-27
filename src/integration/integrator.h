@@ -23,65 +23,262 @@
 #include <map>
 #include <memory>
 
+#include "grid.h"
 #include "ugrid.h"
 #include "params.h"
 #include "utilities.h"
 #include "matrix.h"
-
-// //------------------------------------------------------------------------------
-// //  Forward declaration of ScalarField
-// //------------------------------------------------------------------------------
-// namespace ET
-// {
-//   template<typename T> class Field;
-//   //template<typename T> class ScalarField;
-//   //template<typename T> class VectorField;
-// }
-// #include "field.h"
-// //#include "scalarfield.h"
-// //#include "vectorfield.h"
+//------------------------------------------------------------------------------
+//  Forward declaration of ScalarField
+//------------------------------------------------------------------------------
+namespace ET
+{
+  template<typename T> class Field;
+  template<typename T> class ScalarField;
+  template<typename T> class Interpolator;
+  template<typename T> class DiffEQ;
+  //template<typename T> class VectorField;
+}
+#include "field.h"
+#include "scalarfield.h"
+#include "diffeq.h"
+#include "interpolator.h"
+//#include "vectorfield.h"
 
 namespace ET
 {
-  //----------------------------------------------------------------------------
-  //  Integrator class.
-  //----------------------------------------------------------------------------
+  //! \enum Integrator type enum
+  /*!
+   */
+  enum class IntegratorType
+  {
+    DEFAULT,
+    ODE,
+    PDE,
+  };
+
+  //! \enum ODE Integration Scheme Enum
+  /*!
+   */
+  enum class ODEIntegrationScheme
+  {
+    EULER,
+    IMPROVED_EULER,
+    RUNGE_KUTTA_4,
+  };
+
+  //! \enum PDE Integration Scheme Enum
+  /*!
+   */
+  enum class PDEIntegrationScheme
+  {
+    FDM,
+  };
+
+  //! \class Integrator Base class.
+  /*!
+   */
   template<typename T>
   class Integrator
   {
   public:
+    //! Default Constructor
+    /*
+     */
     Integrator();
+    //! Destructor
+    /*!
+     */
     ~Integrator();
-    Integrator(int type);
-    Integrator(std::string type);
+    //! Constructor with a shared log instance
+    /*!
+     */
+    Integrator(std::shared_ptr<Log> t_log);
+    //! Constructor with a Grid and a log
+    /*!
+     */
+    Integrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
 
-    Integrator(std::shared_ptr<Log> log);
-    Integrator(std::shared_ptr<Grid<T>> ugrid, std::shared_ptr<Log> log);
+    //  Getters and Setters
+    //! Get Name
+    /*! Get the name of the Integrator.
+     */
+    std::string getName() const;
+    //! Get dimension.
+    /*! Get the dimension of the Integrator.
+     */
+    size_t getDim() const;
+    //! Get Grid
+    /*! Get the shared_ptr for the Grid.
+     */
+    std::shared_ptr<Grid<T>> getGrid() const;
+    //! Get Field
+    /*! Get the shared_ptr for the Field.
+     */
+    std::shared_ptr<Field<T>> getField() const;
+    //! Get DiffEQ
+    /*! Get the shared_ptr for the DiffEQ.
+     */
+    std::shared_ptr<DiffEQ<T>> getDiffEQ() const;
+    //! Get Log
+    /*! Get the shared_ptr for the Log.
+     */
+    std::shared_ptr<Log> getLog() const;
+    //! Get Type
+    /*! Get the type of the Integrator.
+     */
+    enum IntegratorType getType() const;
+    //! Set Name
+    /*! Set the name of the Integrator.
+     */
+    void setName(const std::string t_name);
+    //! Set Dimension.
+    /*! Set the dimension of the Integrator.
+     */
+    void setDim(const size_t t_dim);
+    //! Set Grid
+    /*! Set the Grid of the Integrator.
+     */
+    void setGrid(const std::shared_ptr<Grid<T>> t_Grid);
+    //! Set Field
+    /*! Set the Field of the Integrator.
+     */
+    void setField(const std::shared_ptr<Field<T>> t_Field);
+    //! Set DiffEQ
+    /*! Set the DiffEQ of the Integrator.
+     */
+    void setDiffEQ(const std::shared_ptr<DiffEQ<T>> t_DiffEQ);
+    //! Set the Log
+    /*! Set the Log of the Integrator.
+     */
+    void setLog(const std::shared_ptr<Log> t_log);
 
-    //void setF(Vector<T>(ScalarField<T>::*f)(const Vector<T>&,double,Vector<T>));
 
-    // //--------------------------------------------------------------------------
-    // //  Integration methods
-    // //--------------------------------------------------------------------------
-    // void scalarIntegrate(const Grid<T>& ugrid, ScalarField<T>& field);
-    // //--------------------------------------------------------------------------
-    // void scalarRK4Step(const Grid<T>& ugrid, ScalarField<T>& field, double dt);
-
-  private:
-    IntegratorType _type;
-    struct IntegratorParams _params;
-    //Vector<T>(ScalarField<T>::*_f)(const Vector<T>&,double,Vector<T>);
-    std::shared_ptr<Log> _log;
+  protected:
+    /*! Name.  Name of the DiffEQ.  Defaulted to empty string.
+     */
+    std::string m_name {""};
+    /*! Dimension.  Dimension of the DiffEQ.  Defaulted to 0.
+     */
+    size_t m_dim {0};
+    /*! Grid.  A shared_ptr for the underlying Grid.
+     */
+    std::shared_ptr<Grid<T>> m_Grid {std::make_shared<Grid<T>>()};
+    /*! Logger.  Shared instance of a logger.
+     */
+    std::shared_ptr<Log> m_log {std::make_shared<Log>()};
+    /*! Field.  An associated field for the diffeq.
+     */
+    std::shared_ptr<Field<T>> m_Field {std::make_shared<Field<T>>()};
+    /*! DiffEQ.  Shared pointer to the DiffEQ.
+     */
+    std::shared_ptr<DiffEQ<T>> m_DiffEQ {std::make_shared<DiffEQ<T>>()};
+    /*! Type.  The type of the integrator
+     */
+    const enum IntegratorType m_type {IntegratorType::DEFAULT};
     /*! Logging system name generator.
      */
     virtual std::string NAME() const {
-      return "Integrator:[" + std::to_string(m_id.id) + "]:";
+      return "Integrator:[" + std::to_string(m_id.id) + "]:" + m_name + ":";
     }
     /*! Unique ID for each instance.
      */
     UniqueID m_id;
   };
-  //----------------------------------------------------------------------------
+
+  //! \class ODEIntegrator Base class.
+  /*!
+   */
+  template<typename T>
+  class ODEIntegrator : Integrator<T>
+  {
+  public:
+    //! Default Constructor
+    /*
+     */
+    ODEIntegrator();
+    //! Destructor
+    /*!
+     */
+    ~ODEIntegrator();
+    //! Constructor with a shared log instance
+    /*!
+     */
+    ODEIntegrator(std::shared_ptr<Log> t_log);
+    //! Constructor with a Grid and a log
+    /*!
+     */
+    ODEIntegrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
+    //! Get ODE Scheme
+    /*! Get the scheme of the Integrator.
+     */
+    enum ODEIntegrationScheme getScheme() const;
+    //! Set ODE Scheme
+    /*! Set the scheme for the ODE Integrator
+     */
+    void setScheme(const enum ODEIntegrationScheme t_scheme);
+
+  protected:
+    /*! Type.  The type of the integrator
+     */
+    const enum IntegratorType m_type {IntegratorType::ODE};
+    /*! ODE Scheme.  The ODE scheme to use
+     */
+    enum ODEIntegrationScheme m_scheme {ODEIntegrationScheme::EULER};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "ODEIntegrator:[" + std::to_string(this->m_id.id)
+             + "]:" + this->m_name + ":";
+    }
+  };
+
+  //! \class PDEIntegrator Base class.
+  /*!
+   */
+  template<typename T>
+  class PDEIntegrator : Integrator<T>
+  {
+  public:
+    //! Default Constructor
+    /*
+     */
+    PDEIntegrator();
+    //! Destructor
+    /*!
+     */
+    ~PDEIntegrator();
+    //! Constructor with a shared log instance
+    /*!
+     */
+    PDEIntegrator(std::shared_ptr<Log> t_log);
+    //! Constructor with a Grid and a log
+    /*!
+     */
+    PDEIntegrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
+    //! Get PDE Scheme
+    /*! Get the scheme of the Integrator.
+     */
+    enum PDEIntegrationScheme getScheme() const;
+    //! Set PDE Scheme
+    /*! Set the scheme for the PDE Integrator
+     */
+    void setScheme(const enum PDEIntegrationScheme t_scheme);
+
+  protected:
+    /*! Type.  The type of the integrator
+     */
+    const enum IntegratorType m_type {IntegratorType::PDE};
+    /*! PDE Scheme.  The PDE scheme to use
+     */
+    enum PDEIntegrationScheme m_scheme {PDEIntegrationScheme::FDM};
+    /*! Logging system name generator.
+     */
+    virtual std::string NAME() const {
+      return "PDEIntegrator:[" + std::to_string(this->m_id.id)
+             + "]:" + this->m_name + ":";
+    }
+  };
 
   template class Integrator<double>;
 }

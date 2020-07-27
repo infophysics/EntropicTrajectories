@@ -21,156 +21,290 @@
 namespace ET
 {
   //----------------------------------------------------------------------------
-  //  Base class for differential equations
+  //  Base class DiffEQ
   //----------------------------------------------------------------------------
   template<typename T>
   DiffEQ<T>::DiffEQ()
+  : m_name("default"), m_dim(0)
   {
+    m_log = std::make_shared<Log>();
+		m_log->init(NAME(), ".logs/diffeq_" + m_name + ".txt");
+		m_log->TRACE(NAME() + "DiffEQ '" + m_name + "' created at location "
+		            + address_to_string(*this));
   }
+  //----------------------------------------------------------------------------
   template<typename T>
   DiffEQ<T>::~DiffEQ()
   {
+    m_log->TRACE(NAME() + "DiffEQ '" + m_name
+								+ "' destroyed at location " + address_to_string(*this));
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  DiffEQ<T>::DiffEQ(std::shared_ptr<Log> log)
+  DiffEQ<T>::DiffEQ(std::shared_ptr<Log> t_log)
+  : m_name("default"), m_dim(0), m_log(t_log)
   {
+    m_log->TRACE(NAME() + "DiffEQ '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Logger passed to DiffEQ '" + m_name + "'");
   }
+  //----------------------------------------------------------------------------
   template<typename T>
-  DiffEQ<T>::DiffEQ(std::shared_ptr<Grid<T>> ugrid, std::shared_ptr<Log> log)
+  DiffEQ<T>::DiffEQ(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log)
+  : m_name("default"), m_dim(0), m_Grid(t_Grid), m_log(t_log)
   {
+    m_log->TRACE(NAME() + "DiffEQ '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Logger passed to DiffEQ '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::string DiffEQ<T>::getName() const
+  {
+    return m_name;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  size_t DiffEQ<T>::getDim() const
+  {
+    return m_dim;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Grid<T>> DiffEQ<T>::getGrid() const
+  {
+    return m_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Field<T>> DiffEQ<T>::getField() const
+  {
+    return m_Field;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::shared_ptr<Log> DiffEQ<T>::getLog() const
+  {
+    return m_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  enum DiffEQType DiffEQ<T>::getType() const
+  {
+    return m_type;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void DiffEQ<T>::setName(const std::string t_name)
+  {
+    m_log->TRACE(NAME() + "Changed name from '" + m_name
+                 + "' to '" + t_name + "'");
+    m_name = t_name;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void DiffEQ<T>::setDim(const size_t t_dim)
+  {
+    m_log->TRACE(NAME() + "Changed dim from '" + std::to_string(m_dim)
+                 + "' to '" + std::to_string(t_dim) + "'");
+    m_dim = t_dim;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void DiffEQ<T>::setGrid(const std::shared_ptr<Grid<T>> t_Grid)
+  {
+    m_Grid = t_Grid;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void DiffEQ<T>::setField(const std::shared_ptr<Field<T>> t_Field)
+  {
+    m_Field = t_Field;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void DiffEQ<T>::setLog(const std::shared_ptr<Log> t_log)
+  {
+    m_log = t_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T DiffEQ<T>::evaluate(const std::vector<T>& t_point, double t_time)
+  {
+    m_log->WARN(NAME() + "Called DEFAULT evaluate function for DiffEQ");
+    return 0;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> DiffEQ<T>::evaluate(const std::vector<std::vector<T>>& t_points,
+                                     double t_time)
+  {
+    m_log->WARN(NAME() + "Called DEFAULT evaluate function for DiffEQ");
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  //  Base class FirstOrderODE
+  //----------------------------------------------------------------------------
+  template<typename T>
+  FirstOrderODE<T>::FirstOrderODE()
+  : DiffEQ<T>()
+  {
+    this->m_log = std::make_shared<Log>();
+		this->m_log->init(NAME(), ".logs/diffeq_" + this->m_name + ".txt");
+		this->m_log->TRACE(NAME() + "FirstOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  FirstOrderODE<T>::~FirstOrderODE()
+  {
+    this->m_log->TRACE(NAME() + "FirstOrderODE '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  FirstOrderODE<T>::FirstOrderODE(std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_log)
+  {
+    this->m_log->TRACE(NAME() + "FirstOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to FirstOrderODE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  FirstOrderODE<T>::FirstOrderODE(std::shared_ptr<Grid<T>> t_Grid,
+                                  std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_Grid,t_log)
+  {
+    this->m_log->TRACE(NAME() + "FirstOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to FirstOrderODE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T FirstOrderODE<T>::evaluate(const std::vector<T>& t_point, double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for First Order ODE");
+    return 0;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  FirstOrderODE<T>::evaluate(const std::vector<std::vector<T>>& t_points,
+                             double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for First Order ODE");
+    return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  //  Base class SecondOrderODE
+  //----------------------------------------------------------------------------
+  template<typename T>
+  SecondOrderODE<T>::SecondOrderODE()
+  : DiffEQ<T>()
+  {
+    this->m_log = std::make_shared<Log>();
+		this->m_log->init(NAME(), ".logs/diffeq_" + this->m_name + ".txt");
+		this->m_log->TRACE(NAME() + "SecondOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  SecondOrderODE<T>::~SecondOrderODE()
+  {
+    this->m_log->TRACE(NAME() + "SecondOrderODE '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  SecondOrderODE<T>::SecondOrderODE(std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_log)
+  {
+    this->m_log->TRACE(NAME() + "SecondOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to SecondOrderODE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  SecondOrderODE<T>::SecondOrderODE(std::shared_ptr<Grid<T>> t_Grid,
+                                  std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_Grid,t_log)
+  {
+    this->m_log->TRACE(NAME() + "SecondOrderODE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to SecondOrderODE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T SecondOrderODE<T>::evaluate(const std::vector<T>& t_point, double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for Second Order ODE");
+    return 0;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  SecondOrderODE<T>::evaluate(const std::vector<std::vector<T>>& t_points,
+                             double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for Second Order ODE");
+    return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  //  Base class PDE
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDE<T>::PDE()
+  : DiffEQ<T>()
+  {
+    this->m_log = std::make_shared<Log>();
+		this->m_log->init(NAME(), ".logs/diffeq_" + this->m_name + ".txt");
+		this->m_log->TRACE(NAME() + "PDE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDE<T>::~PDE()
+  {
+    this->m_log->TRACE(NAME() + "PDE '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDE<T>::PDE(std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_log)
+  {
+    this->m_log->TRACE(NAME() + "PDE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to PDE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  PDE<T>::PDE(std::shared_ptr<Grid<T>> t_Grid,
+                                  std::shared_ptr<Log> t_log)
+  : DiffEQ<T>(t_Grid,t_log)
+  {
+    this->m_log->TRACE(NAME() + "PDE '" + this->m_name
+                       + "' created at location " + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Logger passed to PDE '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  T PDE<T>::evaluate(const std::vector<T>& t_point, double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for PDE");
+    return 0;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T>
+  PDE<T>::evaluate(const std::vector<std::vector<T>>& t_points,
+                             double t_time)
+  {
+    this->m_log->WARN(NAME() + "Called DEFAULT evaluate function for PDE");
+    return std::vector<T>();
   }
   //----------------------------------------------------------------------------
 
-  // //----------------------------------------------------------------------------
-  // //  Base class for first order differential equations
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // FirstOrderODE<T>::FirstOrderODE()
-  // {
-  // }
-  // template<typename T>
-  // FirstOrderODE<T>::~FirstOrderODE()
-  // {
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Setters and getters
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // void FirstOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
-  // {
-  //   _sfield = field;
-  // }
-  // template<typename T>
-  // void FirstOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
-  // {
-  //   _vfield = field;
-  // }
-  // template<typename T>
-  // std::shared_ptr<ScalarField<T>> FirstOrderODE<T>::getScalarField()
-  // {
-  //   return _sfield;
-  // }
-  // template<typename T>
-  // std::shared_ptr<VectorField<T>> FirstOrderODE<T>::getVectorField()
-  // {
-  //   return _vfield;
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Base class for second order differential equations
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // SecondOrderODE<T>::SecondOrderODE()
-  // {
-  // }
-  // template<typename T>
-  // SecondOrderODE<T>::~SecondOrderODE()
-  // {
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Setters and getters
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // void SecondOrderODE<T>::setScalarField(std::shared_ptr<ScalarField<T>> field)
-  // {
-  //   _sfield = field;
-  // }
-  // template<typename T>
-  // void SecondOrderODE<T>::setVectorField(std::shared_ptr<VectorField<T>> field)
-  // {
-  //   _vfield = field;
-  // }
-  // template<typename T>
-  // std::shared_ptr<ScalarField<T>> SecondOrderODE<T>::getScalarField()
-  // {
-  //   return _sfield;
-  // }
-  // template<typename T>
-  // std::shared_ptr<VectorField<T>> SecondOrderODE<T>::getVectorField()
-  // {
-  //   return _vfield;
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Various first order differential equations
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Heat equation
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // HeatEquation<T>::HeatEquation()
-  // {
-  // }
-  // template<typename T>
-  // HeatEquation<T>::~HeatEquation()
-  // {
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Setters and getters
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // void HeatEquation<T>::setAlpha(T alpha)
-  // {
-  //   _alpha = alpha;
-  // }
-  // template<typename T>
-  // T HeatEquation<T>::getAlpha()
-  // {
-  //   return _alpha;
-  // }
-  // //----------------------------------------------------------------------------
-  //
-  // //----------------------------------------------------------------------------
-  // //  Evaluation functions
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // T HeatEquation<T>::dt(std::vector<T> point, double t, T k)
-  // {
-  //   std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(point,2);
-  //   return _alpha * std::accumulate(d2f_dx2.begin(),d2f_dx2.end(),0);
-  // }
-  // //----------------------------------------------------------------------------
-  // template<typename T>
-  // std::vector<T> HeatEquation<T>::dt(std::vector<std::vector<T>> points,
-  //                                    double t, std::vector<T> k)
-  // {
-  //   std::vector<T> result(this->getScalarField()->getN());
-  //   for(uint64_t i = 0; i < this->getScalarField()->getN(); i++)
-  //   {
-  //     std::vector<T> d2f_dx2 = this->getScalarField()->derivativePoint(points[i],2);
-  //     T val = d2f_dx2[0];
-  //     result[i] = _alpha * val;
-  //   }
-  //   return result;
-  // }
-  // //----------------------------------------------------------------------------
+
 }

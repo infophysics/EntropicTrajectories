@@ -37,12 +37,16 @@
 namespace ET
 {
   template<typename T> class Field;
-  //template<typename T> class ScalarField;
+  template<typename T> class ScalarField;
+  template<typename T> class DiffEQ;
+  template<typename T> class Integrator;
   //template<typename T> class VectorField;
 }
 
 #include "field.h"
-//#include "scalarField.h"
+#include "scalarfield.h"
+#include "diffeq.h"
+#include "integrator.h"
 //#include "vectorField.h"
 
 namespace ET
