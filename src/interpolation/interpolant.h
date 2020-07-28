@@ -52,18 +52,6 @@ namespace ET
     /*! Default destructor for an instance of the base class.
      */
     ~Interpolant();
-    // //! Constructor
-    // /*! constructor for Interpolant that takes a Grid, Field and a logger
-    // */
-    // Interpolant(std::shared_ptr<Grid<T>> t_Grid,
-    //             std::shared_ptr<Field<T>> t_Field,
-    //             std::shared_ptr<Log> t_log);
-    // //! Constructor
-    // /*! constructor for Interpolant that takes a name, Grid, Field and a logger
-    // */
-    // Interpolant(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
-    //             std::shared_ptr<Field<T>> t_Field,
-    //             std::shared_ptr<Log> t_log);
     // Getters and Setters
     //! Get Name.
     /*! Get name. Returns the name of the Interpolant.

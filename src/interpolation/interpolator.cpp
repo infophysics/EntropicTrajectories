@@ -175,31 +175,6 @@ namespace ET
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Interpolator<T>::Interpolator(std::shared_ptr<Grid<T>> t_Grid,
-                                std::shared_ptr<Field<T>> t_Field,
-                                std::shared_ptr<Log> t_log)
-  : m_name("default"), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
-  {
-    m_lsdriver = LSDriver::xGELS;
-    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
-                + address_to_string(*this));
-    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Interpolator<T>::Interpolator(std::string t_name,
-                                std::shared_ptr<Grid<T>> t_Grid,
-                                std::shared_ptr<Field<T>> t_Field,
-                                std::shared_ptr<Log> t_log)
-  : m_name(t_name), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
-  {
-    m_lsdriver = LSDriver::xGELS;
-    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
-                + address_to_string(*this));
-    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
-  }
 	//----------------------------------------------------------------------------
   template<typename T>
   std::string Interpolator<T>::getName() const
@@ -211,12 +186,6 @@ namespace ET
   std::shared_ptr<Grid<T>> Interpolator<T>::getGrid() const
   {
     return m_Grid;
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  std::shared_ptr<Field<T>> Interpolator<T>::getField() const
-  {
-    return m_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -265,12 +234,6 @@ namespace ET
   void Interpolator<T>::setGrid(std::shared_ptr<Grid<T>> t_Grid)
   {
     m_Grid = t_Grid;
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Interpolator<T>::setField(std::shared_ptr<Field<T>> t_Field)
-  {
-    m_Field = t_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -502,14 +465,16 @@ namespace ET
 	}
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T> Interpolator<T>::derivative(const size_t t_index,
+  Vector<T> Interpolator<T>::derivative(Field<T>& t_Field,
+                                const size_t t_index,
                                         const size_t t_degree)
   {
    return Vector<T>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T Interpolator<T>::derivative(const size_t t_index,
+  T Interpolator<T>::derivative(Field<T>& t_Field,
+                                const size_t t_index,
                                 const size_t t_degree,
                                 const size_t t_direction)
   {
@@ -517,14 +482,16 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  Vector<T> Interpolator<T>::derivative(const std::vector<T>& point,
+  Vector<T> Interpolator<T>::derivative(Field<T>& t_Field,
+                                        const std::vector<T>& point,
                                         const size_t t_degree)
   {
     return Vector<T>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T Interpolator<T>::derivative(const std::vector<T>& point,
+  T Interpolator<T>::derivative(Field<T>& t_Field,
+                                const std::vector<T>& point,
                                 const size_t t_degree,
                                 const size_t t_direction)
   {
@@ -532,13 +499,15 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<Vector<T>> Interpolator<T>::fieldDerivative(const size_t t_degree)
+  std::vector<Vector<T>> Interpolator<T>::fieldDerivative(Field<T>& t_Field,
+                                                          const size_t t_degree)
   {
    return std::vector<Vector<T>>();
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  std::vector<T> Interpolator<T>::fieldDerivative(const size_t t_degree,
+  std::vector<T> Interpolator<T>::fieldDerivative(Field<T>& t_Field,
+                                                  const size_t t_degree,
                                                   const size_t t_direction)
   {
    return std::vector<T>();

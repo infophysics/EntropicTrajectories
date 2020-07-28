@@ -247,7 +247,8 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    Vector<T> derivative(const size_t t_index,
+    Vector<T> derivative(Field<T>& t_Field,
+                         const size_t t_index,
                          const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the Grid given by index,
@@ -255,7 +256,8 @@ namespace ET
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    T derivative(const size_t t_index,
+    T derivative(Field<T>& t_Field,
+                 const size_t t_index,
                  const size_t t_degree,
                  const size_t t_direction);
     //! Derivative
@@ -264,7 +266,8 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    Vector<T> derivative(const std::vector<T>& point,
+    Vector<T> derivative(Field<T>& t_Field,
+                         const std::vector<T>& point,
                          const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for an arbitrary point,
@@ -272,7 +275,8 @@ namespace ET
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    T derivative(const std::vector<T>& point,
+    T derivative(Field<T>& t_Field,
+                 const std::vector<T>& point,
                  const size_t t_degree,
                  const size_t t_direction);
     //! Field Derivative
@@ -280,14 +284,16 @@ namespace ET
     *  of degree t_degree.
     *  @return The nth-derivative of the entire field
     */
-    virtual std::vector<Vector<T>> fieldDerivative(const size_t t_degree);
+    virtual std::vector<Vector<T>> fieldDerivative(Field<T>& t_Field,
+                                                   const size_t t_degree);
     //! Field Derivative
     /*! field derivative.  Derivative for the entire field
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction of the entire field
     */
-    virtual std::vector<T> fieldDerivative(const size_t t_degree,
-                                          const size_t t_direction);
+    virtual std::vector<T> fieldDerivative(Field<T>& t_Field,
+                                           const size_t t_degree,
+                                           const size_t t_direction);
     //  Derivatives for scalar fields
     //! Derivative
     /*! scalar field derivative.  Derivative for a point in the Grid given by index,
@@ -295,7 +301,8 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    Vector<T> scalarFieldDerivative(const size_t t_index,
+    Vector<T> scalarFieldDerivative(Field<T>& t_Field,
+                                    const size_t t_index,
                                     const size_t t_degree);
     //! Derivative
     /*! scalar field derivative.  Derivative for a point in the Grid given by index,
@@ -303,7 +310,8 @@ namespace ET
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    T scalarFieldDerivative(const size_t t_index,
+    T scalarFieldDerivative(Field<T>& t_Field,
+                            const size_t t_index,
                             const size_t t_degree,
                             const size_t t_direction);
     //! Derivative
@@ -312,7 +320,8 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    Vector<T> scalarFieldDerivative(const std::vector<T>& point,
+    Vector<T> scalarFieldDerivative(Field<T>& t_Field,
+                                    const std::vector<T>& point,
                                     const size_t t_degree);
     //! Derivative
     /*! scalar field derivative.  Derivative for an arbitrary point,
@@ -320,7 +329,8 @@ namespace ET
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    T scalarFieldDerivative(const std::vector<T>& point,
+    T scalarFieldDerivative(Field<T>& t_Field,
+                            const std::vector<T>& point,
                             const size_t t_degree,
                             const size_t t_direction);
   private:

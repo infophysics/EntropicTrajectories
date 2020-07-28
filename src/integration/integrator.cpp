@@ -59,29 +59,6 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  Integrator<T>::Integrator(std::shared_ptr<Grid<T>> t_Grid,
-                            std::shared_ptr<Field<T>> t_Field,
-                            std::shared_ptr<Log> t_log)
-  : m_name("default"), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
-  {
-    m_log->TRACE(NAME() + "Integrator '" + m_name + "' created at location "
-                + address_to_string(*this));
-    m_log->INFO(NAME() + "Log passed to Integrator '" + m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Integrator<T>::Integrator(std::string t_name,
-                            std::shared_ptr<Grid<T>> t_Grid,
-                            std::shared_ptr<Field<T>> t_Field,
-                            std::shared_ptr<Log> t_log)
-  : m_name(t_name), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
-  {
-    m_log->TRACE(NAME() + "Integrator '" + m_name + "' created at location "
-                + address_to_string(*this));
-    m_log->INFO(NAME() + "Log passed to Integrator '" + m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
   std::string Integrator<T>::getName() const
   {
     return m_name;
@@ -97,12 +74,6 @@ namespace ET
   std::shared_ptr<Grid<T>> Integrator<T>::getGrid() const
   {
     return m_Grid;
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  std::shared_ptr<Field<T>> Integrator<T>::getField() const
-  {
-    return m_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -143,12 +114,6 @@ namespace ET
   void Integrator<T>::setGrid(const std::shared_ptr<Grid<T>> t_Grid)
   {
     m_Grid = t_Grid;
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Integrator<T>::setField(const std::shared_ptr<Field<T>> t_Field)
-  {
-    m_Field = t_Field;
   }
   //----------------------------------------------------------------------------
   template<typename T>

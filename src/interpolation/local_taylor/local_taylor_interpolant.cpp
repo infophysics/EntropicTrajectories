@@ -188,21 +188,20 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolant<T>
-  createLocalTaylorInterpolant(const std::shared_ptr<Field<T>> t_field,
+  createLocalTaylorInterpolant(Field<T>& t_Field,
                                const std::vector<T>& t_expansion_point,
                                const size_t& t_n)
   {
-    const size_t num_points = t_field->getGrid()->getN();
+    const size_t num_points = t_Field.getGrid()->getN();
     //  Construct a local interpolator
-    LocalTaylorInterpolator<T> interp(t_field->getGrid());
-    interp.setField(t_field);
+    LocalTaylorInterpolator<T> interp(t_Field.getGrid());
 
     //  Create the local interpolation matrix using every point
     Matrix<T>
     LTI = interp.constructLocalTaylorMatrix(t_expansion_point,
                                             num_points,
                                             t_n);
-    auto f = interp.getField()->constructLocalFieldValues(t_expansion_point,
+    auto f = t_Field.constructLocalFieldValues(t_expansion_point,
                                                        num_points);
     //  Solve the system
     auto s = interp.xGELSx(LTI,f);
@@ -217,6 +216,6 @@ namespace ET
 
   template LocalTaylorInterpolant<double>
   createLocalTaylorInterpolant<double>
-  (const std::shared_ptr<Field<double>> t_field,
+  (Field<double>& t_Field,
    const std::vector<double>& t_expansion_point, const size_t& t_n);
 }

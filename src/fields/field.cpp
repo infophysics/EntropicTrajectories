@@ -39,7 +39,6 @@ namespace ET
   {
     m_log->TRACE(NAME() + "Field '" + m_name
 								+ "' destroyed at location " + address_to_string(*this));
-    m_Interpolator->getField().reset();
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -125,7 +124,6 @@ namespace ET
     m_Grid = m_Interpolator->getGrid();
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
     m_Integrator = std::make_shared<Integrator<T>>(m_Grid,m_log);
-    m_Interpolator->setField(std::shared_ptr<Field<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -142,7 +140,6 @@ namespace ET
     m_Grid = m_Interpolator->getGrid();
     m_DiffEQ = std::make_shared<DiffEQ<T>>(m_Grid,m_log);
     m_Integrator = std::make_shared<Integrator<T>>(m_Grid,m_log);
-    m_Interpolator->setField(std::shared_ptr<Field<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -289,7 +286,6 @@ namespace ET
     m_Interpolator = t_interpolator;
     //  m_Grid takes presidence over the grid from t_interpolator
     m_Interpolator->setGrid(m_Grid);
-    m_Interpolator->setField(std::shared_ptr<Field<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>

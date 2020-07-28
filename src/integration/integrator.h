@@ -98,18 +98,6 @@ namespace ET
     /*!
      */
     Integrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for Integrator that takes a Grid, Field and a logger
-    */
-    Integrator(std::shared_ptr<Grid<T>> t_Grid,
-               std::shared_ptr<Field<T>> t_Field,
-               std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for Integrator that takes a name, Grid, Field and a logger
-    */
-    Integrator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
-               std::shared_ptr<Field<T>> t_Field,
-               std::shared_ptr<Log> t_log);
     //  Getters and Setters
     //! Get Name
     /*! Get the name of the Integrator.
@@ -123,10 +111,6 @@ namespace ET
     /*! Get the shared_ptr for the Grid.
      */
     std::shared_ptr<Grid<T>> getGrid() const;
-    //! Get Field
-    /*! Get the shared_ptr for the Field.
-     */
-    std::shared_ptr<Field<T>> getField() const;
     //! Get DiffEQ
     /*! Get the shared_ptr for the DiffEQ.
      */
@@ -151,10 +135,6 @@ namespace ET
     /*! Set the Grid of the Integrator.
      */
     void setGrid(const std::shared_ptr<Grid<T>> t_Grid);
-    //! Set Field
-    /*! Set the Field of the Integrator.
-     */
-    void setField(const std::shared_ptr<Field<T>> t_Field);
     //! Set DiffEQ
     /*! Set the DiffEQ of the Integrator.
      */
@@ -183,9 +163,6 @@ namespace ET
     /*! Logger.  Shared instance of a logger.
      */
     std::shared_ptr<Log> m_log {std::make_shared<Log>()};
-    /*! Field.  An associated field for the diffeq.
-     */
-    std::shared_ptr<Field<T>> m_Field;
     /*! DiffEQ.  Shared pointer to the DiffEQ.
      */
     std::shared_ptr<DiffEQ<T>> m_DiffEQ;

@@ -81,19 +81,7 @@ namespace ET
      */
     DiffEQ(std::shared_ptr<Grid<T>> t_Grid,
            std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for DiffEQ that takes a Grid, Field and a logger
-    */
-    DiffEQ(std::shared_ptr<Grid<T>> t_Grid,
-           std::shared_ptr<Field<T>> t_Field,
-           std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for DiffEQ that takes a name, Grid, Field and a logger
-    */
-    DiffEQ(std::string t_name,
-           std::shared_ptr<Grid<T>> t_Grid,
-           std::shared_ptr<Field<T>> t_Field,
-           std::shared_ptr<Log> t_log);
+
     //  Getters and Setters
     //! Get Name
     /*! Get the name of the DiffEQ.
@@ -107,10 +95,6 @@ namespace ET
     /*! Get the shared_ptr for the Grid.
      */
     std::shared_ptr<Grid<T>> getGrid() const;
-    //! Get Field
-    /*! Get the shared_ptr for the Field.
-     */
-    std::shared_ptr<Field<T>> getField() const;
     //! Get Log
     /*! Get the shared_ptr for the Log.
      */
@@ -171,9 +155,6 @@ namespace ET
     /*! Logger.  Shared instance of a logger.
      */
     std::shared_ptr<Log> m_log {std::make_shared<Log>()};
-    /*! Field.  An associated field for the diffeq.
-     */
-    std::shared_ptr<Field<T>> m_Field;
     /* Type of the DiffEQ
      */
     const enum DiffEQType m_type {DiffEQType::DEFAULT};

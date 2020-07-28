@@ -165,7 +165,7 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   LocalTaylorInterpolant<T>
-  createLocalTaylorInterpolant(const std::shared_ptr<Field<T>> t_field,
+  createLocalTaylorInterpolant(Field<T>& t_field,
                                const std::vector<T>& t_expansion_point,
                                const size_t& t_n);
   //----------------------------------------------------------------------------

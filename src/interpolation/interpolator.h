@@ -163,18 +163,6 @@ namespace ET
     */
     Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
                  std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for Interpolator that takes a Grid, Field and a logger
-    */
-    Interpolator(std::shared_ptr<Grid<T>> t_Grid,
-                 std::shared_ptr<Field<T>> t_Field,
-                 std::shared_ptr<Log> t_log);
-    //! Constructor
-    /*! constructor for Interpolator that takes a name, Grid, Field and a logger
-    */
-    Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
-                 std::shared_ptr<Field<T>> t_Field,
-                 std::shared_ptr<Log> t_log);
 
     /*! Get name.  Get the name of the Interpolator.
      *  @return The name of the Interpolator.
@@ -184,10 +172,6 @@ namespace ET
      *  @return A shared pointer to the Grid.
      */
     std::shared_ptr<Grid<T>> getGrid() const;
-    /*! Get Field.  Get the shared instance of the Field.
-     *  @return A shared pointer to the Field.
-     */
-    std::shared_ptr<Field<T>> getField() const;
     /*! Get log.  Get the shared instance of the logger.
      *  @return A shared pointer to the logger
      */
@@ -228,11 +212,6 @@ namespace ET
      *  @param t_Grid A shared pointer for a Grid instance.
      */
     void setGrid(std::shared_ptr<Grid<T>> t_Grid);
-    //! Set Field
-    /*! set Field.  Sets the shared pointer for the associated Field.
-     *  @param t_Field A shared pointer for a Field instance.
-     */
-    void setField(std::shared_ptr<Field<T>> t_Field);
     //! Set Log
     /*! set Log.  Sets the shared pointer for the associated logger.
      *  @param t_log A shared pointer for a Log instance.
@@ -269,7 +248,8 @@ namespace ET
      *  @return The nth-derivative at the point given
      *  by the index.
      */
-    virtual Vector<T> derivative(const size_t t_index,
+    virtual Vector<T> derivative(Field<T>& t_Field,
+                                 const size_t t_index,
                                  const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for a point in the Grid given by index,
@@ -277,7 +257,8 @@ namespace ET
      *  @return The nth-derivative in the lth-direction at the point given
      *  by the index.
      */
-    virtual T derivative(const size_t t_index,
+    virtual T derivative(Field<T>& t_Field,
+                         const size_t t_index,
                          const size_t t_degree,
                          const size_t t_direction);
     //! Derivative
@@ -286,29 +267,33 @@ namespace ET
     *  @return The nth-derivative at the point given
     *  by the index.
     */
-    virtual Vector<T> derivative(const std::vector<T>& point,
-                                const size_t t_degree);
+    virtual Vector<T> derivative(Field<T>& t_Field,
+                                 const std::vector<T>& point,
+                                 const size_t t_degree);
     //! Derivative
     /*! derivative.  Derivative for an arbitrary point,
     *  of degree t_degree and in the direction t_direction.
     *  @return The nth-derivative in the lth-direction at the point given
     *  by the index.
     */
-    virtual T derivative(const std::vector<T>& point,
-                        const size_t t_degree,
-                        const size_t t_direction);
+    virtual T derivative(Field<T>& t_Field,
+                         const std::vector<T>& point,
+                         const size_t t_degree,
+                         const size_t t_direction);
     //! Field Derivative
     /*! field derivative.  Derivative for the entire field
      *  of degree t_degree.
      *  @return The nth-derivative of the entire field
      */
-    virtual std::vector<Vector<T>> fieldDerivative(const size_t t_degree);
+    virtual std::vector<Vector<T>> fieldDerivative(Field<T>& t_Field,
+                                                   const size_t t_degree);
     //! Field Derivative
     /*! field derivative.  Derivative for the entire field
      *  of degree t_degree and in the direction t_direction.
      *  @return The nth-derivative in the lth-direction of the entire field
      */
-    virtual std::vector<T> fieldDerivative(const size_t t_degree,
+    virtual std::vector<T> fieldDerivative(Field<T>& t_Field,
+                                           const size_t t_degree,
                                            const size_t t_direction);
     //! xLinearSolvex
     /*! xLinearSolvex.  Helper function for running either,
@@ -436,9 +421,6 @@ namespace ET
     /*! Grid.  A shared instance of a Grid.
      */
     std::shared_ptr<Grid<T>> m_Grid;
-    /*! Field.  A shared instance of a Field.
-     */
-    std::shared_ptr<Field<T>> m_Field;
     /*! LSDriver.  An enum that denotes the type of least squares
      *  method to use.
      */

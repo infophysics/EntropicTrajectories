@@ -89,31 +89,6 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  LocalTaylorInterpolator<T>::LocalTaylorInterpolator(std::shared_ptr<Grid<T>> t_Grid,
-                                std::shared_ptr<Field<T>> t_Field,
-                                std::shared_ptr<Log> t_log)
-  : Interpolator<T>(t_Grid,t_Field,t_log)
-  {
-    this->m_lsdriver = LSDriver::xGELS;
-    this->m_log->TRACE(NAME() + "LocalTaylorInterpolator '" + this->m_name + "' created at location "
-                + address_to_string(*this));
-    this->m_log->INFO(NAME() + "Log passed to LocalTaylorInterpolator '" + this->m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  LocalTaylorInterpolator<T>::LocalTaylorInterpolator(std::string t_name,
-                                std::shared_ptr<Grid<T>> t_Grid,
-                                std::shared_ptr<Field<T>> t_Field,
-                                std::shared_ptr<Log> t_log)
-  : Interpolator<T>(t_name,t_Grid,t_Field,t_log)
-  {
-    this->m_lsdriver = LSDriver::xGELS;
-    this->m_log->TRACE(NAME() + "LocalTaylorInterpolator '" + this->m_name + "' created at location "
-                + address_to_string(*this));
-    this->m_log->INFO(NAME() + "Log passed to LocalTaylorInterpolator '" + this->m_name + "'");
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
   size_t LocalTaylorInterpolator<T>::getK()
   {
     return m_k;
@@ -427,81 +402,88 @@ namespace ET
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  LocalTaylorInterpolator<T>::derivative(const size_t t_index,
+  LocalTaylorInterpolator<T>::derivative(Field<T>& t_Field,
+                                         const size_t t_index,
                                          const size_t t_degree)
   {
     //  Check the type of the field
-    if (this->m_Field->getType() == FieldType::SCALAR) {
-      return scalarFieldDerivative(t_index, t_degree);
+    if (t_Field.getType() == FieldType::SCALAR) {
+      return scalarFieldDerivative(t_Field, t_index, t_degree);
     }
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T LocalTaylorInterpolator<T>::derivative(const size_t t_index,
+  T LocalTaylorInterpolator<T>::derivative(Field<T>& t_Field,
+                                           const size_t t_index,
                                            const size_t t_degree,
                                            const size_t t_direction)
   {
     //  Check the type of the field
-    if (this->m_Field->getType() == FieldType::SCALAR) {
-      return scalarFieldDerivative(t_index, t_degree, t_direction);
+    if (t_Field.getType() == FieldType::SCALAR) {
+      return scalarFieldDerivative(t_Field, t_index, t_degree, t_direction);
     }
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  LocalTaylorInterpolator<T>::derivative(const std::vector<T>& t_point,
+  LocalTaylorInterpolator<T>::derivative(Field<T>& t_Field,
+                                         const std::vector<T>& t_point,
                                          const size_t t_degree)
   {
     //  Check the type of the field
-    if (this->m_Field->getType() == FieldType::SCALAR) {
-      return scalarFieldDerivative(t_point, t_degree);
+    if (t_Field.getType() == FieldType::SCALAR) {
+      return scalarFieldDerivative(t_Field, t_point, t_degree);
     }
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T LocalTaylorInterpolator<T>::derivative(const std::vector<T>& t_point,
+  T LocalTaylorInterpolator<T>::derivative(Field<T>& t_Field,
+                                           const std::vector<T>& t_point,
                                            const size_t t_degree,
                                            const size_t t_direction)
   {
     //  Check the type of the field
-    if (this->m_Field->getType() == FieldType::SCALAR) {
-      return scalarFieldDerivative(t_point, t_degree, t_direction);
+    if (t_Field.getType() == FieldType::SCALAR) {
+      return scalarFieldDerivative(t_Field, t_point, t_degree, t_direction);
     }
   }
   //----------------------------------------------------------------------------
   template<typename T>
   std::vector<Vector<T>>
-  LocalTaylorInterpolator<T>::fieldDerivative(const size_t t_degree)
+  LocalTaylorInterpolator<T>::fieldDerivative(Field<T>& t_Field,
+                                              const size_t t_degree)
   {
     std::vector<Vector<T>> result(this->m_Grid->getN());
     for (auto i = 0; i < result.size(); i++) {
-      result[i] = derivative(i,t_degree);
+      result[i] = derivative(t_Field,i,t_degree);
     }
     return result;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T>
-  LocalTaylorInterpolator<T>::fieldDerivative(const size_t t_degree,
+  LocalTaylorInterpolator<T>::fieldDerivative(Field<T>& t_Field,
+                                              const size_t t_degree,
                                               const size_t t_direction)
   {
     std::vector<T> result(this->m_Grid->getN());
     for (auto i = 0; i < result.size(); i++) {
-      result[i] = derivative(i,t_degree,t_direction);
+      result[i] = derivative(t_Field,i,t_degree,t_direction);
     }
     return result;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  LocalTaylorInterpolator<T>::scalarFieldDerivative(const size_t t_index,
+  LocalTaylorInterpolator<T>::scalarFieldDerivative(Field<T>& t_Field,
+                                                    const size_t t_index,
                                                     const size_t t_degree)
   {
     Vector<T> result(this->m_Grid->getDim());
     //  Construct the LTI Matrix for the point at index.
     Matrix<T> LTI = constructLocalTaylorMatrix(t_index, m_k, t_degree);
     //  Construct the field object
-    auto f = this->m_Field->constructLocalFieldValues(t_index);
+    auto f = t_Field.constructLocalFieldValues(t_index);
     //  Solve the system
     auto s = this->xGELSx(LTI,f);
     //  Grab each value corresponding to the derivative
@@ -516,24 +498,25 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T LocalTaylorInterpolator<T>::scalarFieldDerivative(const size_t t_index,
+  T LocalTaylorInterpolator<T>::scalarFieldDerivative(Field<T>& t_Field,
+                                                      const size_t t_index,
                                                       const size_t t_degree,
                                                       const size_t t_direction)
   {
-    return scalarFieldDerivative(t_index,t_degree)(t_direction);
+    return scalarFieldDerivative(t_Field,t_index,t_degree)(t_direction);
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T>
-  LocalTaylorInterpolator<T>::scalarFieldDerivative(
-                              const std::vector<T>& t_point,
-                              const size_t t_degree)
+  LocalTaylorInterpolator<T>::scalarFieldDerivative(Field<T>& t_Field,
+                                                const std::vector<T>& t_point,
+                                                const size_t t_degree)
   {
     Vector<T> result(this->m_Grid->getDim());
     //  Construct the LTI Matrix for the point at index.
     Matrix<T> LTI = constructLocalTaylorMatrix(t_point, m_k, t_degree);
     //  Construct the field object
-    auto f = this->m_Field->constructLocalFieldValues(t_point,m_k);
+    auto f = t_Field.constructLocalFieldValues(t_point,m_k);
     //  Solve the system
     auto s = this->xGELSx(LTI,f);
     //  Grab each value corresponding to the derivative
@@ -548,12 +531,12 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  T LocalTaylorInterpolator<T>::scalarFieldDerivative(
-                                const std::vector<T>& t_point,
-                                const size_t t_degree,
-                                const size_t t_direction)
+  T LocalTaylorInterpolator<T>::scalarFieldDerivative(Field<T>& t_Field,
+                                                const std::vector<T>& t_point,
+                                                const size_t t_degree,
+                                                const size_t t_direction)
   {
-    return scalarFieldDerivative(t_point,t_degree)(t_direction);
+    return scalarFieldDerivative(t_Field,t_point,t_degree)(t_direction);
   }
   //----------------------------------------------------------------------------
 }

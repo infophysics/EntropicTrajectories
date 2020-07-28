@@ -27,7 +27,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
 		            + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -35,11 +34,8 @@ namespace ET
   template<typename T>
   ScalarField<T>::~ScalarField()
   {
-    std::cout << "Delete1 count: " << this->m_Interpolator->getField().use_count() << std::endl;
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name
 								+ "' destroyed at location " + address_to_string(*this));
-    this->m_Interpolator->getField().reset();
-    std::cout << "Delete2 count: " << this->m_Interpolator->getField().use_count() << std::endl;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -49,7 +45,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -61,7 +56,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -73,7 +67,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -85,7 +78,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -97,7 +89,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -109,7 +100,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -122,7 +112,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -135,7 +124,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -149,7 +137,6 @@ namespace ET
     this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
                 + address_to_string(*this));
     this->m_dim = 1;
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -163,7 +150,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -177,7 +163,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -192,7 +177,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -208,7 +192,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -223,7 +206,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -239,7 +221,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -254,7 +235,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -270,7 +250,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -286,8 +265,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
-    std::cout << "Create count: " << this->m_Interpolator->getField().use_count() << std::endl;
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -304,7 +281,6 @@ namespace ET
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -347,7 +323,6 @@ namespace ET
     this->m_Interpolator = t_interpolator;
     //  m_Grid takes presidence over the grid from t_interpolator
     this->m_Interpolator->setGrid(this->m_Grid);
-    this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -693,7 +668,7 @@ namespace ET
   Vector<T> ScalarField<T>::derivative(const size_t t_index,
                                        const size_t t_degree)
   {
-    return this->m_Interpolator->derivative(t_index, t_degree);
+    return this->m_Interpolator->derivative(*this,t_index,t_degree);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -701,14 +676,14 @@ namespace ET
                                const size_t t_degree,
                                const size_t t_direction)
   {
-    return this->m_Interpolator->derivative(t_index, t_degree, t_direction);
+    return this->m_Interpolator->derivative(*this,t_index, t_degree, t_direction);
   }
   //----------------------------------------------------------------------------
   template<typename T>
   Vector<T> ScalarField<T>::derivative(const std::vector<T>& t_point,
                                        const size_t t_degree)
   {
-    return this->m_Interpolator->derivative(t_point, t_degree);
+    return this->m_Interpolator->derivative(*this,t_point, t_degree);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -716,21 +691,21 @@ namespace ET
                                        const size_t t_degree,
                                        const size_t t_direction)
   {
-    return this->m_Interpolator->derivative(t_point, t_degree, t_direction);
+    return this->m_Interpolator->derivative(*this,t_point, t_degree, t_direction);
   }
   //----------------------------------------------------------------------------
   template<typename T>
   std::vector<Vector<T>>
   ScalarField<T>::fieldDerivative(const size_t t_degree)
   {
-    return this->m_Interpolator->fieldDerivative(t_degree);
+    return this->m_Interpolator->fieldDerivative(*this,t_degree);
   }
   //----------------------------------------------------------------------------
   template<typename T>
   std::vector<T> ScalarField<T>::fieldDerivative(const size_t t_degree,
                                     const size_t t_direction)
   {
-    return this->m_Interpolator->fieldDerivative(t_degree, t_direction);
+    return this->m_Interpolator->fieldDerivative(*this,t_degree, t_direction);
   }
   //----------------------------------------------------------------------------
 
