@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <string>
+#include <limits>
 
 #include "utilities.h"
 #include "matrix.h"
@@ -42,6 +43,50 @@ namespace ET
     UNSTRUCTURED,
     MESHLESS,
   };
+  //! \enum Boundary Types
+  /*! An enum for a boundary type for a point.
+   *  The boundary type specifies implicit boundaries
+   *  for each degree of freedom.
+   */
+  enum class BoundaryType
+  {
+    UNBOUNDED,
+    OPEN,
+    CLOSED,
+  };
+  //! \class BoundaryPair
+  /*! A struct for holding boundary information for
+   *  each degree of freedom.
+   */
+  template<typename T>
+  struct BoundaryPair
+  {
+    //! Left boundarytype
+    enum BoundaryType m_left_type = {BoundaryType::UNBOUNDED};
+    //! Right boundarytype
+    enum BoundaryType m_right_type = {BoundaryType::UNBOUNDED};
+    //! Left bounary value
+    T m_left = -std::numeric_limits<T>::infinity();
+    //! Right boundary value
+    T m_right = std::numeric_limits<T>::infinity();
+    //! Constructor
+    BoundaryPair() {}
+    //! Constructor with values (assuming both sides are closed)
+    BoundaryPair(const T& t_left, const T& t_right)
+    : m_left(t_left), m_right(t_right),
+      m_left_type(BoundaryType::CLOSED), m_right_type(BoundaryType::CLOSED)
+    {
+    }
+    //! Constructor with values and types
+    BoundaryPair(const T& t_left, const T& t_right,
+                 const enum BoundaryType t_left_type,
+                 const enum BoundaryType t_right_type)
+    : m_left(t_left), m_right(t_right),
+      m_left_type(t_left_type), m_right_type(t_right_type)
+    {
+    }
+  };
+  //! \enum
   //! \class Grid Class
   /*! A Base class for various different types of grids.
    */
@@ -199,6 +244,17 @@ namespace ET
      *  otherwise know which functions are available.
      */
     enum GridType getType() const;
+    //! Get BoundaryPairs
+    /*! Get the std::vector of boundary pairs.
+     *  @return The std::vector of boundary pairs
+     */
+    std::vector<BoundaryPair<T>> getBoundaryPairs() const;
+    //! Get BoundaryPair
+    /*! Get a specific boundary pair.
+     *  @param t_i The index of the boundary pair.
+     *  @return A BoundaryPair struct.
+     */
+    BoundaryPair<T> getBoundaryPair(size_t t_i) const;
     //! Get point
     /*! Get a particular point in the grid.  This method is identical to
      *  the operator()(const size_t t_i)
@@ -237,6 +293,17 @@ namespace ET
      *  @param t_log A std::shared_ptr<Log> instance of a logger.
      */
     void setLog(std::shared_ptr<Log> t_log);
+    //! Set BoundaryPairs
+    /*! Set the std::vector of boundary pairs.
+     *  @param The std::vector of boundary pairs
+     */
+    void setBoundaryPairs(std::vector<BoundaryPair<T>> t_boundary);
+    //! Set BoundaryPair
+    /*! Set a specific boundary pair.
+     *  @param t_i The index of the boundary pair.
+     *  @param A BoundaryPair struct.
+     */
+    void setBoundaryPair(size_t t_i, BoundaryPair<T> t_boundary);
     //! Move data
     /*! Reassign ownership of the elements of an std::vector<std::vector<T>>
      *  to the m_grid data member.
@@ -372,6 +439,9 @@ namespace ET
      *  Defaulted to default.
      */
     const enum GridType m_type {GridType::DEFAULT};
+    /*! Vector of boundary pairs for each dof.
+     */
+    std::vector<BoundaryPair<T>> m_boundary;
     /*! Logging system name generator.
      */
     virtual std::string NAME() const {
@@ -391,6 +461,7 @@ namespace ET
     const_iterator cend() const   { return m_grid.cend(); }
   };
 
+  template struct BoundaryPair<double>;
   template class Grid<double>;
 
 }

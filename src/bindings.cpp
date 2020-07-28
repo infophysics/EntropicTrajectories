@@ -442,19 +442,42 @@ PYBIND11_MODULE(etraj, m) {
 	m.def("dgesdd", &DGESDD);
 	m.def("dgesdd_svd", &DGESDD_SVD);
 	m.def("dgetri", &DGETRI);
-	//--------------------------------------------------------------------------
+	//----------------------------------------------------------------------------
 
-  //--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   //  GridType enum
-  //--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   py::enum_<GridType>(m, "GridType")
 		.value("default", GridType::DEFAULT)
     .value("structured", GridType::STRUCTURED)
     .value("unstructured", GridType::UNSTRUCTURED)
     .value("meshless", GridType::MESHLESS)
 		;
-  //--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------
+  //  Boundary Type enum
+  //----------------------------------------------------------------------------
+  py::enum_<BoundaryType>(m, "BoundaryType")
+    .value("unbounded", BoundaryType::UNBOUNDED)
+    .value("open", BoundaryType::OPEN)
+    .value("closed", BoundaryType::CLOSED)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Boundary Pair Struct
+  //----------------------------------------------------------------------------
+  py::class_<BoundaryPair<double>>(m, "BoundaryPair")
+    .def(py::init<>())
+    .def(py::init<const double&, const double&>())
+    .def(py::init<const double&, const double&,
+                  const enum BoundaryType, const enum BoundaryType>())
+    .def_readwrite("left_type", &BoundaryPair<double>::m_left_type)
+    .def_readwrite("right_type", &BoundaryPair<double>::m_right_type)
+    .def_readwrite("left", &BoundaryPair<double>::m_left)
+    .def_readwrite("right", &BoundaryPair<double>::m_right)
+    ;
   //----------------------------------------------------------------------------
 	//	Grid Base class
 	//----------------------------------------------------------------------------
@@ -507,12 +530,16 @@ PYBIND11_MODULE(etraj, m) {
     .def("get_type", &Grid<double>::getType)
     .def("get_point", &Grid<double>::getPoint,
          py::return_value_policy::reference)
+    .def("get_boundary_pairs", &Grid<double>::getBoundaryPairs)
+    .def("get_boundary_pair", &Grid<double>::getBoundaryPair)
     .def("set_name", &Grid<double>::setName)
     .def("set_dim", &Grid<double>::setDim)
     .def("set_N", &Grid<double>::setN)
     .def("set_grid", &Grid<double>::setGrid)
     .def("set_coords", &Grid<double>::setCoords)
     .def("set_log", &Grid<double>::setLog)
+    .def("set_boundary_pairs", &Grid<double>::setBoundaryPairs)
+    .def("set_boundary_pair", &Grid<double>::setBoundaryPair)
     .def("move_grid", &Grid<double>::moveGrid)
     .def_property("name", &Grid<double>::getName,
                   &Grid<double>::setName)
@@ -526,6 +553,8 @@ PYBIND11_MODULE(etraj, m) {
                   &Grid<double>::setCoords)
     .def_property_readonly("type", &Grid<double>::getType)
     .def_property("log", &Grid<double>::getLog, &Grid<double>::setLog)
+    .def_property("boundary", &Grid<double>::getBoundaryPairs,
+                              &Grid<double>::setBoundaryPairs)
     //  Operator overloads
     .def(py::self == py::self)
 		.def(py::self != py::self)

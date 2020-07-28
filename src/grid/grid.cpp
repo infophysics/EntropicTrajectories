@@ -73,6 +73,8 @@ namespace ET
 		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
 		            + address_to_string(*this));
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -82,6 +84,8 @@ namespace ET
     m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -92,6 +96,8 @@ namespace ET
 		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
 		            + address_to_string(*this));
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -101,6 +107,8 @@ namespace ET
     m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -111,6 +119,8 @@ namespace ET
 		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
 		            + address_to_string(*this));
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -123,6 +133,8 @@ namespace ET
 		m_log->TRACE(NAME() + "KDTree 'default' created at location "
 		            + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -133,6 +145,8 @@ namespace ET
 		m_log->init(NAME(), ".logs/grid_" + m_name + ".txt");
 		m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
 		            + address_to_string(*this));
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -143,6 +157,8 @@ namespace ET
     m_log->TRACE(NAME() + "Grid '" + m_name + "' created at location "
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Logger passed to Grid '" + m_name + "'");
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -162,6 +178,8 @@ namespace ET
       m_grid = std::move(t_grid);
       m_log->TRACE(NAME() + "t_grid object moved to m_grid");
     }
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -181,6 +199,8 @@ namespace ET
       m_grid = std::move(t_grid);
       m_log->TRACE(NAME() + "t_grid object moved to m_grid");
     }
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -201,6 +221,8 @@ namespace ET
       m_grid = std::move(t_grid);
       m_log->TRACE(NAME() + "t_grid object moved to m_grid");
     }
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -220,6 +242,8 @@ namespace ET
       m_grid = std::move(t_grid);
       m_log->TRACE(NAME() + "t_grid object moved to m_grid");
     }
+    m_log->TRACE(NAME() + "Constructing default boundary pairs");
+    m_boundary.resize(m_dim);
   }
   //----------------------------------------------------------------------------
   //  Getters and Setters
@@ -283,6 +307,27 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  std::vector<BoundaryPair<T>> Grid<T>::getBoundaryPairs() const
+  {
+    return m_boundary;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  BoundaryPair<T> Grid<T>::getBoundaryPair(size_t t_i) const
+  {
+    if (t_i >= m_dim) {
+      m_log->ERROR(NAME() + "Attempting to get boundary pair for index "
+                   + std::to_string(t_i) + " in space of dimension "
+                   + std::to_string(m_dim));
+      m_log->TRACE(NAME() + "Returning empty pair.");
+      return BoundaryPair<T>();
+    }
+    else {
+      return m_boundary[t_i];
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   void Grid<T>::setName(const std::string t_name)
   {
     m_log->TRACE(NAME() + "Changed name from '" + m_name
@@ -327,6 +372,34 @@ namespace ET
     m_log->TRACE(NAME() + "Changed log from '" + address_to_string(m_log)
                  + "' to '" + address_to_string(t_log) + "'");
     m_log = t_log;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setBoundaryPairs(std::vector<BoundaryPair<T>> t_boundary)
+  {
+    if (t_boundary.size() != m_dim) {
+      m_log->WARN(NAME() + "Setting new boundary values with dimension "
+                  + std::to_string(t_boundary.size())
+                  + ", while array has dimension "
+                  + std::to_string(m_dim));
+    }
+    m_log->TRACE(NAME() + "Setting new boundary pairs");
+    m_boundary = t_boundary;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Grid<T>::setBoundaryPair(size_t t_i, BoundaryPair<T> t_boundary)
+  {
+    if (t_i >= m_dim) {
+      m_log->ERROR(NAME() + "Attempting to set boundary pair for index "
+                   + std::to_string(t_i) + " in space of dimension "
+                   + std::to_string(m_dim));
+      m_log->TRACE(NAME() + "Returning.");
+      return;
+    }
+    else {
+      m_boundary[t_i] = t_boundary;
+    }
   }
   //----------------------------------------------------------------------------
   template<typename T>
