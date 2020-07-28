@@ -39,6 +39,31 @@ namespace ET
   {
     m_log->TRACE(NAME() + " destroyed at location " + address_to_string(*this));
   }
+  // //----------------------------------------------------------------------------
+  // template<typename T>
+  // Interpolant<T>::Interpolant(std::shared_ptr<Grid<T>> t_Grid,
+  //                             std::shared_ptr<Field<T>> t_Field,
+  //                             std::shared_ptr<Log> t_log)
+  // : m_name("default"), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  // {
+  //   m_lsdriver = LSDriver::xGELS;
+  //   m_log->TRACE(NAME() + "Interpolant '" + m_name + "' created at location "
+  //               + address_to_string(*this));
+  //   m_log->INFO(NAME() + "Log passed to Interpolant '" + m_name + "'");
+  // }
+  // //----------------------------------------------------------------------------
+  // template<typename T>
+  // Interpolant<T>::Interpolant(std::string t_name,
+  //                             std::shared_ptr<Grid<T>> t_Grid,
+  //                             std::shared_ptr<Field<T>> t_Field,
+  //                             std::shared_ptr<Log> t_log)
+  // : m_name(t_name), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  // {
+  //   m_lsdriver = LSDriver::xGELS;
+  //   m_log->TRACE(NAME() + "Interpolant '" + m_name + "' created at location "
+  //               + address_to_string(*this));
+  //   m_log->INFO(NAME() + "Log passed to Interpolant '" + m_name + "'");
+  // }
   //----------------------------------------------------------------------------
   template<typename T>
   std::string Interpolant<T>::getName() const

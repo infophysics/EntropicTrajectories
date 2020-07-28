@@ -234,9 +234,12 @@ namespace ET
      */
     virtual Vector<T> constructLocalFieldValues(const std::vector<T>& t_point,
                                                 size_t t_k);
-    // std::shared_ptr<Field<T>> getptr() {
-    //   return shared_from_this();
-    // }
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Field<T>> getptr() {
+      return std::shared_ptr<Field<T>>(this);
+    }
 
   protected:
     /*! Name.  The name of the Interpolator.

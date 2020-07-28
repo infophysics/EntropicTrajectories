@@ -175,6 +175,31 @@ namespace ET
                 + address_to_string(*this));
     m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
   }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Interpolator<T>::Interpolator(std::shared_ptr<Grid<T>> t_Grid,
+                                std::shared_ptr<Field<T>> t_Field,
+                                std::shared_ptr<Log> t_log)
+  : m_name("default"), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  {
+    m_lsdriver = LSDriver::xGELS;
+    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Interpolator<T>::Interpolator(std::string t_name,
+                                std::shared_ptr<Grid<T>> t_Grid,
+                                std::shared_ptr<Field<T>> t_Field,
+                                std::shared_ptr<Log> t_log)
+  : m_name(t_name), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  {
+    m_lsdriver = LSDriver::xGELS;
+    m_log->TRACE(NAME() + "Interpolator '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Log passed to Interpolator '" + m_name + "'");
+  }
 	//----------------------------------------------------------------------------
   template<typename T>
   std::string Interpolator<T>::getName() const

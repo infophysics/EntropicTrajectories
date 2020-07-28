@@ -164,6 +164,12 @@ namespace ET
                                                 const std::vector<double>& x2,
                                                 size_t deg);
     const std::string summary();
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Monomial> getptr() {
+      return std::shared_ptr<Monomial>(this);
+    }
 
   private:
     size_t m_dim;

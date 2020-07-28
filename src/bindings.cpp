@@ -1114,11 +1114,11 @@ PYBIND11_MODULE(etraj, m) {
     .def("set_Interpolator", &ScalarField<double>::setInterpolator)
     .def("set_DiffEQ", &ScalarField<double>::setDiffEQ)
     .def("set_Integrator", &ScalarField<double>::setIntegrator)
-    .def_property("Interpolator", &Field<double>::getInterpolator,
+    .def_property("Interpolator", &ScalarField<double>::getInterpolator,
                                   &ScalarField<double>::setInterpolator)
-    .def_property("DiffEQ", &Field<double>::getDiffEQ,
+    .def_property("DiffEQ",       &ScalarField<double>::getDiffEQ,
                                   &ScalarField<double>::setDiffEQ)
-    .def_property("Integrator", &Field<double>::getIntegrator,
+    .def_property("Integrator",   &ScalarField<double>::getIntegrator,
                                   &ScalarField<double>::setIntegrator)
     .def_property_readonly("type", &ScalarField<double>::getType)
 		//	Operator overloads
@@ -1284,6 +1284,15 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string,std::shared_ptr<Grid<double>>,
                   std::shared_ptr<Log>>(),
          py::arg("name"), py::arg("Grid"), py::arg("log"))
+    .def(py::init<std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("Grid"), py::arg("Field"), py::arg("log"))
+    .def(py::init<std::string,
+                  std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("Grid"), py::arg("Field"), py::arg("log"))
     //  Getters and Setters
     .def("get_name", &Interpolator<double>::getName)
     .def("get_Grid", &Interpolator<double>::getGrid)
@@ -1388,6 +1397,15 @@ PYBIND11_MODULE(etraj, m) {
     .def(py::init<std::string,std::shared_ptr<UGrid<double>>,
                  std::shared_ptr<Log>>(),
         py::arg("name"), py::arg("UGrid"), py::arg("log"))
+    .def(py::init<std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("Grid"), py::arg("Field"), py::arg("log"))
+    .def(py::init<std::string,
+                  std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("Grid"), py::arg("Field"), py::arg("log"))
     //  Getters and Setters
     .def("get_k", &LocalTaylorInterpolator<double>::getK)
     .def("get_n", &LocalTaylorInterpolator<double>::getN)
@@ -1660,6 +1678,15 @@ PYBIND11_MODULE(etraj, m) {
   py::class_<DiffEQ<double>,
              std::shared_ptr<DiffEQ<double>>>(m, "DiffEQ")
     .def(py::init<>())
+    .def(py::init<std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("Grid"), py::arg("Field"), py::arg("log"))
+    .def(py::init<std::string,
+                  std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("Grid"), py::arg("Field"), py::arg("log"))
     ;
   //----------------------------------------------------------------------------
 
@@ -1669,6 +1696,15 @@ PYBIND11_MODULE(etraj, m) {
 	py::class_<Integrator<double>,
 	           std::shared_ptr<Integrator<double>>>(m, "Integrator")
 		.def(py::init<>())
+    .def(py::init<std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("Grid"), py::arg("Field"), py::arg("log"))
+    .def(py::init<std::string,
+                  std::shared_ptr<Grid<double>>,
+                  std::shared_ptr<Field<double>>,
+                  std::shared_ptr<Log>>(),
+         py::arg("name"), py::arg("Grid"), py::arg("Field"), py::arg("log"))
 		//.def("scalar_RK4_step", &Integrator<double>::scalarRK4Step)
 		;
 	//----------------------------------------------------------------------------

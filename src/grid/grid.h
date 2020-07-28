@@ -340,6 +340,12 @@ namespace ET
     virtual std::shared_ptr<KDTree<T>> getKDTree() const { return std::make_shared<KDTree<T>>(); }
     //! set KDtree
     virtual void setKDTree(std::shared_ptr<KDTree<T>> t_kdtree) { return; }
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Grid<T>> getptr() {
+      return std::shared_ptr<Grid<T>>(this);
+    }
 
   protected:
     /*! Name.  Name of the Grid.  Defaulted to empty string.

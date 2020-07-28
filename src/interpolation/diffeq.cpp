@@ -59,6 +59,29 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  DiffEQ<T>::DiffEQ(std::shared_ptr<Grid<T>> t_Grid,
+                    std::shared_ptr<Field<T>> t_Field,
+                    std::shared_ptr<Log> t_log)
+  : m_name("default"), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  {
+    m_log->TRACE(NAME() + "DiffEQ '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Log passed to DiffEQ '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  DiffEQ<T>::DiffEQ(std::string t_name,
+                    std::shared_ptr<Grid<T>> t_Grid,
+                    std::shared_ptr<Field<T>> t_Field,
+                    std::shared_ptr<Log> t_log)
+  : m_name(t_name), m_Grid(t_Grid), m_log(t_log), m_Field(t_Field)
+  {
+    m_log->TRACE(NAME() + "DiffEQ '" + m_name + "' created at location "
+                + address_to_string(*this));
+    m_log->INFO(NAME() + "Log passed to DiffEQ '" + m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   std::string DiffEQ<T>::getName() const
   {
     return m_name;

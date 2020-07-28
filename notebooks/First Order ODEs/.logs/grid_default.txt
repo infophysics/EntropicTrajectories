@@ -1,17 +1,51 @@
-[13:59:04] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x55c5db7aaba0
-[13:59:04] [trace] ET:Grid:[1]:default:t_grid object copied to m_grid
-[13:59:04] [trace] ET:UGrid:[1]:default:UGrid 'default' created at location 0x55c5db7aaba0
-[13:59:04] [trace] ET:KDTree:[2]:default:KDTree 'default' created at location 0x55c5daa00bc0
-[13:59:04] [info] ET:KDTree:[2]:default:Initialized KDTree with 1000 points in 1 dimensions
-[13:59:09] [trace] ET:Field:[3]:default:Field 'default' created at location 0x55c5db79a790
-[13:59:09] [info] ET:Field:[3]:default:Logger passed to Field 'default'
-[13:59:09] [trace] ET:Interpolator:[4]:default:Interpolator 'default' created at location 0x55c5db77cb10
-[13:59:09] [info] ET:Interpolator:[4]:default:Log passed to Interpolator 'default'
-[13:59:09] [trace] ET:DiffEQ:[5]:default:DiffEQ 'default' created at location 0x55c5db7b94f0
-[13:59:09] [info] ET:DiffEQ:[5]:default:Logger passed to DiffEQ 'default'
-[13:59:09] [trace] ET:Integrator:[6]:default:Integrator 'default' created at location 0x55c5daccf060
-[13:59:09] [info] ET:Integrator:[6]:default:Logger passed to Integrator 'default'
-[13:59:09] [trace] ET:Field:[3]:default:Field 'default' destroyed at location 0x55c5db79a790
-[13:59:09] [trace] ET:Integrator:[6]:default:Integrator 'default' destroyed at location 0x55c5daccf060
-[13:59:09] [trace] ET:DiffEQ:[5]:default:DiffEQ 'default' destroyed at location 0x55c5db7b94f0
-[13:59:09] [trace] ET:Interpolator:[4]:default:Interpolator 'default' destroyed at location 0x55c5db77cb10
+[20:24:26] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x55b90dd73480
+[20:24:26] [trace] ET:Grid:[1]:default:t_grid object copied to m_grid
+[20:24:26] [trace] ET:UGrid:[1]:default:UGrid 'default' created at location 0x55b90dd73480
+[20:24:26] [trace] ET:KDTree:[2]:default:KDTree 'default' created at location 0x55b90cf58b40
+[20:24:26] [info] ET:KDTree:[2]:default:Initialized KDTree with 1000 points in 1 dimensions
+[20:24:26] [trace] ET:Field:[3]:default:Field 'default' created at location 0x55b90dd63010
+[20:24:26] [info] ET:Field:[3]:default:Logger passed to Field 'default'
+[20:24:26] [trace] ET:Interpolator:[4]:default:Interpolator 'default' created at location 0x55b90dd434f0
+[20:24:26] [info] ET:Interpolator:[4]:default:Log passed to Interpolator 'default'
+[20:24:26] [trace] ET:DiffEQ:[5]:default:DiffEQ 'default' created at location 0x55b90dd81df0
+[20:24:26] [info] ET:DiffEQ:[5]:default:Logger passed to DiffEQ 'default'
+[20:24:26] [trace] ET:Integrator:[6]:default:Integrator 'default' created at location 0x55b90d1785e0
+[20:24:26] [info] ET:Integrator:[6]:default:Logger passed to Integrator 'default'
+[20:24:26] [trace] ET:ScalarField:[7]:default:ScalarField 'default' created at location 0x55b90dd63010
+[20:24:26] [trace] ET:Interpolator:[8]:default:Interpolator 'default' created at location 0x55b90dd20b20
+[20:24:27] [trace] ET:Interpolator:[8]:default:Interpolator 'default' destroyed at location 0x55b90dd20b20
+[20:24:39] [trace] ET:Grid:[11]:default:Grid 'default' created at location 0x55b90dda9fa0
+[20:24:39] [trace] ET:Grid:[11]:default:t_grid object copied to m_grid
+[20:24:39] [trace] ET:UGrid:[11]:default:UGrid 'default' created at location 0x55b90dda9fa0
+[20:24:39] [trace] ET:KDTree:[12]:default:KDTree 'default' created at location 0x55b90cf58a60
+[20:24:39] [info] ET:KDTree:[12]:default:Initialized KDTree with 1000 points in 1 dimensions
+[20:24:39] [trace] ET:Field:[13]:default:Field 'default' created at location 0x55b90d04f630
+[20:24:39] [info] ET:Field:[13]:default:Logger passed to Field 'default'
+[20:24:39] [trace] ET:Interpolator:[14]:default:Interpolator 'default' created at location 0x55b90daf21b0
+[20:24:39] [info] ET:Interpolator:[14]:default:Log passed to Interpolator 'default'
+[20:24:39] [trace] ET:DiffEQ:[15]:default:DiffEQ 'default' created at location 0x55b90d6eb930
+[20:24:39] [info] ET:DiffEQ:[15]:default:Logger passed to DiffEQ 'default'
+[20:24:39] [trace] ET:Integrator:[16]:default:Integrator 'default' created at location 0x55b90cf6fb60
+[20:24:39] [info] ET:Integrator:[16]:default:Logger passed to Integrator 'default'
+[20:24:39] [trace] ET:ScalarField:[17]:default:ScalarField 'default' created at location 0x55b90d04f630
+[20:24:39] [trace] ET:Interpolator:[18]:default:Interpolator 'default' created at location 0x55b90dd20b20
+[20:24:39] [trace] ET:Interpolator:[14]:default:Interpolator 'default' destroyed at location 0x55b90daf21b0
+[20:24:45] [trace] ET:Grid:[21]:default:Grid 'default' created at location 0x55b90dddf250
+[20:24:45] [trace] ET:Grid:[21]:default:t_grid object copied to m_grid
+[20:24:45] [trace] ET:UGrid:[21]:default:UGrid 'default' created at location 0x55b90dddf250
+[20:24:45] [trace] ET:KDTree:[22]:default:KDTree 'default' created at location 0x55b90dd65760
+[20:24:45] [info] ET:KDTree:[22]:default:Initialized KDTree with 1000 points in 1 dimensions
+[20:24:45] [trace] ET:Field:[23]:default:Field 'default' created at location 0x55b90d045b20
+[20:24:45] [info] ET:Field:[23]:default:Logger passed to Field 'default'
+[20:24:45] [trace] ET:Interpolator:[24]:default:Interpolator 'default' created at location 0x55b90daf21b0
+[20:24:45] [info] ET:Interpolator:[24]:default:Log passed to Interpolator 'default'
+[20:24:45] [trace] ET:DiffEQ:[25]:default:DiffEQ 'default' created at location 0x55b90cf6fbf0
+[20:24:45] [info] ET:DiffEQ:[25]:default:Logger passed to DiffEQ 'default'
+[20:24:45] [trace] ET:Integrator:[26]:default:Integrator 'default' created at location 0x55b90dd6bb50
+[20:24:45] [info] ET:Integrator:[26]:default:Logger passed to Integrator 'default'
+[20:24:45] [trace] ET:ScalarField:[27]:default:ScalarField 'default' created at location 0x55b90d045b20
+[20:24:45] [trace] ET:ScalarField:[17]:default:ScalarField 'default' destroyed at location 0x55b90d04f630
+[20:24:45] [trace] ET:Field:[13]:default:Field 'default' destroyed at location 0x55b90d04f630
+[20:24:45] [trace] ET:Integrator:[16]:default:Integrator 'default' destroyed at location 0x55b90cf6fb60
+[20:24:45] [trace] ET:DiffEQ:[15]:default:DiffEQ 'default' destroyed at location 0x55b90d6eb930
+[20:24:45] [trace] ET:Interpolator:[18]:default:Interpolator 'default' destroyed at location 0x55b90dd20b20

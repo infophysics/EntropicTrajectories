@@ -94,6 +94,20 @@ namespace ET
     LocalTaylorInterpolator(std::string t_name,
                             std::shared_ptr<Grid<T>> t_ugrid,
                             std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for LocalTaylorInterpolator that takes a Grid, Field and a
+     *  logger
+     */
+    LocalTaylorInterpolator(std::shared_ptr<Grid<T>> t_Grid,
+                            std::shared_ptr<Field<T>> t_Field,
+                            std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for LocalTaylorInterpolator that takes a name, Grid,
+     *  Field and a logger
+     */
+    LocalTaylorInterpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
+                            std::shared_ptr<Field<T>> t_Field,
+                            std::shared_ptr<Log> t_log);
     /*! Get k.  Get the nearest neighbor value.
      *  @return The nearest neighbor value k.
      */

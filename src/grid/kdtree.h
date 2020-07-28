@@ -332,6 +332,12 @@ namespace ET
     std::tuple<std::vector<std::vector<size_t>>,
                std::vector<std::vector<double>>>
     query(const std::vector<std::vector<T>>& t_points, double t_radius);
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<KDTree<T>> getptr() {
+      return std::shared_ptr<KDTree<T>>(this);
+    }
     //--------------------------------------------------------------------------
 
   private:

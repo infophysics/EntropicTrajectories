@@ -79,8 +79,21 @@ namespace ET
     //! Constructor with a Grid and a log
     /*!
      */
-    DiffEQ(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
-
+    DiffEQ(std::shared_ptr<Grid<T>> t_Grid,
+           std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for DiffEQ that takes a Grid, Field and a logger
+    */
+    DiffEQ(std::shared_ptr<Grid<T>> t_Grid,
+           std::shared_ptr<Field<T>> t_Field,
+           std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for DiffEQ that takes a name, Grid, Field and a logger
+    */
+    DiffEQ(std::string t_name,
+           std::shared_ptr<Grid<T>> t_Grid,
+           std::shared_ptr<Field<T>> t_Field,
+           std::shared_ptr<Log> t_log);
     //  Getters and Setters
     //! Get Name
     /*! Get the name of the DiffEQ.
@@ -137,6 +150,12 @@ namespace ET
      */
     virtual std::vector<T> evaluate(const std::vector<std::vector<T>>& t_points,
                                     double t_time);
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<DiffEQ<T>> getptr() {
+      return std::shared_ptr<DiffEQ<T>>(this);
+    }
 
 
   protected:

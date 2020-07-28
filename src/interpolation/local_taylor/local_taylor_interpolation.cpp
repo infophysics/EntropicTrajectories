@@ -89,6 +89,31 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator(std::shared_ptr<Grid<T>> t_Grid,
+                                std::shared_ptr<Field<T>> t_Field,
+                                std::shared_ptr<Log> t_log)
+  : Interpolator<T>(t_Grid,t_Field,t_log)
+  {
+    this->m_lsdriver = LSDriver::xGELS;
+    this->m_log->TRACE(NAME() + "LocalTaylorInterpolator '" + this->m_name + "' created at location "
+                + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Log passed to LocalTaylorInterpolator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  LocalTaylorInterpolator<T>::LocalTaylorInterpolator(std::string t_name,
+                                std::shared_ptr<Grid<T>> t_Grid,
+                                std::shared_ptr<Field<T>> t_Field,
+                                std::shared_ptr<Log> t_log)
+  : Interpolator<T>(t_name,t_Grid,t_Field,t_log)
+  {
+    this->m_lsdriver = LSDriver::xGELS;
+    this->m_log->TRACE(NAME() + "LocalTaylorInterpolator '" + this->m_name + "' created at location "
+                + address_to_string(*this));
+    this->m_log->INFO(NAME() + "Log passed to LocalTaylorInterpolator '" + this->m_name + "'");
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   size_t LocalTaylorInterpolator<T>::getK()
   {
     return m_k;

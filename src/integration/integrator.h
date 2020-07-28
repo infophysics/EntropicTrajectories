@@ -98,7 +98,18 @@ namespace ET
     /*!
      */
     Integrator(std::shared_ptr<Grid<T>> t_Grid, std::shared_ptr<Log> t_log);
-
+    //! Constructor
+    /*! constructor for Integrator that takes a Grid, Field and a logger
+    */
+    Integrator(std::shared_ptr<Grid<T>> t_Grid,
+               std::shared_ptr<Field<T>> t_Field,
+               std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Integrator that takes a name, Grid, Field and a logger
+    */
+    Integrator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
+               std::shared_ptr<Field<T>> t_Field,
+               std::shared_ptr<Log> t_log);
     //  Getters and Setters
     //! Get Name
     /*! Get the name of the Integrator.
@@ -152,7 +163,12 @@ namespace ET
     /*! Set the Log of the Integrator.
      */
     void setLog(const std::shared_ptr<Log> t_log);
-
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Integrator<T>> getptr() {
+      return std::shared_ptr<Integrator<T>>(this);
+    }
 
   protected:
     /*! Name.  Name of the DiffEQ.  Defaulted to empty string.

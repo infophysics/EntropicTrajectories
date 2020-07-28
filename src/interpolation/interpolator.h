@@ -163,6 +163,18 @@ namespace ET
     */
     Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
                  std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Interpolator that takes a Grid, Field and a logger
+    */
+    Interpolator(std::shared_ptr<Grid<T>> t_Grid,
+                 std::shared_ptr<Field<T>> t_Field,
+                 std::shared_ptr<Log> t_log);
+    //! Constructor
+    /*! constructor for Interpolator that takes a name, Grid, Field and a logger
+    */
+    Interpolator(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
+                 std::shared_ptr<Field<T>> t_Field,
+                 std::shared_ptr<Log> t_log);
 
     /*! Get name.  Get the name of the Interpolator.
      *  @return The name of the Interpolator.
@@ -407,6 +419,12 @@ namespace ET
      *  @return The solution Matrix Y.
      */
     Matrix<T> xWMLSx(Matrix<T> A, Matrix<T> X, std::vector<T> t_point);
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Interpolator<T>> getptr() {
+      return std::shared_ptr<Interpolator<T>>(this);
+    }
 
   protected:
     /*! Name.  The name of the Interpolator.

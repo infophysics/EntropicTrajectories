@@ -24,6 +24,8 @@ namespace ET
   ScalarField<T>::ScalarField()
   : Field<T>()
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+		            + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -33,12 +35,19 @@ namespace ET
   template<typename T>
   ScalarField<T>::~ScalarField()
   {
+    std::cout << "Delete1 count: " << this->m_Interpolator->getField().use_count() << std::endl;
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name
+								+ "' destroyed at location " + address_to_string(*this));
+    this->m_Interpolator->getField().reset();
+    std::cout << "Delete2 count: " << this->m_Interpolator->getField().use_count() << std::endl;
   }
   //----------------------------------------------------------------------------
   template<typename T>
   ScalarField<T>::ScalarField(std::string t_name)
   : Field<T>(t_name)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -49,6 +58,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::shared_ptr<Log> t_log)
   : Field<T>(t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -59,6 +70,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::string t_name, std::shared_ptr<Log> t_log)
   : Field<T>(t_name, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -69,6 +82,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::shared_ptr<Grid<T>> t_grid)
   : Field<T>(t_grid)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -79,6 +94,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::string t_name, std::shared_ptr<Grid<T>> t_grid)
   : Field<T>(t_name, t_grid)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -89,6 +106,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::shared_ptr<Interpolator<T>> t_interpolator)
   : Field<T>(t_interpolator)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -100,6 +119,8 @@ namespace ET
                               std::shared_ptr<Interpolator<T>> t_interpolator)
   : Field<T>(t_name, t_interpolator)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -111,6 +132,8 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_grid, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -123,6 +146,8 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_name, t_grid, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     this->m_dim = 1;
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
@@ -133,6 +158,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::vector<T> t_field)
   : Field<T>()
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -145,6 +172,8 @@ namespace ET
   ScalarField<T>::ScalarField(std::string t_name, std::vector<T> t_field)
   : Field<T>(t_name)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -158,6 +187,8 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -172,6 +203,8 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_name, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -185,6 +218,8 @@ namespace ET
                               std::shared_ptr<Grid<T>> t_grid)
   : Field<T>(t_grid)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -199,6 +234,8 @@ namespace ET
                               std::shared_ptr<Grid<T>> t_grid)
   : Field<T>(t_name, t_grid)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -212,6 +249,8 @@ namespace ET
                               std::shared_ptr<Interpolator<T>> t_interpolator)
   : Field<T>(t_interpolator)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -226,6 +265,8 @@ namespace ET
                               std::shared_ptr<Interpolator<T>> t_interpolator)
   : Field<T>(t_name, t_interpolator)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
@@ -240,10 +281,13 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_grid, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();
     this->m_Interpolator->setField(std::shared_ptr<ScalarField<T>>(this));
+    std::cout << "Create count: " << this->m_Interpolator->getField().use_count() << std::endl;
     // this->m_DiffEQ->setField(std::shared_ptr<ScalarField<T>>(this));
     // this->m_Integrator->setField(std::shared_ptr<ScalarField<T>>(this));
   }
@@ -255,6 +299,8 @@ namespace ET
                               std::shared_ptr<Log> t_log)
   : Field<T>(t_name, t_grid, t_log)
   {
+    this->m_log->TRACE(NAME() + "ScalarField '" + this->m_name + "' created at location "
+                + address_to_string(*this));
     m_field = t_field;
     this->m_dim = 1;
     this->m_N = m_field.size();

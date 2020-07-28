@@ -24,7 +24,6 @@ namespace ET
   UGrid<T>::UGrid()
   : Grid<T>()
   {
-    this->m_log = std::make_shared<Log>();
 		this->m_log->init(NAME(), ".logs/grid_" + this->m_name + ".txt");
 		this->m_log->TRACE(NAME() + "UGrid '" + this->m_name + "' created at location "
 		            + address_to_string(*this));

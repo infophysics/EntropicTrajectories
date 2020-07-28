@@ -52,7 +52,18 @@ namespace ET
     /*! Default destructor for an instance of the base class.
      */
     ~Interpolant();
-
+    // //! Constructor
+    // /*! constructor for Interpolant that takes a Grid, Field and a logger
+    // */
+    // Interpolant(std::shared_ptr<Grid<T>> t_Grid,
+    //             std::shared_ptr<Field<T>> t_Field,
+    //             std::shared_ptr<Log> t_log);
+    // //! Constructor
+    // /*! constructor for Interpolant that takes a name, Grid, Field and a logger
+    // */
+    // Interpolant(std::string t_name, std::shared_ptr<Grid<T>> t_Grid,
+    //             std::shared_ptr<Field<T>> t_Field,
+    //             std::shared_ptr<Log> t_log);
     // Getters and Setters
     //! Get Name.
     /*! Get name. Returns the name of the Interpolant.
@@ -173,6 +184,12 @@ namespace ET
      *  @return The value of the derivatives at each point.
      */
     virtual std::vector<T> dd(const std::vector<std::vector<T>>& t_point);
+    //! Get shared ptr.
+    /*! Returns a shared_ptr of this instance.
+     */
+    std::shared_ptr<Interpolant<T>> getptr() {
+      return std::shared_ptr<Interpolant<T>>(this);
+    }
 
   protected:
     /*! Name.  Name of the interpolant.
