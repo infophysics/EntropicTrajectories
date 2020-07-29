@@ -375,8 +375,20 @@ PYBIND11_MODULE(etraj, m) {
 		.def("transpose", (void (Matrix<double>::*)(bool))
 				 &Matrix<double>::transpose_inplace)
 		.def("trace", &Matrix<double>::trace)
+    .def("remove_row", &Matrix<double>::removeRow)
+    .def("remove_row_inplace", &Matrix<double>::removeRowInplace)
+    .def("remove_col", &Matrix<double>::removeCol)
+    .def("remove_col_inplace", &Matrix<double>::removeColInplace)
+    .def("remove_rows", &Matrix<double>::removeRows)
+    .def("remove_rows_inplace", &Matrix<double>::removeRowsInplace)
+    .def("remove_cols", &Matrix<double>::removeCols)
+    .def("remove_cols_inplace", &Matrix<double>::removeColsInplace)
+    .def("add_row", &Matrix<double>::addRow)
+    .def("add_row_inplace", &Matrix<double>::addRowInplace)
+    .def("add_col", &Matrix<double>::addCol)
+    .def("add_col_inplace", &Matrix<double>::addColInplace)
 		;
-	//--------------------------------------------------------------------------
+	  //--------------------------------------------------------------------------
 
 	//--------------------------------------------------------------------------
 	//	Instantiations of matrices

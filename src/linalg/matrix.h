@@ -272,26 +272,18 @@ namespace ET
     //  Removing and adding Rows/Cols
     //  Functions for removing/adding single rows/cols
     Matrix<T> removeRow(const size_t t_row) const;
-    void removeRow(const size_t t_row);
+    void removeRowInplace(const size_t t_row);
     Matrix<T> removeCol(const size_t t_col) const;
-    void removeCol(const size_t t_col);
+    void removeColInplace(const size_t t_col);
     Matrix<T> addRow(const size_t t_row, std::vector<T> t_new) const;
-    void addRow(const size_t t_row, std::vector<T> t_new);
+    void addRowInplace(const size_t t_row, std::vector<T> t_new);
     Matrix<T> addCol(const size_t t_col, std::vector<T> t_new) const;
-    void addCol(const size_t t_col, std::vector<T> t_new);
+    void addColInplace(const size_t t_col, std::vector<T> t_new);
     //  Functions for removing/adding multiple rows/cols
     Matrix<T> removeRows(const std::vector<size_t> t_row) const;
-    void removeRows(const std::vector<size_t> t_row);
+    void removeRowsInplace(const std::vector<size_t> t_row);
     Matrix<T> removeCols(const std::vector<size_t> t_col) const;
-    void removeCols(const std::vector<size_t> t_col);
-    Matrix<T> addRows(const std::vector<size_t> t_row,
-                      std::vector<std::vector<T>> t_new) const;
-    void addRows(const std::vector<size_t> t_row,
-                 std::vector<std::vector<T>> t_new);
-    Matrix<T> addCols(const std::vector<size_t> t_col,
-                      std::vector<std::vector<T>> t_new) const;
-    void addCols(const std::vector<size_t> t_col,
-                 std::vector<std::vector<T>> t_new);
+    void removeColsInplace(const std::vector<size_t> t_col);
 
     //  Linear algebra tools
     //  TODO:

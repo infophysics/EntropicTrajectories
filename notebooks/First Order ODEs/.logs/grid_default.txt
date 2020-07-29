@@ -1,19 +1,15 @@
-[06:22:04] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x564f98ede140
-[06:22:04] [trace] ET:Grid:[1]:default:t_grid object copied to m_grid
-[06:22:04] [trace] ET:Grid:[1]:default:Constructing default boundary pairs
-[06:22:04] [trace] ET:UGrid:[1]:default:UGrid 'default' created at location 0x564f98ede140
-[06:22:04] [trace] ET:KDTree:[2]:default:KDTree 'default' created at location 0x564f992a01f0
-[06:22:04] [info] ET:KDTree:[2]:default:Initialized KDTree with 1000 points in 1 dimensions
-[06:22:05] [trace] ET:Field:[3]:default:Field 'default' created at location 0x564f999d6560
-[06:22:05] [info] ET:Field:[3]:default:Logger passed to Field 'default'
-[06:22:05] [trace] ET:Interpolator:[4]:default:Interpolator 'default' created at location 0x564f98fd2510
-[06:22:05] [info] ET:Interpolator:[4]:default:Log passed to Interpolator 'default'
-[06:22:05] [trace] ET:DiffEQ:[5]:default:DiffEQ 'default' created at location 0x564f99a949a0
-[06:22:05] [info] ET:DiffEQ:[5]:default:Logger passed to DiffEQ 'default'
-[06:22:05] [trace] ET:Integrator:[6]:default:Integrator 'default' created at location 0x564f99a94a20
-[06:22:05] [info] ET:Integrator:[6]:default:Logger passed to Integrator 'default'
-[06:22:05] [trace] ET:ScalarField:[7]:default:ScalarField 'default' created at location 0x564f999d6560
-[06:22:05] [trace] ET:ScalarField:[7]:default:Adding boundary condition of type Dirichlet to list of Boundary Conditions.
-[06:22:05] [trace] ET:ScalarField:[7]:default:Adding boundary condition of type Dirichlet to list of Boundary Conditions.
-[06:22:05] [trace] ET:Interpolator:[8]:default:Interpolator 'default' created at location 0x564f99488720
-[06:22:05] [trace] ET:Interpolator:[4]:default:Interpolator 'default' destroyed at location 0x564f98fd2510
+[19:13:34] [trace] ET:Grid:[1]:default:Grid 'default' created at location 0x56230d04c140
+[19:13:34] [trace] ET:Grid:[1]:default:t_grid object copied to m_grid
+[19:13:34] [trace] ET:Grid:[1]:default:Constructing default boundary pairs
+[19:13:34] [trace] ET:UGrid:[1]:default:UGrid 'default' created at location 0x56230d04c140
+[19:13:34] [trace] ET:KDTree:[2]:default:KDTree 'default' created at location 0x56230d40e1f0
+[19:13:34] [info] ET:KDTree:[2]:default:Initialized KDTree with 1000 points in 1 dimensions
+[19:14:44] [trace] ET:Grid:[3]:default:Grid 'default' created at location 0x56230ce0a510
+[19:14:44] [trace] ET:Grid:[3]:default:t_grid object copied to m_grid
+[19:14:44] [trace] ET:Grid:[3]:default:Constructing default boundary pairs
+[19:14:44] [trace] ET:UGrid:[3]:default:UGrid 'default' created at location 0x56230ce0a510
+[19:14:44] [trace] ET:KDTree:[4]:default:KDTree 'default' created at location 0x56230ce63bc0
+[19:14:44] [info] ET:KDTree:[4]:default:Initialized KDTree with 1000 points in 1 dimensions
+[19:14:44] [trace] ET:UGrid:[1]:default:UGrid 'default' destroyed at location 0x56230d04c140
+[19:14:44] [trace] ET:KDTree:[2]:default:KDTree 'default' destroyed at location 0x56230d40e1f0
+[19:14:44] [trace] ET:Grid:[1]:default:Grid 'default' destroyed at location 0x56230d04c140

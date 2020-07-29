@@ -938,7 +938,7 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::removeRow(const size_t t_row)
+  void Matrix<T>::removeRowInplace(const size_t t_row)
   {
     //  Check that row exists
     if (t_row >= m_m && m_m != 1) {
@@ -970,7 +970,7 @@ namespace ET
       }
     }
     m_array = new_array;
-    m_m--
+    m_m--;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -1010,12 +1010,12 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::removeCol(const size_t t_col)
+  void Matrix<T>::removeColInplace(const size_t t_col)
   {
     //  Check that row exists
     if (t_col >= m_n && m_n != 1) {
       std::cout << "ERROR!" << std::endl;
-      return Matrix<T>();
+      return;
     }
     //  otherwise return the trimmed matrix
     //  NOTE: Since any element can be written as x = i*m_n + j,
@@ -1043,7 +1043,7 @@ namespace ET
       }
     }
     m_array = new_array;
-    m_n--
+    m_n--;
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -1054,56 +1054,42 @@ namespace ET
       std::cout << "ERROR" << std::endl;
       return Matrix<T>();
     }
-    //  otherwise add the new row AFTER the row indexd by t_row
-    // auto i = 0;
-    // std::vector<T> new_array;
-    // while (i/m_n < t_row) {
-    //   new_array.push_back(m_array[i]);
-    // }
-    // i += 4;
-    // for (auto j = i; j < m_array.size(); j++) {
-    //   new_array.push_back(m_array[j]);
-    // }
     //  NOTE: Perhaps its better to do a nested for loop instead.
     std::vector<T> new_array;
     for (auto i = 0; i < m_m; i++) {
-      for (auto j = 0; j < m_n; j++) {
-        new_array.push_back(m_array[i*m_n + j]);
-      }
       if (i == t_row) {
         new_array.insert(new_array.end(),t_new.begin(),t_new.end());
       }
+      for (auto j = 0; j < m_n; j++) {
+        new_array.push_back(m_array[i*m_n + j]);
+      }
+    }
+    if (t_row == m_m) {
+      new_array.insert(new_array.end(),t_new.begin(),t_new.end());
     }
     return Matrix<T>(m_m+1,m_n,new_array);
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::addRow(const size_t t_row, std::vector<T> t_new)
+  void Matrix<T>::addRowInplace(const size_t t_row, std::vector<T> t_new)
   {
     //  Check that the length of the new row is the same as the others
     if (t_new.size() != m_n || t_row > m_m) {
       std::cout << "ERROR" << std::endl;
-      return Matrix<T>();
+      return;
     }
-    //  otherwise add the new row AFTER the row indexd by t_row
-    // auto i = 0;
-    // std::vector<T> new_array;
-    // while (i/m_n < t_row) {
-    //   new_array.push_back(m_array[i]);
-    // }
-    // i += 4;
-    // for (auto j = i; j < m_array.size(); j++) {
-    //   new_array.push_back(m_array[j]);
-    // }
     //  NOTE: Perhaps its better to do a nested for loop instead.
     std::vector<T> new_array;
     for (auto i = 0; i < m_m; i++) {
-      for (auto j = 0; j < m_n; j++) {
-        new_array.push_back(m_array[i*m_n + j]);
-      }
       if (i == t_row) {
         new_array.insert(new_array.end(),t_new.begin(),t_new.end());
       }
+      for (auto j = 0; j < m_n; j++) {
+        new_array.push_back(m_array[i*m_n + j]);
+      }
+    }
+    if (t_row == m_m) {
+      new_array.insert(new_array.end(),t_new.begin(),t_new.end());
     }
     m_array = new_array;
     m_m++;
@@ -1121,31 +1107,37 @@ namespace ET
     std::vector<T> new_array;
     for (auto i = 0; i < m_m+1; i++) {
       for (auto j = 0; j < m_n; j++) {
-        new_array.push_back(m_array[i*m_n + j]);
         if (j == t_col) {
           new_array.push_back(t_new[i]);
         }
+        new_array.push_back(m_array[i*m_n + j]);
+      }
+      if (t_col == m_n) {
+        new_array.push_back(t_new[i]);
       }
     }
     return Matrix<T>(m_m,m_n+1,new_array);
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::addCol(const size_t t_col, std::vector<T> t_new)
+  void Matrix<T>::addColInplace(const size_t t_col, std::vector<T> t_new)
   {
     //  Check that the length of the new row is the same as the others
     if (t_new.size() != m_m || t_col > m_n) {
       std::cout << "ERROR" << std::endl;
-      return Matrix<T>();
+      return;
     }
     //  otherwise add the new column AFTER the col indexed by t_col
     std::vector<T> new_array;
     for (auto i = 0; i < m_m+1; i++) {
       for (auto j = 0; j < m_n; j++) {
-        new_array.push_back(m_array[i*m_n + j]);
         if (j == t_col) {
           new_array.push_back(t_new[i]);
         }
+        new_array.push_back(m_array[i*m_n + j]);
+      }
+      if (t_col == m_n) {
+        new_array.push_back(t_new[i]);
       }
     }
     m_array = new_array;
@@ -1188,26 +1180,26 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::removeRows(const std::vector<size_t> t_rows)
+  void Matrix<T>::removeRowsInplace(const std::vector<size_t> t_rows)
   {
     //  Check that rows exist
     for (auto i = 0; i < t_rows.size(); i++) {
       if (t_rows[i] >= m_m) {
         std::cout << "ERROR" << std::endl;
-        return Matrix<T>();
+        return;
       }
     }
     if (t_rows.size() >= m_m) {
       std::cout << "ERROR" << std::endl;
-      return Matrix<T>();
+      return;
     }
     //  otherwise remove them.
     //  NOTE: Perhaps its better to do a nested for loop instead.
     std::vector<T> new_array;
     for (auto i = 0; i < m_m; i++) {
       bool skip = false;
-      for (auto k = 0; k < t_rowss.size(); k++) {
-        if (t_rowss[k] == i) {
+      for (auto k = 0; k < t_rows.size(); k++) {
+        if (t_rows[k] == i) {
           skip = true;
         }
       }
@@ -1226,7 +1218,7 @@ namespace ET
   Matrix<T> Matrix<T>::removeCols(const std::vector<size_t> t_cols) const
   {
     //  Check that rows exist
-    for (auto i = 0; i < t_rows.size(); i++) {
+    for (auto i = 0; i < t_cols.size(); i++) {
       if (t_cols[i] >= m_n) {
         std::cout << "ERROR" << std::endl;
         return Matrix<T>();
@@ -1257,18 +1249,18 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
-  void Matrix<T>::removeCols(const std::vector<size_t> t_cols)
+  void Matrix<T>::removeColsInplace(const std::vector<size_t> t_cols)
   {
     //  Check that rows exist
-    for (auto i = 0; i < t_rows.size(); i++) {
+    for (auto i = 0; i < t_cols.size(); i++) {
       if (t_cols[i] >= m_n) {
         std::cout << "ERROR" << std::endl;
-        return Matrix<T>();
+        return;
       }
     }
     if (t_cols.size() >= m_n) {
       std::cout << "ERROR" << std::endl;
-      return Matrix<T>();
+      return;
     }
     //  otherwise remove them.
     //  NOTE: Perhaps its better to do a nested for loop instead.
@@ -1290,59 +1282,6 @@ namespace ET
     m_array = new_array;
     m_n -= t_cols.size();
   }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Matrix<T> Matrix<T>::addRows(const std::vector<size_t> t_rows,
-                    std::vector<std::vector<T>> t_new) const
-  {
-    for (auto k = 0; k < t_rows.size(); k++) {
-      if (t_new[k].size() != m_n || t_rows[k] > m_m) {
-        std::cout << "ERROR" << std::endl;
-        return Matrix<T>();
-      }
-    }
-    //  Check that the length of the new row is the same as the others
-
-    //  otherwise add the new row AFTER the row indexd by t_row
-    // auto i = 0;
-    // std::vector<T> new_array;
-    // while (i/m_n < t_row) {
-    //   new_array.push_back(m_array[i]);
-    // }
-    // i += 4;
-    // for (auto j = i; j < m_array.size(); j++) {
-    //   new_array.push_back(m_array[j]);
-    // }
-    //  NOTE: Perhaps its better to do a nested for loop instead.
-    std::vector<T> new_array;
-    for (auto i = 0; i < m_m; i++) {
-      for (auto j = 0; j < m_n; j++) {
-        new_array.push_back(m_array[i*m_n + j]);
-      }
-      if (i == t_row) {
-        new_array.insert(new_array.end(),t_new.begin(),t_new.end());
-      }
-    }
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Matrix<T>::addRows(const std::vector<size_t> t_rows,
-               std::vector<std::vector<T>> t_new)
-  {
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  Matrix<T> Matrix<T>::addCols(const std::vector<size_t> t_cols,
-                    std::vector<std::vector<T>> t_new) const
-  {
-  }
-  //----------------------------------------------------------------------------
-  template<typename T>
-  void Matrix<T>::addCols(const std::vector<size_t> t_cols,
-               std::vector<std::vector<T>> t_new)
-  {
-  }
-  //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   //  Various instantiators
   //----------------------------------------------------------------------------

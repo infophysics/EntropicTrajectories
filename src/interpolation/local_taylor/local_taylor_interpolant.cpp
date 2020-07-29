@@ -212,6 +212,8 @@ namespace ET
     //        Either way, we need a local taylor matrix for the boundary
     //        points, A_ij.
     //  NOTE: Going with removing rows for now to construct a new matrix.
+    //        The goal here is to remove the rows corresponding to the
+    //        boundary points, and then construct the constraint matrix.
     for (auto i = 0; i < conditions.size(); i++) {
 
     }
