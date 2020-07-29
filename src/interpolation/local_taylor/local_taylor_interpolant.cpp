@@ -202,7 +202,19 @@ namespace ET
                                             num_points,
                                             t_n);
     auto f = t_Field.constructLocalFieldValues(t_expansion_point,
-                                                       num_points);
+                                               num_points);
+    //  Incorporate boundary conditions
+    std::vector<BoundaryCondition<T>>
+    conditions = t_Field.getBoundaryConditions();
+    //  TODO: What strategy should we use here?
+    //        Either we remove the boundary points from LTI
+    //        Or we have boundary points be separate from the Grid.
+    //        Either way, we need a local taylor matrix for the boundary
+    //        points, A_ij.
+    //  NOTE: Going with removing rows for now to construct a new matrix.
+    for (auto i = 0; i < conditions.size(); i++) {
+
+    }
     //  Solve the system
     auto s = interp.xGELSx(LTI,f);
     //  Create the interpolant

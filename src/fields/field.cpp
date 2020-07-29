@@ -20,6 +20,25 @@
 
 namespace ET
 {
+  //----------------------------------------------------------------------------
+  std::map<std::string, BoundaryConditionType> BoundaryConditionTypeMap =
+  {
+    { "Dirichlet", BoundaryConditionType::DIRICHLET },
+    { "Neumann",   BoundaryConditionType::NEUMANN },
+    { "Robin",     BoundaryConditionType::ROBIN },
+    { "Mixed",     BoundaryConditionType::MIXED },
+    { "Cauchy",    BoundaryConditionType::CAUCHY },
+  };
+  //----------------------------------------------------------------------------
+  std::map<BoundaryConditionType, std::string> BoundaryConditionTypeNameMap =
+  {
+    { BoundaryConditionType::DIRICHLET, "Dirichlet" },
+    { BoundaryConditionType::NEUMANN,   "Neumann" },
+    { BoundaryConditionType::ROBIN,     "Robin" },
+    { BoundaryConditionType::MIXED,     "Mixed" },
+    { BoundaryConditionType::CAUCHY,    "Cauchy" },
+  };
+  //----------------------------------------------------------------------------
   template<typename T>
   Field<T>::Field()
   : m_name("default"), m_dim(0), m_N(0)
@@ -220,6 +239,27 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  std::vector<struct BoundaryCondition<T>> Field<T>::getBoundaryConditions() const
+  {
+    return m_boundary_conditions;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  struct BoundaryCondition<T> Field<T>::getBoundaryCondition(const size_t t_i) const
+  {
+    if (t_i >= m_boundary_conditions.size()) {
+      m_log->ERROR(NAME() + "Attempted to access boundary condition at index "
+                   + std::to_string(t_i) + ", while there are only "
+                   + std::to_string(m_boundary_conditions.size()));
+      m_log->TRACE("Returning empty BoundaryCondition");
+      return BoundaryCondition<T>();
+    }
+    else {
+      return m_boundary_conditions[t_i];
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   int Field<T>::getFlag() const
   {
     return m_flag;
@@ -303,6 +343,40 @@ namespace ET
                  + address_to_string(m_Integrator)
                  + "' to '" + address_to_string(t_integrator) + "'");
     m_Integrator = t_integrator;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void
+  Field<T>::setBoundaryConditions(std::vector<struct BoundaryCondition<T>>
+                                  t_boundaryConditions)
+  {
+    m_boundary_conditions = t_boundaryConditions;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Field<T>::setBoundaryCondition(const size_t t_i,
+                                      struct BoundaryCondition<T>
+                                      t_boundaryCondition)
+  {
+    if (t_i >= m_boundary_conditions.size()) {
+      m_log->ERROR(NAME() + "Attempted to access boundary condition at index "
+                   + std::to_string(t_i) + ", while there are only "
+                   + std::to_string(m_boundary_conditions.size()));
+      return;
+    }
+    else {
+      m_boundary_conditions[t_i] = t_boundaryCondition;
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Field<T>::addBoundaryCondition(struct BoundaryCondition<T>
+                                      t_boundaryCondition)
+  {
+    m_log->TRACE(NAME() + "Adding boundary condition of type "
+                 + BoundaryConditionTypeNameMap[t_boundaryCondition.m_type]
+                 + " to list of Boundary Conditions.");
+    m_boundary_conditions.push_back(t_boundaryCondition);
   }
   //----------------------------------------------------------------------------
   template<typename T>

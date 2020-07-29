@@ -53,6 +53,46 @@ namespace ET
     VECTOR,
     FRAME
   };
+  //! \enum Boundary Conditions Type
+  /*! An enum for denoting the various types of boundary conditions.
+   */
+  enum class BoundaryConditionType
+  {
+    DIRICHLET,
+    NEUMANN,
+    ROBIN,
+    MIXED,
+    CAUCHY,
+  };
+
+  extern std::map<std::string, BoundaryConditionType>
+  BoundaryConditionTypeMap;
+  extern std::map<BoundaryConditionType, std::string>
+  BoundaryConditionTypeNameMap;
+  //! \class Boundary Conditions struct
+  /*!
+   */
+  template<typename T>
+  struct BoundaryCondition
+  {
+    //! Type
+    enum BoundaryConditionType m_type {BoundaryConditionType::DIRICHLET};
+    //! Value
+    T m_value {0};
+    //! Index of the point
+    size_t m_index {0};
+    //! Boundary condition direction
+    size_t m_direction {0};
+    //! Constructor
+    BoundaryCondition() {}
+    //! Constructor with everything
+    BoundaryCondition(enum BoundaryConditionType t_type,
+                      T t_value, size_t t_index, size_t t_direction)
+    : m_type(t_type), m_value(t_value), m_index(t_index),
+      m_direction(t_direction)
+    {
+    }
+  };
   //! Field Class
   /*! A Base class for various types of fields, such as ET::ScalarField,
    *  ET::VectorField and ET::FrameField.
@@ -142,6 +182,15 @@ namespace ET
      *  @return A shared pointer to the Integrator.
      */
     std::shared_ptr<Integrator<T>> getIntegrator() const;
+    //! Get Boundary conditions
+    /*! @return A std::vector of boundary conditions.
+     */
+    std::vector<struct BoundaryCondition<T>> getBoundaryConditions() const;
+    //! Get Boundary condition
+    /*! @param t_i The index of the condition.
+     *  @return A BoundaryCondition.
+     */
+    struct BoundaryCondition<T> getBoundaryCondition(const size_t t_i) const;
     //! Get flag
     /*! get flag.
      *  @return An int that classifies the type of information stored in
@@ -199,6 +248,19 @@ namespace ET
      *  @param t_integrator A shared pointer for a Integrator instance.
      */
     virtual void setIntegrator(std::shared_ptr<Integrator<T>> t_integrator);
+    //! Set BoundaryConditions
+    /*! Set the boundary conditions.
+     *  @param t_boundaryConditions A std::vector of boundary conditions.
+     */
+    void
+    setBoundaryConditions(std::vector<struct BoundaryCondition<T>> t_boundaryConditions);
+    //! Set BoundaryCondition
+    /*! Set a particular boundary condition.
+     *  @param t_i The index of the condition.
+     *  @param t_boundayCondition The new boundary condition to set.
+     */
+    void setBoundaryCondition(const size_t t_i,
+                              struct BoundaryCondition<T> t_boundaryCondition);
     //! Set flag
     /*! set flag.  Sets the flag pertaining to info.
         @param t_flag an int that classifies the type of information stored
@@ -210,6 +272,11 @@ namespace ET
         @param t_info an std::string containing useful messages.
     */
     void setInfo(std::string t_info);
+    //! Add boundary condition
+    /*! Adds a new boundary condition to the list.
+     *  @param t_boundaryCondition A new boundary condition.
+     */
+    void addBoundaryCondition(struct BoundaryCondition<T> t_boundaryCondition);
     //  Operators
     //! Assignment operator
     /*! Virtual function for the assignment operator which prevents slicing.
@@ -276,6 +343,10 @@ namespace ET
      *  Defaulted to default.
      */
     const enum FieldType m_type {FieldType::DEFAULT};
+    /*! Boundary conditions.  A std::vector of boundary conditions
+     *  for interpolation.
+     */
+    std::vector<BoundaryCondition<T>> m_boundary_conditions;
     /*! Logging system name generator.
      */
     virtual std::string NAME() const {
@@ -299,7 +370,9 @@ namespace ET
       m_info = t_field.getInfo();
     }
   };
+  //----------------------------------------------------------------------------
 
+  template class BoundaryCondition<double>;
   template class Field<double>;
 
 }

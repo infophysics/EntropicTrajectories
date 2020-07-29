@@ -975,6 +975,31 @@ PYBIND11_MODULE(etraj, m) {
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
+  //  Boundary Condition Type enum
+  //----------------------------------------------------------------------------
+  py::enum_<BoundaryConditionType>(m, "BoundaryConditionType")
+    .value("dirichlet", BoundaryConditionType::DIRICHLET)
+    .value("neumann", BoundaryConditionType::NEUMANN)
+    .value("robin", BoundaryConditionType::ROBIN)
+    .value("mixed", BoundaryConditionType::MIXED)
+    .value("cauchy", BoundaryConditionType::CAUCHY)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
+  //  Boundary Condition Struct
+  //----------------------------------------------------------------------------
+  py::class_<BoundaryCondition<double>>(m, "BoundaryCondition")
+    .def(py::init<>())
+    .def(py::init<enum BoundaryConditionType,double,size_t,size_t>())
+    .def_readwrite("type", &BoundaryCondition<double>::m_type)
+    .def_readwrite("value", &BoundaryCondition<double>::m_value)
+    .def_readwrite("index", &BoundaryCondition<double>::m_index)
+    .def_readwrite("direction", &BoundaryCondition<double>::m_direction)
+    ;
+  //----------------------------------------------------------------------------
+
+  //----------------------------------------------------------------------------
   //  Field Base Class
   //----------------------------------------------------------------------------
   py::class_<Field<double>, std::shared_ptr<Field<double>>>(m, "Field")
@@ -1004,6 +1029,8 @@ PYBIND11_MODULE(etraj, m) {
     .def("get_Interpolator", &Field<double>::getInterpolator)
     .def("get_DiffEQ", &Field<double>::getDiffEQ)
     .def("get_Integrator", &Field<double>::getIntegrator)
+    .def("get_boundary_conditions", &Field<double>::getBoundaryConditions)
+    .def("get_boundary_condition", &Field<double>::getBoundaryCondition)
     .def("get_flag", &Field<double>::getFlag)
     .def("get_info", &Field<double>::getInfo)
     .def("set_name", &Field<double>::setName)
@@ -1014,6 +1041,9 @@ PYBIND11_MODULE(etraj, m) {
     .def("set_Interpolator", &Field<double>::setInterpolator)
     .def("set_DiffEQ", &Field<double>::setDiffEQ)
     .def("set_Integrator", &Field<double>::setIntegrator)
+    .def("set_boundary_conditions", &Field<double>::setBoundaryConditions)
+    .def("set_boundary_condition", &Field<double>::setBoundaryCondition)
+    .def("add_boundary_condition", &Field<double>::addBoundaryCondition)
     .def("set_flag", &Field<double>::setFlag)
     .def("set_info", &Field<double>::setInfo)
     .def("get_type", &Field<double>::getType)
