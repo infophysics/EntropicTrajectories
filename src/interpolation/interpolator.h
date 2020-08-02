@@ -37,6 +37,9 @@
 namespace ET
 {
   template<typename T> class Field;
+  template<typename T>
+  struct BoundaryCondition;
+  enum class BoundaryConditionType;
   //template<typename T> class ScalarField;
   template<typename T> class DiffEQ;
   template<typename T> class Integrator;
@@ -240,7 +243,26 @@ namespace ET
      *  @param t_type A string denoting the solver type.
      */
     void setSolverType(std::string t_type);
-
+    //  Boundary conditions
+    //! Construct boundary condition matrix.
+    /*! construct a Boundary condition matrix.
+     */
+    virtual Matrix<T> constructBoundaryConditionMatrix(Field<T>& t_Field,
+                                 const std::vector<T>& t_expansion_point);
+    //! Dirichlet condition
+    /*! Generate the row of a boundary condition matrix for a
+     *  dirichlet boundary condition.
+     */
+    virtual std::vector<T> dirichletCondition(Field<T>& t_Field,
+                                 const std::vector<T>& t_expansion_point,
+                                 BoundaryCondition<T>& t_condition);
+    //! Neumann condition
+    /*! Generate the row of a boundary condition matrix for a
+    *  neumann boundary condition.
+    */
+    virtual std::vector<T> neumannCondition(Field<T>& t_Field,
+                                const std::vector<T>& t_expansion_point,
+                                BoundaryCondition<T>& t_condition);
     //  Derivative functions that must be overloaded in derived classes.
     //! Derivative
     /*! derivative.  Derivative for a point in the Grid given by index,

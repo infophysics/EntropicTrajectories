@@ -27,6 +27,8 @@ option(USE_LOG_LEVEL_DEBUG "Using debug mode for loggers" OFF)
 option(LOG_LEVEL_GLOBAL "Using global logger" ON)
 # unit test option
 option(UNIT_TEST "Conducting unit tests" OFF)
+# documentation generation option
+option(DOCS "Compiling docs" OFF)
 
 # Include useful macros
 FILE( GLOB filenames "cmake/Macros/*.cmake" )
@@ -165,7 +167,9 @@ target_link_libraries(
 )
 
 # generate documentation
-add_subdirectory("docs")
+if(DOCS)
+  add_subdirectory("docs")
+endif()
 
 # generate tests
 if(UNIT_TEST)

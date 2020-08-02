@@ -401,6 +401,53 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  Matrix<T>
+  LocalTaylorInterpolator<T>::constructBoundaryConditionMatrix(Field<T>& t_Field,
+                               const std::vector<T>& t_expansion_point)
+  {
+    //  Incorporate boundary conditions
+    std::vector<BoundaryCondition<T>>
+    conditions = t_Field.getBoundaryConditions();
+    //  std::vector<std::vector>
+    std::vector<std::vector<T>> condition_array(conditions.size());
+    //  TODO: What strategy should we use here?
+    //        Either we remove the boundary points from LTI
+    //        Or we have boundary points be separate from the Grid.
+    //        Either way, we need a local taylor matrix for the boundary
+    //        points, A_ij.
+    //  NOTE: Going with removing rows for now to construct a new matrix.
+    //        The goal here is to remove the rows corresponding to the
+    //        boundary points, and then construct the constraint matrix.
+    for (auto i = 0; i < conditions.size(); i++) {
+      if (conditions[i].m_type == BoundaryConditionType::DIRICHLET) {
+        condition_array[i] = dirichletCondition(t_Field,t_expansion_point,
+                                                conditions[i]);
+      }
+      if (conditions[i].m_type == BoundaryConditionType::NEUMANN) {
+        condition_array[i] = neumannCondition(t_Field,t_expansion_point,
+                                                conditions[i]);
+      }
+    }
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> LocalTaylorInterpolator<T>::dirichletCondition(Field<T>& t_Field,
+                               const std::vector<T>& t_expansion_point,
+                               BoundaryCondition<T>& t_condition)
+  {
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> LocalTaylorInterpolator<T>::neumannCondition(Field<T>& t_Field,
+                              const std::vector<T>& t_expansion_point,
+                              BoundaryCondition<T>& t_condition)
+  {
+    //  NOTE: Neumann conditions are conditions on the first derivative
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   Vector<T>
   LocalTaylorInterpolator<T>::derivative(Field<T>& t_Field,
                                          const size_t t_index,

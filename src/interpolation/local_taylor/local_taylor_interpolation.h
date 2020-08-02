@@ -239,6 +239,26 @@ namespace ET
     Matrix<T> constructLocalTaylorMatrix(const std::vector<T>& t_point,
                                          const double t_radius,
                                          const size_t t_n);
+    //  Boundary conditions
+    //! Construct boundary condition matrix.
+    /*! construct a Boundary condition matrix.
+    */
+    virtual Matrix<T> constructBoundaryConditionMatrix(Field<T>& t_Field,
+                                const std::vector<T>& t_expansion_point);
+    //! Dirichlet condition
+    /*! Generate the row of a boundary condition matrix for a
+     *  dirichlet boundary condition.
+     */
+    virtual std::vector<T> dirichletCondition(Field<T>& t_Field,
+                                 const std::vector<T>& t_expansion_point,
+                                 BoundaryCondition<T>& t_condition);
+    //! Neumann condition
+    /*! Generate the row of a boundary condition matrix for a
+    *  neumann boundary condition.
+    */
+    virtual std::vector<T> neumannCondition(Field<T>& t_Field,
+                                const std::vector<T>& t_expansion_point,
+                                BoundaryCondition<T>& t_condition);
 
     //  Overloaded derivative functions
     //! Derivative

@@ -283,6 +283,30 @@ namespace ET
   }
   //----------------------------------------------------------------------------
   template<typename T>
+  Matrix<T>
+  Interpolator<T>::constructBoundaryConditionMatrix(Field<T>& t_Field,
+                               const std::vector<T>& t_expansion_point)
+  {
+    return Matrix<T>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> Interpolator<T>::dirichletCondition(Field<T>& t_Field,
+                               const std::vector<T>& t_expansion_point,
+                               BoundaryCondition<T>& t_condition)
+  {
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  std::vector<T> Interpolator<T>::neumannCondition(Field<T>& t_Field,
+                              const std::vector<T>& t_expansion_point,
+                              BoundaryCondition<T>& t_condition)
+  {
+   return std::vector<T>();
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
   Vector<T> Interpolator<T>::xLinearSolvex(Matrix<T> t_A, Vector<T> t_x,
                                            size_t t_index)
   {
