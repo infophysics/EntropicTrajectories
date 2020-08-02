@@ -366,6 +366,28 @@ namespace ET
         @return An std::string of information about the Vector.
      */
     const std::string summary();
+    //! Remove value
+    /*! Remove a value to decrease the dimension of the vector.
+     *  @param t_index The location to remove the value.
+     */
+    Vector<T> removeVal(const size_t t_index) const;
+    //! Remove value inplace
+    /*! Remove a value to decrease the dimension of the vector.
+     *  @param t_index The location to remove the value.
+     */
+    void removeValInplace(const size_t t_index);
+    //! Add Value
+    /*! Add a new value to increase the dimension of the vector.
+     *  @param t_index The location to insert the value.
+     *  @param t_value The value to insert.
+     */
+    Vector<T> addVal(const size_t t_index, const T t_value) const;
+    //! Add Value inplace
+    /*! Add a new value to increase the dimension of the vector.
+     *  @param t_index The location to insert the value.
+     *  @param t_value The value to insert.
+     */
+    void addValInplace(const size_t t_index, const T t_value);
 
   private:
     /*!  Dimension \f$n\f$ of the vector space \f$\mathbb{R}^n\f$.

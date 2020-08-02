@@ -144,15 +144,15 @@ include_directories(${BLAS_INCLUDE_DIRS}
 # generate the library libetraj
 add_library(libetraj ${SOURCES})
 # generate a test main.cpp file
-add_executable(main ${SOURCE_DIR}main.cpp)
-target_link_libraries(
-  main PUBLIC libetraj
-  ${BLAS_LIBRARIES}
-  ${CBLAS_LIBRARIES}
-  ${LAPACK_LIBRARIES}
-  ${LAPACKE_LIBRARIES}
-  ${Boost_LIBRARIES}
-)
+# add_executable(main ${SOURCE_DIR}main.cpp)
+# target_link_libraries(
+#   main PUBLIC libetraj
+#   ${BLAS_LIBRARIES}
+#   ${CBLAS_LIBRARIES}
+#   ${LAPACK_LIBRARIES}
+#   ${LAPACKE_LIBRARIES}
+#   ${Boost_LIBRARIES}
+# )
 
 # Generate Python module
 add_subdirectory(include/pybind11)

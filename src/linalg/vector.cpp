@@ -475,7 +475,89 @@ namespace ET
     return sum;
   }
   //----------------------------------------------------------------------------
-
+  template<typename T>
+  Vector<T> Vector<T>::removeVal(const size_t t_index) const
+  {
+    //  Check that index exists
+    if (t_index >= m_dim) {
+      std::cout << "ERROR" << std::endl;
+      return Vector<T>();
+    }
+    //  otherwise remove the value
+    std::vector<T> new_vec;
+    for (auto i = 0; i < m_dim; i++) {
+      if (i == t_index) {
+        continue;
+      }
+      new_vec.push_back(m_vec[i]);
+    }
+    return Vector<T>(new_vec);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Vector<T>::removeValInplace(const size_t t_index)
+  {
+    //  Check that index exists
+    if (t_index >= m_dim) {
+      std::cout << "ERROR" << std::endl;
+      return;
+    }
+    //  otherwise remove the value
+    std::vector<T> new_vec;
+    for (auto i = 0; i < m_dim; i++) {
+      if (i == t_index) {
+        continue;
+      }
+      new_vec.push_back(m_vec[i]);
+    }
+    m_vec = new_vec;
+    m_dim--;
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  Vector<T> Vector<T>::addVal(const size_t t_index, const T t_value) const
+  {
+    //  Check that index exists
+    if (t_index > m_dim) {
+      std::cout << "ERROR" << std::endl;
+      return Vector<T>();
+    }
+    //  otherwise remove the value
+    std::vector<T> new_vec;
+    for (auto i = 0; i < m_dim; i++) {
+      if (i == t_index) {
+        new_vec.push_back(t_value);
+      }
+      new_vec.push_back(m_vec[i]);
+    }
+    if (t_index == m_dim) {
+      new_vec.push_back(t_value);
+    }
+    return Vector<T>(new_vec);
+  }
+  //----------------------------------------------------------------------------
+  template<typename T>
+  void Vector<T>::addValInplace(const size_t t_index, const T t_value)
+  {
+    //  Check that index exists
+    if (t_index > m_dim) {
+      std::cout << "ERROR" << std::endl;
+      return;
+    }
+    //  otherwise remove the value
+    std::vector<T> new_vec;
+    for (auto i = 0; i < m_dim; i++) {
+      if (i == t_index) {
+        new_vec.push_back(t_value);
+      }
+      new_vec.push_back(m_vec[i]);
+    }
+    if (t_index == m_dim) {
+      new_vec.push_back(t_value);
+    }
+    m_vec = new_vec;
+    m_dim++;
+  }
   //----------------------------------------------------------------------------
   //  Various instantiators
   //----------------------------------------------------------------------------

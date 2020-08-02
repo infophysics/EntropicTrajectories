@@ -214,11 +214,43 @@ namespace ET
     //  NOTE: Going with removing rows for now to construct a new matrix.
     //        The goal here is to remove the rows corresponding to the
     //        boundary points, and then construct the constraint matrix.
-    for (auto i = 0; i < conditions.size(); i++) {
-
+    Matrix<T>
+    C = interp.constructBoundaryConditionMatrix(t_Field,t_expansion_point);
+    Vector<T> s;
+    Vector<T> f_C;
+    if (conditions.size() == 0) {
+      //  Solve the system
+      s = interp.xGELSx(LTI,f);
+    }
+    else {
+      //  Create larger matrix [[A^TA C^T],[C 0]]
+      Matrix<T> LTI_T = LTI.transpose();
+      Matrix<T> A_TA = LTI_T * LTI;
+      Matrix<T> C_T = C.transpose();
+      Matrix<T> B = A_TA;
+      Matrix<T> B2 = C_T;
+      for (auto i = 0; i < C.getNumRows(); i++) {
+        B.addRow(B.getNumRows(),C.getRow(i));
+        std::vector<T> z(C.getNumCols(),0.0);
+        B2.addRow(B.getNumRows(),z);
+      }
+      for (auto i = 0; i < B2.getNumCols(); i++) {
+        B.addCol(B.getNumCols(),B2.getCol(i));
+      }
+      //  Create solution vector [A^Tf f_C]
+      auto new_f = LTI_T * f;
+      for (auto i = 0; i < f_C.getDim(); i++) {
+        new_f.addVal(new_f.getDim(),f_C(i));
+      }
+      //  find the solution vector
+      s = interp.xGELSx(B,new_f);
+      //  reduce solution to the coefficients of the expansion
+      for (auto i = 0; i < f_C.getDim(); i++) {
+        s.removeVal(s.getDim());
+      }
     }
     //  Solve the system
-    auto s = interp.xGELSx(LTI,f);
+    //auto s = interp.xGELSx(LTI,f);
     //  Create the interpolant
     LocalTaylorInterpolant<T> interpolant;
     interpolant.set_n(t_n);

@@ -41,7 +41,7 @@ class CMakeBuild(build_ext):
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
                       '-DUSE_LOG_LEVEL_DEBUG=ON',
                       '-DLOG_LEVEL_GLOBAL=ON',
-                      '-DUNIT_TEST=ON',
+                      '-DUNIT_TEST=OFF',
                       '-DDOCS=OFF']
 
         cfg = 'Debug' if self.debug else 'Release'

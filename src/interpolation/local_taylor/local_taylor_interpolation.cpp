@@ -428,6 +428,7 @@ namespace ET
                                                 conditions[i]);
       }
     }
+    return Matrix<T>(condition_array);
   }
   //----------------------------------------------------------------------------
   template<typename T>
@@ -443,8 +444,18 @@ namespace ET
                               const std::vector<T>& t_expansion_point,
                               BoundaryCondition<T>& t_condition)
   {
-    //  NOTE: Neumann conditions are conditions on the first derivative
-   return std::vector<T>();
+    //  Construct a derivative polynomial vector
+    //  1  x  x^2  ...  ->  0  1  2x  ...
+    std::vector<double>
+    temp = m_monomial.taylorMonomialExpansion(t_expansion_point,
+      t_Field.getGrid()->getPoint(t_condition.m_index));
+    std::vector<T> constraint_vec(temp.size());
+    constraint_vec[0] = 0;
+    constraint_vec[1] = 1;
+    for (auto j = 2; j < temp.size(); j++) {
+      constraint_vec[j] += T(j) * temp[j-1];
+    }
+   return constraint_vec;
   }
   //----------------------------------------------------------------------------
   template<typename T>
